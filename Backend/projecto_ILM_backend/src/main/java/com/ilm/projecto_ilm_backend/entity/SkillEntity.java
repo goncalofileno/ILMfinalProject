@@ -10,7 +10,8 @@ public class SkillEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @Column(name="id", nullable = false, unique = true, updatable = false)
+    @GeneratedValue (strategy =  GenerationType.IDENTITY)
+    @Column(name="id", nullable = false,unique = true,updatable = false)
     private int id;
 
     @Column(name="name", nullable = false, unique = true, updatable = true)

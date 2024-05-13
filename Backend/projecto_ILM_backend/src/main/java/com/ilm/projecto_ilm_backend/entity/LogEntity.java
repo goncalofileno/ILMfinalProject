@@ -13,7 +13,8 @@ public class LogEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @Column(name = "id", nullable = false, unique = true, updatable = false)
+    @GeneratedValue (strategy =  GenerationType.IDENTITY)
+    @Column(name="id", nullable = false,unique = true,updatable = false)
     private int id;
 
     @Column(name = "date", nullable = false, unique = false, updatable = true)

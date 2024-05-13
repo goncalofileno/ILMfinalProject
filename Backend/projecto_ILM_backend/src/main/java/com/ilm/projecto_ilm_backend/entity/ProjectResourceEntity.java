@@ -10,7 +10,8 @@ public class ProjectResourceEntity implements Serializable{
     private static final long serialVersionUID = 1L;
 
     @Id
-    @Column(name="id", nullable = false, unique = true, updatable = false)
+    @GeneratedValue (strategy =  GenerationType.IDENTITY)
+    @Column(name="id", nullable = false,unique = true,updatable = false)
     private int id;
 
     @ManyToOne
@@ -23,5 +24,8 @@ public class ProjectResourceEntity implements Serializable{
 
     @Column(name="stock", nullable = false, unique = false, updatable = true)
     private int stock;
+
+    public ProjectResourceEntity() {
+    }
 
 }

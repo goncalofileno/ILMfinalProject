@@ -3,6 +3,7 @@ package com.ilm.projecto_ilm_backend.entity;
 import jakarta.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name="user")
@@ -11,7 +12,8 @@ public class UserEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @Column(name="id", nullable = false, unique = true, updatable = false)
+    @GeneratedValue (strategy =  GenerationType.IDENTITY)
+    @Column(name="id", nullable = false,unique = true,updatable = false)
     private int id;
 
     @Column(name="username", nullable = false, unique = true, updatable = true)
@@ -58,6 +60,12 @@ public class UserEntity implements Serializable {
 
     @Column(name="tutorial", nullable = false, unique = false, updatable = true)
     private boolean tutorial;
+
+    @OneToMany(mappedBy = "user")
+    private List<UserProjectEntity> userProjects;
+
+    @OneToMany(mappedBy = "user")
+    private List<UserTaskEntity> userTasks;
 
     public UserEntity() {
     }

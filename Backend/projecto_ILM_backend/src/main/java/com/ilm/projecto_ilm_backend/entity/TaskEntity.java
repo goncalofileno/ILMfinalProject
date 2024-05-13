@@ -12,7 +12,8 @@ public class TaskEntity implements Serializable{
     private static final long serialVersionUID = 1L;
 
     @Id
-    @Column(name="id", nullable = false, unique = true, updatable = false)
+    @GeneratedValue (strategy =  GenerationType.IDENTITY)
+    @Column(name="id", nullable = false,unique = true,updatable = false)
     private int id;
 
     @Column(name="title", nullable = false, unique = false, updatable = true)
@@ -36,8 +37,8 @@ public class TaskEntity implements Serializable{
     @ManyToMany
     private List<TaskEntity> dependentTasks;
 
-    @ManyToMany
-    private List<UserEntity> userInTask;
+    @OneToMany(mappedBy = "task")
+    private List<UserTaskEntity> userTasks;
 
     @ManyToOne
     private ProjectEntity project;
@@ -107,14 +108,6 @@ public class TaskEntity implements Serializable{
 
     public void setDependentTasks(List<TaskEntity> dependentTasks) {
         this.dependentTasks = dependentTasks;
-    }
-
-    public List<UserEntity> getUserInTask() {
-        return userInTask;
-    }
-
-    public void setUserInTask(List<UserEntity> userInTask) {
-        this.userInTask = userInTask;
     }
 
     public ProjectEntity getProject() {

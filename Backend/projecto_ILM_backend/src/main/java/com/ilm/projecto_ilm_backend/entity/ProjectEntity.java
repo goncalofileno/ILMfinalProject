@@ -12,7 +12,8 @@ public class ProjectEntity implements Serializable{
     private static final long serialVersionUID = 1L;
 
     @Id
-    @Column(name="id", nullable = false, unique = true, updatable = false)
+    @GeneratedValue (strategy =  GenerationType.IDENTITY)
+    @Column(name="id", nullable = false,unique = true,updatable = false)
     private int id;
 
     @Column(name="title", nullable = false, unique = true, updatable = true)
@@ -48,8 +49,8 @@ public class ProjectEntity implements Serializable{
     @OneToMany(mappedBy = "project")
     private List<ProjectResourceEntity> projectResources;
 
-    @ManyToMany
-    private List<UserEntity> userInProject;
+    @OneToMany(mappedBy = "project")
+    private List<UserProjectEntity> userProjects;
 
     @ManyToMany
     private List<SkillEntity> skillInProject;
