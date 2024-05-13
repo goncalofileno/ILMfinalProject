@@ -1,6 +1,8 @@
 package com.ilm.projecto_ilm_backend.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+
 import java.io.Serializable;
 import java.util.List;
 import java.time.LocalDateTime;
@@ -25,11 +27,15 @@ public class MessageEntity implements Serializable {
     @Column(name="seen", nullable = false, unique = false, updatable = true)
     private boolean seen;
 
-    @Column(name="receiver", nullable = false, unique = false, updatable = true)
-    private String receiver;
-
+    @NotNull
     @ManyToOne
     private UserEntity sender;
+
+    @ManyToOne
+    private UserEntity receiverUser;
+
+    @ManyToOne
+    private ProjectEntity receiverProject;
 
     public MessageEntity() {
     }
@@ -66,13 +72,6 @@ public class MessageEntity implements Serializable {
         this.seen = seen;
     }
 
-    public String getReceiver() {
-        return receiver;
-    }
-
-    public void setReceiver(String receiver) {
-        this.receiver = receiver;
-    }
 
     public UserEntity getSender() {
         return sender;
@@ -80,5 +79,21 @@ public class MessageEntity implements Serializable {
 
     public void setSender(UserEntity sender) {
         this.sender = sender;
+    }
+
+    public UserEntity getReceiverUser() {
+        return receiverUser;
+    }
+
+    public void setReceiverUser(UserEntity receiverUser) {
+        this.receiverUser = receiverUser;
+    }
+
+    public ProjectEntity getReceiverProject() {
+        return receiverProject;
+    }
+
+    public void setReceiverProject(ProjectEntity receiverProject) {
+        this.receiverProject = receiverProject;
     }
 }
