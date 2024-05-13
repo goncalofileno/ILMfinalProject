@@ -2,10 +2,11 @@ package com.ilm.projecto_ilm_backend.entity;
 
 import jakarta.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
-@Table(name="interest")
-public class Interest {
+@Table(name="skill")
+public class SkillEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -15,10 +16,13 @@ public class Interest {
     @Column(name="name", nullable = false, unique = true, updatable = true)
     private String name;
 
-    @Column(name="description", nullable = false, unique = false, updatable = true)
-    private String description;
+    @Column(name="type", nullable = false, unique = false, updatable = true)
+    private int type;
 
-    public Interest() {
+    @ManyToMany
+    private List<UserEntity> userWithSkill;
+
+    public SkillEntity() {
     }
 
     public int getId() {
@@ -37,11 +41,11 @@ public class Interest {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
+    public int getType() {
+        return type;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setType(int type) {
+        this.type = type;
     }
 }
