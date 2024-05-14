@@ -1,38 +1,41 @@
 package com.ilm.projecto_ilm_backend.entity;
 
+import com.ilm.projecto_ilm_backend.ENUMS.ResourceTypeENUM;
 import jakarta.persistence.*;
+
 import java.io.Serializable;
 import java.util.List;
 
 @Entity
-@Table(name="resources")
+@Table(name = "resources")
 public class ResourceEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue (strategy =  GenerationType.IDENTITY)
-    @Column(name="id", nullable = false,unique = true,updatable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false, unique = true, updatable = false)
     private int id;
 
-   @Column(name="type", nullable = false, unique = false, updatable = true)
-    private boolean type;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type", nullable = false, unique = false, updatable = true)
+    private ResourceTypeENUM type;
 
-    @Column(name="name", nullable = false, unique = false, updatable = true)
+    @Column(name = "name", nullable = false, unique = false, updatable = true)
     private String name;
 
-    @Column(name="description", nullable = false, unique = false, updatable = true)
+    @Column(name = "description", nullable = false, unique = false, updatable = true)
     private String description;
 
-    @Column(name="observation", nullable = false, unique = false, updatable = true)
+    @Column(name = "observation", nullable = false, unique = false, updatable = true)
     private String observation;
 
-    @Column(name="stock", nullable = false, unique = false, updatable = true)
+    @Column(name = "stock", nullable = false, unique = false, updatable = true)
     private int stock;
 
-    @Column(name="brand", nullable = false, unique = false, updatable = true)
+    @Column(name = "brand", nullable = false, unique = false, updatable = true)
     private String brand;
 
-    @Column(name="serialNumber", nullable = false, unique = false, updatable = true)
+    @Column(name = "serialNumber", nullable = false, unique = false, updatable = true)
     private String serialNumber;
 
     @ManyToMany
@@ -53,12 +56,20 @@ public class ResourceEntity implements Serializable {
         this.id = id;
     }
 
-    public boolean isType() {
+    public ResourceTypeENUM getType() {
         return type;
     }
 
-    public void setType(boolean type) {
+    public void setType(ResourceTypeENUM type) {
         this.type = type;
+    }
+
+    public List<ProjectResourceEntity> getProjectResources() {
+        return projectResources;
+    }
+
+    public void setProjectResources(List<ProjectResourceEntity> projectResources) {
+        this.projectResources = projectResources;
     }
 
     public String getName() {

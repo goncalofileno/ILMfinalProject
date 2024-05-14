@@ -41,8 +41,8 @@ public class ProjectEntity implements Serializable{
     @Column(name="photo", nullable = false, unique = false, updatable = true)
     private String photo;
 
-    @Column(name="lab", nullable = false, unique = false, updatable = true)
-    private int lab;
+    @ManyToOne
+    private LabEntity lab;
 
     @Column(name="deleted", nullable = false, unique = false, updatable = true)
     private boolean deleted;
@@ -131,11 +131,11 @@ public class ProjectEntity implements Serializable{
         this.photo = photo;
     }
 
-    public int getLab() {
+    public LabEntity getLab() {
         return lab;
     }
 
-    public void setLab(int lab) {
+    public void setLab(LabEntity lab) {
         this.lab = lab;
     }
 

@@ -25,6 +25,7 @@ public class LogEntity implements Serializable {
     @Column(name = "receiver", nullable = true, unique = false, updatable = false)
     private String receiver;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false, unique = false, updatable = false)
     private LogTypeENUM type;
 

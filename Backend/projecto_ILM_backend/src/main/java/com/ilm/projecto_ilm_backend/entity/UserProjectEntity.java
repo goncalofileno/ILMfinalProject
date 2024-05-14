@@ -1,6 +1,7 @@
 package com.ilm.projecto_ilm_backend.entity;
 
 import com.ilm.projecto_ilm_backend.ENUMS.InviteStatusENUM;
+import com.ilm.projecto_ilm_backend.ENUMS.UserInProjectTypeENUM;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -24,11 +25,8 @@ public class UserProjectEntity implements Serializable {
     @JoinColumn(name = "project_id")
     private ProjectEntity project;
 
-    @Column(name = "isManager", nullable = false, unique = false, updatable = true)
-    private boolean isManager;
-
-    @Column(name = "isCreator", nullable = false, unique = false, updatable = false)
-    private boolean isCreator;
+    @Column(name = "type", nullable = false, unique = false, updatable = true)
+    private UserInProjectTypeENUM type;
 
     @Column(name = "inviteStatus", nullable = true, unique = false, updatable = true)
     private InviteStatusENUM inviteStatus;
@@ -60,20 +58,12 @@ public class UserProjectEntity implements Serializable {
         this.project = project;
     }
 
-    public boolean isManager() {
-        return isManager;
+    public UserInProjectTypeENUM getType() {
+        return type;
     }
 
-    public void setManager(boolean manager) {
-        isManager = manager;
-    }
-
-    public boolean isCreator() {
-        return isCreator;
-    }
-
-    public void setCreator(boolean creator) {
-        isCreator = creator;
+    public void setType(UserInProjectTypeENUM type) {
+        this.type = type;
     }
 
     public InviteStatusENUM getInviteStatus() {

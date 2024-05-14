@@ -1,5 +1,6 @@
 package com.ilm.projecto_ilm_backend.entity;
 
+import com.ilm.projecto_ilm_backend.ENUMS.UserInTaskTypeENUM;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -23,8 +24,8 @@ public class UserTaskEntity implements Serializable {
     @JoinColumn(name = "task_id")
     private TaskEntity task;
 
-    @Column(name = "isAuthor", nullable = false, unique = false, updatable = true)
-    private boolean isAuthor;
+    @Column(name = "type", nullable = false, unique = false, updatable = true)
+    private UserInTaskTypeENUM type;
 
     public UserTaskEntity() {
     }

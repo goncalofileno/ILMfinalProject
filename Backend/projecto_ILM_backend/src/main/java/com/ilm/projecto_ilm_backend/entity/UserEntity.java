@@ -49,9 +49,6 @@ public class UserEntity implements Serializable {
     @Column(name = "photo", nullable = false, unique = false, updatable = true)
     private String photo;
 
-    @Column(name = "lab", nullable = false, unique = false, updatable = true)
-    private WorkLocalENUM lab;
-
     @Column(name = "token", nullable = true, unique = true, updatable = true)
     private String token;
 
@@ -63,6 +60,9 @@ public class UserEntity implements Serializable {
 
     @Column(name = "tutorial", nullable = false, unique = false, updatable = true)
     private boolean tutorial;
+
+    @ManyToOne
+    private LabEntity lab;
 
     @OneToMany(mappedBy = "user")
     private List<UserProjectEntity> userProjects;
@@ -161,11 +161,11 @@ public class UserEntity implements Serializable {
         this.photo = photo;
     }
 
-    public WorkLocalENUM getLab() {
+    public LabEntity getLab() {
         return lab;
     }
 
-    public void setLab(WorkLocalENUM lab) {
+    public void setLab(LabEntity lab) {
         this.lab = lab;
     }
 
