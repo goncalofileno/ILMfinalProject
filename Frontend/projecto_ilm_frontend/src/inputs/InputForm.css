@@ -1,0 +1,18 @@
+.inputForm {
+   display: flex;
+   flex-direction: column;
+}
+
+.inputForm input {
+   border-top: none;
+   border-right: none;
+   border-left: none;
+   background-color: transparent;
+   border-color: rgba(0, 0, 0, 0.26);
+   border-bottom: 1px solid;
+}
+
+.inputForm input:focus {
+   outline: none;
+   border-color: rgb(192, 23, 34);
+}
