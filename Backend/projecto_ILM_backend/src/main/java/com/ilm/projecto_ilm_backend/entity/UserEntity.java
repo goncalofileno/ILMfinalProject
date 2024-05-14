@@ -1,64 +1,67 @@
 package com.ilm.projecto_ilm_backend.entity;
 
+import com.ilm.projecto_ilm_backend.ENUMS.UserTypeENUM;
+import com.ilm.projecto_ilm_backend.ENUMS.WorkLocalENUM;
 import jakarta.persistence.*;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name="user")
+@Table(name = "user")
 public class UserEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue (strategy =  GenerationType.IDENTITY)
-    @Column(name="id", nullable = false,unique = true,updatable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false, unique = true, updatable = false)
     private int id;
 
-    @Column(name="username", nullable = false, unique = true, updatable = true)
+    @Column(name = "username", nullable = false, unique = true, updatable = true)
     private String username;
 
-    @Column(name="password", nullable = false, unique = false, updatable = true)
+    @Column(name = "password", nullable = false, unique = false, updatable = true)
     private String password;
 
-    @Column(name="email", nullable = false, unique = true, updatable = true)
+    @Column(name = "email", nullable = false, unique = true, updatable = true)
     private String email;
 
-    @Column(name="firstName", nullable = false, unique = false, updatable = true)
+    @Column(name = "firstName", nullable = false, unique = false, updatable = true)
     private String firstName;
 
-    @Column(name="lastName", nullable = false, unique = false, updatable = true)
+    @Column(name = "lastName", nullable = false, unique = false, updatable = true)
     private String lastName;
 
-    @Column(name="type", nullable = false, unique = false, updatable = true)
-    private int type;
+    @Column(name = "type", nullable = false, unique = false, updatable = true)
+    private UserTypeENUM type;
 
-    @Column(name="registrationDate", nullable = false, unique = false, updatable = true)
+    @Column(name = "registrationDate", nullable = false, unique = false, updatable = true)
     private LocalDateTime registrationDate;
 
-    @Column(name="mailConfirmed", nullable = false, unique = false, updatable = true)
+    @Column(name = "mailConfirmed", nullable = false, unique = false, updatable = true)
     private boolean mailConfirmed;
 
-    @Column(name="profileCreated", nullable = false, unique = false, updatable = true)
+    @Column(name = "profileCreated", nullable = false, unique = false, updatable = true)
     private boolean profileCreated;
 
-    @Column(name="photo", nullable = false, unique = false, updatable = true)
+    @Column(name = "photo", nullable = false, unique = false, updatable = true)
     private String photo;
 
-    @Column(name="lab", nullable = false, unique = false, updatable = true)
-    private int lab;
+    @Column(name = "lab", nullable = false, unique = false, updatable = true)
+    private WorkLocalENUM lab;
 
-    @Column(name="token", nullable = true, unique = true, updatable = true)
+    @Column(name = "token", nullable = true, unique = true, updatable = true)
     private String token;
 
-    @Column(name="lastActivity", nullable = true, unique = false, updatable = true)
+    @Column(name = "lastActivity", nullable = true, unique = false, updatable = true)
     private LocalDateTime lastActivity;
 
-    @Column(name="deleted", nullable = false, unique = false, updatable = true)
+    @Column(name = "deleted", nullable = false, unique = false, updatable = true)
     private boolean deleted;
 
-    @Column(name="tutorial", nullable = false, unique = false, updatable = true)
+    @Column(name = "tutorial", nullable = false, unique = false, updatable = true)
     private boolean tutorial;
 
     @OneToMany(mappedBy = "user")
@@ -118,11 +121,11 @@ public class UserEntity implements Serializable {
         this.lastName = lastName;
     }
 
-    public int getType() {
+    public UserTypeENUM getType() {
         return type;
     }
 
-    public void setType(int type) {
+    public void setType(UserTypeENUM type) {
         this.type = type;
     }
 
@@ -158,11 +161,11 @@ public class UserEntity implements Serializable {
         this.photo = photo;
     }
 
-    public int getLab() {
+    public WorkLocalENUM getLab() {
         return lab;
     }
 
-    public void setLab(int lab) {
+    public void setLab(WorkLocalENUM lab) {
         this.lab = lab;
     }
 
@@ -196,5 +199,21 @@ public class UserEntity implements Serializable {
 
     public void setTutorial(boolean tutorial) {
         this.tutorial = tutorial;
+    }
+
+    public List<UserProjectEntity> getUserProjects() {
+        return userProjects;
+    }
+
+    public void setUserProjects(List<UserProjectEntity> userProjects) {
+        this.userProjects = userProjects;
+    }
+
+    public List<UserTaskEntity> getUserTasks() {
+        return userTasks;
+    }
+
+    public void setUserTasks(List<UserTaskEntity> userTasks) {
+        this.userTasks = userTasks;
     }
 }

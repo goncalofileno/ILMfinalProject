@@ -1,5 +1,6 @@
 package com.ilm.projecto_ilm_backend.entity;
 
+import com.ilm.projecto_ilm_backend.ENUMS.NotificationTypeENUM;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
@@ -7,26 +8,26 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name="notification")
-public class NotificationEntity implements Serializable{
+@Table(name = "notification")
+public class NotificationEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue (strategy =  GenerationType.IDENTITY)
-    @Column(name="id", nullable = false,unique = true,updatable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false, unique = true, updatable = false)
     private int id;
 
-    @Column(name="type", nullable = false, unique = false, updatable = false)
-    private int type;
+    @Column(name = "type", nullable = false, unique = false, updatable = false)
+    private NotificationTypeENUM type;
 
-    @Column(name="readStatus", nullable = false, unique = false, updatable = true)
+    @Column(name = "readStatus", nullable = false, unique = false, updatable = true)
     private boolean readStatus;
 
-    @Column(name="sendDate", nullable = false, unique = false, updatable = false)
+    @Column(name = "sendDate", nullable = false, unique = false, updatable = false)
     private LocalDateTime sendDate;
 
-    @Column(name="text", nullable = false, unique = false, updatable = false)
+    @Column(name = "text", nullable = false, unique = false, updatable = false)
     private String text;
 
     @NotNull
@@ -44,12 +45,12 @@ public class NotificationEntity implements Serializable{
         this.id = id;
     }
 
-    public int getType() {
-        return type;
+    public void setType(NotificationTypeENUM type) {
+        this.type = type;
     }
 
-    public void setType(int type) {
-        this.type = type;
+    public NotificationTypeENUM getType() {
+        return type;
     }
 
     public boolean isReadStatus() {
