@@ -1,0 +1,34 @@
+* {
+   margin: 0;
+   padding: 0;
+}
+
+body {
+   margin: 0;
+   font-family: "Mark-Bold", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
+      "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+   -webkit-font-smoothing: antialiased;
+   -moz-osx-font-smoothing: grayscale;
+   background-color: rgb(255, 255, 255) smoke;
+}
+
+/*
+#4b0808
+#9B1018
+#C01822
+#DEDEDE
+#646464
+#CB4246
+#E1E1E1
+*/
+
+code {
+   font-family: Mark-Bold, source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
+.ilm-form {
+   /*background-color: rgba(247, 55, 68, 0.116);*/
+   background: linear-gradient(to right, #ff2c2c85, #ffe5e5);
+   padding: 48px;
+   color: rgb(0, 0, 0);
+}
