@@ -1,5 +1,6 @@
 package com.ilm.projecto_ilm_backend.entity;
 
+import com.ilm.projecto_ilm_backend.ENUMS.TaskStatusENUM;
 import jakarta.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -23,7 +24,7 @@ public class TaskEntity implements Serializable{
     private String description;
 
     @Column(name="status", nullable = false, unique = false, updatable = true)
-    private int status;
+    private TaskStatusENUM status;
 
     @Column(name="initialDate", nullable = false, unique = false, updatable = true)
     private LocalDateTime initialDate;
@@ -70,11 +71,11 @@ public class TaskEntity implements Serializable{
         this.description = description;
     }
 
-    public int getStatus() {
+    public TaskStatusENUM getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(TaskStatusENUM status) {
         this.status = status;
     }
 
@@ -116,5 +117,13 @@ public class TaskEntity implements Serializable{
 
     public void setProject(ProjectEntity project) {
         this.project = project;
+    }
+
+    public List<UserTaskEntity> getUserTasks() {
+        return userTasks;
+    }
+
+    public void setUserTasks(List<UserTaskEntity> userTasks) {
+        this.userTasks = userTasks;
     }
 }

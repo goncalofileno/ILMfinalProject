@@ -1,5 +1,7 @@
 package com.ilm.projecto_ilm_backend.entity;
 
+import com.ilm.projecto_ilm_backend.ENUMS.LogTypeENUM;
+import com.ilm.projecto_ilm_backend.ENUMS.TaskStatusENUM;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
@@ -24,16 +26,16 @@ public class LogEntity implements Serializable {
     private String receiver;
 
     @Column(name = "type", nullable = false, unique = false, updatable = false)
-    private int type;
+    private LogTypeENUM type;
 
     @Column(name = "taskTitle", nullable = true, unique = false, updatable = false)
     private String taskTitle;
 
     @Column(name = "taskOldStatus", nullable = true, unique = false, updatable = false)
-    private int taskOldStatus;
+    private TaskStatusENUM taskOldStatus;
 
     @Column(name = "taskNewStatus", nullable = true, unique = false, updatable = false)
-    private int taskNewStatus;
+    private TaskStatusENUM taskNewStatus;
 
     @Column(name = "resourceName", nullable = true, unique = false, updatable = false)
     private String resourceName;
@@ -76,11 +78,11 @@ public class LogEntity implements Serializable {
         this.receiver = receiver;
     }
 
-    public int getType() {
+    public LogTypeENUM getType() {
         return type;
     }
 
-    public void setType(int type) {
+    public void setType(LogTypeENUM type) {
         this.type = type;
     }
 
@@ -92,19 +94,19 @@ public class LogEntity implements Serializable {
         this.taskTitle = taskTitle;
     }
 
-    public int getTaskOldStatus() {
+    public TaskStatusENUM getTaskOldStatus() {
         return taskOldStatus;
     }
 
-    public void setTaskOldStatus(int taskOldStatus) {
+    public void setTaskOldStatus(TaskStatusENUM taskOldStatus) {
         this.taskOldStatus = taskOldStatus;
     }
 
-    public int getTaskNewStatus() {
+    public TaskStatusENUM getTaskNewStatus() {
         return taskNewStatus;
     }
 
-    public void setTaskNewStatus(int taskNewStatus) {
+    public void setTaskNewStatus(TaskStatusENUM taskNewStatus) {
         this.taskNewStatus = taskNewStatus;
     }
 

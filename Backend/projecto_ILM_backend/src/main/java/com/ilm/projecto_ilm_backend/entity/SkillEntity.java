@@ -1,5 +1,6 @@
 package com.ilm.projecto_ilm_backend.entity;
 
+import com.ilm.projecto_ilm_backend.ENUMS.SkillTypeENUM;
 import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.List;
@@ -18,7 +19,7 @@ public class SkillEntity implements Serializable {
     private String name;
 
     @Column(name="type", nullable = false, unique = false, updatable = true)
-    private int type;
+    private SkillTypeENUM type;
 
     @ManyToMany
     private List<UserEntity> userWithSkill;
@@ -42,11 +43,19 @@ public class SkillEntity implements Serializable {
         this.name = name;
     }
 
-    public int getType() {
+    public SkillTypeENUM getType() {
         return type;
     }
 
-    public void setType(int type) {
+    public void setType(SkillTypeENUM type) {
         this.type = type;
+    }
+
+    public List<UserEntity> getUserWithSkill() {
+        return userWithSkill;
+    }
+
+    public void setUserWithSkill(List<UserEntity> userWithSkill) {
+        this.userWithSkill = userWithSkill;
     }
 }

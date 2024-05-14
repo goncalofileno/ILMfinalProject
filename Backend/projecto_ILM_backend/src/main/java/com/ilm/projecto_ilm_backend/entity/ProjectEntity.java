@@ -1,5 +1,6 @@
 package com.ilm.projecto_ilm_backend.entity;
 
+import com.ilm.projecto_ilm_backend.ENUMS.StateProjectENUM;
 import jakarta.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -29,7 +30,7 @@ public class ProjectEntity implements Serializable{
     private LocalDateTime endDate;
 
     @Column(name="status", nullable = false, unique = false, updatable = true)
-    private int status;
+    private StateProjectENUM status;
 
     @Column(name="motivation", nullable = false, unique = false, updatable = true)
     private String motivation;
@@ -54,4 +55,119 @@ public class ProjectEntity implements Serializable{
 
     @ManyToMany
     private List<SkillEntity> skillInProject;
+
+    public ProjectEntity() {
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public LocalDateTime getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDateTime startDate) {
+        this.startDate = startDate;
+    }
+
+    public LocalDateTime getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(LocalDateTime endDate) {
+        this.endDate = endDate;
+    }
+
+    public StateProjectENUM getStatus() {
+        return status;
+    }
+
+    public void setStatus(StateProjectENUM status) {
+        this.status = status;
+    }
+
+    public String getMotivation() {
+        return motivation;
+    }
+
+    public void setMotivation(String motivation) {
+        this.motivation = motivation;
+    }
+
+    public int getMaxMembers() {
+        return maxMembers;
+    }
+
+    public void setMaxMembers(int maxMembers) {
+        this.maxMembers = maxMembers;
+    }
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
+
+    public int getLab() {
+        return lab;
+    }
+
+    public void setLab(int lab) {
+        this.lab = lab;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public List<ProjectResourceEntity> getProjectResources() {
+        return projectResources;
+    }
+
+    public void setProjectResources(List<ProjectResourceEntity> projectResources) {
+        this.projectResources = projectResources;
+    }
+
+    public List<UserProjectEntity> getUserProjects() {
+        return userProjects;
+    }
+
+    public void setUserProjects(List<UserProjectEntity> userProjects) {
+        this.userProjects = userProjects;
+    }
+
+    public List<SkillEntity> getSkillInProject() {
+        return skillInProject;
+    }
+
+    public void setSkillInProject(List<SkillEntity> skillInProject) {
+        this.skillInProject = skillInProject;
+    }
 }

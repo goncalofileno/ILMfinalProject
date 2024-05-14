@@ -1,0 +1,13 @@
+package com.ilm.projecto_ilm_backend.ENUMS;
+
+public enum LogTypeENUM {
+    MEMBERS,
+    TASKS_CREATED,
+    TASKS_COMPLETED,
+    TASKS_IN_PROGRESS,
+    TASKS_DELETED,
+    TASKS_UPDATED,
+    PROJECT_INFO_UPDATED,
+    PROJECT_STATUS_UPDATED,
+    RESOURCES_ADDED
+}
