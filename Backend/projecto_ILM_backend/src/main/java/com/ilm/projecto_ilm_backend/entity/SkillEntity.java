@@ -18,6 +18,7 @@ public class SkillEntity implements Serializable {
     @Column(name="name", nullable = false, unique = true, updatable = true)
     private String name;
 
+    @Enumerated(EnumType.STRING)
     @Column(name="type", nullable = false, unique = false, updatable = true)
     private SkillTypeENUM type;
 

@@ -24,6 +24,7 @@ public class UserTaskEntity implements Serializable {
     @JoinColumn(name = "task_id")
     private TaskEntity task;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false, unique = false, updatable = true)
     private UserInTaskTypeENUM type;
 

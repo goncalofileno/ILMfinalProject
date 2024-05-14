@@ -23,6 +23,7 @@ public class TaskEntity implements Serializable{
     @Column(name="description", nullable = false, unique = false, updatable = true)
     private String description;
 
+    @Enumerated(EnumType.STRING)
     @Column(name="status", nullable = false, unique = false, updatable = true)
     private TaskStatusENUM status;
 

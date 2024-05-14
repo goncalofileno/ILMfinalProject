@@ -25,9 +25,11 @@ public class UserProjectEntity implements Serializable {
     @JoinColumn(name = "project_id")
     private ProjectEntity project;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false, unique = false, updatable = true)
     private UserInProjectTypeENUM type;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "inviteStatus", nullable = true, unique = false, updatable = true)
     private InviteStatusENUM inviteStatus;
 

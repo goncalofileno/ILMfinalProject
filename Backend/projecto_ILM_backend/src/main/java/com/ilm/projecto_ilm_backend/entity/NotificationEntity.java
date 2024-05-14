@@ -18,6 +18,7 @@ public class NotificationEntity implements Serializable {
     @Column(name = "id", nullable = false, unique = true, updatable = false)
     private int id;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false, unique = false, updatable = false)
     private NotificationTypeENUM type;
 

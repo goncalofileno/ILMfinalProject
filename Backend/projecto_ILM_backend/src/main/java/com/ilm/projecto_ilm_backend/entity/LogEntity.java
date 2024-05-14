@@ -32,9 +32,11 @@ public class LogEntity implements Serializable {
     @Column(name = "taskTitle", nullable = true, unique = false, updatable = false)
     private String taskTitle;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "taskOldStatus", nullable = true, unique = false, updatable = false)
     private TaskStatusENUM taskOldStatus;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "taskNewStatus", nullable = true, unique = false, updatable = false)
     private TaskStatusENUM taskNewStatus;
 
