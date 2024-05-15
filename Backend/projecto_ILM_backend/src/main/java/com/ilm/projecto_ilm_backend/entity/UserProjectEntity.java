@@ -6,72 +6,143 @@ import jakarta.persistence.*;
 
 import java.io.Serializable;
 
+/**
+ * The UserProjectEntity class represents the "user_project" table in the database.
+ * Each instance of this class corresponds to a single row in the table.
+ */
 @Entity
 @Table(name = "user_project")
 public class UserProjectEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * The unique ID of the user project. This is the primary key in the "user_project" table.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, unique = true, updatable = false)
     private int id;
 
+    /**
+     * The user associated with this user project. This is a many-to-one relationship with the UserEntity class.
+     */
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
+    /**
+     * The project associated with this user project. This is a many-to-one relationship with the ProjectEntity class.
+     */
     @ManyToOne
     @JoinColumn(name = "project_id")
     private ProjectEntity project;
 
+    /**
+     * The type of the user in the project. This is an enumerated type.
+     */
     @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false, unique = false, updatable = true)
     private UserInProjectTypeENUM type;
 
+    /**
+     * The invite status of the user in the project. This is an enumerated type.
+     */
     @Enumerated(EnumType.STRING)
     @Column(name = "inviteStatus", nullable = true, unique = false, updatable = true)
     private InviteStatusENUM inviteStatus;
 
+    /**
+     * Default constructor.
+     */
     public UserProjectEntity() {
     }
-
+    /**
+     * Returns the unique ID of this user project.
+     *
+     * @return the ID of this user project.
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * Sets the unique ID of this user project.
+     *
+     * @param id the new ID of this user project.
+     */
     public void setId(int id) {
         this.id = id;
     }
 
+    /**
+     * Returns the user associated with this user project.
+     *
+     * @return the user associated with this user project.
+     */
     public UserEntity getUser() {
         return user;
     }
 
+    /**
+     * Sets the user associated with this user project.
+     *
+     * @param user the new user associated with this user project.
+     */
     public void setUser(UserEntity user) {
         this.user = user;
     }
 
+    /**
+     * Returns the project associated with this user project.
+     *
+     * @return the project associated with this user project.
+     */
     public ProjectEntity getProject() {
         return project;
     }
 
+    /**
+     * Sets the project associated with this user project.
+     *
+     * @param project the new project associated with this user project.
+     */
     public void setProject(ProjectEntity project) {
         this.project = project;
     }
 
+    /**
+     * Returns the type of the user in the project.
+     *
+     * @return the type of the user in the project.
+     */
     public UserInProjectTypeENUM getType() {
         return type;
     }
 
+    /**
+     * Sets the type of the user in the project.
+     *
+     * @param type the new type of the user in the project.
+     */
     public void setType(UserInProjectTypeENUM type) {
         this.type = type;
     }
 
+    /**
+     * Returns the invite status of the user in the project.
+     *
+     * @return the invite status of the user in the project.
+     */
     public InviteStatusENUM getInviteStatus() {
         return inviteStatus;
     }
 
+    /**
+     * Sets the invite status of the user in the project.
+     *
+     * @param inviteStatus the new invite status of the user in the project.
+     */
     public void setInviteStatus(InviteStatusENUM inviteStatus) {
         this.inviteStatus = inviteStatus;
     }
