@@ -1,7 +1,7 @@
 package com.ilm.projecto_ilm_backend.entity;
 
-import com.ilm.projecto_ilm_backend.ENUMS.InviteStatusENUM;
 import com.ilm.projecto_ilm_backend.ENUMS.UserInProjectTypeENUM;
+import com.ilm.projecto_ilm_backend.ENUMS.ConvertersENUM.UserInProjectTypeEnumConverter;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -41,22 +41,16 @@ public class UserProjectEntity implements Serializable {
     /**
      * The type of the user in the project. This is an enumerated type.
      */
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = UserInProjectTypeEnumConverter.class)
     @Column(name = "type", nullable = false, unique = false, updatable = true)
     private UserInProjectTypeENUM type;
-
-    /**
-     * The invite status of the user in the project. This is an enumerated type.
-     */
-    @Enumerated(EnumType.STRING)
-    @Column(name = "inviteStatus", nullable = true, unique = false, updatable = true)
-    private InviteStatusENUM inviteStatus;
 
     /**
      * Default constructor.
      */
     public UserProjectEntity() {
     }
+
     /**
      * Returns the unique ID of this user project.
      *
@@ -127,23 +121,5 @@ public class UserProjectEntity implements Serializable {
      */
     public void setType(UserInProjectTypeENUM type) {
         this.type = type;
-    }
-
-    /**
-     * Returns the invite status of the user in the project.
-     *
-     * @return the invite status of the user in the project.
-     */
-    public InviteStatusENUM getInviteStatus() {
-        return inviteStatus;
-    }
-
-    /**
-     * Sets the invite status of the user in the project.
-     *
-     * @param inviteStatus the new invite status of the user in the project.
-     */
-    public void setInviteStatus(InviteStatusENUM inviteStatus) {
-        this.inviteStatus = inviteStatus;
     }
 }

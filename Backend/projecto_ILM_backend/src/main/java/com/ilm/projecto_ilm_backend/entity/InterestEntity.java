@@ -2,14 +2,15 @@ package com.ilm.projecto_ilm_backend.entity;
 
 import jakarta.persistence.*;
 import java.io.Serializable;
-import java.util.List;
-
 /**
  * The InterestEntity class represents the "interest" table in the database.
  * Each instance of this class corresponds to a single row in the table.
  */
 @Entity
 @Table(name="interest")
+@NamedQuery(name = "Interest.findById", query = "SELECT i FROM InterestEntity i WHERE i.id = :id")
+@NamedQuery(name = "Interest.findAll", query = "SELECT i FROM InterestEntity i")
+@NamedQuery(name = "Interest.countAll", query = "SELECT COUNT(i) FROM InterestEntity i")
 public class InterestEntity implements Serializable{
     private static final long serialVersionUID = 1L;
 
@@ -28,10 +29,10 @@ public class InterestEntity implements Serializable{
     private String name;
 
     /**
-     * The list of users associated with this interest. This is a many-to-many relationship.
+     * The deleted field of the interest. This is a boolean field in the "interest" table.
      */
-    @ManyToMany
-    private List<UserEntity> users;
+    @Column(name="isDeleted", nullable = false, unique = false, updatable = true)
+    private boolean deleted;
 
     /**
      * Default constructor.
@@ -69,5 +70,21 @@ public class InterestEntity implements Serializable{
      */
     public void setName(String name) {
         this.name = name;
+    }
+
+    /**
+     * Returns the deleted status of this interest.
+     * @return the deleted status of this interest.
+     */
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    /**
+     * Sets the deleted status of this interest.
+     * @param deleted the new deleted status of this interest.
+     */
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }

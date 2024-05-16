@@ -2,7 +2,7 @@ package com.ilm.projecto_ilm_backend.entity;
 
 import com.ilm.projecto_ilm_backend.ENUMS.WorkLocalENUM;
 import jakarta.persistence.*;
-
+import com.ilm.projecto_ilm_backend.ENUMS.ConvertersENUM.WorkLocalEnumConverter;
 import java.io.Serializable;
 
 /**
@@ -11,6 +11,7 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = "lab")
+@NamedQuery(name = "Lab.findByLocal", query = "SELECT l FROM LabEntity l WHERE l.local = :local")
 public class LabEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -25,7 +26,7 @@ public class LabEntity implements Serializable {
     /**
      * The local of the lab. This is an enumerated type.
      */
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = WorkLocalEnumConverter.class)
     @Column(name = "local", nullable = false, unique = true, updatable = true)
     private WorkLocalENUM local;
 

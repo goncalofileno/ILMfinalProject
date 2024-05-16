@@ -9,6 +9,8 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = "supplier")
+@NamedQuery(name = "Supplier.findByName", query = "SELECT s FROM SupplierEntity s WHERE s.name = :name")
+@NamedQuery(name = "Supplier.findById", query = "SELECT s FROM SupplierEntity s WHERE s.id = :id")
 public class SupplierEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;

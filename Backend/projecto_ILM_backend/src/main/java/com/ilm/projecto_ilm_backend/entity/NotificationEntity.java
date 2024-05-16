@@ -1,5 +1,6 @@
 package com.ilm.projecto_ilm_backend.entity;
 
+import com.ilm.projecto_ilm_backend.ENUMS.ConvertersENUM.NotificationTypeEnumConverter;
 import com.ilm.projecto_ilm_backend.ENUMS.NotificationTypeENUM;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -27,7 +28,7 @@ public class NotificationEntity implements Serializable {
     /**
      * The type of the notification. This is an enumerated type.
      */
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = NotificationTypeEnumConverter.class)
     @Column(name = "type", nullable = false, unique = false, updatable = false)
     private NotificationTypeENUM type;
 

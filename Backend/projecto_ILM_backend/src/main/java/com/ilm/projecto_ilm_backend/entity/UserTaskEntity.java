@@ -1,5 +1,6 @@
 package com.ilm.projecto_ilm_backend.entity;
 
+import com.ilm.projecto_ilm_backend.ENUMS.ConvertersENUM.UserInTaskTypeEnumConverter;
 import com.ilm.projecto_ilm_backend.ENUMS.UserInTaskTypeENUM;
 import jakarta.persistence.*;
 
@@ -40,7 +41,7 @@ public class UserTaskEntity implements Serializable {
     /**
      * The type of the user in the task. This is an enumerated type.
      */
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = UserInTaskTypeEnumConverter.class)
     @Column(name = "type", nullable = false, unique = false, updatable = true)
     private UserInTaskTypeENUM type;
 

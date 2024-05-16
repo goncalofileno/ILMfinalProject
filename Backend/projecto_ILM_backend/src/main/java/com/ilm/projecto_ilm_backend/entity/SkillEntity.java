@@ -1,6 +1,7 @@
 package com.ilm.projecto_ilm_backend.entity;
 
 import com.ilm.projecto_ilm_backend.ENUMS.SkillTypeENUM;
+import com.ilm.projecto_ilm_backend.ENUMS.ConvertersENUM.SkillTypeEnumConverter;
 import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.List;
@@ -11,6 +12,8 @@ import java.util.List;
  */
 @Entity
 @Table(name="skill")
+@NamedQuery(name = "Skill.findById", query = "SELECT s FROM SkillEntity s WHERE s.id = :id")
+@NamedQuery(name = "Skill.findAll", query = "SELECT s FROM SkillEntity s")
 public class SkillEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -19,7 +22,7 @@ public class SkillEntity implements Serializable {
      */
     @Id
     @GeneratedValue (strategy =  GenerationType.IDENTITY)
-    @Column(name="id", nullable = false,unique = true,updatable = false)
+    @Column(name="id", nullable = false, unique = true, updatable = false)
     private int id;
 
     /**
@@ -31,15 +34,15 @@ public class SkillEntity implements Serializable {
     /**
      * The type of the skill. This is an enumerated type.
      */
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = SkillTypeEnumConverter.class)
     @Column(name="type", nullable = false, unique = false, updatable = true)
     private SkillTypeENUM type;
 
     /**
-     * The users associated with the skill. This is a many-to-many relationship with the UserEntity class.
+     * The deleted status of the skill.
      */
-    @ManyToMany
-    private List<UserEntity> userWithSkill;
+    @Column(name="isDeleted", nullable = false, unique = false, updatable = true)
+    private boolean deleted;
 
     /**
      * Default constructor.
@@ -102,20 +105,20 @@ public class SkillEntity implements Serializable {
     }
 
     /**
-     * Returns the users associated with this skill.
+     * Returns the deleted status of this skill.
      *
-     * @return the users associated with this skill.
+     * @return the deleted status of this skill.
      */
-    public List<UserEntity> getUserWithSkill() {
-        return userWithSkill;
+    public boolean isDeleted() {
+        return deleted;
     }
 
     /**
-     * Sets the users associated with this skill.
+     * Sets the deleted status of this skill.
      *
-     * @param userWithSkill the new users associated with this skill.
+     * @param deleted the new deleted status of this skill.
      */
-    public void setUserWithSkill(List<UserEntity> userWithSkill) {
-        this.userWithSkill = userWithSkill;
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }

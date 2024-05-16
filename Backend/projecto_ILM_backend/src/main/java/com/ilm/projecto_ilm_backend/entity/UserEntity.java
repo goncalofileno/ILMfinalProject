@@ -1,7 +1,7 @@
 package com.ilm.projecto_ilm_backend.entity;
 
 import com.ilm.projecto_ilm_backend.ENUMS.UserTypeENUM;
-import com.ilm.projecto_ilm_backend.ENUMS.WorkLocalENUM;
+import com.ilm.projecto_ilm_backend.ENUMS.ConvertersENUM.UserTypeEnumConverter;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -14,7 +14,8 @@ import java.util.List;
  */
 @Entity
 @Table(name = "user")
-@NamedQuery(name = "User.findByUsername", query = "SELECT u FROM UserEntity u WHERE u.username = :username")
+@NamedQuery(name = "User.findByEmail", query = "SELECT u FROM UserEntity u WHERE u.email = :email")
+@NamedQuery(name = "User.findById", query = "SELECT u FROM UserEntity u WHERE u.id = :id")
 public class UserEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -60,7 +61,7 @@ public class UserEntity implements Serializable {
     /**
      * The type of the user. This is an enum field in the "user" table.
      */
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = UserTypeEnumConverter.class)
     @Column(name = "type", nullable = false, unique = false, updatable = true)
     private UserTypeENUM type;
 
@@ -111,6 +112,18 @@ public class UserEntity implements Serializable {
      */
     @Column(name = "tutorial", nullable = false, unique = false, updatable = true)
     private boolean tutorial;
+
+    /**
+     * The interests of the user. This is a many-to-many relationship.
+     */
+    @ManyToMany
+    private List<InterestEntity> interests;
+
+    /**
+     * The skills of the user. This is a many-to-many relationship.
+     */
+    @ManyToMany
+    private List<SkillEntity> skills;
 
     /**
      * The lab associated with the user. This is a many-to-one relationship.
@@ -458,5 +471,41 @@ public class UserEntity implements Serializable {
      */
     public void setUserTasks(List<UserTaskEntity> userTasks) {
         this.userTasks = userTasks;
+    }
+
+    /**
+     * Returns the interests of this user.
+     *
+     * @return the interests of this user.
+     */
+    public List<InterestEntity> getInterests() {
+        return interests;
+    }
+
+    /**
+     * Sets the interests of this user.
+     *
+     * @param interests the new interests of this user.
+     */
+    public void setInterests(List<InterestEntity> interests) {
+        this.interests = interests;
+    }
+
+    /**
+     * Returns the skills of this user.
+     *
+     * @return the skills of this user.
+     */
+    public List<SkillEntity> getSkills() {
+        return skills;
+    }
+
+    /**
+     * Sets the skills of this user.
+     *
+     * @param skills the new skills of this user.
+     */
+    public void setSkills(List<SkillEntity> skills) {
+        this.skills = skills;
     }
 }

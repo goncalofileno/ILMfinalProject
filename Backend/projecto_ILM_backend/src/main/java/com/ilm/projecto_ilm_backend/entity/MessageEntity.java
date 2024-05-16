@@ -67,6 +67,17 @@ public class MessageEntity implements Serializable {
     }
 
     /**
+     * Method to check the constraints before persisting or updating the entity.
+     */
+    @PrePersist
+    @PreUpdate
+    private void validateReceivers() {
+        if ((receiverUser == null && receiverProject == null) || (receiverUser != null && receiverProject != null)) {
+            throw new IllegalStateException("Message must have either a receiverUser or a receiverProject, but not both.");
+        }
+    }
+
+    /**
      * Returns the unique ID of this message.
      *
      * @return the ID of this message.

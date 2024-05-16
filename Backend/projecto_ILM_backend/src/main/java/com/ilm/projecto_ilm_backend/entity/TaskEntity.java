@@ -1,5 +1,6 @@
 package com.ilm.projecto_ilm_backend.entity;
 
+import com.ilm.projecto_ilm_backend.ENUMS.ConvertersENUM.TaskStatusEnumConverter;
 import com.ilm.projecto_ilm_backend.ENUMS.TaskStatusENUM;
 import jakarta.persistence.*;
 
@@ -40,7 +41,7 @@ public class TaskEntity implements Serializable {
     /**
      * The status of the task. This is an enumerated type.
      */
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = TaskStatusEnumConverter.class)
     @Column(name = "status", nullable = false, unique = false, updatable = true)
     private TaskStatusENUM status;
 

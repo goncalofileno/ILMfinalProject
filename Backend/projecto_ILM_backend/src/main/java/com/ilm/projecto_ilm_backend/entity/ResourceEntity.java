@@ -1,6 +1,7 @@
 package com.ilm.projecto_ilm_backend.entity;
 
 import com.ilm.projecto_ilm_backend.ENUMS.ResourceTypeENUM;
+import com.ilm.projecto_ilm_backend.ENUMS.ConvertersENUM.ResourceTypeEnumConverter;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -12,6 +13,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "resources")
+@NamedQuery(name = "Resource.findById", query = "SELECT r FROM ResourceEntity r WHERE r.id = :id")
 public class ResourceEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -26,7 +28,7 @@ public class ResourceEntity implements Serializable {
     /**
      * The type of the resource. This is an enumerated type.
      */
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = ResourceTypeEnumConverter.class)
     @Column(name = "type", nullable = false, unique = false, updatable = true)
     private ResourceTypeENUM type;
 
@@ -263,5 +265,6 @@ public class ResourceEntity implements Serializable {
     public void setSupplier(List<SupplierEntity> supplier) {
         this.supplier = supplier;
     }
+
 
 }

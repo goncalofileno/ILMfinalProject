@@ -23,6 +23,7 @@ public class UserDao extends AbstractDao<UserEntity> {
 
     /**
      * Merges the state of the given user into the current persistence context.
+     *
      * @param user the user to be merged.
      */
     @Transactional
@@ -38,13 +39,36 @@ public class UserDao extends AbstractDao<UserEntity> {
     }
 
     /**
-     * Finds a user by username.
-     * @param username the username of the user to find.
-     * @return the user with the given username, or null if no such user exists.
+     * Finds a user by the given email.
+     *
+     * @param email the email of the user to be found.
+     *              The email is unique for each user.
+     *              It is used to identify the user.
+     *              It is a string.
      */
-    public UserEntity findByUsername(String username) {
+    public UserEntity findByEmail(String email) {
         try {
-            return em.createNamedQuery("User.findByUsername", UserEntity.class).setParameter("username", username).getSingleResult();
+            return em.createNamedQuery("User.findByEmail", UserEntity.class).setParameter("email", email)
+                    .getSingleResult();
+
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * Finds a user by the given id.
+     *
+     * @param id the id of the user to be found.
+     *           The id is unique for each user.
+     *           It is used to identify the user.
+     *           It is an integer.
+     */
+    public UserEntity findById(int id) {
+        try {
+            return em.createNamedQuery("User.findById", UserEntity.class).setParameter("id", id)
+                    .getSingleResult();
+
         } catch (Exception e) {
             return null;
         }

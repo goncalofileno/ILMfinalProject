@@ -1,7 +1,11 @@
 package com.ilm.projecto_ilm_backend.entity;
 
+import com.ilm.projecto_ilm_backend.ENUMS.ConvertersENUM.StateProjectEnumConverter;
+import com.ilm.projecto_ilm_backend.ENUMS.ConvertersENUM.TaskStatusEnumConverter;
 import com.ilm.projecto_ilm_backend.ENUMS.LogTypeENUM;
+import com.ilm.projecto_ilm_backend.ENUMS.ConvertersENUM.LogTypeEnumConverter;
 import com.ilm.projecto_ilm_backend.ENUMS.TaskStatusENUM;
+import com.ilm.projecto_ilm_backend.ENUMS.StateProjectENUM;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
@@ -41,7 +45,7 @@ public class LogEntity implements Serializable {
     /**
      * The type of the log entry. This is an enumerated type.
      */
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = LogTypeEnumConverter.class)
     @Column(name = "type", nullable = false, unique = false, updatable = false)
     private LogTypeENUM type;
 
@@ -54,16 +58,30 @@ public class LogEntity implements Serializable {
     /**
      * The old status of the task associated with the log entry. This is an enumerated type.
      */
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = TaskStatusEnumConverter.class)
     @Column(name = "taskOldStatus", nullable = true, unique = false, updatable = false)
     private TaskStatusENUM taskOldStatus;
 
     /**
      * The new status of the task associated with the log entry. This is an enumerated type.
      */
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = TaskStatusEnumConverter.class)
     @Column(name = "taskNewStatus", nullable = true, unique = false, updatable = false)
     private TaskStatusENUM taskNewStatus;
+
+    /**
+     * The old state of the project associated with the log entry. This is an enumerated type.
+     */
+    @Convert(converter = StateProjectEnumConverter.class)
+    @Column(name = "projectOldState", nullable = true, unique = false, updatable = false)
+    private StateProjectENUM projectOldState;
+
+    /**
+     * The new state of the project associated with the log entry. This is an enumerated type.
+     */
+    @Convert(converter = StateProjectEnumConverter.class)
+    @Column(name = "projectNewState", nullable = true, unique = false, updatable = false)
+    private StateProjectENUM projectNewState;
 
     /**
      * The name of the resource associated with the log entry.
@@ -95,6 +113,55 @@ public class LogEntity implements Serializable {
      * Default constructor.
      */
     public LogEntity() {
+    }
+
+    /**
+     * Method to check the constraints before persisting or updating the entity.
+     */
+    @PrePersist
+    @PreUpdate
+    private void validateLogEntry() {
+        switch (this.type) {
+            case MEMBERS:
+                if (receiver == null || taskTitle != null || taskOldStatus != null || taskNewStatus != null || resourceName != null || resourceStock != 0) {
+                    throw new IllegalStateException("For MEMBERS log type: receiver must not be null and all task/resource fields must be null.");
+                }
+                break;
+            case TASKS_CREATED:
+                if (taskTitle == null || receiver != null || taskOldStatus != null || taskNewStatus != null || resourceName != null || resourceStock != 0) {
+                    throw new IllegalStateException("For TASKS_CREATED log type: taskTitle must not be null and all other fields must be null.");
+                }
+                break;
+            case TASKS_COMPLETED:
+            case TASKS_IN_PROGRESS:
+                if (taskTitle == null || taskOldStatus == null || taskNewStatus == null || receiver != null || resourceName != null || resourceStock != 0) {
+                    throw new IllegalStateException("For TASKS_COMPLETED or TASKS_IN_PROGRESS log types: taskTitle, taskOldStatus, and taskNewStatus must not be null, and all other fields must be null.");
+                }
+                break;
+            case TASKS_DELETED:
+            case TASKS_UPDATED:
+                if (taskTitle == null || receiver != null || taskOldStatus != null || taskNewStatus != null || resourceName != null || resourceStock != 0) {
+                    throw new IllegalStateException("For TASKS_DELETED or TASKS_UPDATED log types: taskTitle must not be null and all other fields must be null.");
+                }
+                break;
+            case PROJECT_INFO_UPDATED:
+                if (receiver != null || taskTitle != null || taskOldStatus != null || taskNewStatus != null || resourceName != null || resourceStock != 0 || projectOldState != null || projectNewState != null) {
+                    throw new IllegalStateException("For PROJECT_INFO_UPDATED log type: all fields must be null.");
+                }
+                break;
+            case PROJECT_STATUS_UPDATED:
+                if (projectOldState == null || projectNewState == null || receiver != null || taskTitle != null || taskOldStatus != null || taskNewStatus != null || resourceName != null || resourceStock != 0) {
+                    throw new IllegalStateException("For PROJECT_STATUS_UPDATED log type: projectOldState and projectNewState must not be null and all other fields must be null.");
+                }
+                break;
+            case RESOURCES_ADDED:
+                if (resourceName == null || resourceStock == 0 || receiver != null || taskTitle != null || taskOldStatus != null || taskNewStatus != null || projectOldState != null || projectNewState != null) {
+                    throw new IllegalStateException("For RESOURCES_ADDED log type: resourceName and resourceStock must not be null and all other fields must be null.");
+                }
+                break;
+            default:
+                throw new IllegalStateException("Unknown log type: " + this.type);
+        }
     }
 
     /**
@@ -221,6 +288,42 @@ public class LogEntity implements Serializable {
      */
     public void setTaskNewStatus(TaskStatusENUM taskNewStatus) {
         this.taskNewStatus = taskNewStatus;
+    }
+
+    /**
+     * Returns the old state of the project associated with this log entry.
+     *
+     * @return the old state of the project.
+     */
+    public StateProjectENUM getProjectOldState() {
+        return projectOldState;
+    }
+
+    /**
+     * Sets the old state of the project associated with this log entry.
+     *
+     * @param projectOldState the new old state of the project.
+     */
+    public void setProjectOldState(StateProjectENUM projectOldState) {
+        this.projectOldState = projectOldState;
+    }
+
+    /**
+     * Returns the new state of the project associated with this log entry.
+     *
+     * @return the new state of the project.
+     */
+    public StateProjectENUM getProjectNewState() {
+        return projectNewState;
+    }
+
+    /**
+     * Sets the new state of the project associated with this log entry.
+     *
+     * @param projectNewState the new state of the project.
+     */
+    public void setProjectNewState(StateProjectENUM projectNewState) {
+        this.projectNewState = projectNewState;
     }
 
     /**

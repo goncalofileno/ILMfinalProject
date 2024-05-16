@@ -20,11 +20,44 @@ public class StartupBean {
     UserBean userBean;
 
     /**
+     * The LabBean instance used for managing LabEntity instances.
+     */
+    @Inject
+    LabBean labBean;
+
+    /**
+     * The InterestBean instance used for managing InterestEntity instances.
+     */
+    @Inject
+    InterestBean interestBean;
+
+    /**
+     * The SkillBean instance used for managing SkillEntity instances.
+     */
+    @Inject
+    SkillBean skillBean;
+
+    /**
+     * The SupplierBean instance used for managing SupplierEntity instances.
+     */
+    @Inject
+    SupplierBean supplierBean;
+
+    @Inject
+    ResourceBean resourceBean;
+
+    /**
      * This method is called after the bean is constructed and dependency injection is complete.
-     * It creates default users if they do not exist.
+     * It creates default users, labs, interests, skills, suppliers, resources if they do not exist.
      */
     @PostConstruct
     public void init() {
+        labBean.createDefaultLabsIfNotExistent();
+        skillBean.createDefaultSkillsIfNotExistent();
+        interestBean.createDefaultInterestsIfNotExistent();
+        supplierBean.createDefaultSuppliersIfNotExistent();
+        resourceBean.createDefaultResourcesIfNotExistent();
+
         userBean.createDefaultUsersIfNotExistent();
     }
 }

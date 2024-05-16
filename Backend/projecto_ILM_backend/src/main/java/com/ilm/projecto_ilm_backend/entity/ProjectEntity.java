@@ -2,17 +2,20 @@ package com.ilm.projecto_ilm_backend.entity;
 
 import com.ilm.projecto_ilm_backend.ENUMS.StateProjectENUM;
 import jakarta.persistence.*;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import com.ilm.projecto_ilm_backend.ENUMS.ConvertersENUM.StateProjectEnumConverter;
 
 /**
  * The ProjectEntity class represents the "project" table in the database.
  * Each instance of this class corresponds to a single row in the table.
  */
 @Entity
-@Table(name="project")
-public class ProjectEntity implements Serializable{
+@Table(name = "project")
+public class ProjectEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -20,56 +23,57 @@ public class ProjectEntity implements Serializable{
      * The unique ID of the project. This is the primary key in the "project" table.
      */
     @Id
-    @GeneratedValue (strategy =  GenerationType.IDENTITY)
-    @Column(name="id", nullable = false,unique = true,updatable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false, unique = true, updatable = false)
     private int id;
 
     /**
      * The title of the project.
      */
-    @Column(name="title", nullable = false, unique = true, updatable = true)
+    @Column(name = "title", nullable = false, unique = true, updatable = true)
     private String title;
 
     /**
      * The description of the project.
      */
-    @Column(name="description", nullable = false, unique = false, updatable = true)
+    @Column(name = "description", nullable = false, unique = false, updatable = true)
     private String description;
 
     /**
      * The start date of the project.
      */
-    @Column(name="startDate", nullable = false, unique = false, updatable = true)
+    @Column(name = "startDate", nullable = false, unique = false, updatable = true)
     private LocalDateTime startDate;
 
     /**
      * The end date of the project.
      */
-    @Column(name="endDate", nullable = false, unique = false, updatable = true)
+    @Column(name = "endDate", nullable = false, unique = false, updatable = true)
     private LocalDateTime endDate;
 
     /**
      * The status of the project. This is an enumerated type.
      */
-    @Column(name="status", nullable = false, unique = false, updatable = true)
+    @Convert(converter = StateProjectEnumConverter.class)
+    @Column(name = "status", nullable = false, unique = false, updatable = true)
     private StateProjectENUM status;
 
     /**
      * The motivation of the project.
      */
-    @Column(name="motivation", nullable = false, unique = false, updatable = true)
+    @Column(name = "motivation", nullable = false, unique = false, updatable = true)
     private String motivation;
 
     /**
      * The maximum number of members in the project.
      */
-    @Column(name="maxMembers", nullable = false, unique = false, updatable = true)
+    @Column(name = "maxMembers", nullable = false, unique = false, updatable = true)
     private int maxMembers;
 
     /**
      * The photo of the project.
      */
-    @Column(name="photo", nullable = false, unique = false, updatable = true)
+    @Column(name = "photo", nullable = false, unique = false, updatable = true)
     private String photo;
 
     /**
@@ -81,7 +85,7 @@ public class ProjectEntity implements Serializable{
     /**
      * The deleted status of the project.
      */
-    @Column(name="deleted", nullable = false, unique = false, updatable = true)
+    @Column(name = "deleted", nullable = false, unique = false, updatable = true)
     private boolean deleted;
 
     /**
@@ -110,6 +114,7 @@ public class ProjectEntity implements Serializable{
 
     /**
      * Returns the unique ID of this project.
+     *
      * @return the ID of this project.
      */
     public int getId() {
@@ -118,6 +123,7 @@ public class ProjectEntity implements Serializable{
 
     /**
      * Sets the unique ID of this project.
+     *
      * @param id the new ID of this project.
      */
     public void setId(int id) {
@@ -126,6 +132,7 @@ public class ProjectEntity implements Serializable{
 
     /**
      * Returns the title of this project.
+     *
      * @return the title of this project.
      */
     public String getTitle() {
@@ -134,6 +141,7 @@ public class ProjectEntity implements Serializable{
 
     /**
      * Sets the title of this project.
+     *
      * @param title the new title of this project.
      */
     public void setTitle(String title) {
@@ -142,6 +150,7 @@ public class ProjectEntity implements Serializable{
 
     /**
      * Returns the description of this project.
+     *
      * @return the description of this project.
      */
     public String getDescription() {
@@ -150,6 +159,7 @@ public class ProjectEntity implements Serializable{
 
     /**
      * Sets the description of this project.
+     *
      * @param description the new description of this project.
      */
     public void setDescription(String description) {
@@ -158,6 +168,7 @@ public class ProjectEntity implements Serializable{
 
     /**
      * Returns the start date of this project.
+     *
      * @return the start date of this project.
      */
     public LocalDateTime getStartDate() {
@@ -166,6 +177,7 @@ public class ProjectEntity implements Serializable{
 
     /**
      * Sets the start date of this project.
+     *
      * @param startDate the new start date of this project.
      */
     public void setStartDate(LocalDateTime startDate) {
@@ -174,6 +186,7 @@ public class ProjectEntity implements Serializable{
 
     /**
      * Returns the end date of this project.
+     *
      * @return the end date of this project.
      */
     public LocalDateTime getEndDate() {
@@ -182,6 +195,7 @@ public class ProjectEntity implements Serializable{
 
     /**
      * Sets the end date of this project.
+     *
      * @param endDate the new end date of this project.
      */
     public void setEndDate(LocalDateTime endDate) {
@@ -190,6 +204,7 @@ public class ProjectEntity implements Serializable{
 
     /**
      * Returns the status of this project.
+     *
      * @return the status of this project.
      */
     public StateProjectENUM getStatus() {
@@ -198,6 +213,7 @@ public class ProjectEntity implements Serializable{
 
     /**
      * Sets the status of this project.
+     *
      * @param status the new status of this project.
      */
     public void setStatus(StateProjectENUM status) {
@@ -206,6 +222,7 @@ public class ProjectEntity implements Serializable{
 
     /**
      * Returns the motivation of this project.
+     *
      * @return the motivation of this project.
      */
     public String getMotivation() {
@@ -214,6 +231,7 @@ public class ProjectEntity implements Serializable{
 
     /**
      * Sets the motivation of this project.
+     *
      * @param motivation the new motivation of this project.
      */
     public void setMotivation(String motivation) {
@@ -222,6 +240,7 @@ public class ProjectEntity implements Serializable{
 
     /**
      * Returns the maximum number of members in this project.
+     *
      * @return the maximum number of members in this project.
      */
     public int getMaxMembers() {
@@ -230,6 +249,7 @@ public class ProjectEntity implements Serializable{
 
     /**
      * Sets the maximum number of members in this project.
+     *
      * @param maxMembers the new maximum number of members in this project.
      */
     public void setMaxMembers(int maxMembers) {
@@ -238,6 +258,7 @@ public class ProjectEntity implements Serializable{
 
     /**
      * Returns the photo of this project.
+     *
      * @return the photo of this project.
      */
     public String getPhoto() {
@@ -246,6 +267,7 @@ public class ProjectEntity implements Serializable{
 
     /**
      * Sets the photo of this project.
+     *
      * @param photo the new photo of this project.
      */
     public void setPhoto(String photo) {
@@ -254,6 +276,7 @@ public class ProjectEntity implements Serializable{
 
     /**
      * Returns the lab associated with this project.
+     *
      * @return the lab associated with this project.
      */
     public LabEntity getLab() {
@@ -262,6 +285,7 @@ public class ProjectEntity implements Serializable{
 
     /**
      * Sets the lab associated with this project.
+     *
      * @param lab the new lab associated with this project.
      */
     public void setLab(LabEntity lab) {
@@ -270,6 +294,7 @@ public class ProjectEntity implements Serializable{
 
     /**
      * Returns the deleted status of this project.
+     *
      * @return true if the project is deleted, false otherwise.
      */
     public boolean isDeleted() {
@@ -278,6 +303,7 @@ public class ProjectEntity implements Serializable{
 
     /**
      * Sets the deleted status of this project.
+     *
      * @param deleted the new deleted status of this project.
      */
     public void setDeleted(boolean deleted) {
@@ -286,6 +312,7 @@ public class ProjectEntity implements Serializable{
 
     /**
      * Returns the resources associated with this project.
+     *
      * @return the resources associated with this project.
      */
     public List<ProjectResourceEntity> getProjectResources() {
@@ -294,6 +321,7 @@ public class ProjectEntity implements Serializable{
 
     /**
      * Sets the resources associated with this project.
+     *
      * @param projectResources the new resources associated with this project.
      */
     public void setProjectResources(List<ProjectResourceEntity> projectResources) {
@@ -302,6 +330,7 @@ public class ProjectEntity implements Serializable{
 
     /**
      * Returns the users associated with this project.
+     *
      * @return the users associated with this project.
      */
     public List<UserProjectEntity> getUserProjects() {
@@ -310,6 +339,7 @@ public class ProjectEntity implements Serializable{
 
     /**
      * Sets the users associated with this project.
+     *
      * @param userProjects the new users associated with this project.
      */
     public void setUserProjects(List<UserProjectEntity> userProjects) {
@@ -318,6 +348,7 @@ public class ProjectEntity implements Serializable{
 
     /**
      * Returns the skills associated with this project.
+     *
      * @return the skills associated with this project.
      */
     public List<SkillEntity> getSkillInProject() {
@@ -326,6 +357,7 @@ public class ProjectEntity implements Serializable{
 
     /**
      * Sets the skills associated with this project.
+     *
      * @param skillInProject the new skills associated with this project.
      */
     public void setSkillInProject(List<SkillEntity> skillInProject) {
