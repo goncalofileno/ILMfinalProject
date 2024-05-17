@@ -89,17 +89,23 @@
 }
 
 .background-img-container {
-   height: 100%;
+   width: 40%;
+   height: 94vh;
    display: flex;
+   z-index: -1;
+   position: absolute;
+   align-items: flex-end;
+   margin-left: 30px;
+   margin-top: 6vh;
 }
 .background-img-app {
    background-image: url("../../../../Resources/background-img-app-png.png");
    background-size: cover;
    background-repeat: no-repeat;
    background-position: center;
-   height: 96%;
-   width: 96%;
-   margin-left: 20px;
+   height: 85%;
+   width: 80%;
+   transform: translate(0, 5vh);
 }
 
 #projects-title {

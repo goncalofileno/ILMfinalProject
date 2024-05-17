@@ -21,6 +21,9 @@ function App() {
    return (
       <>
          <LoginHeader />
+         <div className="background-img-container">
+            <div className="background-img-app"></div>
+         </div>
          <div className="flex-column" ref={loginRef}>
             <div className="flex-row" id="row-img-description-title">
                <div className="flex-column" id="img-description-app">
@@ -28,11 +31,7 @@ function App() {
                      Where Ideas <span>Take Flight</span>
                   </h1>
                   <div className="flex-row" id="row-img-description">
-                     <div className="space-after-table">
-                        <div className="background-img-container">
-                           <div className="background-img-app"></div>
-                        </div>
-                     </div>
+                     <div className="space-after-table"></div>
                      <div className="ilm-description-login-register">
                         <div>
                            Welcome to our Innovation Lab Management app, where creativity meets collaboration and ideas
