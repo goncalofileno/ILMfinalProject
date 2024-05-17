@@ -1,6 +1,7 @@
 .inputForm {
    display: flex;
    flex-direction: column;
+   gap: 10px;
 }
 
 .inputForm input {
@@ -15,4 +16,23 @@
 .inputForm input:focus {
    outline: none;
    border-color: rgb(192, 23, 34);
+}
+
+.required-field-inputForm {
+   color: rgb(192, 23, 34);
+   font-size: 12px;
+}
+
+.inputForm label {
+   font-size: 18px;
+}
+
+.inputForm input {
+   font-size: 16px;
+}
+
+.input-div {
+   display: flex;
+   flex-direction: column;
+   gap: 4px;
 }

@@ -1,0 +1,15 @@
+.ilm-headers {
+   background-color: rgb(192, 23, 34);
+   position: fixed;
+   width: 100%;
+   padding: 7px 20px;
+   z-index: 1000;
+}
+
+.logo {
+   height: 48px;
+   width: 45px;
+   background-image: url("../../../../Resources/logo.png");
+   background-size: cover;
+   background-position: center;
+}

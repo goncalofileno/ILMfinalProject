@@ -1,0 +1,20 @@
+#login-buttons {
+   display: flex;
+   flex-direction: row;
+   width: 100%;
+   gap: 27px;
+}
+
+#login-buttons button {
+   width: 47%;
+}
+
+#forgot-pass-div {
+   text-align: right;
+   color: rgb(192, 23, 34);
+   cursor: pointer;
+}
+
+#forgot-pass-div:hover {
+   text-decoration: underline;
+}

@@ -1,0 +1,50 @@
+.ilm-card {
+   width: 35vh;
+   height: 30vh;
+   padding: 25px 20px;
+   color: rgb(60, 60, 60);
+   font-size: 21px;
+}
+
+.description-cards {
+   font-size: 15px;
+   color: rgb(100, 100, 100);
+   margin-top: 2vh;
+}
+
+.more-details-cards {
+   font-size: 14px;
+   color: rgb(100, 100, 100);
+   margin-top: 4vh;
+   font-weight: bold;
+   cursor: pointer;
+}
+
+.more-details-cards:hover {
+   color: rgb(192, 23, 34);
+}
+
+.margin-left-arrow {
+   margin-left: 10px;
+   transition: all 0.5s cubic-bezier(0.215, 0.61, 0.355, 1) 0s;
+}
+
+.more-details-cards:hover .margin-left-arrow {
+   transform: translate(0px, -10px);
+   transition: all 0.5s cubic-bezier(0.215, 0.61, 0.355, 1) 0s;
+}
+.card-bkg-color1 {
+   background: linear-gradient(56.26deg, rgba(60, 60, 60, 0.2) 0%, rgba(60, 60, 60, 0.05) 100%), rgb(255, 255, 255);
+}
+
+.card-bkg-color2 {
+   background: linear-gradient(56.26deg, rgba(192, 23, 34, 0.2) 0%, rgba(192, 23, 34, 0.05) 100%), rgb(255, 255, 255);
+}
+
+.card-bkg-color3 {
+   background: linear-gradient(56.26deg, rgba(29, 110, 0, 0.2) 0%, rgba(26, 192, 23, 0.05) 100%), rgb(255, 255, 255);
+}
+
+.card-bkg-color4 {
+   background: linear-gradient(56.26deg, rgba(7, 0, 110, 0.2) 0%, rgba(34, 23, 192, 0.05) 100%), rgb(255, 255, 255);
+}
