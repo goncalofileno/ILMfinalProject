@@ -103,8 +103,8 @@
    background-size: cover;
    background-repeat: no-repeat;
    background-position: center;
-   height: 85%;
-   width: 80%;
+   height: 35vw;
+   width: 30vw;
    transform: translate(0, 5vh);
 }
 
