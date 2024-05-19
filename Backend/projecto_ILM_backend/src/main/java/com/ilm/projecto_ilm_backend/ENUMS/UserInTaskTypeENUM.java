@@ -4,6 +4,7 @@ package com.ilm.projecto_ilm_backend.ENUMS;
  * Enum representing different types of user roles in a task.
  */
 public enum UserInTaskTypeENUM {
+
     /**
      * Creator role.
      * Represented by the integer value 0.
@@ -14,7 +15,19 @@ public enum UserInTaskTypeENUM {
      * Member role.
      * Represented by the integer value 1.
      */
-    MEMBER(1);
+    MEMBER(1),
+
+    /**
+     * Creator in charge role.
+     * Represented by the integer value 2.
+     */
+    CREATOR_INCHARGE(2),
+
+    /**
+     * Member in charge role.
+     * Represented by the integer value 3.
+     */
+    INCHARGE(3);
 
     private final int intValue;
 

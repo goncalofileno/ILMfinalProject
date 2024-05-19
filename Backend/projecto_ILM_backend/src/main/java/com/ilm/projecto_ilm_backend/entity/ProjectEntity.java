@@ -30,8 +30,8 @@ public class ProjectEntity implements Serializable {
     /**
      * The title of the project.
      */
-    @Column(name = "title", nullable = false, unique = true, updatable = true)
-    private String title;
+    @Column(name = "name", nullable = false, unique = true, updatable = true)
+    private String name;
 
     /**
      * The description of the project.
@@ -44,6 +44,12 @@ public class ProjectEntity implements Serializable {
      */
     @Column(name = "startDate", nullable = false, unique = false, updatable = true)
     private LocalDateTime startDate;
+
+    /**
+     * The end initial date of the project.
+     */
+    @Column(name = "initialDate", nullable = false, unique = false, updatable = true)
+    private LocalDateTime initialDate;
 
     /**
      * The end date of the project.
@@ -77,6 +83,12 @@ public class ProjectEntity implements Serializable {
     private String photo;
 
     /**
+     * The reason of cancel the project.
+     */
+    @Column(name = "reason", nullable = true, unique = false, updatable = true)
+    private String reason;
+
+    /**
      * The lab associated with the project. This is a many-to-one relationship with the LabEntity class.
      */
     @ManyToOne
@@ -87,6 +99,9 @@ public class ProjectEntity implements Serializable {
      */
     @Column(name = "deleted", nullable = false, unique = false, updatable = true)
     private boolean deleted;
+
+    @Column(name = "keywords", nullable = false, unique = false, updatable = true)
+    private String keywords;
 
     /**
      * The resources associated with the project. This is a one-to-many relationship with the ProjectResourceEntity class.
@@ -131,21 +146,21 @@ public class ProjectEntity implements Serializable {
     }
 
     /**
-     * Returns the title of this project.
+     * Returns the name of this project.
      *
-     * @return the title of this project.
+     * @return the name of this project.
      */
-    public String getTitle() {
-        return title;
+    public String getName() {
+        return name;
     }
 
     /**
-     * Sets the title of this project.
+     * Sets the name of this project.
      *
-     * @param title the new title of this project.
+     * @param name the new name of this project.
      */
-    public void setTitle(String title) {
-        this.title = title;
+    public void setName(String name) {
+        this.name = name;
     }
 
     /**
@@ -164,6 +179,24 @@ public class ProjectEntity implements Serializable {
      */
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    /**
+     * Returns the initial date of this project.
+     *
+     * @return the initial date of this project.
+     */
+    public LocalDateTime getInitialDate() {
+        return initialDate;
+    }
+
+    /**
+     * Sets the initial date of this project.
+     *
+     * @param initialDate the new initial date of this project.
+     */
+    public void setInitialDate(LocalDateTime initialDate) {
+        this.initialDate = initialDate;
     }
 
     /**
@@ -275,6 +308,24 @@ public class ProjectEntity implements Serializable {
     }
 
     /**
+     * Returns the reason of this project.
+     *
+     * @return the reason of this project.
+     */
+    public String getReason() {
+        return reason;
+    }
+
+    /**
+     * Sets the reason of this project.
+     *
+     * @param reason the new reason of this project.
+     */
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
+
+    /**
      * Returns the lab associated with this project.
      *
      * @return the lab associated with this project.
@@ -308,6 +359,24 @@ public class ProjectEntity implements Serializable {
      */
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    /**
+     * Returns the keywords of this project.
+     *
+     * @return the keywords of this project.
+     */
+    public String getKeywords() {
+        return keywords;
+    }
+
+    /**
+     * Sets the keywords of this project.
+     *
+     * @param keywords the new keywords of this project.
+     */
+    public void setKeywords(String keywords) {
+        this.keywords = keywords;
     }
 
     /**

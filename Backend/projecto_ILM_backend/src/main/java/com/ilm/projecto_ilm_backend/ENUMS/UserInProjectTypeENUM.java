@@ -26,7 +26,13 @@ public enum UserInProjectTypeENUM {
      * Pending role.
      * Represented by the integer value 3.
      */
-    PENDING(3);
+    PENDING(3),
+
+    /**
+     * Exmember role.
+     * Represented by the integer value 4.
+     */
+    EXMEMBER(4);
 
 
     private final int intValue;

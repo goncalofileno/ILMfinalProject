@@ -25,6 +25,13 @@ public class UserTaskEntity implements Serializable {
     private int id;
 
     /**
+     * The type of the user in the task. This is an enumerated type.
+     */
+    @Convert(converter = UserInTaskTypeEnumConverter.class)
+    @Column(name = "type", nullable = false, unique = false, updatable = true)
+    private UserInTaskTypeENUM type;
+
+    /**
      * The user associated with this user task. This is a many-to-one relationship with the UserEntity class.
      */
     @ManyToOne
@@ -37,13 +44,6 @@ public class UserTaskEntity implements Serializable {
     @ManyToOne
     @JoinColumn(name = "task_id")
     private TaskEntity task;
-
-    /**
-     * The type of the user in the task. This is an enumerated type.
-     */
-    @Convert(converter = UserInTaskTypeEnumConverter.class)
-    @Column(name = "type", nullable = false, unique = false, updatable = true)
-    private UserInTaskTypeENUM type;
 
     /**
      * Default constructor.
