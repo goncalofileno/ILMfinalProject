@@ -6,12 +6,17 @@ import com.ilm.projecto_ilm_backend.dao.InterestDao;
 import com.ilm.projecto_ilm_backend.dao.LabDao;
 import com.ilm.projecto_ilm_backend.dao.SkillDao;
 import com.ilm.projecto_ilm_backend.dao.UserDao;
+import com.ilm.projecto_ilm_backend.dto.RegisterUserDto;
 import com.ilm.projecto_ilm_backend.entity.InterestEntity;
 import com.ilm.projecto_ilm_backend.entity.LabEntity;
 import com.ilm.projecto_ilm_backend.entity.SkillEntity;
 import com.ilm.projecto_ilm_backend.entity.UserEntity;
+import com.ilm.projecto_ilm_backend.service.UserService;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.ApplicationScoped;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -116,6 +121,35 @@ public class UserBean {
             user.setProfileCreated(false);
             user.setDeleted(false);
             user.setTutorial(false);
+        }
+    }
+
+    /**
+     * Registers a new user.
+     *
+     * @param registerUserDto the DTO containing user registration details
+     * @return true if the user was successfully registered, false otherwise
+     */
+    public boolean registerUser(RegisterUserDto registerUserDto) {
+        try {
+            UserEntity user = new UserEntity();
+            user.setEmail(registerUserDto.getMail());
+            user.setPassword(registerUserDto.getPassword());
+            user.setMailConfirmed(false);
+            user.setProfileCreated(false);
+            user.setDeleted(false);
+            user.setTutorial(false);
+            user.setRegistrationDate(LocalDateTime.now());
+            user.setType(UserTypeENUM.STANDARD_USER);
+            user.setPhoto("https://www.pngkey.com/png/full/114-1149878_setting-user-avatar-in-specific-size-without-breaking.png");
+
+            userDao.persist(user);
+            return true;
+        } catch (Exception e) {
+            // Log the exception
+            Logger logger = LogManager.getLogger(UserService.class);
+            logger.error("Error persisting user: ", e);
+            return false;
         }
     }
 }

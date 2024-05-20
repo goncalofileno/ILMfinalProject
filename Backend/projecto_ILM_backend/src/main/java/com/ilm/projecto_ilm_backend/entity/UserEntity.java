@@ -31,7 +31,7 @@ public class UserEntity implements Serializable {
     /**
      * The username of the user. This is a unique field in the "user" table.
      */
-    @Column(name = "username", nullable = false, unique = true, updatable = true)
+    @Column(name = "username", nullable = true, unique = true, updatable = true)
     private String username;
 
     /**
@@ -49,13 +49,13 @@ public class UserEntity implements Serializable {
     /**
      * The first name of the user.
      */
-    @Column(name = "firstName", nullable = false, unique = false, updatable = true)
+    @Column(name = "firstName", nullable = true, unique = false, updatable = true)
     private String firstName;
 
     /**
      * The last name of the user.
      */
-    @Column(name = "lastName", nullable = false, unique = false, updatable = true)
+    @Column(name = "lastName", nullable = true, unique = false, updatable = true)
     private String lastName;
 
     /**
