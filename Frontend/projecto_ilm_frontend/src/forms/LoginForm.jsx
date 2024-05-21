@@ -1,11 +1,13 @@
 import InputForm from "../inputs/InputForm";
 import "./LoginForm.css";
 import { useNavigate } from "react-router-dom";
+import { useMediaQuery } from "react-responsive";
 
 export default function LoginForm() {
    const navigate = useNavigate();
+   const isPhone = useMediaQuery({ maxWidth: 576 });
    return (
-      <div className="login-register-form-container">
+      <div className="login-register-form-container" style={{ marginTop: isPhone && "6vh" }}>
          <form className="ilm-form login-register-form">
             <div className="form-content">
                <div className="form-title" id="login-form-title">

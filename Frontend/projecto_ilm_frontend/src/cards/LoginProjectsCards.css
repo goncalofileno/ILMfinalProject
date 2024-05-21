@@ -1,21 +1,22 @@
 .ilm-card {
-   width: 35vh;
-   height: 30vh;
-   padding: 25px 20px;
+   width: 90%;
+   padding: 20px 20px;
    color: rgb(60, 60, 60);
    font-size: 21px;
+   border-radius: 15px;
+   padding-bottom: 15px;
 }
 
 .description-cards {
    font-size: 15px;
    color: rgb(100, 100, 100);
-   margin-top: 2vh;
+   margin-top: calc(1.1 * var(--vh));
 }
 
 .more-details-cards {
    font-size: 14px;
    color: rgb(100, 100, 100);
-   margin-top: 4vh;
+   margin-top: calc(2 * var(--vh));
    font-weight: bold;
    cursor: pointer;
 }
@@ -47,4 +48,8 @@
 
 .card-bkg-color4 {
    background: linear-gradient(56.26deg, rgba(7, 0, 110, 0.2) 0%, rgba(34, 23, 192, 0.05) 100%), rgb(255, 255, 255);
+}
+
+.cards-title {
+   text-wrap: nowrap;
 }

@@ -2,7 +2,15 @@
    display: flex;
    flex-direction: column;
    gap: 20px;
-   width: 70%;
+   width: 95%;
+}
+
+.login-register-form-container {
+   display: flex;
+   width: 100%;
+   align-items: center;
+   justify-content: center;
+   margin-top: 8vh;
 }
 
 .register-inputs {
@@ -99,7 +107,7 @@ meter[value="4"]::-webkit-meter-optimum-value {
 }
 .or-line-register {
    width: 45%;
-   transform: translate(0, 100%);
+   transform: translate(0, 5%);
 }
 
 .or-line-register hr {

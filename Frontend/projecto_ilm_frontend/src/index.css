@@ -3,13 +3,33 @@
    padding: 0;
 }
 
+:root {
+   --vh: 1vh; /* Fallback value */
+   --vw: 1vw; /* Fallback value */
+}
+
 body {
    margin: 0;
    font-family: "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
       sans-serif;
    -webkit-font-smoothing: antialiased;
    -moz-osx-font-smoothing: grayscale;
+}
+
+.bckg-color-ilm-page {
    background-color: rgb(245, 245, 245);
+   width: 100%;
+   height: 92vh;
+   z-index: -1;
+   position: absolute;
+}
+
+.bckg-color-ilm-page2 {
+   background-color: rgb(255, 255, 255);
+   width: 100%;
+   height: 91.5vh;
+   z-index: -1;
+   position: absolute;
 }
 
 /*
@@ -32,6 +52,7 @@ code {
    padding: 48px;
    color: rgb(60, 60, 60);
    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.15);
+   border-radius: 15px;
 }
 
 .ilm-form .form-title {
@@ -42,7 +63,8 @@ code {
 .submit-button {
    background-color: rgb(192, 23, 34);
    color: white;
-   border: 0px;
+   border: 0;
+   border-radius: 15px;
    font-size: 16px;
    padding: 14px 0px;
    cursor: pointer;
@@ -56,7 +78,8 @@ code {
 .secondary-button {
    background-color: #727272;
    color: white;
-   border: 0px;
+   border: 0;
+   border-radius: 15px;
    font-size: 16px;
    padding: 14px 0px;
    cursor: pointer;
@@ -67,18 +90,6 @@ code {
    background-color: #4b4b4b;
 }
 
-.flex-row {
-   display: flex;
-   flex-direction: row;
-   width: 100%;
-   gap: 20px;
-}
-
-.flex-column {
-   display: flex;
-   flex-direction: column;
-}
-
 .form-content {
    display: flex;
    flex-direction: column;
@@ -86,21 +97,27 @@ code {
    gap: 20px;
 }
 
-.login-register-form-container {
-   display: flex;
-   width: 35%;
-   margin-top: 6vh;
-   height: 94vh;
-   align-items: center;
-}
-
 .ilm-page {
-   margin-top: 4vh;
-   height: 96vh;
+   background-image: url("../../../Resources/background-img-grey.jpg");
+   background-size: cover;
+   background-repeat: no-repeat;
+   background-position: center;
+   margin-top: 60px;
+   height: calc(85 * var(--vh) - 60px);
 }
 
 .ilm-page2 {
-   margin-top: 4vh;
-   height: 96vh;
    background-color: rgb(255, 255, 255);
+
+   height: calc(85 * var(--vh) - 59px);
+}
+
+.ilm-page3 {
+   background-color: rgb(245, 245, 245);
+
+   height: calc(85 * var(--vh) - 59px);
+}
+
+.outer-container {
+   height: 100%;
 }

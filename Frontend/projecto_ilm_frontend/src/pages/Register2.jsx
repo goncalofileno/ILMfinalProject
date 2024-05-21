@@ -5,7 +5,7 @@ import { useRef } from "react";
 import LoginProjectsCards from "../cards/LoginProjectsCards";
 import { Row, Col } from "react-bootstrap";
 
-export default function Register() {
+export default function Register2() {
    const contentRef = useRef(null);
 
    const scrollToContent = () => {

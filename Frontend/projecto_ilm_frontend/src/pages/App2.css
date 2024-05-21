@@ -1,0 +1,204 @@
+.App {
+   text-align: center;
+}
+
+.App-logo {
+   height: 40vmin;
+   pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+   .App-logo {
+      animation: App-logo-spin infinite 20s linear;
+   }
+}
+
+.App-header {
+   background-color: #282c34;
+   min-height: 100vh;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   justify-content: center;
+   font-size: calc(10px + 2vmin);
+   color: white;
+}
+
+.App-link {
+   color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+   from {
+      transform: rotate(0deg);
+   }
+   to {
+      transform: rotate(360deg);
+   }
+}
+
+.ilm-description-login-register {
+   margin-top: 10px;
+}
+
+.ilm-general-title {
+   font-size: 65px;
+   color: rgb(60, 60, 60);
+   margin-top: 20px;
+}
+
+.ilm-general-subTitle {
+   font-size: 50px;
+   color: rgb(60, 60, 60);
+   margin-top: 30px;
+   width: 88%;
+}
+
+.ilm-general-title span {
+   color: rgb(192, 23, 34);
+}
+
+.space-after-table {
+   width: 50%;
+}
+
+.space-after-table h4 {
+   margin-left: 50px;
+}
+
+.ilm-description-login-register div {
+   text-align: justify;
+   margin-top: 50px;
+   font-size: 20px;
+   width: 94%;
+}
+
+.ilm-description-login-register button {
+   margin-top: 100px;
+   width: 70%;
+}
+
+.ilm-projects-login-page {
+   padding-left: 50px;
+}
+
+.background-img-container {
+   width: 40%;
+   height: 90vh;
+   display: flex;
+
+   position: absolute;
+   align-items: flex-end;
+   margin-left: 30px;
+}
+
+#projects-title {
+   margin-top: 15px;
+   margin-left: 2vw;
+}
+
+.flex-row-project-cards {
+   display: flex;
+   flex-direction: row;
+   gap: 5vh;
+   margin-top: 3vh;
+   margin-left: 5vh;
+}
+
+.flex-column-cards {
+   display: flex;
+   flex-direction: column;
+   gap: 2vh;
+}
+
+#see-more-projects-div {
+   display: flex;
+   justify-content: center;
+   width: 100%;
+   height: 100%;
+   align-items: center;
+   justify-content: flex-start;
+   text-wrap: nowrap;
+}
+
+.btn-with-up-arrow:hover .margin-left-arrow {
+   transform: translate(0px, -6px);
+   transition: all 0.5s cubic-bezier(0.215, 0.61, 0.355, 1) 0s;
+}
+
+#slogan-app {
+   text-align: center;
+}
+
+#slogan-app span {
+   margin-left: 30px;
+}
+
+.container-login-page {
+   margin-top: 62px;
+}
+
+#col-description {
+   padding-left: 0px;
+}
+
+#bckg-color-ilm-projects {
+   margin-top: 92vh;
+}
+
+.row-login-page {
+   height: 100%;
+}
+
+.col-login-form {
+   display: flex;
+   align-items: center;
+}
+
+#projects-button {
+   margin-bottom: 9.5vh;
+}
+
+.last-row-projects-login {
+   margin-bottom: 9.5vh;
+}
+
+.take-flight-phone {
+   text-align: center;
+   font-size: 45px;
+}
+
+#col-projects-button-phone {
+   display: flex;
+   justify-content: center;
+}
+
+#projects-button-phone {
+   margin-bottom: 9.5vh;
+   width: 70%;
+}
+
+.ilm-login-page {
+   --bs-gutter-x: 1.5rem;
+   --bs-gutter-y: 0;
+   /* width: 100%; */
+   padding-right: calc(var(--bs-gutter-x) * 0.5);
+   margin-right: auto;
+   margin-left: auto;
+}
+
+.col-projects-cards-login {
+   margin-top: 15px;
+}
+
+#see-more-projects-button {
+   width: 85%;
+   text-align: center;
+   padding-right: 20px;
+   padding-left: 20px;
+}
+
+.div-project-button {
+   display: flex;
+   justify-content: center;
+}
