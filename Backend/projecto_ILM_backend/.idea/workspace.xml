@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ArtifactsWorkspaceSettings">
     <artifacts-to-build>
-      <artifact name="projeto_ILM_backend:war exploded" />
+      <artifact name="projecto_ILM_backend:war exploded" />
     </artifacts-to-build>
   </component>
   <component name="AutoImportSettings">
@@ -10,35 +10,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b39111a9-eb9d-471d-a3e4-b7f611c37010" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jboss-web.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/artifacts/projeto_ILM_backend_war.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/artifacts/projeto_ILM_backend_war_exploded.xml" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/dto/interest/InterestDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/dto/skill/SkillDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/mapper/InterestMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/mapper/SkillMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/service/InterestService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/service/SkillService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/bean/StartupBean.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/bean/StartupBean.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/bean/UserBean.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/bean/UserBean.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/emailService/EmailService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/emailService/EmailService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/META-INF/persistence.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/META-INF/persistence.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/bean/LabBean.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/bean/LabBean.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/bean/StartupBean.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/bean/StartupBean.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/bean/UserBean.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/bean/UserBean.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/dao/UserDao.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/dao/UserDao.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/bean/InterestBean.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/bean/InterestBean.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/bean/SkillBean.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/bean/SkillBean.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/bean/InterestBean.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/bean/InterestBean.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/dto/RegisterUserDto.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/emailService/EmailService$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/emailService/EmailService$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/emailService/EmailService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/emailService/EmailService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/entity/UserEntity.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/entity/UserEntity.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/service/UserService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/service/UserService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/validator/DatabaseValidator.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/validator/DatabaseValidator.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/bean/LabBean.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/bean/LabBean.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/bean/StartupBean.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/bean/StartupBean.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/bean/UserBean.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/bean/UserBean.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/dao/UserDao.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/dao/UserDao.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/entity/LabEntity.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/entity/LabEntity.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/entity/UserEntity.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/entity/UserEntity.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/service/UserService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/service/UserService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/validator/DatabaseValidator.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/validator/DatabaseValidator.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/pages/CreateProfilePage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/pages/CreateProfilePage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/stores/useBaseUrlStore.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/stores/useBaseUrlStore.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,7 +43,7 @@
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
-        <option name="mavenHome" value="Use Maven wrapper" />
+        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
       </MavenGeneralSettings>
     </option>
   </component>
@@ -71,28 +56,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "JBoss/WildFly Server.JBoss/WildFly 30.0.1.Final.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/Bernardo/Desktop/AcertarORumo/Programação Avançada em Java/ILMfinalProject/Backend/projecto_ILM_backend",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;JBoss/WildFly Server.JBoss/WildFly 30.0.1.Final.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Bernardo/Desktop/AcertarORumo/Programação Avançada em Java/ILMfinalProject/Backend/projecto_ILM_backend&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
-    <configuration name="JBoss/WildFly 30.0.1.Final" type="JBossConfiguration" factoryName="Local" APPLICATION_SERVER_NAME="JBoss/WildFly 30.0.1.Final" ALTERNATIVE_JRE_ENABLED="false" nameIsGenerated="true">
+    <configuration name="JBoss/WildFly 30.0.1.Final" type="JBossConfiguration" factoryName="Local" APPLICATION_SERVER_NAME="JBoss/WildFly 31.0.1.Final" ALTERNATIVE_JRE_ENABLED="false" nameIsGenerated="true">
       <option name="UPDATING_POLICY" value="restart-server" />
       <deployment>
-        <artifact name="projeto_ILM_backend:war exploded">
+        <artifact name="projecto_ILM_backend:war exploded">
           <settings />
         </artifact>
       </deployment>
@@ -100,7 +85,7 @@
         <option name="SERVER" />
         <option name="BINDING_SET_NAME" value="" />
         <option name="DOMAIN" value="false" />
-        <option name="SERVER_GROUP" value="main-server-group" />
+        <option name="SERVER_GROUP" />
         <option name="USERNAME" value="" />
         <option name="CREDENTIAL_ALIAS" />
       </server-settings>
@@ -156,7 +141,7 @@
       <method v="2">
         <option name="Make" enabled="true" />
         <option name="BuildArtifacts" enabled="true">
-          <artifact name="projeto_ILM_backend:war exploded" />
+          <artifact name="projecto_ILM_backend:war exploded" />
         </option>
       </method>
     </configuration>
@@ -214,20 +199,5 @@
         </entry>
       </map>
     </option>
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/bean/LabBean.java</url>
-          <line>31</line>
-          <properties class="com.ilm.projecto_ilm_backend.bean.LabBean" method="createDefaultLabsIfNotExistent">
-            <option name="EMULATED" value="true" />
-            <option name="WATCH_EXIT" value="false" />
-          </properties>
-          <option name="timeStamp" value="5" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

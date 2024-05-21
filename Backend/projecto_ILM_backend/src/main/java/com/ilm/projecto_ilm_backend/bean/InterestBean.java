@@ -1,10 +1,15 @@
 package com.ilm.projecto_ilm_backend.bean;
 
 import com.ilm.projecto_ilm_backend.dao.InterestDao;
+import com.ilm.projecto_ilm_backend.dto.interest.InterestDto;
 import com.ilm.projecto_ilm_backend.entity.InterestEntity;
+import com.ilm.projecto_ilm_backend.mapper.InterestMapper;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ejb.EJB;
 import jakarta.transaction.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The InterestBean class is responsible for managing InterestEntity instances.
@@ -73,5 +78,21 @@ public class InterestBean {
 
             interestDao.persist(interest);
         }
+    }
+
+     /**
+      * Returns all interests.
+      *
+      * @return a list with all interests
+      */
+    public List<InterestDto> getAllInterests() {
+
+        List<InterestEntity> interests = interestDao.findAll();
+        List<InterestDto> interestDtos = new ArrayList<>();
+
+        for (InterestEntity interest : interests) {
+            interestDtos.add(InterestMapper.toDto(interest));
+        }
+        return interestDtos;
     }
 }
