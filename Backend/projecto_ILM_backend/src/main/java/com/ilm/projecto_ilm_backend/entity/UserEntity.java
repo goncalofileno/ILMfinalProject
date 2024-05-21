@@ -80,8 +80,14 @@ public class UserEntity implements Serializable {
     /**
      * The profile creation status of the user.
      */
-    @Column(name = "profileCreated", nullable = false, unique = false, updatable = true)
+    @Column(name = "profileCreated", nullable = true, unique = false, updatable = true)
     private boolean profileCreated;
+
+    /**
+     * The public profile status of the user.
+     */
+    @Column(name = "publicProfile", nullable = false, unique = false, updatable = true)
+    private boolean publicProfile;
 
     /**
      * The photo URL of the user.
@@ -327,6 +333,24 @@ public class UserEntity implements Serializable {
      */
     public void setProfileCreated(boolean profileCreated) {
         this.profileCreated = profileCreated;
+    }
+
+    /**
+     * Returns the public profile status of this user.
+     *
+     * @return the public profile status of this user.
+     */
+    public boolean isPublicProfile() {
+        return publicProfile;
+    }
+
+    /**
+     * Sets the public profile status of this user.
+     *
+     * @param publicProfile the new public profile status of this user.
+     */
+    public void setPublicProfile(boolean publicProfile) {
+        this.publicProfile = publicProfile;
     }
 
     /**

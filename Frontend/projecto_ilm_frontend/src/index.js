@@ -3,11 +3,11 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import ReactDOM from "react-dom/client";
 import App from "./pages/App";
 import Register from "./pages/Register";
-import CreateProfile from "./pages/CreateProfile";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter as Router } from "react-router-dom";
 import { Route, Routes } from "react-router-dom";
-import "./index.css";
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -16,7 +16,6 @@ root.render(
          <Routes>
             <Route index element={<App />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/createprofile" element={<CreateProfile />} />
          </Routes>
       </Router>
    </React.StrictMode>

@@ -77,6 +77,7 @@ public class UserBean {
             user.setSkills(skills);
             user.setSkills(skills);
             user.setLab(lab);
+            user.setPublicProfile(false);
             user.setDeleted(false);
             user.setTutorial(false);
 
@@ -102,6 +103,7 @@ public class UserBean {
             List<SkillEntity> skills = skillDao.findAll();
             user.setSkills(skills);
             user.setLab(lab);
+            user.setPublicProfile(false);
             user.setDeleted(false);
             user.setTutorial(false);
 
@@ -121,6 +123,7 @@ public class UserBean {
             user.setProfileCreated(false);
             user.setDeleted(false);
             user.setTutorial(false);
+            user.setPublicProfile(false);
         }
     }
 
