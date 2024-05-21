@@ -20,4 +20,14 @@ public class DatabaseValidator {
     public boolean checkEmail(String email) {
         return userDao.findByEmail(email) != null;
     }
+
+    /**
+     * Checks if the provided username is already present in the database.
+     *
+     * @param username the username to be checked
+     * @return {@code true} if the username is found in the database, {@code false} otherwise
+     */
+    public boolean checkUsername(String username) {
+      return userDao.findByUsername(username) != null;
+    }
 }

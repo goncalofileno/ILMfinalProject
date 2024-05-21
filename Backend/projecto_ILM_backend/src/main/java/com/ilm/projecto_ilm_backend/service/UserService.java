@@ -1,13 +1,10 @@
 package com.ilm.projecto_ilm_backend.service;
 
 import com.ilm.projecto_ilm_backend.bean.UserBean;
-import com.ilm.projecto_ilm_backend.dto.RegisterUserDto;
+import com.ilm.projecto_ilm_backend.dto.user.RegisterUserDto;
 import com.ilm.projecto_ilm_backend.validator.RegexValidator;
 import com.ilm.projecto_ilm_backend.validator.DatabaseValidator;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
@@ -65,6 +62,28 @@ public class UserService {
             }
         } else {
             return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+    }
+
+    /**
+     * Checks if a username is already in the database.
+     *
+     * @param username the username to be checked
+     * @return HTTP response indicating the result of the username check
+     * @throws UnknownHostException if the local host name could not be resolved into an address
+     */
+    @POST
+    @Path("/checkUsername")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response checkUsername(@HeaderParam("username") String username) throws UnknownHostException {
+        String clientIP = InetAddress.getLocalHost().getHostAddress();
+        logger.info("Received a request to check if a username is already in the database from IP address: " + clientIP + " with username: " + username);
+        // Check if username already exists in the database
+        if (databaseValidator.checkUsername(username)) {
+            return Response.status(Response.Status.CONFLICT).build();
+        } else {
+            return Response.status(Response.Status.OK).build();
         }
     }
 }

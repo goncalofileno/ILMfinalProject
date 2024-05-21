@@ -6,7 +6,7 @@ import com.ilm.projecto_ilm_backend.dao.InterestDao;
 import com.ilm.projecto_ilm_backend.dao.LabDao;
 import com.ilm.projecto_ilm_backend.dao.SkillDao;
 import com.ilm.projecto_ilm_backend.dao.UserDao;
-import com.ilm.projecto_ilm_backend.dto.RegisterUserDto;
+import com.ilm.projecto_ilm_backend.dto.user.RegisterUserDto;
 import com.ilm.projecto_ilm_backend.entity.InterestEntity;
 import com.ilm.projecto_ilm_backend.entity.LabEntity;
 import com.ilm.projecto_ilm_backend.entity.SkillEntity;

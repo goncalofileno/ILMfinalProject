@@ -1,4 +1,4 @@
-package com.ilm.projecto_ilm_backend.dto;
+package com.ilm.projecto_ilm_backend.dto.user;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
 

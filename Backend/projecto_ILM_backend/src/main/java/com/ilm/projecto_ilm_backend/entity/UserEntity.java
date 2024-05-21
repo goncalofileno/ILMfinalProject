@@ -16,6 +16,7 @@ import java.util.List;
 @Table(name = "user")
 @NamedQuery(name = "User.findByEmail", query = "SELECT u FROM UserEntity u WHERE u.email = :email")
 @NamedQuery(name = "User.findById", query = "SELECT u FROM UserEntity u WHERE u.id = :id")
+@NamedQuery(name = "User.findByUsername", query = "SELECT u FROM UserEntity u WHERE u.username = :username")
 public class UserEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;

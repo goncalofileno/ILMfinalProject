@@ -2,9 +2,15 @@ package com.ilm.projecto_ilm_backend.bean;
 
 import com.ilm.projecto_ilm_backend.ENUMS.WorkLocalENUM;
 import com.ilm.projecto_ilm_backend.dao.LabDao;
+import com.ilm.projecto_ilm_backend.dto.lab.LabDto;
 import com.ilm.projecto_ilm_backend.entity.LabEntity;
+import com.ilm.projecto_ilm_backend.mapper.LabMapper;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The LabBean class is responsible for managing LabEntity instances.
@@ -60,5 +66,14 @@ public class LabBean {
             lab.setContact("+351 259 350 000");
             labDao.persist(lab);
         }
+    }
+
+    public List<LabDto> getAllLabs() {
+        List<LabEntity> labs = labDao.findAll();
+        List<LabDto> labDtos = new ArrayList<>();
+        for (LabEntity lab : labs) {
+            labDtos.add(LabMapper.toDto(lab));
+        }
+        return labDtos;
     }
 }

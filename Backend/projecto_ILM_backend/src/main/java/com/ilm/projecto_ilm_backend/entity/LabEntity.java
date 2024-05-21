@@ -21,7 +21,8 @@ public class LabEntity implements Serializable {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "id", nullable = false, unique = true, updatable = false)
+    private int id;
 
     /**
      * The local of the lab. This is an enumerated type.
@@ -46,7 +47,7 @@ public class LabEntity implements Serializable {
      * Returns the ID of this lab.
      * @return the ID of this lab.
      */
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
@@ -54,7 +55,7 @@ public class LabEntity implements Serializable {
      * Sets the ID of this lab.
      * @param id the new ID of this lab.
      */
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

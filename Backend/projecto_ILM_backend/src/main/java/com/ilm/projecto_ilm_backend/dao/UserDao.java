@@ -74,4 +74,22 @@ public class UserDao extends AbstractDao<UserEntity> {
         }
     }
 
+    /**
+     * Finds a user by the given username.
+     *
+     * @param username the username of the user to be found.
+     *              The username is unique for each user.
+     *              It is used to identify the user.
+     *              It is a string.
+     */
+    public UserEntity findByUsername(String username) {
+        try {
+            return em.createNamedQuery("User.findByUsername", UserEntity.class).setParameter("username", username)
+                    .getSingleResult();
+
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
 }

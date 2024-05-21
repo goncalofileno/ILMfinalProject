@@ -1,12 +1,12 @@
 import React from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
+import 'bootstrap/dist/css/bootstrap.min.css';
 import ReactDOM from "react-dom/client";
 import App from "./pages/App";
 import Register from "./pages/Register";
+import CreateProfilePage from "./pages/CreateProfilePage";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter as Router } from "react-router-dom";
 import { Route, Routes } from "react-router-dom";
-import 'bootstrap/dist/css/bootstrap.min.css';
 import "./index.css";
 
 
@@ -17,6 +17,7 @@ root.render(
          <Routes>
             <Route index element={<App />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/create-profile" element={<CreateProfilePage />} />
          </Routes>
       </Router>
    </React.StrictMode>
