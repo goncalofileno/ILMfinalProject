@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./pages/App";
 import Register from "./pages/Register";
+import CreateProfile from "./pages/CreateProfile";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter as Router } from "react-router-dom";
 import { Route, Routes } from "react-router-dom";
@@ -15,6 +16,7 @@ root.render(
          <Routes>
             <Route index element={<App />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/createprofile" element={<CreateProfile />} />
          </Routes>
       </Router>
    </React.StrictMode>
