@@ -1,0 +1,27 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" external-system-id="Maven" name="projeto_ILM_backend:war exploded">
+    <output-path>$PROJECT_DIR$/target/my_activities_backend</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <exploded>true</exploded>
+        <module>projeto_ILM_backend</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="root">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="projeto_ILM_backend" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="Maven: org.apache.logging.log4j:log4j-api:2.23.1" />
+          <element id="library" level="project" name="Maven: org.apache.logging.log4j:log4j-core:2.23.1" />
+        </element>
+      </element>
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/target/my_activities_backend/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="javaee-facet-resources" facet="projeto_ILM_backend/web/Web" />
+    </root>
+  </artifact>
+</component>

@@ -159,7 +159,7 @@
       <workItem from="1716303100781" duration="191000" />
       <workItem from="1716303302153" duration="1178000" />
       <workItem from="1716305166908" duration="671000" />
-      <workItem from="1716306004022" duration="4660000" />
+      <workItem from="1716306004022" duration="5253000" />
     </task>
     <servers />
   </component>
@@ -181,15 +181,6 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/bean/SkillBean.java</url>
-          <line>18</line>
-          <properties class="com.ilm.projecto_ilm_backend.bean.SkillBean" method="createDefaultSkillsIfNotExistent">
-            <option name="EMULATED" value="true" />
-            <option name="WATCH_EXIT" value="false" />
-          </properties>
-          <option name="timeStamp" value="3" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/bean/LabBean.java</url>
           <line>31</line>
           <properties class="com.ilm.projecto_ilm_backend.bean.LabBean" method="createDefaultLabsIfNotExistent">
@@ -197,11 +188,6 @@
             <option name="WATCH_EXIT" value="false" />
           </properties>
           <option name="timeStamp" value="5" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/emailService/EmailService.java</url>
-          <line>13</line>
-          <option name="timeStamp" value="6" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
