@@ -38,12 +38,12 @@ function App() {
          <LoginHeader />
          <div className="page-content">
             <div className="ilm-page">
-               <Container className="outer-container">
+               <Container fluid className="outer-container">
                   <Row className="outer-container">
                      <Col xl={8} lg={6}>
                         <Row>
                            <Col lg={6}>
-                              <h1 className="app-slogan">Where Ideas</h1>
+                              <h1 className="app-slogan app-slogan-1">Where Ideas</h1>
                            </Col>
                            <Col lg={6}>
                               <h1 className="app-slogan app-slogan-2">Take Flight</h1>
