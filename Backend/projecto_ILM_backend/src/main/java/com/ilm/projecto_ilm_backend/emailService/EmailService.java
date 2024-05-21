@@ -13,11 +13,11 @@ import java.util.Properties;
 @Stateless
 public class EmailService {
     private final String username= "innovationlabmanagementcs@gmail.com";// Your email username
-    private final String password= "hwgm ieue gynx dnkj";// Your email password
+    private final String password= "xnog bvud syvq rpcv";// Your email password
     // SMTP server port
 
 
-    public void sendEmail(String userUsername,String to, String verificationLink, boolean confirmationAccount) throws MessagingException, UnsupportedEncodingException {
+    public void sendEmail(String to, String verificationLink, boolean confirmationAccount) throws MessagingException, UnsupportedEncodingException {
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
@@ -39,7 +39,7 @@ public class EmailService {
         if(confirmationAccount) {
             message.setSubject("Confirm Your Account Registration");
 
-            emailContent = "<p>Dear " + userUsername + "</p>"
+            emailContent = "<p>Dear user</p>"
                     + "<p>Thank you for registering with AgileFlow!</p>"
                     + "<p>To complete the registration process and gain full access to your account, please click on the link below to confirm your email address:</p>"
                     + "<p><a href='http://localhost:5173/confirmEmail/" + verificationLink + "'>http://localhost:5173/confirmEmail/" + verificationLink + "</a></p>"
@@ -51,7 +51,7 @@ public class EmailService {
         else{
             message.setSubject("Reset Password");
 
-            emailContent = "<p>Dear " + userUsername + "</p>"
+            emailContent = "<p>Dear user</p>"
 
                     + "<p>To reset your password, please click on the link below:</p>"
                     + "<p><a href='http://localhost:5173/resetPassAfter/" + verificationLink + "'>http://localhost:5173/resetPassAfter/" + verificationLink + "</a></p>"

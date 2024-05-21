@@ -9,8 +9,5 @@
         <module name="projeto_ILM_backend" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="projeto_ILM_backend" target="11" />
-    </bytecodeTargetLevel>
   </component>
 </project>

@@ -7,6 +7,7 @@ import com.ilm.projecto_ilm_backend.dao.LabDao;
 import com.ilm.projecto_ilm_backend.dao.SkillDao;
 import com.ilm.projecto_ilm_backend.dao.UserDao;
 import com.ilm.projecto_ilm_backend.dto.user.RegisterUserDto;
+import com.ilm.projecto_ilm_backend.emailService.EmailService;
 import com.ilm.projecto_ilm_backend.entity.InterestEntity;
 import com.ilm.projecto_ilm_backend.entity.LabEntity;
 import com.ilm.projecto_ilm_backend.entity.SkillEntity;
@@ -14,11 +15,16 @@ import com.ilm.projecto_ilm_backend.entity.UserEntity;
 import com.ilm.projecto_ilm_backend.service.UserService;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.mail.MessagingException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 
+import java.io.UnsupportedEncodingException;
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.Base64;
 import java.util.List;
 
 /**
@@ -52,11 +58,14 @@ public class UserBean {
     @EJB
     SkillDao skillDao;
 
+    @Inject
+    EmailService emailService;
+
     /**
      * Creates a default user with username "admin" if it does not exist.
      * The user is created with predefined values.
      */
-    public void createDefaultUsersIfNotExistent() {
+    public void createDefaultUsersIfNotExistent() throws MessagingException, UnsupportedEncodingException {
         if (userDao.findById(1) == null) {
             UserEntity user = new UserEntity();
             user.setUsername("admin");
@@ -145,7 +154,8 @@ public class UserBean {
             user.setRegistrationDate(LocalDateTime.now());
             user.setType(UserTypeENUM.STANDARD_USER);
             user.setPhoto("https://www.pngkey.com/png/full/114-1149878_setting-user-avatar-in-specific-size-without-breaking.png");
-
+            user.setToken(generateNewToken());
+            emailService.sendEmail(user.getEmail(),user.getToken(),true);
             userDao.persist(user);
             return true;
         } catch (Exception e) {
@@ -154,5 +164,13 @@ public class UserBean {
             logger.error("Error persisting user: ", e);
             return false;
         }
+    }
+
+    private String generateNewToken() {
+        SecureRandom secureRandom = new SecureRandom();
+        Base64.Encoder base64Encoder = Base64.getUrlEncoder();
+        byte[] randomBytes = new byte[24];
+        secureRandom.nextBytes(randomBytes);
+        return base64Encoder.encodeToString(randomBytes);
     }
 }

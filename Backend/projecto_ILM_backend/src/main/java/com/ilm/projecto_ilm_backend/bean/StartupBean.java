@@ -4,6 +4,9 @@ import jakarta.annotation.PostConstruct;
 import jakarta.ejb.Singleton;
 import jakarta.ejb.Startup;
 import jakarta.inject.Inject;
+import jakarta.mail.MessagingException;
+
+import java.io.UnsupportedEncodingException;
 
 /**
  * The StartupBean class is a singleton bean that is instantiated upon application startup.
@@ -51,7 +54,7 @@ public class StartupBean {
      * It creates default users, labs, interests, skills, suppliers, resources if they do not exist.
      */
     @PostConstruct
-    public void init() {
+    public void init() throws MessagingException, UnsupportedEncodingException {
         labBean.createDefaultLabsIfNotExistent();
         skillBean.createDefaultSkillsIfNotExistent();
         interestBean.createDefaultInterestsIfNotExistent();
