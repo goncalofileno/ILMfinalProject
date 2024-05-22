@@ -11,19 +11,18 @@ function App() {
    const navigate = useNavigate();
    const contentRef = useRef(null);
    const isComputer = useMediaQuery({ minWidth: 1200 });
-
-   useEffect(() => {
-      const updateSizeVariables = () => {
-         document.documentElement.style.setProperty("--vh", `${window.screen.height * 0.01}px`);
-         document.documentElement.style.setProperty("--vw", `${window.screen.width * 0.01}px`);
-      };
-
-      console.log(document.documentElement.style.getPropertyValue("--vh"));
-      updateSizeVariables();
-   }, []);
+   const isTablet = useMediaQuery({ minWidth: 992, maxWidth: 1200 });
+   const isSmallTablet = useMediaQuery({ minWidth: 768, maxWidth: 992 });
+   const isPhone = useMediaQuery({ maxWidth: 768 });
+   const headerHeight = 60;
 
    const scrollToContent = () => {
       contentRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+      if (!isComputer) {
+         setTimeout(() => {
+            window.scrollBy(0, -headerHeight);
+         }, 500);
+      }
    };
 
    const scrollToLogin = () => {
@@ -37,40 +36,63 @@ function App() {
       <>
          <LoginHeader />
          <div className="page-content">
-            <div className="ilm-page">
+            <div className={isComputer ? "ilm-page" : isTablet ? "ilm-pageb" : "ilm-page-noheight"}>
                <Container fluid className="outer-container">
-                  <Row className="outer-container">
-                     <Col xl={8} lg={6}>
+                  <Row className="outer-row">
+                     <Col xl={8} lg={6} sm={12}>
                         <Row>
-                           <Col lg={6}>
-                              <h1 className="app-slogan app-slogan-1">Where Ideas</h1>
+                           <Col xl={6} lg={12} md={6} sm={12}>
+                              <h1 className="app-slogan app-slogan-1" style={{ textAlign: isSmallTablet && "end" }}>
+                                 Where Ideas
+                              </h1>
                            </Col>
-                           <Col lg={6}>
-                              <h1 className="app-slogan app-slogan-2">Take Flight</h1>
+                           <Col xl={6} lg={12} md={6} sm={12}>
+                              <h1
+                                 className="app-slogan app-slogan-2"
+                                 style={{ textAlign: (isTablet || isPhone) && "center" }}
+                              >
+                                 Take Flight
+                              </h1>
                            </Col>
                         </Row>
                         <Row>
-                           <Col lg={6}></Col>
-                           <Col>
-                              {" "}
-                              <div className="ilm-description">
-                                 Welcome to our Innovation Lab Management app, where creativity meets collaboration and
-                                 ideas turn into reality. With our app, you can manage and track your projects
-                                 seamlessly, from brainstorming to implementation, ensuring every idea has the potential
-                                 to flourish. Join us in driving progress and inspiring change, one innovative project
-                                 at a time.
-                              </div>
-                              <div className="div-project-button">
-                                 <button className="submit-button" id="projects-button" onClick={scrollToContent}>
-                                    Some of our Projects
-                                 </button>
-                              </div>
-                           </Col>
+                           {isComputer && <Col lg={6}></Col>}
+                           {!isPhone && (
+                              <Col>
+                                 {" "}
+                                 <div className="ilm-description">
+                                    Welcome to our Innovation Lab Management app, where creativity meets collaboration
+                                    and ideas turn into reality. With our app, you can manage and track your projects
+                                    seamlessly, from brainstorming to implementation, ensuring every idea has the
+                                    potential to flourish. Join us in driving progress and inspiring change, one
+                                    innovative project at a time.
+                                 </div>
+                                 <div className="div-project-button">
+                                    <button
+                                       className="submit-button"
+                                       id="projects-button"
+                                       onClick={scrollToContent}
+                                       style={{ marginBottom: !isComputer && !isTablet && "100px" }}
+                                    >
+                                       Some of our Projects
+                                    </button>
+                                 </div>
+                              </Col>
+                           )}
                         </Row>
                      </Col>
-                     <Col xl={4} lg={6}>
+                     <Col xl={4} lg={6} className="align-items-center" style={{ marginTop: isPhone && "50px" }}>
                         <LoginForm />
                      </Col>
+                     {isPhone && (
+                        <Col>
+                           <div className="div-project-button">
+                              <button className="submit-button" id="projects-button" onClick={scrollToContent}>
+                                 Some of our Projects
+                              </button>
+                           </div>
+                        </Col>
+                     )}
                   </Row>
                </Container>
             </div>
@@ -80,7 +102,7 @@ function App() {
                      <h1 className="ilm-general-subTitle">Projects</h1>
                   </Row>
                   <Row className="row-margin-top-20 last-row-padd-bott">
-                     <Col lg={3}>
+                     <Col lg={3} md={6} className={!isComputer && !isTablet && "col-margin-bottom-16"}>
                         <div className="flex-col-gap-16">
                            <LoginProjectsCards
                               cardBkgColor="card-bkg-color1"
@@ -96,7 +118,7 @@ function App() {
                            />
                         </div>
                      </Col>
-                     <Col lg={3}>
+                     <Col lg={3} md={6} className={!isComputer && !isTablet && "col-margin-bottom-16"}>
                         <div className="flex-col-gap-16">
                            <LoginProjectsCards
                               cardBkgColor="card-bkg-color4"
@@ -112,7 +134,7 @@ function App() {
                            />
                         </div>
                      </Col>
-                     <Col lg={3}>
+                     <Col lg={3} md={6} className={!isComputer && !isTablet && "col-margin-bottom-16"}>
                         <div className="flex-col-gap-16">
                            <LoginProjectsCards
                               cardBkgColor="card-bkg-color2"
@@ -128,7 +150,7 @@ function App() {
                            />
                         </div>
                      </Col>
-                     <Col lg={3}>
+                     <Col lg={3} md={6}>
                         <div className="flex-col-gap-16" id="last-column-projects">
                            <LoginProjectsCards
                               cardBkgColor="card-bkg-color3"
@@ -136,7 +158,7 @@ function App() {
                               description="From software architectures to system testing, we’ll look after your project from take-off to landing, combining our broad expertise with an in-depth knowledge of the rigorous safety standards in aviation."
                               scrollToRef={scrollToLogin}
                            />
-                           <div className="see-more-projects-button-div">
+                           <div className="see-more-projects-button-div" style={{ height: isPhone && "100px" }}>
                               <div
                                  className="submit-button btn-with-up-arrow"
                                  onClick={scrollToLogin}

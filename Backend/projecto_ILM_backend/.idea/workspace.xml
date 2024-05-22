@@ -10,35 +10,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b39111a9-eb9d-471d-a3e4-b7f611c37010" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jboss-web.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/artifacts/projeto_ILM_backend_war.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/artifacts/projeto_ILM_backend_war_exploded.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/bean/StartupBean.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/bean/StartupBean.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/bean/UserBean.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/bean/UserBean.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/emailService/EmailService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/emailService/EmailService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/META-INF/persistence.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/META-INF/persistence.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/bean/LabBean.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/bean/LabBean.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/bean/StartupBean.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/bean/StartupBean.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/bean/UserBean.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/bean/UserBean.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/dao/UserDao.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/dao/UserDao.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/dto/RegisterUserDto.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/emailService/EmailService$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/emailService/EmailService$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/emailService/EmailService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/emailService/EmailService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/entity/UserEntity.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/entity/UserEntity.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/service/UserService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/service/UserService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/validator/DatabaseValidator.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/validator/DatabaseValidator.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/bean/LabBean.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/bean/LabBean.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/bean/StartupBean.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/bean/StartupBean.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/bean/UserBean.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/bean/UserBean.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/dao/UserDao.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/dao/UserDao.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/entity/LabEntity.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/entity/LabEntity.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/entity/UserEntity.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/entity/UserEntity.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/service/UserService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/service/UserService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/validator/DatabaseValidator.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/validator/DatabaseValidator.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/index.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/inputs/InputForm.css" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/inputs/InputForm.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/pages/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/pages/App.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -197,7 +172,7 @@
       <workItem from="1716303302153" duration="1178000" />
       <workItem from="1716305166908" duration="671000" />
       <workItem from="1716306004022" duration="5253000" />
-      <workItem from="1716311442246" duration="1505000" />
+      <workItem from="1716311442246" duration="2504000" />
     </task>
     <servers />
   </component>
