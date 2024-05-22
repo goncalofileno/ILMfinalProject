@@ -11,6 +11,7 @@
   <component name="ChangeListManager">
     <list default="true" id="b39111a9-eb9d-471d-a3e4-b7f611c37010" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/pages/CreateProfilePage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/pages/CreateProfilePage.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,25 +28,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "goncalofileno"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;goncalofileno&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/goncalofileno/ILMfinalProject.git",
-    "accountId": "82723f28-5b6d-4ecd-b363-f57f58e35b91"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/goncalofileno/ILMfinalProject.git&quot;,
+    &quot;accountId&quot;: &quot;82723f28-5b6d-4ecd-b363-f57f58e35b91&quot;
   }
-}]]></component>
-  <component name="MavenImportPreferences">
-    <option name="generalSettings">
-      <MavenGeneralSettings>
-        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
-      </MavenGeneralSettings>
-    </option>
-  </component>
+}</component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 7
 }</component>
@@ -73,10 +67,10 @@
   }
 }</component>
   <component name="RunManager">
-    <configuration name="JBoss/WildFly 30.0.1.Final" type="JBossConfiguration" factoryName="Local" APPLICATION_SERVER_NAME="JBoss/WildFly 31.0.1.Final" ALTERNATIVE_JRE_ENABLED="false" nameIsGenerated="true">
+    <configuration name="JBoss/WildFly 30.0.1.Final" type="JBossConfiguration" factoryName="Local" APPLICATION_SERVER_NAME="JBoss/WildFly 30.0.1.Final" ALTERNATIVE_JRE_ENABLED="false" nameIsGenerated="true">
       <option name="UPDATING_POLICY" value="restart-server" />
       <deployment>
-        <artifact name="projecto_ILM_backend:war exploded">
+        <artifact name="projeto_ILM_backend:war exploded">
           <settings />
         </artifact>
       </deployment>
@@ -141,6 +135,7 @@
         <option name="Make" enabled="true" />
         <option name="BuildArtifacts" enabled="true">
           <artifact name="projecto_ILM_backend:war exploded" />
+          <artifact name="projeto_ILM_backend:war exploded" />
         </option>
       </method>
     </configuration>
