@@ -2,9 +2,14 @@ package com.ilm.projecto_ilm_backend.bean;
 
 import com.ilm.projecto_ilm_backend.ENUMS.SkillTypeENUM;
 import com.ilm.projecto_ilm_backend.dao.SkillDao;
+import com.ilm.projecto_ilm_backend.dto.skill.SkillDto;
 import com.ilm.projecto_ilm_backend.entity.SkillEntity;
+import com.ilm.projecto_ilm_backend.mapper.SkillMapper;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.ApplicationScoped;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The SkillBean class is an application scoped bean that manages SkillEntity instances.
@@ -125,5 +130,14 @@ public class SkillBean {
             skillDao.persist(skill);
         }
 
+    }
+
+    public List<SkillDto> getAllSkills() {
+        List<SkillEntity> skills = skillDao.findAll();
+        List<SkillDto> skillDtos = new ArrayList<>();
+        for (SkillEntity skill : skills) {
+            skillDtos.add(SkillMapper.toDto(skill));
+        }
+        return skillDtos;
     }
 }
