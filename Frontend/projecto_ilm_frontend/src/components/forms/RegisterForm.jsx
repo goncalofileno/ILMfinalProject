@@ -48,11 +48,17 @@ export default function RegisterForm() {
 
    const calculateStrength = (password) => {
       let strength = 0;
-      if (/[a-z]/.test(password)) strength++; // lowercase
-      if (/[A-Z]/.test(password)) strength++; // uppercase
-      if (/\d/.test(password)) strength++; // digits
-      if (/\W/.test(password)) strength++; // special characters
-      if (password.length >= 6) strength++; // length
+      if (/\S/.test(password)) {
+         strength++;
+         if (password.length >= 6) {
+            if (/[a-z]/.test(password)) strength++; // lowercase
+            if (/[A-Z]/.test(password)) strength++; // uppercase
+            if (/\d/.test(password)) strength++; // digits
+         }
+         if (strength === 4) {
+            if (/\W/.test(password)) strength++; // special characters
+         }
+      }
       return strength;
    };
    return (

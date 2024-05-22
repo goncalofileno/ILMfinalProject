@@ -1,9 +1,9 @@
 import "./App.css";
 import { useNavigate } from "react-router-dom";
 import RegisterForm from "../components/forms/RegisterForm";
-import LoginHeader from "../headers/LoginHeader";
+import LoginHeader from "../components/headers/LoginHeader";
 import { useRef, useEffect } from "react";
-import LoginProjectsCards from "../cards/LoginProjectsCards";
+import LoginProjectsCards from "../components/cards/LoginProjectsCards";
 import { Row, Col, Container } from "react-bootstrap";
 import { useMediaQuery } from "react-responsive";
 
@@ -18,9 +18,6 @@ function Register() {
 
    const scrollToContent = () => {
       contentRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
-      setTimeout(() => {
-         window.scrollBy(0, -headerHeight);
-      }, 500);
    };
 
    const scrollToLogin = () => {
@@ -94,7 +91,7 @@ function Register() {
                   </Row>
                </Container>
             </div>
-            <div className="ilm-page2" ref={contentRef}>
+            <div className="ilm-page2" ref={contentRef} style={{ paddingTop: "60px" }}>
                <Container className="outer-container">
                   <Row>
                      <h1 className="ilm-general-subTitle">Projects</h1>

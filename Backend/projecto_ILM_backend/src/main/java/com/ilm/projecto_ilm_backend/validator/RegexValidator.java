@@ -28,9 +28,10 @@ public class RegexValidator {
      * @param password the password to be validated
      * @return {@code true} if the password matches the regex pattern, {@code false} otherwise
      */
+
     public static boolean validatePassword(String password) {
         // Regex to validate password
-        String passwordRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{6,20}$";
+        String passwordRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{6,20}$";
         return password.matches(passwordRegex);
     }
 }
