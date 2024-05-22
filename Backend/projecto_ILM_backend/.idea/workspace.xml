@@ -11,9 +11,6 @@
   <component name="ChangeListManager">
     <list default="true" id="b39111a9-eb9d-471d-a3e4-b7f611c37010" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/pages/CreateProfilePage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/pages/CreateProfilePage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/selectors/InterestSelector.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/selectors/InterestSelector.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/selectors/SkillSelector.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/selectors/SkillSelector.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,6 +27,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "goncalofileno"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/goncalofileno/ILMfinalProject.git",
+    "accountId": "82723f28-5b6d-4ecd-b363-f57f58e35b91"
+  }
+}]]></component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
@@ -150,7 +159,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="jdk-21.0.1-openjdk-21.0.1-f644763e9732-f98dd351" />
+        <option value="bundled-jdk-9f38398b9061-18abd8497189-intellij.indexing.shared.core-IU-241.14494.240" />
+        <option value="bundled-js-predefined-1d06a55b98c1-74d2a5396914-JavaScript-IU-241.14494.240" />
       </set>
     </attachedChunks>
   </component>
@@ -173,6 +183,7 @@
       <workItem from="1716305166908" duration="671000" />
       <workItem from="1716306004022" duration="5253000" />
       <workItem from="1716311442246" duration="1505000" />
+      <workItem from="1716388992098" duration="984000" />
     </task>
     <servers />
   </component>

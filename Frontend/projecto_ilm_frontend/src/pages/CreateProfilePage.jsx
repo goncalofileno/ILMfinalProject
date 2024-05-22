@@ -20,6 +20,7 @@ const CreateProfilePage = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [office, setOffice] = useState("");
+  const [bio, setBio] = useState("");
   const [usernameValid, setUsernameValid] = useState(null); // null: not checked, true: available, false: not available
   const [loading, setLoading] = useState(false);
   const [labs, setLabs] = useState([]);
@@ -114,6 +115,7 @@ const CreateProfilePage = () => {
       formData.append("firstName", firstName);
       formData.append("lastName", lastName);
       formData.append("office", office);
+      formData.append("bio", bio);
       if (selectedFile) {
         formData.append("file", selectedFile);
       }
@@ -271,6 +273,22 @@ const CreateProfilePage = () => {
                     </Form.Label>
                     <Col sm="8" className="d-flex align-items-center">
                       <Form.Check type="switch" id="custom-switch" />
+                    </Col>
+                  </Form.Group>
+
+                  <Form.Group as={Row} controlId="formBio" className="mb-3">
+                    <Form.Label column sm="4">
+                      Bio:
+                    </Form.Label>
+                    <Col sm="8">
+                      <Form.Control
+                        as="textarea"
+                        rows={3}
+                        style={{ resize: 'none' }}
+                        placeholder="Enter Bio"
+                        value={bio}
+                        onChange={(e) => setBio(e.target.value)}
+                      />
                     </Col>
                   </Form.Group>
                 </Col>
