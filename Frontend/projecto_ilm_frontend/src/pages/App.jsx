@@ -15,6 +15,7 @@ function App() {
    const isTablet = useMediaQuery({ minWidth: 992, maxWidth: 1200 });
    const isSmallTablet = useMediaQuery({ minWidth: 768, maxWidth: 992 });
    const isPhone = useMediaQuery({ maxWidth: 768 });
+   const headerHeight = 110;
 
    const scrollToContent = () => {
       contentRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -22,6 +23,9 @@ function App() {
 
    const scrollToLoginForm = () => {
       loginFormRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+      setTimeout(() => {
+         window.scrollBy(0, -headerHeight);
+      }, 500);
    };
 
    const scrollToLogin = () => {

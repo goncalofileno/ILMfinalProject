@@ -45,7 +45,7 @@ export default function LoginForm() {
                <div id="sign-up-with">
                   <div>Sign up with:</div>
                   <div id="sign-up-with-icons">
-                     <i class="fab fa-google fa-lg"></i>
+                     <i className="fab fa-google fa-lg"></i>
                   </div>
                </div>
             </div>

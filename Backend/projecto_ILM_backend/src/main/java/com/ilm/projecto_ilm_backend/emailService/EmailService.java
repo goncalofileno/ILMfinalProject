@@ -23,6 +23,8 @@ public class EmailService {
         props.put("mail.smtp.starttls.enable", "true");
         props.put("mail.smtp.host", "smtp.gmail.com");
         props.put("mail.smtp.port", "587");
+        props.put("mail.debug", "true");
+        props.put("mail.smtp.ssl.trust", "*");
 
         Session session = Session.getInstance(props, new Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
@@ -42,7 +44,7 @@ public class EmailService {
             emailContent = "<p>Dear user</p>"
                     + "<p>Thank you for registering with AgileFlow!</p>"
                     + "<p>To complete the registration process and gain full access to your account, please click on the link below to confirm your email address:</p>"
-                    + "<p><a href='http://localhost:5173/confirmEmail/" + verificationLink + "'>http://localhost:5173/confirmEmail/" + verificationLink + "</a></p>"
+                    + "<p><a href='http://localhost:3000/create-profile/" + verificationLink + "'>http://localhost:3000/create-profile/" + verificationLink + "</a></p>"
                     + "<p>If you did not request this registration, please ignore this email.</p>"
                     + "<p>Thank you,</p>"
                     + "<p>AgileFlow Team</p>";

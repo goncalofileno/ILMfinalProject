@@ -1,5 +1,5 @@
 import React from "react";
-import 'bootstrap/dist/css/bootstrap.min.css';
+import "bootstrap/dist/css/bootstrap.min.css";
 import ReactDOM from "react-dom/client";
 import App from "./pages/App";
 import Register from "./pages/Register";
@@ -9,7 +9,6 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { Route, Routes } from "react-router-dom";
 import "./index.css";
 
-
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
    <React.StrictMode>
@@ -17,7 +16,7 @@ root.render(
          <Routes>
             <Route index element={<App />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/create-profile" element={<CreateProfilePage />} />
+            <Route path="/create-profile/:token" element={<CreateProfilePage />} />
          </Routes>
       </Router>
    </React.StrictMode>
