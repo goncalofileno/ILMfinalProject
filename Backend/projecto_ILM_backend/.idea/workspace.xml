@@ -10,20 +10,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b39111a9-eb9d-471d-a3e4-b7f611c37010" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/dto/interest/InterestDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/dto/skill/SkillDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/mapper/InterestMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/mapper/SkillMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/service/InterestService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/service/SkillService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/bean/InterestBean.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/bean/InterestBean.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/bean/SkillBean.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/bean/SkillBean.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/bean/InterestBean.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/bean/InterestBean.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/dto/RegisterUserDto.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/pages/CreateProfilePage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/pages/CreateProfilePage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/stores/useBaseUrlStore.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/stores/useBaseUrlStore.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/selectors/InterestSelector.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/selectors/InterestSelector.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/selectors/SkillSelector.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/selectors/SkillSelector.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -95,7 +95,7 @@ const InterestSelector = ({ selectedInterests, setSelectedInterests }) => {
   return (
     <Container>
       <Form.Group controlId="formInterests">
-        <Form.Label>Interests</Form.Label>
+        <Form.Label>Interests:</Form.Label>
         <InputGroup className="mb-3">
           <Form.Control
             type="text"
