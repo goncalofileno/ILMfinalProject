@@ -10,13 +10,12 @@
 .description-cards {
    font-size: 15px;
    color: rgb(100, 100, 100);
-   margin-top: calc(1.1 * var(--vh));
 }
 
 .more-details-cards {
    font-size: 14px;
    color: rgb(100, 100, 100);
-   margin-top: calc(2 * var(--vh));
+   margin-top: 12px;
    font-weight: bold;
    cursor: pointer;
 }

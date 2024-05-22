@@ -77,5 +77,14 @@
 }
 
 .last-row-padd-bott {
-   padding-bottom: calc(2 * var(--vh));
+   padding-bottom: 15px;
+}
+
+.align-items-center {
+   display: flex;
+   justify-content: center;
+}
+
+.col-margin-bottom-16 {
+   margin-bottom: 16px;
 }

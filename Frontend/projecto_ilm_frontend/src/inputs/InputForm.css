@@ -4,20 +4,6 @@
    gap: 10px;
 }
 
-.inputForm input {
-   border-top: none;
-   border-right: none;
-   border-left: none;
-   background-color: transparent;
-   border-color: rgba(0, 0, 0, 0.26);
-   border-bottom: 1px solid;
-}
-
-.inputForm input:focus {
-   outline: none;
-   border-color: rgb(192, 23, 34);
-}
-
 .required-field-inputForm {
    color: rgb(192, 23, 34);
    font-size: 12px;
@@ -25,10 +11,6 @@
 
 .inputForm label {
    font-size: 18px;
-}
-
-.inputForm input {
-   font-size: 16px;
 }
 
 .input-div {
