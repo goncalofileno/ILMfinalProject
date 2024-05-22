@@ -103,6 +103,13 @@ public class UserEntity implements Serializable {
     private String token;
 
     /**
+     * The auxiliar token of the user is needed for the confirmation email and for the update of the password when user forget it.
+     * This is a unique field in the "user" table.
+     */
+    @Column(name = "auxiliarToken", nullable = true, unique = true, updatable = true)
+    private String auxiliarToken;
+
+    /**
      * The last activity date of the user.
      */
     @Column(name = "lastActivity", nullable = true, unique = false, updatable = true)
@@ -119,6 +126,9 @@ public class UserEntity implements Serializable {
      */
     @Column(name = "tutorial", nullable = false, unique = false, updatable = true)
     private boolean tutorial;
+
+
+
 
     /**
      * The interests of the user. This is a many-to-many relationship.
@@ -532,5 +542,14 @@ public class UserEntity implements Serializable {
      */
     public void setSkills(List<SkillEntity> skills) {
         this.skills = skills;
+    }
+
+
+    public String getAuxiliarToken() {
+        return auxiliarToken;
+    }
+
+    public void setAuxiliarToken(String auxiliarToken) {
+        this.auxiliarToken = auxiliarToken;
     }
 }

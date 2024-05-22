@@ -2,6 +2,7 @@ import "./RegisterForm.css";
 import InputForm from "../inputs/InputForm";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { registerUser } from "../../utilities/services";
 
 export default function RegisterForm() {
    const [email, setEmail] = useState("");
@@ -18,6 +19,13 @@ export default function RegisterForm() {
       if (email === "") setEmailRequirementNotMet(true);
       if (password === "") setPasswordRequirementNotMet(true);
       if (confirmPassword === "") setConfirmPasswordRequirementNotMet(true);
+      if (strength >= 4) {
+         registerUser(email, password).then((response) => {
+            if (response.status === 201) {
+               navigate("/");
+            }
+         });
+      }
    };
 
    const handleCancel = () => {

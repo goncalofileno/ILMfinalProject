@@ -1,6 +1,6 @@
 import "./App.css";
 import { useNavigate } from "react-router-dom";
-import RegisterForm from "../forms/RegisterForm";
+import RegisterForm from "../components/forms/RegisterForm";
 import LoginHeader from "../headers/LoginHeader";
 import { useRef, useEffect } from "react";
 import LoginProjectsCards from "../cards/LoginProjectsCards";
@@ -18,11 +18,9 @@ function Register() {
 
    const scrollToContent = () => {
       contentRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
-      if (!isComputer) {
-         setTimeout(() => {
-            window.scrollBy(0, -headerHeight);
-         }, 500);
-      }
+      setTimeout(() => {
+         window.scrollBy(0, -headerHeight);
+      }, 500);
    };
 
    const scrollToLogin = () => {

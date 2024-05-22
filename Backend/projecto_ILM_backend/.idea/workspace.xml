@@ -11,9 +11,23 @@
   <component name="ChangeListManager">
     <list default="true" id="b39111a9-eb9d-471d-a3e4-b7f611c37010" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/bean/UserBean.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/bean/UserBean.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/entity/UserEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/entity/UserEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/bean/UserBean.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/bean/UserBean.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/entity/UserEntity.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/entity/UserEntity.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Diagrama ER/.untitled.vpp.lck" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/forms/LoginForm.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/forms/LoginForm.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/forms/RegisterForm.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/forms/RegisterForm.jsx" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/index.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/inputs/InputForm.css" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/inputs/InputForm.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/inputs/InputForm.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/inputs/InputForm.jsx" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/pages/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/pages/App.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/pages/App2.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/pages/App2.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/pages/Register.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/pages/Register.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/pages/Register2.jsx" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,7 +62,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "JBoss/WildFly Server.JBoss/WildFly 30.0.1.Final.executor": "Run",
+    "JBoss/WildFly Server.JBoss/WildFly 30.0.1.Final.executor": "Debug",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "main",
@@ -172,7 +186,7 @@
       <workItem from="1716303302153" duration="1178000" />
       <workItem from="1716305166908" duration="671000" />
       <workItem from="1716306004022" duration="5253000" />
-      <workItem from="1716311442246" duration="2504000" />
+      <workItem from="1716311442246" duration="4011000" />
     </task>
     <servers />
   </component>
@@ -201,6 +215,15 @@
             <option name="WATCH_EXIT" value="false" />
           </properties>
           <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/service/UserService.java</url>
+          <line>41</line>
+          <properties class="com.ilm.projecto_ilm_backend.service.UserService" method="registerUser">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="6" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

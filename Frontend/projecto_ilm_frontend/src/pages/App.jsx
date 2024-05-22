@@ -18,11 +18,9 @@ function App() {
 
    const scrollToContent = () => {
       contentRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
-      if (!isComputer) {
-         setTimeout(() => {
-            window.scrollBy(0, -headerHeight);
-         }, 500);
-      }
+      setTimeout(() => {
+         window.scrollBy(0, -headerHeight);
+      }, 550);
    };
 
    const scrollToLogin = () => {
