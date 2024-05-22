@@ -88,3 +88,19 @@
 .col-margin-bottom-16 {
    margin-bottom: 16px;
 }
+
+#loginForm-button {
+   display: flex;
+   justify-content: center;
+}
+
+.div-see-login-button {
+   display: flex;
+   justify-content: center;
+}
+
+#loginForm-button {
+   width: 60%;
+   margin-top: 80px;
+   margin-bottom: 100px;
+}

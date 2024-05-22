@@ -42,6 +42,7 @@ meter {
 
 meter[value="0"]::-webkit-meter-optimum-value {
    transition: ease-in-out 0.5s;
+   transition: ease-in-out 0.5s;
 }
 meter[value="1"]::-webkit-meter-optimum-value {
    background: red;
@@ -56,6 +57,10 @@ meter[value="3"]::-webkit-meter-optimum-value {
    transition: ease-in-out 0.5s;
 }
 meter[value="4"]::-webkit-meter-optimum-value {
+   background: green;
+   transition: ease-in-out 0.5s;
+}
+meter[value="5"]::-webkit-meter-optimum-value {
    background: green;
    transition: ease-in-out 0.5s;
 }

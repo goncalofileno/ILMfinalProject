@@ -131,7 +131,7 @@ code {
 
 .ilm-page2 {
    background-color: rgb(255, 255, 255);
-   height: calc(100vh - 60px);
+   height: 100vh;
 }
 
 .ilm-page3-noheight {
@@ -141,7 +141,7 @@ code {
 
 .ilm-page3 {
    background-color: rgb(245, 245, 245);
-   height: calc(100vh - 60px);
+   height: 100vh;
 }
 
 .ilm-input {
@@ -162,6 +162,7 @@ code {
 .outer-container {
    height: 100%;
    padding: 10px;
+   padding-top: 0px;
    width: calc(100% - 10px);
 }
 

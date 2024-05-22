@@ -12,7 +12,7 @@
 .logo {
    height: 47px;
    width: 44px;
-   background-image: url("../../../../Resources/logo.png");
+   background-image: url("../../../../../Resources/logo.png");
    background-size: cover;
    background-position: center;
 }

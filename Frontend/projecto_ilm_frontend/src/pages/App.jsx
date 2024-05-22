@@ -1,28 +1,27 @@
 import "./App.css";
 import { useNavigate } from "react-router-dom";
-import LoginForm from "../forms/LoginForm";
-import LoginHeader from "../headers/LoginHeader";
+import LoginForm from "../components/forms/LoginForm";
+import LoginHeader from "../components/headers/LoginHeader";
 import { useRef, useEffect } from "react";
-import LoginProjectsCards from "../cards/LoginProjectsCards";
+import LoginProjectsCards from "../components/cards/LoginProjectsCards";
 import { Row, Col, Container } from "react-bootstrap";
 import { useMediaQuery } from "react-responsive";
 
 function App() {
    const navigate = useNavigate();
    const contentRef = useRef(null);
+   const loginFormRef = useRef(null);
    const isComputer = useMediaQuery({ minWidth: 1200 });
    const isTablet = useMediaQuery({ minWidth: 992, maxWidth: 1200 });
    const isSmallTablet = useMediaQuery({ minWidth: 768, maxWidth: 992 });
    const isPhone = useMediaQuery({ maxWidth: 768 });
-   const headerHeight = 60;
 
    const scrollToContent = () => {
       contentRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
-      if (!isComputer) {
-         setTimeout(() => {
-            window.scrollBy(0, -headerHeight);
-         }, 500);
-      }
+   };
+
+   const scrollToLoginForm = () => {
+      loginFormRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
    };
 
    const scrollToLogin = () => {
@@ -41,15 +40,26 @@ function App() {
                   <Row className="outer-row">
                      <Col xl={8} lg={6} sm={12}>
                         <Row>
-                           <Col xl={6} lg={12} md={6} sm={12}>
-                              <h1 className="app-slogan app-slogan-1" style={{ textAlign: isSmallTablet && "end" }}>
+                           <Col xl={6} lg={12} md={6} sm={6}>
+                              <h1
+                                 className="app-slogan app-slogan-1"
+                                 style={{
+                                    textAlign: isSmallTablet && "end",
+                                    marginTop: isPhone && "10px",
+                                    marginBottom: isPhone && "0px",
+                                 }}
+                              >
                                  Where Ideas
                               </h1>
                            </Col>
-                           <Col xl={6} lg={12} md={6} sm={12}>
+                           <Col xl={6} lg={12} md={6} sm={6}>
                               <h1
                                  className="app-slogan app-slogan-2"
-                                 style={{ textAlign: (isTablet || isPhone) && "center" }}
+                                 style={{
+                                    textAlign: (isTablet || isPhone) && "center",
+                                    marginTop: isPhone && "10px",
+                                    marginBottom: isPhone && "0px",
+                                 }}
                               >
                                  Take Flight
                               </h1>
@@ -57,31 +67,39 @@ function App() {
                         </Row>
                         <Row>
                            {isComputer && <Col lg={6}></Col>}
-                           {!isPhone && (
-                              <Col>
-                                 {" "}
-                                 <div className="ilm-description">
-                                    Welcome to our Innovation Lab Management app, where creativity meets collaboration
-                                    and ideas turn into reality. With our app, you can manage and track your projects
-                                    seamlessly, from brainstorming to implementation, ensuring every idea has the
-                                    potential to flourish. Join us in driving progress and inspiring change, one
-                                    innovative project at a time.
-                                 </div>
+
+                           <Col>
+                              {" "}
+                              <div className="ilm-description">
+                                 Welcome to our Innovation Lab Management app, where creativity meets collaboration and
+                                 ideas turn into reality. With our app, you can manage and track your projects
+                                 seamlessly, from brainstorming to implementation, ensuring every idea has the potential
+                                 to flourish. Join us in driving progress and inspiring change, one innovative project
+                                 at a time.
+                              </div>
+                              {!isSmallTablet && !isPhone ? (
                                  <div className="div-project-button">
-                                    <button
-                                       className="submit-button"
-                                       id="projects-button"
-                                       onClick={scrollToContent}
-                                       style={{ marginBottom: !isComputer && !isTablet && "100px" }}
-                                    >
+                                    <button className="submit-button" id="projects-button" onClick={scrollToContent}>
                                        Some of our Projects
                                     </button>
                                  </div>
-                              </Col>
-                           )}
+                              ) : (
+                                 <div className="div-see-login-button">
+                                    <button className="submit-button" id="loginForm-button" onClick={scrollToLoginForm}>
+                                       Login
+                                    </button>
+                                 </div>
+                              )}
+                           </Col>
                         </Row>
                      </Col>
-                     <Col xl={4} lg={6} className="align-items-center" style={{ marginTop: isPhone && "50px" }}>
+                     <Col
+                        xl={4}
+                        lg={6}
+                        className="align-items-center"
+                        style={{ marginTop: (isPhone || isSmallTablet) && "30px" }}
+                        ref={loginFormRef}
+                     >
                         <LoginForm />
                      </Col>
                      {isPhone && (
@@ -96,7 +114,7 @@ function App() {
                   </Row>
                </Container>
             </div>
-            <div className="ilm-page2" ref={contentRef}>
+            <div className="ilm-page2" ref={contentRef} style={{ paddingTop: "60px" }}>
                <Container className="outer-container">
                   <Row>
                      <h1 className="ilm-general-subTitle">Projects</h1>

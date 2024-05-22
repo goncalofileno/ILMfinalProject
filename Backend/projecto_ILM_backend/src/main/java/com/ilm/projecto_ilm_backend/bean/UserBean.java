@@ -154,8 +154,8 @@ public class UserBean {
             user.setRegistrationDate(LocalDateTime.now());
             user.setType(UserTypeENUM.STANDARD_USER);
             user.setPhoto("https://www.pngkey.com/png/full/114-1149878_setting-user-avatar-in-specific-size-without-breaking.png");
-            user.setToken(generateNewToken());
-            emailService.sendEmail(user.getEmail(),user.getToken(),true);
+            user.setAuxiliarToken(generateNewToken());
+            emailService.sendEmail(user.getEmail(),user.getAuxiliarToken(),true);
             userDao.persist(user);
             return true;
         } catch (Exception e) {
