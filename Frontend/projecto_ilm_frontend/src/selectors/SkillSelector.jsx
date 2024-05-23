@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Form, Row, Col, Button, Card, ListGroup, InputGroup, Container, Alert, Modal } from "react-bootstrap";
 import { getSkills } from "../utilities/services";
+import { useNavigate, useParams } from "react-router-dom";
 //import useAxios from "../axios/axiosConfig"; // Certifique-se de que o caminho está correto
 
 const SkillSelector = ({ selectedSkills, setSelectedSkills }) => {
@@ -11,10 +12,11 @@ const SkillSelector = ({ selectedSkills, setSelectedSkills }) => {
    const [showModal, setShowModal] = useState(false);
    const [newSkillType, setNewSkillType] = useState("");
    const [newSkillName, setNewSkillName] = useState("");
+   const { token } = useParams();
    //const axios = useAxios();
 
    useEffect(() => {
-      getSkills()
+      getSkills(token)
          .then((response) => {
             return response.json();
          })

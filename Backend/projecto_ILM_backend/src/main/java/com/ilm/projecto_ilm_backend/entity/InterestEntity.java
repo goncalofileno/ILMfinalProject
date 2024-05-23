@@ -11,6 +11,7 @@ import java.io.Serializable;
 @NamedQuery(name = "Interest.findById", query = "SELECT i FROM InterestEntity i WHERE i.id = :id")
 @NamedQuery(name = "Interest.findAll", query = "SELECT i FROM InterestEntity i")
 @NamedQuery(name = "Interest.countAll", query = "SELECT COUNT(i) FROM InterestEntity i")
+@NamedQuery(name = "Interest.findByName", query = "SELECT i FROM InterestEntity i WHERE i.name = :name")
 public class InterestEntity implements Serializable{
     private static final long serialVersionUID = 1L;
 

@@ -7,6 +7,7 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * The InterestDao class provides methods for interacting with the "interest" table in the database.
@@ -70,6 +71,7 @@ public class InterestDao extends AbstractDao<InterestEntity> {
             return 0;
         }
     }
+
     /**
      * Finds all InterestEntities in the database.
      *
@@ -82,4 +84,32 @@ public class InterestDao extends AbstractDao<InterestEntity> {
             return null;
         }
     }
+
+    /**
+     * Finds an interest entity by its name.
+     *
+     * @param name the name of the interest entity to find.
+     * @return an Optional containing the interest entity with the given name if it exists.
+     */
+    public Optional<InterestEntity> findByName(String name) {
+        try {
+            InterestEntity interest = em.createNamedQuery("Interest.findByName", InterestEntity.class)
+                    .setParameter("name", name)
+                    .getSingleResult();
+            return Optional.of(interest);
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
+    /**
+     * Creates a new interest entity in the database.
+     *
+     * @param interest the interest entity to create.
+     */
+    @Transactional
+    public void create(InterestEntity interest) {
+        em.persist(interest);
+    }
 }
+

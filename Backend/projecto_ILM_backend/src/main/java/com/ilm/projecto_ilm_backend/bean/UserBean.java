@@ -1,5 +1,6 @@
 package com.ilm.projecto_ilm_backend.bean;
 
+import com.ilm.projecto_ilm_backend.ENUMS.SkillTypeENUM;
 import com.ilm.projecto_ilm_backend.ENUMS.UserTypeENUM;
 import com.ilm.projecto_ilm_backend.ENUMS.WorkLocalENUM;
 import com.ilm.projecto_ilm_backend.dao.InterestDao;
@@ -7,6 +8,7 @@ import com.ilm.projecto_ilm_backend.dao.LabDao;
 import com.ilm.projecto_ilm_backend.dao.SkillDao;
 import com.ilm.projecto_ilm_backend.dao.UserDao;
 import com.ilm.projecto_ilm_backend.dto.user.RegisterUserDto;
+import com.ilm.projecto_ilm_backend.dto.user.UserProfileDto;
 import com.ilm.projecto_ilm_backend.emailService.EmailService;
 import com.ilm.projecto_ilm_backend.entity.InterestEntity;
 import com.ilm.projecto_ilm_backend.entity.LabEntity;
@@ -21,11 +23,18 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The UserBean class is responsible for managing UserEntity instances.
@@ -37,25 +46,25 @@ public class UserBean {
     /**
      * The UserDao instance used for accessing the database.
      */
-    @EJB
+    @Inject
     UserDao userDao;
 
     /**
      * The LabDao instance used for accessing the database.
      */
-    @EJB
+    @Inject
     LabDao labDao;
 
     /**
      * The InterestDao instance used for accessing the database.
      */
-    @EJB
+    @Inject
     InterestDao interestDao;
 
     /**
      * The SkillDao instance used for accessing the database.
      */
-    @EJB
+    @Inject
     SkillDao skillDao;
 
     @Inject
@@ -155,7 +164,7 @@ public class UserBean {
             user.setType(UserTypeENUM.STANDARD_USER);
             user.setPhoto("https://www.pngkey.com/png/full/114-1149878_setting-user-avatar-in-specific-size-without-breaking.png");
             user.setAuxiliarToken(generateNewToken());
-            emailService.sendEmail(user.getEmail(),user.getAuxiliarToken(),true);
+            emailService.sendConfirmationEmail(user.getEmail(), user.getAuxiliarToken());
             userDao.persist(user);
             return true;
         } catch (Exception e) {
@@ -166,6 +175,11 @@ public class UserBean {
         }
     }
 
+    /**
+     * Generates a new token for user confirmation.
+     *
+     * @return the generated token
+     */
     private String generateNewToken() {
         SecureRandom secureRandom = new SecureRandom();
         Base64.Encoder base64Encoder = Base64.getUrlEncoder();
@@ -173,4 +187,76 @@ public class UserBean {
         secureRandom.nextBytes(randomBytes);
         return base64Encoder.encodeToString(randomBytes);
     }
+
+    /**
+     * Confirms the user's email.
+     * @param token
+     * @return
+     */
+    public boolean confirmEmail(String token) {
+        UserEntity user = userDao.findByAuxiliarToken(token);
+        if (user != null) {
+            user.setMailConfirmed(true);
+            userDao.merge(user);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean createProfile(UserProfileDto userProfileDto, String auxiliarToken) {
+        UserEntity user = userDao.findByAuxiliarToken(auxiliarToken);
+        if (user == null) {
+            return false;
+        }
+
+        user.setFirstName(userProfileDto.getFirstName());
+        user.setLastName(userProfileDto.getLastName());
+        user.setUsername(userProfileDto.getUsername());
+        user.setLab(labDao.findbyLocal(WorkLocalENUM.valueOf(userProfileDto.getLab().toUpperCase())));
+        user.setBio(userProfileDto.getBio());
+        user.setPublicProfile(userProfileDto.publicProfile());
+
+        // Handle skills
+        List<SkillEntity> skillEntities = userProfileDto.getSkills().stream()
+                .map(skillDto -> skillDao.findByName(skillDto.getName())
+                        .orElseGet(() -> {
+                            SkillEntity newSkill = new SkillEntity();
+                            newSkill.setName(skillDto.getName());
+                            newSkill.setType(SkillTypeENUM.valueOf(skillDto.getType()));
+                            skillDao.create(newSkill);
+                            return newSkill;
+                        }))
+                .collect(Collectors.toList());
+        user.setSkills(skillEntities);
+
+        // Handle interests
+        List<InterestEntity> interestEntities = userProfileDto.getInterests().stream()
+                .map(interestDto -> interestDao.findByName(interestDto.getName())
+                        .orElseGet(() -> {
+                            InterestEntity newInterest = new InterestEntity();
+                            newInterest.setName(interestDto.getName());
+                            interestDao.create(newInterest);
+                            return newInterest;
+                        }))
+                .collect(Collectors.toList());
+        user.setInterests(interestEntities);
+
+        userDao.merge(user);
+        return true;
+    }
+
+
+    public String saveProfilePicture(InputStream profilePictureInputStream, String fileName, int userId) {
+        String directoryPath = "/Users/goncalofileno/Desktop/Fotos";
+        String filePath = directoryPath + "/" + userId + "_" + fileName;
+        try {
+            Files.copy(profilePictureInputStream, Paths.get(filePath), StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to save profile picture", e);
+        }
+        return filePath;
+    }
+
 }
+

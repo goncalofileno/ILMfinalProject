@@ -7,6 +7,7 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * The SkillDao class is a Data Access Object (DAO) for the SkillEntity class.
@@ -14,7 +15,6 @@ import java.util.List;
  */
 @Stateless
 public class SkillDao extends AbstractDao<SkillEntity> {
-
 
     private static final long serialVersionUID = 1L;
 
@@ -66,5 +66,29 @@ public class SkillDao extends AbstractDao<SkillEntity> {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    /**
+     * Finds a skill entity by its name.
+     *
+     * @param name the name of the skill entity to find.
+     * @return an Optional containing the skill entity with the given name.
+     */
+    public Optional<SkillEntity> findByName(String name) {
+        try {
+            return Optional.of(em.createNamedQuery("Skill.findByName", SkillEntity.class).setParameter("name", name).getSingleResult());
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
+    /**
+     * Creates a new skill entity in the database.
+     *
+     * @param skillEntity the skill entity to create.
+     */
+    @Transactional
+    public void create(SkillEntity skillEntity) {
+        em.persist(skillEntity);
     }
 }

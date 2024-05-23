@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ArtifactsWorkspaceSettings">
     <artifacts-to-build>
-      <artifact name="projeto_ILM_backend:war exploded" />
+      <artifact name="projecto_ILM_backend:war exploded" />
     </artifacts-to-build>
   </component>
   <component name="AutoImportSettings">
@@ -10,9 +10,192 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b39111a9-eb9d-471d-a3e4-b7f611c37010" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/dto/user/UserProfileDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/validator/UserProfileValidator.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+<<<<<<< HEAD
       <change beforePath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/service/UserService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/validator/RegexValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/validator/RegexValidator.java" afterDir="false" />
+=======
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/ENUMS/WorkLocalENUM.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/ENUMS/WorkLocalENUM.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/bean/UserBean.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/bean/UserBean.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/dao/InterestDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/dao/InterestDao.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/dao/SkillDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/dao/SkillDao.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/emailService/EmailService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/emailService/EmailService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/entity/InterestEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/entity/InterestEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/entity/SkillEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/entity/SkillEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/entity/UserEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/entity/UserEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/service/InterestService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/service/InterestService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/service/LabService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/service/LabService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/service/SkillService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/service/SkillService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/service/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/validator/DatabaseValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/validator/DatabaseValidator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/ENUMS/WorkLocalENUM.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/ENUMS/WorkLocalENUM.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/bean/UserBean.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/bean/UserBean.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/dao/InterestDao.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/dao/InterestDao.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/dao/SkillDao.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/dao/SkillDao.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/emailService/EmailService$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/emailService/EmailService$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/emailService/EmailService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/emailService/EmailService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/entity/InterestEntity.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/entity/InterestEntity.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/entity/SkillEntity.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/entity/SkillEntity.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/entity/UserEntity.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/entity/UserEntity.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/service/UserService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/service/UserService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/META-INF/MANIFEST.MF" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/META-INF/beans.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/META-INF/persistence.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/ENUMS/ConvertersENUM/LogTypeEnumConverter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/ENUMS/ConvertersENUM/NotificationTypeEnumConverter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/ENUMS/ConvertersENUM/ResourceTypeEnumConverter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/ENUMS/ConvertersENUM/SkillTypeEnumConverter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/ENUMS/ConvertersENUM/StateProjectEnumConverter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/ENUMS/ConvertersENUM/TaskStatusEnumConverter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/ENUMS/ConvertersENUM/UserInProjectTypeEnumConverter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/ENUMS/ConvertersENUM/UserInTaskTypeEnumConverter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/ENUMS/ConvertersENUM/UserTypeEnumConverter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/ENUMS/ConvertersENUM/WorkLocalEnumConverter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/ENUMS/LogTypeENUM.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/ENUMS/NotificationTypeENUM.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/ENUMS/ResourceTypeENUM.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/ENUMS/SkillTypeENUM.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/ENUMS/StateProjectENUM.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/ENUMS/TaskStatusENUM.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/ENUMS/UserInProjectTypeENUM.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/ENUMS/UserInTaskTypeENUM.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/ENUMS/UserTypeENUM.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/ENUMS/WorkLocalENUM.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/bean/InterestBean.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/bean/LabBean.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/bean/ResourceBean.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/bean/SkillBean.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/bean/StartupBean.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/bean/SupplierBean.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/bean/UserBean.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/dao/AbstractDao.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/dao/InterestDao.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/dao/LabDao.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/dao/ResourceDao.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/dao/SkillDao.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/dao/SupplierDao.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/dao/UserDao.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/dto/RegisterUserDto.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/entity/InterestEntity.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/entity/LabEntity.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/entity/LogEntity$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/entity/LogEntity.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/entity/MessageEntity.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/entity/NoteEntity.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/entity/NotificationEntity.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/entity/ProjectEntity.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/entity/ProjectResourceEntity.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/entity/ResourceEntity.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/entity/SkillEntity.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/entity/SupplierEntity.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/entity/SystemEntity.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/entity/TaskEntity.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/entity/UserEntity.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/entity/UserProjectEntity.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/entity/UserTaskEntity.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/service/ApplicationConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/service/UserService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/validator/DatabaseValidator.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/validator/RegexValidator.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/classes/log4j2.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/lib/jakarta.mail-api-2.0.1.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/lib/log4j-api-2.23.1.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/my_activities_backend/WEB-INF/lib/log4j-core-2.23.1.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/META-INF/MANIFEST.MF" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/META-INF/beans.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/META-INF/persistence.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/ENUMS/ConvertersENUM/LogTypeEnumConverter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/ENUMS/ConvertersENUM/NotificationTypeEnumConverter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/ENUMS/ConvertersENUM/ResourceTypeEnumConverter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/ENUMS/ConvertersENUM/SkillTypeEnumConverter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/ENUMS/ConvertersENUM/StateProjectEnumConverter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/ENUMS/ConvertersENUM/TaskStatusEnumConverter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/ENUMS/ConvertersENUM/UserInProjectTypeEnumConverter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/ENUMS/ConvertersENUM/UserInTaskTypeEnumConverter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/ENUMS/ConvertersENUM/UserTypeEnumConverter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/ENUMS/ConvertersENUM/WorkLocalEnumConverter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/ENUMS/LogTypeENUM.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/ENUMS/NotificationTypeENUM.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/ENUMS/ResourceTypeENUM.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/ENUMS/SkillTypeENUM.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/ENUMS/StateProjectENUM.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/ENUMS/TaskStatusENUM.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/ENUMS/UserInProjectTypeENUM.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/ENUMS/UserInTaskTypeENUM.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/ENUMS/UserTypeENUM.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/ENUMS/WorkLocalENUM.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/bean/InterestBean.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/bean/LabBean.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/bean/ResourceBean.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/bean/SkillBean.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/bean/StartupBean.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/bean/SupplierBean.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/bean/UserBean.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/dao/AbstractDao.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/dao/InterestDao.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/dao/LabDao.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/dao/ResourceDao.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/dao/SkillDao.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/dao/SupplierDao.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/dao/UserDao.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/dto/RegisterUserDto.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/emailService/EmailService$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/emailService/EmailService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/entity/InterestEntity.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/entity/LabEntity.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/entity/LogEntity$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/entity/LogEntity.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/entity/MessageEntity.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/entity/NoteEntity.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/entity/NotificationEntity.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/entity/ProjectEntity.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/entity/ProjectResourceEntity.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/entity/ResourceEntity.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/entity/SkillEntity.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/entity/SupplierEntity.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/entity/SystemEntity.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/entity/TaskEntity.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/entity/UserEntity.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/entity/UserProjectEntity.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/entity/UserTaskEntity.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/service/ApplicationConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/service/UserService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/validator/DatabaseValidator.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/com/ilm/projecto_ilm_backend/validator/RegexValidator.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/classes/log4j2.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/jboss-web.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/lib/angus-activation-2.0.0.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/lib/antlr4-runtime-4.10.1.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/lib/byte-buddy-1.14.7.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/lib/classmate-1.5.1.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/lib/hibernate-commons-annotations-6.0.6.Final.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/lib/hibernate-core-6.2.13.Final.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/lib/hibernate-jpamodelgen-5.6.10.Final.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/lib/istack-commons-runtime-4.1.1.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/lib/jakarta.activation-api-2.1.0.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/lib/jakarta.inject-api-2.0.1.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/lib/jakarta.persistence-api-3.0.0.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/lib/jakarta.transaction-api-2.0.1.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/lib/jakarta.xml.bind-api-4.0.0.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/lib/jandex-3.0.5.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/lib/javax.activation-api-1.2.0.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/lib/jaxb-api-2.3.1.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/lib/jaxb-core-4.0.2.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/lib/jaxb-runtime-4.0.2.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/lib/jboss-logging-3.5.0.Final.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/lib/log4j-api-2.23.1.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/lib/log4j-core-2.23.1.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/lib/mysql-connector-j-8.3.0.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/lib/protobuf-java-3.25.1.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/projeto_ILM_backend/WEB-INF/lib/txw2-4.0.2.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/pages/CreateProfilePage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/pages/CreateProfilePage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/selectors/InterestSelector.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/selectors/InterestSelector.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/selectors/SkillSelector.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/selectors/SkillSelector.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/utilities/services.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/utilities/services.js" afterDir="false" />
+>>>>>>> 35aef03d4b36c5e40eb91f659f7e55bc179e6d1c
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,6 +224,9 @@
     &quot;accountId&quot;: &quot;82723f28-5b6d-4ecd-b363-f57f58e35b91&quot;
   }
 }</component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="jar://$MAVEN_REPOSITORY$/jakarta/platform/jakarta.jakartaee-api/9.1.0/jakarta.jakartaee-api-9.1.0.jar!/jakarta/ws/rs/core/Response.class" root0="SKIP_INSPECTION" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 7
 }</component>
@@ -53,6 +239,12 @@
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;JBoss/WildFly Server.JBoss/WildFly 30.0.1.Final.executor&quot;: &quot;Run&quot;,
+<<<<<<< HEAD
+=======
+    &quot;JBoss/WildFly Server.JBoss/WildFly 31.0.1.Final.executor&quot;: &quot;Run&quot;,
+    &quot;JavaScript Debug.JBoss/WildFly 31.0.1.Final JavaScript.executor&quot;: &quot;Debug&quot;,
+    &quot;Maven.projeto_ilm_final [clean,install].executor&quot;: &quot;Run&quot;,
+>>>>>>> 35aef03d4b36c5e40eb91f659f7e55bc179e6d1c
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
@@ -70,11 +262,24 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+<<<<<<< HEAD
+=======
+  <component name="RunDashboard">
+    <option name="excludedTypes">
+      <set>
+        <option value="JBossConfiguration" />
+      </set>
+    </option>
+  </component>
+>>>>>>> 35aef03d4b36c5e40eb91f659f7e55bc179e6d1c
   <component name="RunManager">
-    <configuration name="JBoss/WildFly 30.0.1.Final" type="JBossConfiguration" factoryName="Local" APPLICATION_SERVER_NAME="JBoss/WildFly 30.0.1.Final" ALTERNATIVE_JRE_ENABLED="false" nameIsGenerated="true">
+    <configuration name="JBoss/WildFly 31.0.1.Final" type="JBossConfiguration" factoryName="Local" APPLICATION_SERVER_NAME="JBoss/WildFly 31.0.1.Final" ALTERNATIVE_JRE_ENABLED="false" nameIsGenerated="true">
+      <option name="OPEN_IN_BROWSER_URL" value="http://localhost:3000/" />
+      <option name="BROWSER_ID" value="98ca6316-2f89-46d9-a9e5-fa9e2b0625b3" />
+      <option name="START_JAVASCRIPT_DEBUGGER" value="true" />
       <option name="UPDATING_POLICY" value="restart-server" />
       <deployment>
-        <artifact name="projeto_ILM_backend:war exploded">
+        <artifact name="projecto_ILM_backend:war exploded">
           <settings />
         </artifact>
       </deployment>
@@ -82,13 +287,13 @@
         <option name="SERVER" />
         <option name="BINDING_SET_NAME" value="" />
         <option name="DOMAIN" value="false" />
-        <option name="SERVER_GROUP" />
+        <option name="SERVER_GROUP" value="main-server-group" />
         <option name="USERNAME" value="" />
         <option name="CREDENTIAL_ALIAS" />
       </server-settings>
       <predefined_log_file enabled="true" id="JBoss" />
       <RunnerSettings RunnerId="Debug">
-        <option name="DEBUG_PORT" value="55858" />
+        <option name="DEBUG_PORT" value="63134" />
       </RunnerSettings>
       <ConfigurationWrapper VM_VAR="JAVA_OPTS" RunnerId="Cover">
         <option name="USE_ENV_VARIABLES" value="true" />
@@ -137,9 +342,9 @@
       </ConfigurationWrapper>
       <method v="2">
         <option name="Make" enabled="true" />
+        <option name="MakeProject" enabled="true" />
         <option name="BuildArtifacts" enabled="true">
           <artifact name="projecto_ILM_backend:war exploded" />
-          <artifact name="projeto_ILM_backend:war exploded" />
         </option>
       </method>
     </configuration>
@@ -158,7 +363,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="jdk-21.0.1-openjdk-21.0.1-f644763e9732-f98dd351" />
+        <option value="bundled-jdk-9f38398b9061-18abd8497189-intellij.indexing.shared.core-IU-241.14494.240" />
+        <option value="bundled-js-predefined-1d06a55b98c1-74d2a5396914-JavaScript-IU-241.14494.240" />
       </set>
     </attachedChunks>
   </component>
@@ -185,7 +391,13 @@
       <workItem from="1716400790407" duration="1150000" />
       <workItem from="1716402077725" duration="6728000" />
       <workItem from="1716421492850" duration="2547000" />
+<<<<<<< HEAD
       <workItem from="1716472782647" duration="4716000" />
+=======
+      <workItem from="1716388992098" duration="2903000" />
+      <workItem from="1716474653157" duration="3735000" />
+      <workItem from="1716478401511" duration="3331000" />
+>>>>>>> 35aef03d4b36c5e40eb91f659f7e55bc179e6d1c
     </task>
     <servers />
   </component>
@@ -202,5 +414,8 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
 </project>
