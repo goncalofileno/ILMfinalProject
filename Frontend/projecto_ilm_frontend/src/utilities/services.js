@@ -113,20 +113,20 @@ async function getLabs(auxiliarToken) {
 
 async function createProfile(userProfileDto, auxiliarToken) {
    try {
-       const response = await fetch(`${baseURL}user/createProfile`, {
-           method: "POST",
-           headers: {
-               Accept: "application/json",
-               "Content-Type": "application/json",
-               Authorization: auxiliarToken,
-           },
-           body: JSON.stringify(userProfileDto),
-       });
+      const response = await fetch(`${baseURL}user/createProfile`, {
+         method: "POST",
+         headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: auxiliarToken,
+         },
+         body: JSON.stringify(userProfileDto),
+      });
 
-       return response;
+      return response;
    } catch (error) {
-       console.error("Error during creating profile:", error);
-       throw error;
+      console.error("Error during creating profile:", error);
+      throw error;
    }
 }
 
@@ -135,19 +135,29 @@ async function uploadProfilePicture(profilePicture, auxiliarToken) {
    formData.append("profilePicture", profilePicture);
 
    try {
-       const response = await fetch(`${baseURL}user/uploadProfilePicture`, {
-           method: "POST",
-           headers: {
-               Authorization: auxiliarToken,
-           },
-           body: formData,
-       });
+      const response = await fetch(`${baseURL}user/uploadProfilePicture`, {
+         method: "POST",
+         headers: {
+            Authorization: auxiliarToken,
+         },
+         body: formData,
+      });
 
-       return response;
+      return response;
    } catch (error) {
-       console.error("Error during uploading profile picture:", error);
-       throw error;
+      console.error("Error during uploading profile picture:", error);
+      throw error;
    }
 }
 
-export { registerUser, getInterests, getLabs, getSkills, checkUsername, checkAuxiliarToken, createProfile, uploadProfilePicture };
+export {
+   registerUser,
+   getInterests,
+   getLabs,
+   getSkills,
+   checkUsername,
+   checkAuxiliarToken,
+   createProfile,
+   uploadProfilePicture,
+   checkEmail,
+};

@@ -12,8 +12,9 @@ export default function RegisterForm() {
    const [confirmPassword, setConfirmPassword] = useState("");
    const [warningTypeEmail, setWarningTypeEmail] = useState("");
    const [warningTxtEmail, setWarningTxtEmail] = useState("");
-   const [waningTypePassword, setWarningTypePassword] = useState("");
+   const [warningTypePassword, setWarningTypePassword] = useState("");
    const [warningTxtPassword, setWarningTxtPassword] = useState("");
+   const [showTolltip, setShowTooltip] = useState(false);
    const [warningTypeConfirmPassword, setWarningTypeConfirmPassword] = useState("");
    const [warningTxtConfirmPassword, setWarningTxtConfirmPassword] = useState("");
 
@@ -21,10 +22,11 @@ export default function RegisterForm() {
 
    const handleSubmit = (e) => {
       e.preventDefault();
+      if (warningTypePassword === "incorrect") setShowTooltip(true);
       if (email !== "" && password !== "" && confirmPassword !== "") {
          if (
             warningTypeEmail === "success" &&
-            waningTypePassword === "success" &&
+            warningTypePassword === "success" &&
             warningTypeConfirmPassword === "success"
          ) {
             registerUser(email, password).then((response) => {
@@ -39,11 +41,12 @@ export default function RegisterForm() {
    const handleOnBlurEmail = () => {
       console.log("Email is being checked");
       checkEmail(email).then((response) => {
-         if (response.status === 200) {
+         console.log(response);
+         if (response.status == 200) {
             console.log("Email is valid");
             setWarningTypeEmail("success");
             setWarningTxtEmail("Email is valid");
-         } else if (response.status === 409 || response.status === 400) {
+         } else if (response.status == 409 || response.status == 400) {
             setWarningTypeEmail("incorrect");
             setWarningTxtEmail("Email this email is invalid");
             console.log("Email is invalid");
@@ -75,15 +78,11 @@ export default function RegisterForm() {
       navigate("/");
    };
 
-   const updateEmail = (e) => {
-      setEmail(e.target.value);
-   };
    const updatePassword = (e) => {
       setPassword(e.target.value);
       setStrength(calculateStrength(e.target.value));
-   };
-   const updateConfirmPassword = (e) => {
-      setConfirmPassword(e.target.value);
+
+      validatePassword(e.target.value);
    };
 
    const calculateStrength = (password) => {
@@ -101,6 +100,26 @@ export default function RegisterForm() {
       }
       return strength;
    };
+
+   const validatePassword = (value) => {
+      const conditions = {
+         upper: /[A-Z]/.test(value),
+         lower: /[a-z]/.test(value),
+         number: /\d/.test(value),
+         special: /\W/.test(value),
+         length: value.length >= 6,
+      };
+      setConditionsMet(conditions);
+   };
+
+   const [conditionsMet, setConditionsMet] = useState({
+      upper: false,
+      lower: false,
+      number: false,
+      special: false,
+      length: false,
+   });
+
    return (
       <div className="login-register-form-container">
          <form className="ilm-form login-register-form">
@@ -113,7 +132,7 @@ export default function RegisterForm() {
                      label="Email"
                      type="email"
                      value={email}
-                     setValue={updateEmail}
+                     setValue={setEmail}
                      warningType={warningTypeEmail}
                      warningTxt={warningTxtEmail}
                      handleOnBlur={handleOnBlurEmail}
@@ -124,9 +143,12 @@ export default function RegisterForm() {
                         type="password"
                         value={password}
                         setValue={updatePassword}
-                        warningType={waningTypePassword}
+                        warningType={warningTypePassword}
                         warningTxt={warningTxtPassword}
                         handleOnBlur={handleOnBlurPassword}
+                        showTolltip={showTolltip}
+                        setShowTooltip={setShowTooltip}
+                        conditionsMet={conditionsMet}
                      ></PasswordForm>
                      <div id="pass-strength">
                         <div>Password Strength</div>
@@ -163,7 +185,7 @@ export default function RegisterForm() {
                      label="Confirm Password"
                      type="password"
                      value={confirmPassword}
-                     setValue={updateConfirmPassword}
+                     setValue={setConfirmPassword}
                      warningType={warningTypeConfirmPassword}
                      warningTxt={warningTxtConfirmPassword}
                      handleOnBlur={handleOnBlurConfirmPassword}
