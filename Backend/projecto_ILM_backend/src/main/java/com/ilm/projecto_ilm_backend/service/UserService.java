@@ -11,6 +11,8 @@ import jakarta.ws.rs.core.Response;
 import jakarta.inject.Inject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.mapping.AuxiliaryDatabaseObject;
+
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -84,6 +86,20 @@ public class UserService {
             return Response.status(Response.Status.CONFLICT).build();
         } else {
             return Response.status(Response.Status.OK).build();
+        }
+    }
+
+    @GET
+    @Path("/checkAuxiliarToken")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response checkAuxiliarToken(@HeaderParam("auxiliarToken") String auxiliarToken) throws UnknownHostException {
+        String clientIP = InetAddress.getLocalHost().getHostAddress();
+        logger.info("Received a request to check if an auxiliar token exist in the database from IP address: " + clientIP);
+        // Check if username already exists in the database
+        if (databaseValidator.checkAuxiliarToken(auxiliarToken)) {
+            return Response.status(Response.Status.OK).build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
     }
 }

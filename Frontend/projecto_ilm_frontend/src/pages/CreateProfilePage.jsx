@@ -6,7 +6,8 @@ import SkillSelector from "../selectors/SkillSelector";
 import DefaultAvatar from "../resources/avatares/Avatar padrão.jpg";
 import LoginHeader from "../components/headers/LoginHeader";
 import "./CreateProfilePage.css";
-import { getLabs, checkUsername } from "../utilities/services";
+import { getLabs, checkUsername, checkAuxiliarToken } from "../utilities/services";
+import { useNavigate, useParams } from "react-router-dom";
 
 const CreateProfilePage = () => {
    const [username, setUsername] = useState("");
@@ -23,21 +24,29 @@ const CreateProfilePage = () => {
    const [selectedInterests, setSelectedInterests] = useState([]);
    const [selectedSkills, setSelectedSkills] = useState([]);
    const [formErrors, setFormErrors] = useState({}); // Adicionei para gerenciar os erros de validação
+   const navigate = useNavigate();
+   const { token } = useParams();
 
    //const axios = useAxios();
 
    useEffect(() => {
-      getLabs()
-         .then((response) => {
-            return response.json();
-         })
-         .then((data) => {
-            const formattedLabs = data.map((lab) => ({
-               ...lab,
-               local: formatLocalName(lab.local),
-            }));
-            setLabs(formattedLabs);
-         });
+      checkAuxiliarToken(token).then((response) => {
+         if (response.status === 200) {
+            getLabs()
+               .then((response) => {
+                  return response.json();
+               })
+               .then((data) => {
+                  const formattedLabs = data.map((lab) => ({
+                     ...lab,
+                     local: formatLocalName(lab.local),
+                  }));
+                  setLabs(formattedLabs);
+               });
+         } else {
+            navigate("/");
+         }
+      });
    }, []);
 
    const formatLocalName = (name) => {
@@ -86,6 +95,10 @@ const CreateProfilePage = () => {
       if (!office) errors.office = "Office is required.";
       setFormErrors(errors);
       return Object.keys(errors).length === 0;
+   };
+
+   const handleCancel = () => {
+      navigate("/");
    };
 
    const handleSubmit = async (e) => {
@@ -265,7 +278,7 @@ const CreateProfilePage = () => {
 
                      <Row className="mt-4 justify-content-end">
                         <Col md="auto" className="button-group">
-                           <Button variant="secondary" className="mr-3">
+                           <Button variant="secondary" className="mr-3" onClick={handleCancel}>
                               Cancel
                            </Button>
                            <Button variant="primary" type="submit">

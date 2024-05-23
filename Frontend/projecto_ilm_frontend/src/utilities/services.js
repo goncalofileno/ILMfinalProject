@@ -1,60 +1,94 @@
 const baseURL = "http://localhost:8080/projeto_ilm_final/rest/";
 
+async function checkUsername(username) {
+   try {
+      return await fetch(`${baseURL}user/checkUsername`, {
+         method: "POST",
+         headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            username: username,
+         },
+      });
+   } catch (error) {
+      console.error("Error during fetching username:", error);
+   }
+}
+
+async function checkAuxiliarToken(auxiliarToken) {
+   try {
+      return await fetch(`${baseURL}user/checkAuxiliarToken`, {
+         method: "GET",
+         headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            auxiliarToken: auxiliarToken,
+         },
+      });
+   } catch (error) {
+      console.error("Error during fetching auxiliarToken:", error);
+   }
+}
+
 async function registerUser(email, password) {
    let user = {
       mail: email,
       password: password,
    };
-
-   return await fetch(`${baseURL}user/register`, {
-      method: "POST",
-      headers: {
-         Accept: "application/json",
-         "Content-Type": "application/json",
-      },
-      body: JSON.stringify(user),
-   });
+   try {
+      return await fetch(`${baseURL}user/register`, {
+         method: "POST",
+         headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+         },
+         body: JSON.stringify(user),
+      });
+   } catch (error) {
+      console.error("Error during fetching register:", error);
+   }
 }
 
 async function getInterests() {
-   return await fetch(`${baseURL}interest/all`, {
-      method: "GET",
-      headers: {
-         Accept: "application/json",
-         "Content-Type": "application/json",
-      },
-   });
+   try {
+      return await fetch(`${baseURL}interest/all`, {
+         method: "GET",
+         headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+         },
+      });
+   } catch (error) {
+      console.error("Error during fetching interests:", error);
+   }
 }
 
 async function getSkills() {
-   return await fetch(`${baseURL}skill/all`, {
-      method: "GET",
-      headers: {
-         Accept: "application/json",
-         "Content-Type": "application/json",
-      },
-   });
+   try {
+      return await fetch(`${baseURL}skill/all`, {
+         method: "GET",
+         headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+         },
+      });
+   } catch (error) {
+      console.error("Error during fetching skills:", error);
+   }
 }
 
 async function getLabs() {
-   return await fetch(`${baseURL}lab/all`, {
-      method: "GET",
-      headers: {
-         Accept: "application/json",
-         "Content-Type": "application/json",
-      },
-   });
+   try {
+      return await fetch(`${baseURL}lab/all`, {
+         method: "GET",
+         headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+         },
+      });
+   } catch (error) {
+      console.error("Error during fetching labs:", error);
+   }
 }
 
-async function checkUsername(username) {
-   return await fetch(`${baseURL}user/checkUsername`, {
-      method: "POST",
-      headers: {
-         Accept: "application/json",
-         "Content-Type": "application/json",
-         username: username,
-      },
-   });
-}
-
-export { registerUser, getInterests, getLabs, getSkills, checkUsername };
+export { registerUser, getInterests, getLabs, getSkills, checkUsername, checkAuxiliarToken };

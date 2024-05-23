@@ -11,13 +11,10 @@
   <component name="ChangeListManager">
     <list default="true" id="b39111a9-eb9d-471d-a3e4-b7f611c37010" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/emailService/EmailService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/emailService/EmailService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/emailService/EmailService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/emailService/EmailService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/components/forms/LoginForm.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/components/forms/LoginForm.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/index.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/pages/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/pages/App.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/dao/UserDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/dao/UserDao.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/entity/UserEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/entity/UserEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/service/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/validator/DatabaseValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/validator/DatabaseValidator.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,7 +59,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/Bernardo/Desktop/projeto5backend",
+    "last_opened_file_path": "C:/Users/Bernardo/Desktop/AcertarORumo/Programação Avançada em Java/ILMfinalProject/Backend/projecto_ILM_backend",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -188,7 +185,8 @@
       <workItem from="1716311442246" duration="1505000" />
       <workItem from="1716388992098" duration="984000" />
       <workItem from="1716400790407" duration="1150000" />
-      <workItem from="1716402077725" duration="6424000" />
+      <workItem from="1716402077725" duration="6728000" />
+      <workItem from="1716421492850" duration="2547000" />
     </task>
     <servers />
   </component>
@@ -205,20 +203,5 @@
         </entry>
       </map>
     </option>
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/bean/UserBean.java</url>
-          <line>144</line>
-          <properties class="com.ilm.projecto_ilm_backend.bean.UserBean" method="registerUser">
-            <option name="EMULATED" value="true" />
-            <option name="WATCH_EXIT" value="false" />
-          </properties>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

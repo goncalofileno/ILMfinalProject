@@ -92,4 +92,24 @@ public class UserDao extends AbstractDao<UserEntity> {
         }
     }
 
+
+    /**
+     * Finds a user by the given auxiliarToken.
+     *
+     * @param auxiliarToken the auxiliarToken of the user to be found.
+     *              The auxiliarToken is unique for each user.
+     *              It is used to identify the user.
+     *              It is a string.
+     */
+
+    public UserEntity findByAuxiliarToken(String auxiliarToken) {
+        try {
+            return em.createNamedQuery("User.findByAuxiliarToken", UserEntity.class).setParameter("auxiliarToken", auxiliarToken)
+                    .getSingleResult();
+
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
 }

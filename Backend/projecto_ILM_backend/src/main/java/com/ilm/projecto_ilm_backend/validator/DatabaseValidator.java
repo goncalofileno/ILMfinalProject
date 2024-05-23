@@ -30,4 +30,14 @@ public class DatabaseValidator {
     public boolean checkUsername(String username) {
       return userDao.findByUsername(username) != null;
     }
+
+
+    /**
+     * Checks if the provided auxiliarToken is already present in the database.
+     *
+     * @param auxiliarToken the auxiliarToken to be checked
+     * @return {@code true} if the auxiliarToken is found in the database, {@code false} otherwise
+     */
+
+    public boolean checkAuxiliarToken (String auxiliarToken) {return userDao.findByAuxiliarToken(auxiliarToken) != null;}
 }
