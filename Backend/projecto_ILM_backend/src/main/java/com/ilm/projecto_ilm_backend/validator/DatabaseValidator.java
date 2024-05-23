@@ -28,7 +28,7 @@ public class DatabaseValidator {
      * @return {@code true} if the username is found in the database, {@code false} otherwise
      */
     public boolean checkUsername(String username) {
-      return userDao.findByUsername(username) != null;
+        return userDao.findByUsername(username) != null;
     }
 
 
@@ -38,6 +38,7 @@ public class DatabaseValidator {
      * @param auxiliarToken the auxiliarToken to be checked
      * @return {@code true} if the auxiliarToken is found in the database, {@code false} otherwise
      */
-
-    public boolean checkAuxiliarToken (String auxiliarToken) {return userDao.findByAuxiliarToken(auxiliarToken) != null;}
+    public boolean checkAuxiliarToken(String auxiliarToken) {
+        return userDao.findByAuxiliarToken(auxiliarToken) != null;
+    }
 }

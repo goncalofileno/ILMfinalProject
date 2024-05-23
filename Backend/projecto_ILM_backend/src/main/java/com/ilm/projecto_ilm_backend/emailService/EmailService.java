@@ -5,19 +5,14 @@ import jakarta.mail.*;
 import jakarta.mail.internet.*;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.Properties;
-
 
 @Stateless
 public class EmailService {
-    private final String username= "innovationlabmanagementcs@gmail.com";// Your email username
-    private final String password= "xnog bvud syvq rpcv";// Your email password
-    // SMTP server port
+    private final String username = "innovationlabmanagementcs@gmail.com"; // Seu nome de usuário do email
+    private final String password = "xnog bvud syvq rpcv"; // Sua senha de email
 
-
-    public void sendEmail(String to, String verificationLink, boolean confirmationAccount) throws MessagingException, UnsupportedEncodingException {
+    private Session createSession() {
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
@@ -26,42 +21,57 @@ public class EmailService {
         props.put("mail.debug", "true");
         props.put("mail.smtp.ssl.trust", "*");
 
-        Session session = Session.getInstance(props, new Authenticator() {
+        return Session.getInstance(props, new Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(username, password);
             }
         });
+    }
+
+    public void sendConfirmationEmail(String to, String verificationLink) throws MessagingException, UnsupportedEncodingException {
+        Session session = createSession();
 
         Message message = new MimeMessage(session);
         message.setFrom(new InternetAddress(username));
         message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
+        message.setSubject("Confirm Your Account Registration");
 
+        String emailContent = "<html>"
+                + "<body style='font-family: Arial, sans-serif; line-height: 1.6;'>"
+                + "<h2>Welcome to AgileFlow!</h2>"
+                + "<p>Thank you for registering with AgileFlow!</p>"
+                + "<p>To complete the registration process and gain full access to your account, please click the button below to confirm your email address:</p>"
+                + "<p style='text-align: center;'>"
+                + "<a href='https://localhost:8443/projeto_ilm_final/rest/user/confirmEmail/" + verificationLink + "' style='display: inline-block; padding: 10px 20px; font-size: 16px; color: white; background-color: #4CAF50; text-decoration: none; border-radius: 5px;'>Confirm Email</a>"
+                + "</p>"
+                + "<p>If you did not request this registration, please ignore this email.</p>"
+                + "<p>Thank you,</p>"
+                + "<p>AgileFlow Team</p>"
+                + "</body>"
+                + "</html>";
 
-        String emailContent="";
-        if(confirmationAccount) {
-            message.setSubject("Confirm Your Account Registration");
-
-            emailContent = "<p>Dear user</p>"
-                    + "<p>Thank you for registering with AgileFlow!</p>"
-                    + "<p>To complete the registration process and gain full access to your account, please click on the link below to confirm your email address:</p>"
-                    + "<p><a href='http://localhost:3000/create-profile/" + verificationLink + "'>http://localhost:3000/create-profile/" + verificationLink + "</a></p>"
-                    + "<p>If you did not request this registration, please ignore this email.</p>"
-                    + "<p>Thank you,</p>"
-                    + "<p>AgileFlow Team</p>";
-
-        }
-        else{
-            message.setSubject("Reset Password");
-
-            emailContent = "<p>Dear user</p>"
-
-                    + "<p>To reset your password, please click on the link below:</p>"
-                    + "<p><a href='http://localhost:5173/resetPassAfter/" + verificationLink + "'>http://localhost:5173/resetPassAfter/" + verificationLink + "</a></p>"
-                    + "<p>Thank you,</p>"
-                    + "<p>AgileFlow Team</p>";
-        }
         message.setContent(emailContent, "text/html");
+        Transport.send(message);
+    }
 
+
+
+
+    public void sendResetPasswordEmail(String to, String verificationLink) throws MessagingException, UnsupportedEncodingException {
+        Session session = createSession();
+
+        Message message = new MimeMessage(session);
+        message.setFrom(new InternetAddress(username));
+        message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
+        message.setSubject("Reset Password");
+
+        String emailContent = "<p>Dear user</p>"
+                + "<p>To reset your password, please click on the link below:</p>"
+                + "<p><a href='http://localhost:5173/resetPassAfter/" + verificationLink + "'>http://localhost:5173/resetPassAfter/" + verificationLink + "</a></p>"
+                + "<p>Thank you,</p>"
+                + "<p>AgileFlow Team</p>";
+
+        message.setContent(emailContent, "text/html");
         Transport.send(message);
     }
 }

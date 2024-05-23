@@ -42,6 +42,18 @@ public enum WorkLocalENUM {
 
     private final int intValue;
 
+    //Metodo que recebe uma string e verifica se é um dos valores possiveis do ENUM
+    public static boolean contains(String test) {
+
+        for (WorkLocalENUM c : WorkLocalENUM.values()) {
+            if (c.name().equals(test)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /**
      * Constructor for WorkLocalENUM.
      * Associates an integer value with the enum constant.

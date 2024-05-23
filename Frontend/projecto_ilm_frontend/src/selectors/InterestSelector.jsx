@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Form, Row, Col, Button, Card, ListGroup, InputGroup, Container, Alert } from "react-bootstrap";
 import { getInterests } from "../utilities/services";
+import { useNavigate, useParams } from "react-router-dom";
 //import useAxios from "../axios/axiosConfig"; // Certifique-se de que o caminho está correto
 
 const InterestSelector = ({ selectedInterests, setSelectedInterests }) => {
@@ -8,10 +9,11 @@ const InterestSelector = ({ selectedInterests, setSelectedInterests }) => {
    const [suggestions, setSuggestions] = useState([]);
    const [input, setInput] = useState("");
    const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(-1); // Adicionando estado para índice da sugestão selecionada
+   const { token } = useParams();
    //const axios = useAxios(); // Obtenha a instância de axios chamando a função useAxios
 
    useEffect(() => {
-      getInterests()
+      getInterests(token)
          .then((response) => {
             return response.json();
          })

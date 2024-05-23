@@ -55,6 +55,12 @@ public class UserEntity implements Serializable {
     private String firstName;
 
     /**
+     * The bio of the user.
+     */
+    @Column(name = "bio", nullable = true, unique = false, updatable = true)
+    private String bio;
+
+    /**
      * The last name of the user.
      */
     @Column(name = "lastName", nullable = true, unique = false, updatable = true)
@@ -291,6 +297,24 @@ public class UserEntity implements Serializable {
      */
     public void setType(UserTypeENUM type) {
         this.type = type;
+    }
+
+    /**
+     * Returns the bio of this user.
+     *
+     * @return the bio of this user.
+     */
+    public String getBio() {
+        return bio;
+    }
+
+    /**
+     * Sets the bio of this user.
+     *
+     * @param bio the new bio of this user.
+     */
+    public void setBio(String bio) {
+        this.bio = bio;
     }
 
     /**
