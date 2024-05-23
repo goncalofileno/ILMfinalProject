@@ -1,12 +1,20 @@
 .inputForm {
    display: flex;
    flex-direction: column;
-   gap: 10px;
+   gap: 3px;
 }
 
-.required-field-inputForm {
-   color: rgb(192, 23, 34);
+.warning-txt-inputForm {
    font-size: 12px;
+   height: 14px;
+}
+
+.success-warning {
+   color: rgb(40, 139, 9);
+}
+
+.incorrect-warning {
+   color: rgb(192, 23, 34);
 }
 
 .inputForm label {
@@ -16,5 +24,27 @@
 .input-div {
    display: flex;
    flex-direction: column;
-   gap: 4px;
+   gap: 2px;
+}
+
+.ilm-input {
+   border-top: none;
+   border-right: none;
+   border-left: none;
+   background-color: transparent;
+   border-bottom: 1px solid rgba(73, 73, 73, 0.536);
+   font-size: 16px;
+}
+
+.success-input {
+   border-color: rgb(40, 139, 9);
+}
+
+.incorrect-input {
+   border-color: rgb(192, 23, 34);
+}
+
+.ilm-input:focus {
+   outline: none;
+   border-color: rgba(0, 0, 0, 1);
 }

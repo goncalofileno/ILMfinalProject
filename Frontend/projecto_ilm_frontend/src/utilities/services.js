@@ -30,6 +30,21 @@ async function checkAuxiliarToken(auxiliarToken) {
    }
 }
 
+async function checkEmail(email) {
+   try {
+      return await fetch(`${baseURL}user/checkEmail`, {
+         method: "GET",
+         headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            email: email,
+         },
+      });
+   } catch (error) {
+      console.error("Error during fetching email:", error);
+   }
+}
+
 async function registerUser(email, password) {
    let user = {
       mail: email,
@@ -91,4 +106,4 @@ async function getLabs() {
    }
 }
 
-export { registerUser, getInterests, getLabs, getSkills, checkUsername, checkAuxiliarToken };
+export { registerUser, getInterests, getLabs, getSkills, checkUsername, checkAuxiliarToken, checkEmail };

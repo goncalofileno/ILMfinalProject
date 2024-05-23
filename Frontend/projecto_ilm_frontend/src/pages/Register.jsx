@@ -2,7 +2,7 @@ import "./App.css";
 import { useNavigate } from "react-router-dom";
 import RegisterForm from "../components/forms/RegisterForm";
 import LoginHeader from "../components/headers/LoginHeader";
-import { useRef, useEffect } from "react";
+import { useRef } from "react";
 import LoginProjectsCards from "../components/cards/LoginProjectsCards";
 import { Row, Col, Container } from "react-bootstrap";
 import { useMediaQuery } from "react-responsive";

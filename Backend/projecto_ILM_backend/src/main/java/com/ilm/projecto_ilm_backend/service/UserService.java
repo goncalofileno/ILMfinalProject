@@ -102,4 +102,20 @@ public class UserService {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
     }
+
+
+    @GET
+    @Path("/checkEmail")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response checkEmail(@HeaderParam("email") String email) throws UnknownHostException {
+        String clientIP = InetAddress.getLocalHost().getHostAddress();
+        logger.info("Received a request to check if an email is already in the database and if it is valid, from IP address: " + clientIP);
+        // Check if username already exists in the database
+        if (!databaseValidator.checkEmail(email)) {
+            if(RegexValidator.validateEmail(email)) return Response.status(Response.Status.OK).build();
+            else return Response.status(Response.Status.BAD_REQUEST).build();
+        } else {
+            return Response.status(Response.Status.CONFLICT).build();
+        }
+    }
 }

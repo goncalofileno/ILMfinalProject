@@ -1,7 +1,7 @@
 import "./InputForm.css";
 import { useState } from "react";
 
-export default function InputForm({ label, type, value, setValue, warningType, warningTxt, handleOnBlur }) {
+export default function PasswordForm({ label, type, value, setValue, warningType, warningTxt, handleOnBlur }) {
    const [visibility, setVisibility] = useState("hidden");
 
    const handleBlur = () => {
@@ -27,7 +27,7 @@ export default function InputForm({ label, type, value, setValue, warningType, w
                }`}
                id={label}
                value={value}
-               onChange={(e) => setValue(e.target.value)}
+               onChange={setValue}
                onFocus={() => setVisibility("hidden")}
             />
             <div

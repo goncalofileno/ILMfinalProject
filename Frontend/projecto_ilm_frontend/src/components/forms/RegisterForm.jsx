@@ -2,29 +2,72 @@ import "./RegisterForm.css";
 import InputForm from "../inputs/InputForm";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { registerUser } from "../../utilities/services";
+import { registerUser, checkEmail } from "../../utilities/services";
+import PasswordForm from "../inputs/PasswordForm";
 
 export default function RegisterForm() {
    const [email, setEmail] = useState("");
    const [password, setPassword] = useState("");
    const [strength, setStrength] = useState(0);
    const [confirmPassword, setConfirmPassword] = useState("");
-   const [emailRequirementNotMet, setEmailRequirementNotMet] = useState(false);
-   const [passwordRequirementNotMet, setPasswordRequirementNotMet] = useState(false);
-   const [confirmPasswordRequirementNotMet, setConfirmPasswordRequirementNotMet] = useState(false);
+   const [warningTypeEmail, setWarningTypeEmail] = useState("");
+   const [warningTxtEmail, setWarningTxtEmail] = useState("");
+   const [waningTypePassword, setWarningTypePassword] = useState("");
+   const [warningTxtPassword, setWarningTxtPassword] = useState("");
+   const [warningTypeConfirmPassword, setWarningTypeConfirmPassword] = useState("");
+   const [warningTxtConfirmPassword, setWarningTxtConfirmPassword] = useState("");
+
    const navigate = useNavigate();
 
    const handleSubmit = (e) => {
       e.preventDefault();
-      if (email === "") setEmailRequirementNotMet(true);
-      if (password === "") setPasswordRequirementNotMet(true);
-      if (confirmPassword === "") setConfirmPasswordRequirementNotMet(true);
+      if (email !== "" && password !== "" && confirmPassword !== "") {
+         if (
+            warningTypeEmail === "success" &&
+            waningTypePassword === "success" &&
+            warningTypeConfirmPassword === "success"
+         ) {
+            registerUser(email, password).then((response) => {
+               if (response.status === 201) {
+                  navigate("/");
+               }
+            });
+         }
+      }
+   };
+
+   const handleOnBlurEmail = () => {
+      console.log("Email is being checked");
+      checkEmail(email).then((response) => {
+         if (response.status === 200) {
+            console.log("Email is valid");
+            setWarningTypeEmail("success");
+            setWarningTxtEmail("Email is valid");
+         } else if (response.status === 409 || response.status === 400) {
+            setWarningTypeEmail("incorrect");
+            setWarningTxtEmail("Email this email is invalid");
+            console.log("Email is invalid");
+         }
+      });
+   };
+
+   const handleOnBlurPassword = () => {
       if (strength >= 4) {
-         registerUser(email, password).then((response) => {
-            if (response.status === 201) {
-               navigate("/");
-            }
-         });
+         setWarningTypePassword("success");
+         setWarningTxtPassword("Password is strong");
+      } else {
+         setWarningTypePassword("incorrect");
+         setWarningTxtPassword("Password must be strong");
+      }
+   };
+
+   const handleOnBlurConfirmPassword = () => {
+      if (password === confirmPassword) {
+         setWarningTypeConfirmPassword("success");
+         setWarningTxtConfirmPassword("Passwords match");
+      } else {
+         setWarningTypeConfirmPassword("incorrect");
+         setWarningTxtConfirmPassword("Passwords do not match");
       }
    };
 
@@ -34,16 +77,13 @@ export default function RegisterForm() {
 
    const updateEmail = (e) => {
       setEmail(e.target.value);
-      setEmailRequirementNotMet(false);
    };
    const updatePassword = (e) => {
       setPassword(e.target.value);
       setStrength(calculateStrength(e.target.value));
-      setPasswordRequirementNotMet(false);
    };
    const updateConfirmPassword = (e) => {
       setConfirmPassword(e.target.value);
-      setConfirmPasswordRequirementNotMet(false);
    };
 
    const calculateStrength = (password) => {
@@ -74,16 +114,20 @@ export default function RegisterForm() {
                      type="email"
                      value={email}
                      setValue={updateEmail}
-                     requirementNotMet={emailRequirementNotMet}
+                     warningType={warningTypeEmail}
+                     warningTxt={warningTxtEmail}
+                     handleOnBlur={handleOnBlurEmail}
                   ></InputForm>
                   <div>
-                     <InputForm
+                     <PasswordForm
                         label="Password"
                         type="password"
                         value={password}
                         setValue={updatePassword}
-                        requirementNotMet={passwordRequirementNotMet}
-                     ></InputForm>
+                        warningType={waningTypePassword}
+                        warningTxt={warningTxtPassword}
+                        handleOnBlur={handleOnBlurPassword}
+                     ></PasswordForm>
                      <div id="pass-strength">
                         <div>Password Strength</div>
                         <meter max="5" value={strength}></meter>
@@ -120,7 +164,9 @@ export default function RegisterForm() {
                      type="password"
                      value={confirmPassword}
                      setValue={updateConfirmPassword}
-                     requirementNotMet={confirmPasswordRequirementNotMet}
+                     warningType={warningTypeConfirmPassword}
+                     warningTxt={warningTxtConfirmPassword}
+                     handleOnBlur={handleOnBlurConfirmPassword}
                   ></InputForm>
                   <div id="buttons-register-form">
                      <button
