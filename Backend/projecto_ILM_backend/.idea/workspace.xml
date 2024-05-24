@@ -11,9 +11,6 @@
   <component name="ChangeListManager">
     <list default="true" id="b39111a9-eb9d-471d-a3e4-b7f611c37010" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/service/UserService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/service/UserService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ilm/projecto_ilm_backend/service/UserService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/utilities/services.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/projecto_ilm_frontend/src/utilities/services.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,30 +51,30 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "JBoss/WildFly Server.JBoss/WildFly 30.0.1.Final.executor": "Run",
-    "JBoss/WildFly Server.JBoss/WildFly 31.0.1.Final.executor": "Run",
-    "JavaScript Debug.JBoss/WildFly 30.0.1.Final JavaScript.executor": "Debug",
-    "JavaScript Debug.JBoss/WildFly 31.0.1.Final JavaScript.executor": "Debug",
-    "Maven.projeto_ilm_final [clean,install].executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/Bernardo/Desktop/AcertarORumo/Programação Avançada em Java/ILMfinalProject/Backend/projecto_ILM_backend",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;JBoss/WildFly Server.JBoss/WildFly 30.0.1.Final.executor&quot;: &quot;Run&quot;,
+    &quot;JBoss/WildFly Server.JBoss/WildFly 31.0.1.Final.executor&quot;: &quot;Run&quot;,
+    &quot;JavaScript Debug.JBoss/WildFly 30.0.1.Final JavaScript.executor&quot;: &quot;Debug&quot;,
+    &quot;JavaScript Debug.JBoss/WildFly 31.0.1.Final JavaScript.executor&quot;: &quot;Debug&quot;,
+    &quot;Maven.projeto_ilm_final [clean,install].executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Bernardo/Desktop/AcertarORumo/Programação Avançada em Java/ILMfinalProject/Backend/projecto_ILM_backend&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunDashboard">
     <option name="excludedTypes">
       <set>
@@ -172,8 +169,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9f38398b9061-18abd8497189-intellij.indexing.shared.core-IU-241.14494.240" />
-        <option value="bundled-js-predefined-1d06a55b98c1-74d2a5396914-JavaScript-IU-241.14494.240" />
+        <option value="jdk-21.0.1-openjdk-21.0.1-f644763e9732-f98dd351" />
       </set>
     </attachedChunks>
   </component>
@@ -204,6 +200,7 @@
       <workItem from="1716388992098" duration="2903000" />
       <workItem from="1716474653157" duration="3735000" />
       <workItem from="1716478401511" duration="3331000" />
+      <workItem from="1716557273495" duration="1340000" />
     </task>
     <servers />
   </component>
@@ -223,20 +220,5 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="LAST_COMMIT_MESSAGE" value="" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/src/main/java/com/ilm/projecto_ilm_backend/service/UserService.java</url>
-          <line>129</line>
-          <properties class="com.ilm.projecto_ilm_backend.service.UserService" method="checkEmail">
-            <option name="EMULATED" value="true" />
-            <option name="WATCH_EXIT" value="false" />
-          </properties>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>
