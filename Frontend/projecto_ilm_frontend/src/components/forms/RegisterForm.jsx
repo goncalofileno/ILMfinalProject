@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { registerUser, checkEmail } from "../../utilities/services";
 import PasswordForm from "../inputs/PasswordForm";
 
-export default function RegisterForm() {
+export default function RegisterForm({ setShowAlert }) {
    const [email, setEmail] = useState("");
    const [password, setPassword] = useState("");
    const [strength, setStrength] = useState(0);
@@ -31,7 +31,11 @@ export default function RegisterForm() {
          ) {
             registerUser(email, password).then((response) => {
                if (response.status === 201) {
-                  navigate("/");
+                  setShowAlert(true);
+                  setTimeout(() => {
+                     setShowAlert(false);
+                     navigate("/");
+                  }, 2000);
                }
             });
          }
@@ -136,6 +140,7 @@ export default function RegisterForm() {
                      warningType={warningTypeEmail}
                      warningTxt={warningTxtEmail}
                      handleOnBlur={handleOnBlurEmail}
+                     onBlurActive={true}
                   ></InputForm>
                   <div>
                      <PasswordForm
@@ -149,6 +154,7 @@ export default function RegisterForm() {
                         showTolltip={showTolltip}
                         setShowTooltip={setShowTooltip}
                         conditionsMet={conditionsMet}
+                        onBlurActive={true}
                      ></PasswordForm>
                      <div id="pass-strength">
                         <div>Password Strength</div>
@@ -189,6 +195,7 @@ export default function RegisterForm() {
                      warningType={warningTypeConfirmPassword}
                      warningTxt={warningTxtConfirmPassword}
                      handleOnBlur={handleOnBlurConfirmPassword}
+                     onBlurActive={true}
                   ></InputForm>
                   <div id="buttons-register-form">
                      <button

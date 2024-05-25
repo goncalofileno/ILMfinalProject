@@ -112,4 +112,14 @@ public class UserDao extends AbstractDao<UserEntity> {
         }
     }
 
+    public boolean checkPassFromEmail(String email, String password) {
+        try {
+            String pass = (String) em.createNamedQuery("User.checkPassFromEmail").setParameter("email", email).getSingleResult();
+            return pass.equals(password);
+
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
 }

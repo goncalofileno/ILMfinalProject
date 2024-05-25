@@ -15,6 +15,7 @@ import com.ilm.projecto_ilm_backend.entity.LabEntity;
 import com.ilm.projecto_ilm_backend.entity.SkillEntity;
 import com.ilm.projecto_ilm_backend.entity.UserEntity;
 import com.ilm.projecto_ilm_backend.service.UserService;
+import com.ilm.projecto_ilm_backend.utilities.HashUtil;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -155,7 +156,7 @@ public class UserBean {
         try {
             UserEntity user = new UserEntity();
             user.setEmail(registerUserDto.getMail());
-            user.setPassword(registerUserDto.getPassword());
+            user.setPassword(HashUtil.toSHA256(registerUserDto.getPassword()));
             user.setMailConfirmed(false);
             user.setProfileCreated(false);
             user.setDeleted(false);
@@ -256,6 +257,16 @@ public class UserBean {
             throw new RuntimeException("Failed to save profile picture", e);
         }
         return filePath;
+    }
+
+    public String loginUser(RegisterUserDto registerUserDto) {
+        if (userDao.checkPassFromEmail(registerUserDto.getMail(), registerUserDto.getPassword())) {
+            UserEntity userEntity = userDao.findByEmail(registerUserDto.getMail());
+            userEntity.setToken(generateNewToken());
+            userDao.merge(userEntity);
+            return userEntity.getToken();
+        }
+        else return null;
     }
 
 }

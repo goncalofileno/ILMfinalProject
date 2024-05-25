@@ -66,6 +66,25 @@ async function registerUser(email, password) {
    }
 }
 
+async function loginUser(email, password) {
+   let user = {
+      mail: email,
+      password: password,
+   };
+   try {
+      return await fetch(`${baseURL}user/login`, {
+         method: "POST",
+         headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+         },
+         body: JSON.stringify(user),
+      });
+   } catch (error) {
+      console.error("Error during fetching register:", error);
+   }
+}
+
 async function getInterests(auxiliarToken) {
    try {
       return await fetch(`${baseURL}interest/all`, {
@@ -160,4 +179,5 @@ export {
    createProfile,
    uploadProfilePicture,
    checkEmail,
+   loginUser,
 };

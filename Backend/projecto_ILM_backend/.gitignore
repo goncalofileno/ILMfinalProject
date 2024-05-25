@@ -36,3 +36,76 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+# Diretório binário
+/bin/
+/build/
+# Diretórios de IDEs
+/.idea/
+/*.iml
+/.classpath
+/.project
+/.settings/
+
+# Arquivos do Maven
+/target/
+!.mvn/wrapper/maven-wrapper.jar
+# Arquivos do Gradle
+.gradle/
+/build/
+/out/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Arquivos temporários
+*.class
+*.war
+*.ear
+*.jar
+# Arquivos de logs
+*.log
+# Arquivos do sistema operacional
+.DS_Store
+Thumbs.db
+
+# Arquivos de backup e temporários do editor
+*~
+*.swp
+*.swo
+*.bak
+*.orig
+# Arquivos do IntelliJ IDEA
+.idea
+*.iws
+*.ipr
+*.iml
+
+# Arquivos do Eclipse
+*.pydevproject
+.project
+.metadata
+*.bak
+*.tmp
+*.swp
+*.swo
+*.orig
+*.log
+bin/
+tmp/
+
+# Arquivos do NetBeans
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+nbactions.xml
+nb-configuration.xml
+
+# Arquivos do VS Code
+.vscode/
+
+# Arquivos do Windows
+*.bat
+
+# Arquivos do MacOS
+*.DS_Store

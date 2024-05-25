@@ -2,10 +2,11 @@ import "./App.css";
 import { useNavigate } from "react-router-dom";
 import LoginForm from "../components/forms/LoginForm";
 import LoginHeader from "../components/headers/LoginHeader";
-import { useRef, useEffect } from "react";
+import { useRef, useState } from "react";
 import LoginProjectsCards from "../components/cards/LoginProjectsCards";
 import { Row, Col, Container } from "react-bootstrap";
 import { useMediaQuery } from "react-responsive";
+import { Alert } from "react-bootstrap";
 
 function App() {
    const navigate = useNavigate();
@@ -15,6 +16,7 @@ function App() {
    const isTablet = useMediaQuery({ minWidth: 992, maxWidth: 1200 });
    const isSmallTablet = useMediaQuery({ minWidth: 768, maxWidth: 992 });
    const isPhone = useMediaQuery({ maxWidth: 768 });
+   const [showAlert, setShowAlert] = useState(false);
    const headerHeight = 110;
 
    const scrollToContent = () => {
@@ -38,6 +40,7 @@ function App() {
    return (
       <>
          <LoginHeader />
+
          <div className="page-content">
             <div className={isComputer ? "ilm-page" : isTablet ? "ilm-pageb" : "ilm-page-noheight"}>
                <Container fluid className="outer-container">
@@ -104,7 +107,14 @@ function App() {
                         style={{ marginTop: (isPhone || isSmallTablet) && "30px" }}
                         ref={loginFormRef}
                      >
-                        <LoginForm />
+                        <Alert
+                           variant="danger"
+                           id="alert-message-register"
+                           style={{ visibility: showAlert ? "visible" : "hidden" }}
+                        >
+                           Invalid data. Please try again.
+                        </Alert>
+                        <LoginForm showAlert={setShowAlert} />
                      </Col>
                      {isPhone && (
                         <Col>

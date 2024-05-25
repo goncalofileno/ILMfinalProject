@@ -8,10 +8,14 @@ import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter as Router } from "react-router-dom";
 import { Route, Routes } from "react-router-dom";
 import "./index.css";
+import { Alert } from "react-bootstrap";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
    <React.StrictMode>
+      <Alert variant="danger" className="alerts-message">
+         This is a danger alert—check it out!
+      </Alert>
       <Router>
          <Routes>
             <Route index element={<App />} />

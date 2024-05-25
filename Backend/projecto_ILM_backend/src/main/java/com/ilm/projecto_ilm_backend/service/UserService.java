@@ -16,7 +16,7 @@ import java.net.UnknownHostException;
 import jakarta.inject.Inject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
+import jakarta.ws.rs.core.NewCookie;
 import java.net.URI;
 
 /**
@@ -200,6 +200,34 @@ public class UserService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response uploadProfilePicture(){
         return Response.status(Response.Status.OK).build();
+    }
+
+
+    /**
+     * Logs in a user.
+     *
+     * @param registerUserDto the DTO containing user login details
+     * @return HTTP response containing the token of the logged in user
+     * @throws UnknownHostException if the local host name could not be resolved into an address
+     */
+    @POST
+    @Path("/login")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response login(RegisterUserDto registerUserDto) throws UnknownHostException {
+        String clientIP = InetAddress.getLocalHost().getHostAddress();
+        logger.info("Received a request to login from IP address: " + clientIP + " with email: " + registerUserDto.getMail());
+        if (databaseValidator.checkEmail(registerUserDto.getMail())) {
+            String token= userBean.loginUser(registerUserDto);
+            if (token !=null) {
+                return Response.status(Response.Status.OK).entity(token).build();
+            } else {
+                return Response.status(Response.Status.UNAUTHORIZED).build();
+            }
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
     }
 }
 

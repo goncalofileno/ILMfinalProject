@@ -2,10 +2,11 @@ import "./App.css";
 import { useNavigate } from "react-router-dom";
 import RegisterForm from "../components/forms/RegisterForm";
 import LoginHeader from "../components/headers/LoginHeader";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import LoginProjectsCards from "../components/cards/LoginProjectsCards";
 import { Row, Col, Container } from "react-bootstrap";
 import { useMediaQuery } from "react-responsive";
+import { Alert } from "react-bootstrap";
 
 function Register() {
    const navigate = useNavigate();
@@ -14,7 +15,7 @@ function Register() {
    const isTablet = useMediaQuery({ minWidth: 992, maxWidth: 1200 });
    const isSmallTablet = useMediaQuery({ minWidth: 768, maxWidth: 992 });
    const isPhone = useMediaQuery({ maxWidth: 768 });
-   const headerHeight = 60;
+   const [showAlert, setShowAlert] = useState(false);
 
    const scrollToContent = () => {
       contentRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -77,7 +78,14 @@ function Register() {
                         </Row>
                      </Col>
                      <Col xl={4} lg={6} className="align-items-center" style={{ marginTop: isPhone && "50px" }}>
-                        <RegisterForm />
+                        <Alert
+                           variant="success"
+                           id="alert-message-register"
+                           style={{ visibility: showAlert ? "visible" : "hidden" }}
+                        >
+                           You have registered in ILM with success.<p> Verify your email to activate your account.</p>
+                        </Alert>
+                        <RegisterForm setShowAlert={setShowAlert} />
                      </Col>
                      {isPhone && (
                         <Col>

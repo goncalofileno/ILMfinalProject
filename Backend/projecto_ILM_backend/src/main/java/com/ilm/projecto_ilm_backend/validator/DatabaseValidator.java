@@ -41,4 +41,6 @@ public class DatabaseValidator {
     public boolean checkAuxiliarToken(String auxiliarToken) {
         return userDao.findByAuxiliarToken(auxiliarToken) != null;
     }
+
+
 }

@@ -154,3 +154,10 @@ code {
 .outer-row {
    height: 100%;
 }
+
+.alerts-message {
+   position: fixed;
+   margin-top: 15px;
+   margin-left: 50%;
+   transform: translate(-50%, 0);
+}

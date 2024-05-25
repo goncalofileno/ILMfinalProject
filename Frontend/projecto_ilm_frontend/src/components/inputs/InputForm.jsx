@@ -1,7 +1,26 @@
 import "./InputForm.css";
 import { useState } from "react";
 
-export default function InputForm({ label, type, value, setValue, warningType, warningTxt, handleOnBlur }) {
+// The InputForm component is used to create a form input field with a label. The component takes in the following props:
+// label: The label for the input field.
+// type: The type of input field (e.g., text, password).
+// value: The value of the input field.
+// setValue: A function to set the value of the input field.
+// warningType: The type of warning to display (e.g., success, incorrect).
+// warningTxt: The text to display as a warning.
+// handleOnBlur: A function to handle the onBlur event.
+// onBlurActive: A boolean to determine if the onBlur event should be active.
+
+export default function InputForm({
+   label,
+   type,
+   value,
+   setValue,
+   warningType,
+   warningTxt,
+   handleOnBlur,
+   onBlurActive,
+}) {
    const [visibility, setVisibility] = useState("hidden");
 
    const handleBlur = () => {
@@ -11,12 +30,16 @@ export default function InputForm({ label, type, value, setValue, warningType, w
       }
    };
 
+   const handleBlurInactive = () => {
+      console.log("Inactive");
+   };
+
    return (
       <div className="inputForm">
          <label htmlFor={label}>{label}</label>
          <div className="input-div">
             <input
-               onBlur={handleBlur}
+               onBlur={onBlurActive ? handleBlur : handleBlurInactive}
                type={type}
                className={`ilm-input ${
                   visibility === "visible"
