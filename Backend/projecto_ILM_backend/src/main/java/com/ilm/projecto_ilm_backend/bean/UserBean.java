@@ -204,6 +204,13 @@ public class UserBean {
         return false;
     }
 
+    /**
+     * Creates a new user profile.
+     *
+     * @param userProfileDto the DTO containing user profile details
+     * @param auxiliarToken the token used to authenticate the user
+     * @return true if the profile was successfully created, false otherwise
+     */
     public boolean createProfile(UserProfileDto userProfileDto, String auxiliarToken) {
         UserEntity user = userDao.findByAuxiliarToken(auxiliarToken);
         if (user == null) {
@@ -247,18 +254,48 @@ public class UserBean {
     }
 
 
-    public String saveProfilePicture(InputStream profilePictureInputStream, String fileName, int userId) {
-        String directoryPath = "/Users/goncalofileno/Desktop/Fotos";
-        String filePath = directoryPath + "/" + userId + "_" + fileName;
+    /**
+     * Saves a user's profile picture.
+     *
+     * @param authHeader the authorization header containing the user's token
+     * @param base64Image the profile picture as a Base64 string
+     * @return true if the profile picture was successfully saved, false otherwise
+     */
+    public boolean saveUserProfilePicture(String authHeader, String base64Image) {
         try {
-            Files.copy(profilePictureInputStream, Paths.get(filePath), StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Failed to save profile picture", e);
+            // Decode the Base64 string back to an image
+            byte[] imageBytes = Base64.getDecoder().decode(base64Image);
+
+            // Extract user information from the token (assuming JWT or similar)
+            UserEntity user = userDao.findByAuxiliarToken(authHeader);
+
+            // Save the image to the user's specific directory
+            String directoryPath = "/Users/goncalofileno/Servers/wildfly-31.0.1.Final/photos/" + user.getId();
+            File directory = new File(directoryPath);
+            if (!directory.exists()) {
+                directory.mkdirs();
+            }
+
+            String filePath = directoryPath + "/profile_picture.jpg";
+            Files.write(Paths.get(filePath), imageBytes);
+
+            // Update the user's photo path in the database
+            user = userDao.findById(user.getId());
+            user.setPhoto(filePath);
+            userDao.merge(user);
+
+            return true;
+        } catch (Exception e) {
+            return false;
         }
-        return filePath;
     }
 
+    /**
+     * Logs in a user.
+     *
+     * @param registerUserDto the DTO containing user login details
+     * @return the token of the logged in user, or null if login failed
+     */
     public String loginUser(RegisterUserDto registerUserDto) {
         if (userDao.checkPassFromEmail(registerUserDto.getMail(), registerUserDto.getPassword())) {
             UserEntity userEntity = userDao.findByEmail(registerUserDto.getMail());

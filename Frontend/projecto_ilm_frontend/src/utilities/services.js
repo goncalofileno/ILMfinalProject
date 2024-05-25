@@ -149,25 +149,33 @@ async function createProfile(userProfileDto, auxiliarToken) {
    }
 }
 
-async function uploadProfilePicture(profilePicture, auxiliarToken) {
-   const formData = new FormData();
-   formData.append("profilePicture", profilePicture);
+async function uploadProfilePicture(file, token) {
+   return new Promise((resolve, reject) => {
+       const reader = new FileReader();
+       reader.readAsDataURL(file);
+       reader.onloadend = async function() {
+           const base64data = reader.result;
+           console.log("Base64 data: ", base64data);
 
-   try {
-      const response = await fetch(`${baseURL}user/uploadProfilePicture`, {
-         method: "POST",
-         headers: {
-            Authorization: auxiliarToken,
-         },
-         body: formData,
-      });
+           try {
+               const response = await fetch(`${baseURL}user/uploadProfilePicture`, {
+                   method: 'POST',
+                   headers: {
+                       'Authorization': token,
+                       'Content-Type': 'application/json'
+                   },
+                   body: JSON.stringify({ file: base64data }),
+               });
 
-      return response;
-   } catch (error) {
-      console.error("Error during uploading profile picture:", error);
-      throw error;
-   }
+               resolve(response);
+           } catch (error) {
+               console.error("Error during uploading profile picture:", error);
+               reject(error);
+           }
+       }
+   });
 }
+
 
 export {
    registerUser,
