@@ -24,10 +24,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
@@ -269,25 +269,56 @@ public class UserBean {
             // Extract user information from the token (assuming JWT or similar)
             UserEntity user = userDao.findByAuxiliarToken(authHeader);
 
-            // Save the image to the user's specific directory
+            // Save the original image to the user's specific directory
             String directoryPath = "/Users/goncalofileno/Servers/wildfly-31.0.1.Final/photos/" + user.getId();
             File directory = new File(directoryPath);
             if (!directory.exists()) {
                 directory.mkdirs();
             }
 
-            String filePath = directoryPath + "/profile_picture.jpg";
-            Files.write(Paths.get(filePath), imageBytes);
+            String originalFilePath = directoryPath + "/profile_picture.jpg";
+            Files.write(Paths.get(originalFilePath), imageBytes);
 
-            // Update the user's photo path in the database
+            // Save resized images
+            ByteArrayInputStream bis = new ByteArrayInputStream(imageBytes);
+            BufferedImage originalImage = ImageIO.read(bis);
+
+            BufferedImage avatarImage = resizeImage(originalImage, 100, 100); // Example size for avatar
+            String avatarFilePath = directoryPath + "/profile_picture_avatar.jpg";
+            ImageIO.write(avatarImage, "jpg", new File(avatarFilePath));
+
+            BufferedImage thumbnailImage = resizeImage(originalImage, 300, 300); // Example size for thumbnail
+            String thumbnailFilePath = directoryPath + "/profile_picture_thumbnail.jpg";
+            ImageIO.write(thumbnailImage, "jpg", new File(thumbnailFilePath));
+
+            // Update the user's photo paths in the database
             user = userDao.findById(user.getId());
-            user.setPhoto(filePath);
+            user.setPhoto(originalFilePath); // Set path for original image
+            user.setAvatarPhoto(avatarFilePath); // Set path for avatar
+            user.setThumbnailPhoto(thumbnailFilePath); // Set path for thumbnail
             userDao.merge(user);
 
             return true;
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
+    }
+
+    /**
+     * Resizes an image to a specific width and height.
+     *
+     * @param originalImage the original image
+     * @param width the desired width
+     * @param height the desired height
+     * @return the resized image
+     */
+    private BufferedImage resizeImage(BufferedImage originalImage, int width, int height) {
+        BufferedImage resizedImage = new BufferedImage(width, height, originalImage.getType());
+        Graphics2D g = resizedImage.createGraphics();
+        g.drawImage(originalImage, 0, 0, width, height, null);
+        g.dispose();
+        return resizedImage;
     }
 
     /**

@@ -102,8 +102,20 @@ public class UserEntity implements Serializable {
     /**
      * The photo URL of the user.
      */
-    @Column(name = "photo", nullable = false, unique = false, updatable = true)
+    @Column(name = "photo", nullable = true, unique = false, updatable = true)
     private String photo;
+
+    /**
+     * The avatar photo URL of the user.
+     */
+    @Column(name = "avatarPhoto", nullable = true, unique = false, updatable = true)
+    private String avatarPhoto;
+
+    /**
+     * The thumbnail photo URL of the user.
+     */
+    @Column(name = "thumbnailPhoto", nullable = true, unique = false, updatable = true)
+    private String thumbnailPhoto;
 
     /**
      * The token of the user. This is a unique field in the "user" table.
@@ -407,6 +419,42 @@ public class UserEntity implements Serializable {
      */
     public void setPhoto(String photo) {
         this.photo = photo;
+    }
+
+    /**
+     * Returns the avatar photo URL of this user.
+     *
+     * @return the avatar photo URL of this user.
+     */
+    public String getAvatarPhoto() {
+        return avatarPhoto;
+    }
+
+    /**
+     * Sets the avatar photo URL of this user.
+     *
+     * @param avatarPhoto the new avatar photo URL of this user.
+     */
+    public void setAvatarPhoto(String avatarPhoto) {
+        this.avatarPhoto = avatarPhoto;
+    }
+
+    /**
+     * Returns the thumbnail photo URL of this user.
+     *
+     * @return the thumbnail photo URL of this user.
+     */
+    public String getThumbnailPhoto() {
+        return thumbnailPhoto;
+    }
+
+    /**
+     * Sets the thumbnail photo URL of this user.
+     *
+     * @param thumbnailPhoto the new thumbnail photo URL of this user.
+     */
+    public void setThumbnailPhoto(String thumbnailPhoto) {
+        this.thumbnailPhoto = thumbnailPhoto;
     }
 
     /**
