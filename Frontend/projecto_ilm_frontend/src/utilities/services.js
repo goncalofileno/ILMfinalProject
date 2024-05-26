@@ -33,6 +33,7 @@ async function checkAuxiliarToken(auxiliarToken) {
 }
 
 async function checkEmail(email) {
+   console.log("Email: ", email);
    try {
       return await fetch(`${baseURL}user/checkEmail`, {
          method: "GET",
@@ -151,31 +152,30 @@ async function createProfile(userProfileDto, auxiliarToken) {
 
 async function uploadProfilePicture(file, token) {
    return new Promise((resolve, reject) => {
-       const reader = new FileReader();
-       reader.readAsDataURL(file);
-       reader.onloadend = async function() {
-           const base64data = reader.result;
-           console.log("Base64 data: ", base64data);
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onloadend = async function () {
+         const base64data = reader.result;
+         console.log("Base64 data: ", base64data);
 
-           try {
-               const response = await fetch(`${baseURL}user/uploadProfilePicture`, {
-                   method: 'POST',
-                   headers: {
-                       'Authorization': token,
-                       'Content-Type': 'application/json'
-                   },
-                   body: JSON.stringify({ file: base64data }),
-               });
+         try {
+            const response = await fetch(`${baseURL}user/uploadProfilePicture`, {
+               method: "POST",
+               headers: {
+                  Authorization: token,
+                  "Content-Type": "application/json",
+               },
+               body: JSON.stringify({ file: base64data }),
+            });
 
-               resolve(response);
-           } catch (error) {
-               console.error("Error during uploading profile picture:", error);
-               reject(error);
-           }
-       }
+            resolve(response);
+         } catch (error) {
+            console.error("Error during uploading profile picture:", error);
+            reject(error);
+         }
+      };
    });
 }
-
 
 export {
    registerUser,
