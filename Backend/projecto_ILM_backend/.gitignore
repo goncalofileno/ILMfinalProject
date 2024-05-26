@@ -12,6 +12,10 @@ target/
 *.iml
 *.ipr
 
+.src/main/java/com/ilm/projecto_ilm_backend/imgsUploads/imagesPath.java
+
+
+
 ### Eclipse ###
 .apt_generated
 .classpath
