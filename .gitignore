@@ -2,3 +2,5 @@
 Backend/projecto_ILM_backend/src/main/java/com/ilm/projecto_ilm_backend/imgsUploads/imagesPath.java
 
 Backend/projecto_ILM_backend/src/main/resources/META-INF/persistence.xml
+
+Backend/projecto_ILM_backend/src/main/java/com/ilm/projecto_ilm_backend/utilities/imgsPath.java
