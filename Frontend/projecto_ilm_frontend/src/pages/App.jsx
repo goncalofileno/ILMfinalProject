@@ -7,6 +7,7 @@ import LoginProjectsCards from "../components/cards/LoginProjectsCards";
 import { Row, Col, Container } from "react-bootstrap";
 import { useMediaQuery } from "react-responsive";
 import { Alert } from "react-bootstrap";
+import ForgetPassModal from "../components/modals/ForgetPassModal";
 
 function App() {
    const navigate = useNavigate();
@@ -17,6 +18,7 @@ function App() {
    const isSmallTablet = useMediaQuery({ minWidth: 768, maxWidth: 992 });
    const isPhone = useMediaQuery({ maxWidth: 768 });
    const [showAlert, setShowAlert] = useState(false);
+   const [isModalActive, setIsModalActive] = useState(false);
    const headerHeight = 110;
 
    const scrollToContent = () => {
@@ -40,7 +42,7 @@ function App() {
    return (
       <>
          <LoginHeader />
-
+         <ForgetPassModal isModalActive={isModalActive} setIsModalActive={setIsModalActive}></ForgetPassModal>
          <div className="page-content">
             <div className={isComputer ? "ilm-page" : isTablet ? "ilm-pageb" : "ilm-page-noheight"}>
                <Container fluid className="outer-container">
@@ -114,7 +116,7 @@ function App() {
                         >
                            Invalid data. Please try again.
                         </Alert>
-                        <LoginForm showAlert={setShowAlert} />
+                        <LoginForm showAlert={setShowAlert} setIsModalActive={setIsModalActive} />
                      </Col>
                      {isPhone && (
                         <Col>

@@ -271,5 +271,48 @@ public class UserService {
         }
 
     }
+
+    @POST
+    @Path("/forgetPassword")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response forgetPassword(@HeaderParam("email")String email) throws UnknownHostException {
+        String clientIP = InetAddress.getLocalHost().getHostAddress();
+       logger.info("Received a request to send the forget password link from IP address: " + clientIP + " with email: " + email);
+        if (databaseValidator.checkEmail(email)) {
+            if(userBean.sendForgetPassLink(email)){
+                return Response.status(Response.Status.OK).build();
+            } else {
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            }
+
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
+    @POST
+    @Path("/resetPassword")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response resetPassword(@Context HttpHeaders headers, @HeaderParam("newPassword") String newPassword) throws UnknownHostException {
+        String clientIP = InetAddress.getLocalHost().getHostAddress();
+        String auxiliarToken = headers.getHeaderString(HttpHeaders.AUTHORIZATION);
+        logger.info("Received a request to reset the password from IP address: " + clientIP);
+        if (databaseValidator.checkAuxiliarToken(auxiliarToken)) {
+            if (RegexValidator.validatePassword(newPassword)) {
+                if (userBean.resetPassword(auxiliarToken, newPassword)) {
+                    return Response.status(Response.Status.OK).build();
+                } else {
+                    return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+                }
+            } else {
+                return Response.status(Response.Status.BAD_REQUEST).build();
+            }
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
 }
 

@@ -5,7 +5,7 @@ import { useMediaQuery } from "react-responsive";
 import { useState } from "react";
 import { loginUser } from "../../utilities/services";
 
-export default function LoginForm({ setShowAlert }) {
+export default function LoginForm({ setShowAlert, setIsModalActive }) {
    const navigate = useNavigate();
    const isPhone = useMediaQuery({ maxWidth: 576 });
    const [email, setEmail] = useState("");
@@ -62,7 +62,9 @@ export default function LoginForm({ setShowAlert }) {
                      Login
                   </button>
                </div>
-               <div id="forgot-pass-div">Forgot your password</div>
+               <div id="forgot-pass-div" onClick={() => setIsModalActive(true)}>
+                  Forgot your password
+               </div>
                <div id="line-or-div">
                   <div className="or-line-register" id="or-left-line">
                      <hr />

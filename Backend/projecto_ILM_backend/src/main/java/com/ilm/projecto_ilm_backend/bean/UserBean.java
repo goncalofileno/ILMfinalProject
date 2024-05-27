@@ -9,7 +9,7 @@ import com.ilm.projecto_ilm_backend.dao.SkillDao;
 import com.ilm.projecto_ilm_backend.dao.UserDao;
 import com.ilm.projecto_ilm_backend.dto.user.RegisterUserDto;
 import com.ilm.projecto_ilm_backend.dto.user.UserProfileDto;
-import com.ilm.projecto_ilm_backend.emailService.EmailService;
+import com.ilm.projecto_ilm_backend.utilities.EmailService;
 import com.ilm.projecto_ilm_backend.entity.InterestEntity;
 import com.ilm.projecto_ilm_backend.entity.LabEntity;
 import com.ilm.projecto_ilm_backend.entity.SkillEntity;
@@ -17,7 +17,6 @@ import com.ilm.projecto_ilm_backend.entity.UserEntity;
 import com.ilm.projecto_ilm_backend.imgsUploads.imagesPath;
 import com.ilm.projecto_ilm_backend.service.UserService;
 import com.ilm.projecto_ilm_backend.utilities.HashUtil;
-import jakarta.ejb.EJB;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.mail.MessagingException;
@@ -31,7 +30,6 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.Base64;
@@ -338,5 +336,30 @@ public class UserBean {
         else return null;
     }
 
+   public boolean sendForgetPassLink(String email){
+        UserEntity user = userDao.findByEmail(email);
+        if(user != null){
+            user.setAuxiliarToken(generateNewToken());
+            userDao.merge(user);
+            try {
+                emailService.sendResetPasswordEmail(user.getEmail(), user.getAuxiliarToken());
+                return true;
+            } catch (MessagingException | UnsupportedEncodingException e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+        return false;
+    }
+
+    public boolean resetPassword(String token, String newPassword){
+        UserEntity user = userDao.findByAuxiliarToken(token);
+        if(user != null){
+            user.setPassword(HashUtil.toSHA256(newPassword));
+            userDao.merge(user);
+            return true;
+        }
+        return false;
+   }
 }
 

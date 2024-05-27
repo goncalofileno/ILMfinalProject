@@ -1,0 +1,33 @@
+.ilm-modal {
+   background: linear-gradient(56.26deg, rgba(192, 23, 34, 0.336) 0%, rgba(192, 23, 34, 0.05) 100%), rgb(255, 255, 255);
+   padding: 35px 48px;
+   color: rgb(60, 60, 60);
+   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.15);
+   border-radius: 15px;
+}
+
+.modal-background {
+   background-color: rgba(0, 0, 0, 0.5);
+   position: fixed;
+   height: 100%;
+   top: 0;
+   left: 0;
+   width: 100%;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   z-index: 1001;
+}
+
+.modal-content {
+   display: flex;
+   flex-direction: column;
+   width: 100%;
+   gap: 20px;
+}
+
+.modal-buttons {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+}

@@ -1,4 +1,4 @@
-package com.ilm.projecto_ilm_backend.emailService;
+package com.ilm.projecto_ilm_backend.utilities;
 
 import jakarta.ejb.Stateless;
 import jakarta.mail.*;
