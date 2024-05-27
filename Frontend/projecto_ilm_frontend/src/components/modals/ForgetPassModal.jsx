@@ -21,7 +21,7 @@ export default function ForgetPassModal({ isModalActive, setIsModalActive }) {
    return (
       <>
          {isModalActive && (
-            <div className="modal-background" onClick={setIsModalActive(false)}>
+            <div className="modal-background" onClick={() => setIsModalActive(false)}>
                <div className="ilm-modal">
                   <div className="modal-content">
                      <h3 className="modal-title">Forget Password</h3>

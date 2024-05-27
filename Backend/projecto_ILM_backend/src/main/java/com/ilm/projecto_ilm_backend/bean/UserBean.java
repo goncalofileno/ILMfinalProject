@@ -14,9 +14,9 @@ import com.ilm.projecto_ilm_backend.entity.InterestEntity;
 import com.ilm.projecto_ilm_backend.entity.LabEntity;
 import com.ilm.projecto_ilm_backend.entity.SkillEntity;
 import com.ilm.projecto_ilm_backend.entity.UserEntity;
-import com.ilm.projecto_ilm_backend.imgsUploads.imagesPath;
 import com.ilm.projecto_ilm_backend.service.UserService;
 import com.ilm.projecto_ilm_backend.utilities.HashUtil;
+import com.ilm.projecto_ilm_backend.utilities.imgsPath;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.mail.MessagingException;
@@ -269,7 +269,7 @@ public class UserBean {
             UserEntity user = userDao.findByAuxiliarToken(authHeader);
 
             // Save the original image to the user's specific directory
-            String directoryPath = imagesPath.IMAGES_PATH + user.getId();
+            String directoryPath = imgsPath.IMAGES_PATH+ user.getId();
             File directory = new File(directoryPath);
             if (!directory.exists()) {
                 directory.mkdirs();
