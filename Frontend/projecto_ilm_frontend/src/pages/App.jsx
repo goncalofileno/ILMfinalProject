@@ -2,12 +2,12 @@ import "./App.css";
 import { useNavigate } from "react-router-dom";
 import LoginForm from "../components/forms/LoginForm";
 import LoginHeader from "../components/headers/LoginHeader";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import LoginProjectsCards from "../components/cards/LoginProjectsCards";
-import { Row, Col, Container } from "react-bootstrap";
+import { Row, Col, Container, Alert } from "react-bootstrap";
 import { useMediaQuery } from "react-responsive";
-import { Alert } from "react-bootstrap";
 import ForgetPassModal from "../components/modals/ForgetPassModal";
+import alertStore from "../stores/alertStore";
 
 function App() {
    const navigate = useNavigate();
@@ -18,7 +18,9 @@ function App() {
    const isSmallTablet = useMediaQuery({ minWidth: 768, maxWidth: 992 });
    const isPhone = useMediaQuery({ maxWidth: 768 });
    const [showAlert, setShowAlert] = useState(false);
+
    const [isModalActive, setIsModalActive] = useState(false);
+   const { visibility, type, message, setVisibility } = alertStore();
    const headerHeight = 110;
 
    const scrollToContent = () => {
@@ -39,10 +41,29 @@ function App() {
       });
    };
 
+   useEffect(() => {
+      if (visibility === "visible") {
+         setTimeout(() => {
+            setVisibility("hidden");
+         }, 3000);
+      }
+   }, [visibility]);
+
+   useEffect(() => {
+      if (showAlert === true) {
+         setTimeout(() => {
+            setShowAlert(false);
+         }, 3000);
+      }
+   }, [showAlert]);
+
    return (
       <>
          <LoginHeader />
          <ForgetPassModal isModalActive={isModalActive} setIsModalActive={setIsModalActive}></ForgetPassModal>
+         <Alert variant={type} className="alerts-message" style={{ visibility: visibility }}>
+            {message}
+         </Alert>
          <div className="page-content">
             <div className={isComputer ? "ilm-page" : isTablet ? "ilm-pageb" : "ilm-page-noheight"}>
                <Container fluid className="outer-container">
@@ -116,13 +137,13 @@ function App() {
                         >
                            Invalid data. Please try again.
                         </Alert>
-                        <LoginForm showAlert={setShowAlert} setIsModalActive={setIsModalActive} />
+                        <LoginForm setShowAlert={setShowAlert} setIsModalActive={setIsModalActive} />
                      </Col>
                      {isPhone && (
                         <Col>
                            <div className="div-project-button">
                               <button className="submit-button" id="projects-button" onClick={scrollToContent}>
-                                 Some of our Projects
+                                 Some of our projects
                               </button>
                            </div>
                         </Col>

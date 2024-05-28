@@ -17,9 +17,11 @@ export default function LoginForm({ setShowAlert, setIsModalActive }) {
          if (response.status === 200) {
             console.log("Login successful");
          } else if (response.status === 401) {
+            setShowAlert(true);
             console.log("Wrong pass");
          } else if (response.status === 404) {
             console.log("Email not found");
+            setShowAlert(true);
          }
       });
       console.log("Login");

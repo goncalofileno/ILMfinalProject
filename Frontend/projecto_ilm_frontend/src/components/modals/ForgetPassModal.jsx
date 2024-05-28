@@ -3,17 +3,21 @@ import "./ForgetPassModal.css";
 import InputForm from "../inputs/InputForm";
 import { useState } from "react";
 import { checkEmail, forgetPassword } from "../../utilities/services";
+import alertStore from "../../stores/alertStore";
 
 export default function ForgetPassModal({ isModalActive, setIsModalActive }) {
    const [email, setEmail] = useState("");
    const [warningType, setWarningType] = useState("");
    const [warningTxt, setWarningTxt] = useState("");
+   const { setMessage, setVisibility, setType } = alertStore();
 
    const handleOnBlur = () => {
       checkEmail(email).then((response) => {
          if (response.status !== 409) {
             setWarningType("incorrect");
             setWarningTxt("Email not found");
+         } else {
+            setWarningTxt("");
          }
       });
    };
@@ -23,7 +27,13 @@ export default function ForgetPassModal({ isModalActive, setIsModalActive }) {
       forgetPassword(email).then((response) => {
          if (response.status === 200) {
             setIsModalActive(false);
-            console.log("Password reset email sent");
+            setVisibility("visible");
+            setMessage("Password reset email sent");
+            setType("success");
+         } else {
+            setVisibility("visible");
+            setMessage("Error sending password reset email");
+            setType("danger");
          }
       });
    };
