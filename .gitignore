@@ -4,3 +4,15 @@ Backend/projecto_ILM_backend/src/main/java/com/ilm/projecto_ilm_backend/imgsUplo
 Backend/projecto_ILM_backend/src/main/resources/META-INF/persistence.xml
 
 Backend/projecto_ILM_backend/src/main/java/com/ilm/projecto_ilm_backend/utilities/imgsPath.java
+
+Backend/demo/.mvn/wrapper/
+
+Backend/demo/.idea/misc.xml
+
+Backend/demo/.idea/vcs.xml
+
+Backend/demo/mvnw.cmd
+
+Backend/demo/mvnw
+
+Backend/demo/.idea/encodings.xml

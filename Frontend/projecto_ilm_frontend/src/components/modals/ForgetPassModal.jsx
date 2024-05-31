@@ -2,7 +2,7 @@ import "./Modals.css";
 import "./ForgetPassModal.css";
 import InputForm from "../inputs/InputForm";
 import { useState } from "react";
-import { checkEmail } from "../../utilities/services";
+import { checkEmail, forgetPassword } from "../../utilities/services";
 
 export default function ForgetPassModal({ isModalActive, setIsModalActive }) {
    const [email, setEmail] = useState("");
@@ -18,11 +18,22 @@ export default function ForgetPassModal({ isModalActive, setIsModalActive }) {
       });
    };
 
+   const handleSubmit = (e) => {
+      e.preventDefault();
+      forgetPassword(email).then((response) => {
+         if (response.status === 200) {
+            setIsModalActive(false);
+            console.log("Password reset email sent");
+         }
+      });
+   };
+
    return (
       <>
          {isModalActive && (
-            <div className="modal-background" onClick={() => setIsModalActive(false)}>
-               <div className="ilm-modal">
+            <>
+               <div className="modal-background" onClick={() => setIsModalActive(false)}></div>
+               <form className="ilm-modal" onSubmit={handleSubmit}>
                   <div className="modal-content">
                      <h3 className="modal-title">Forget Password</h3>
                      <div className="modal-body">
@@ -38,13 +49,13 @@ export default function ForgetPassModal({ isModalActive, setIsModalActive }) {
                         ></InputForm>
                      </div>
                      <div className="modal-buttons">
-                        <button className="submit-button" id="submit-forget-pass">
+                        <button type="submit" className="submit-button" id="submit-forget-pass">
                            Submit
                         </button>
                      </div>
                   </div>
-               </div>
-            </div>
+               </form>
+            </>
          )}
       </>
    );

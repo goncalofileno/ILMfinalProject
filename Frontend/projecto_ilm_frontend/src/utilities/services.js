@@ -177,6 +177,43 @@ async function uploadProfilePicture(file, token) {
    });
 }
 
+async function forgetPassword(email) {
+   try {
+      const response = await fetch(`${baseURL}user/forgetPassword`, {
+         method: "POST",
+         headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            email: email,
+         },
+      });
+
+      return response;
+   } catch (error) {
+      console.error("Error during creating profile:", error);
+      throw error;
+   }
+}
+
+async function resetPassword(newPassword, auxiliarToken) {
+   try {
+      const response = await fetch(`${baseURL}user/resetPassword`, {
+         method: "POST",
+         headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: auxiliarToken,
+            newPassword: newPassword,
+         },
+      });
+
+      return response;
+   } catch (error) {
+      console.error("Error during creating profile:", error);
+      throw error;
+   }
+}
+
 export {
    registerUser,
    getInterests,
@@ -188,4 +225,6 @@ export {
    uploadProfilePicture,
    checkEmail,
    loginUser,
+   forgetPassword,
+   resetPassword,
 };

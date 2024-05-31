@@ -291,6 +291,27 @@ public class UserService {
         }
     }
 
+
+    @GET
+    @Path("/resetPasswordCheck/{auxiliarToken}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response resetPasswordCheck(@PathParam("auxiliarToken") String auxiliarToken) throws UnknownHostException {
+        String clientIP = InetAddress.getLocalHost().getHostAddress();
+        logger.info("Received a request to reset password of a user from IP address: " + clientIP);
+
+        if (databaseValidator.checkAuxiliarToken(auxiliarToken)) {
+            URI uri = URI.create("http://localhost:3000/reset-password/" + auxiliarToken);
+            logger.info("Auxiliar token to reset password was confirmed.");
+            return Response.seeOther(uri).build();
+
+
+        } else {
+            logger.error("Auxiliar token not found.");
+            URI uri = URI.create("http://localhost:3000/");
+            return Response.seeOther(uri).build();
+        }
+    }
+
     @POST
     @Path("/resetPassword")
     @Consumes(MediaType.APPLICATION_JSON)

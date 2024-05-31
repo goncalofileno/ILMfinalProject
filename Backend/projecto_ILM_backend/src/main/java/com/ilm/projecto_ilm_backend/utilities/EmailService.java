@@ -38,7 +38,7 @@ public class EmailService {
 
         String emailContent = "<html>"
                 + "<body style='font-family: Arial, sans-serif; line-height: 1.6;'>"
-                + "<h2>Welcome to AgileFlow!</h2>"
+                + "<h2>Welcome to Innovation Lab Management!</h2>"
                 + "<p>Thank you for registering with AgileFlow!</p>"
                 + "<p>To complete the registration process and gain full access to your account, please click the button below to confirm your email address:</p>"
                 + "<p style='text-align: center;'>"
@@ -46,7 +46,7 @@ public class EmailService {
                 + "</p>"
                 + "<p>If you did not request this registration, please ignore this email.</p>"
                 + "<p>Thank you,</p>"
-                + "<p>AgileFlow Team</p>"
+                + "<p>Innovation Lab Management Team</p>"
                 + "</body>"
                 + "</html>";
 
@@ -67,9 +67,11 @@ public class EmailService {
 
         String emailContent = "<p>Dear user</p>"
                 + "<p>To reset your password, please click on the link below:</p>"
-                + "<p><a href='http://localhost:5173/resetPassAfter/" + verificationLink + "'>http://localhost:5173/resetPassAfter/" + verificationLink + "</a></p>"
+                + "<p style='text-align: center;'>"
+                + "<a href='https://localhost:8443/projeto_ilm_final/rest/user/resetPasswordCheck/" + verificationLink + "' style='display: inline-block; padding: 10px 20px; font-size: 16px; color: white; background-color: #4CAF50; text-decoration: none; border-radius: 5px;'>Reset Password here</a>"
+                + "</p>"
                 + "<p>Thank you,</p>"
-                + "<p>AgileFlow Team</p>";
+                + "<p>Innovation Lab Management Team</p>";
 
         message.setContent(emailContent, "text/html");
         Transport.send(message);

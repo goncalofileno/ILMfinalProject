@@ -52,7 +52,7 @@ export default function RegisterForm({ setShowAlert }) {
             setWarningTxtEmail("Email is valid");
          } else if (response.status == 409 || response.status == 400) {
             setWarningTypeEmail("incorrect");
-            setWarningTxtEmail("Email this email is invalid");
+            setWarningTxtEmail("This email is invalid");
             console.log("Email is invalid");
          }
       });
