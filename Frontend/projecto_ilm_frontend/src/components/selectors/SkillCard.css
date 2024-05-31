@@ -1,0 +1,47 @@
+/* SkillCard.css */
+.skill-card {
+    position: relative;
+    background-color: #f8f9fa; /* Cor de fundo do cartão */
+    border-radius: 10px; /* Arredondamento das bordas do cartão */
+}
+
+.skill-card-body {
+    padding-top: 2px; /* Remove o padding top */
+}
+
+.div-mestra-button-card {
+    width: 100%;
+    display: flex;
+    justify-content: end;
+    margin-top: 5px;
+
+}
+
+.button-card{
+    margin-right: 5px;
+}
+
+.card-title-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.remove-btn {
+    font-size: 15px; /* Ajusta o tamanho da fonte */
+    padding: 5px; /* Ajusta o padding */
+    width: 30px; /* Define a largura */
+    height: 30px; 
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.skill-title {
+    margin-right: 9px; /* Espaço entre o título e o botão */
+}
+
+.skill-type {
+    font-size: 0.65rem; /* Ajuste o tamanho da fonte do tipo de habilidade */
+}
