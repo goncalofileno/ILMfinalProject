@@ -12,6 +12,9 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = "user_project")
+@NamedQuery(name = "UserProject.findById", query = "SELECT up FROM UserProjectEntity up WHERE up.id = :id")
+@NamedQuery(name = "UserProject.findByProjectId", query = "SELECT up FROM UserProjectEntity up WHERE up.project.id = :projectId")
+@NamedQuery(name = "UserProject.findByUserId", query = "SELECT up FROM UserProjectEntity up WHERE up.user.id = :userId")
 public class UserProjectEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
