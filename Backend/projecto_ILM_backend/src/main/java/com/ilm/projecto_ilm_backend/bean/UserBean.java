@@ -327,7 +327,7 @@ public class UserBean {
      * @return the token of the logged in user, or null if login failed
      */
     public String loginUser(RegisterUserDto registerUserDto) {
-        if (userDao.checkPassFromEmail(registerUserDto.getMail(), registerUserDto.getPassword())) {
+        if (userDao.checkPassFromEmail(registerUserDto.getMail(), HashUtil.toSHA256(registerUserDto.getPassword()))) {
             UserEntity userEntity = userDao.findByEmail(registerUserDto.getMail());
             userEntity.setToken(generateNewToken());
             userDao.merge(userEntity);

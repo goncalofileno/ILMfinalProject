@@ -61,7 +61,7 @@ function App() {
       <>
          <LoginHeader />
          <ForgetPassModal isModalActive={isModalActive} setIsModalActive={setIsModalActive}></ForgetPassModal>
-         <Alert variant={type} className="alerts-message" style={{ visibility: visibility }}>
+         <Alert variant={type} className="alerts-message" style={{ visibility: visibility, zIndex: "1005" }}>
             {message}
          </Alert>
          <div className="page-content">
@@ -206,22 +206,19 @@ function App() {
                         </div>
                      </Col>
                      <Col lg={3} md={6}>
-                        <div className="flex-col-gap-16" id="last-column-projects">
+                        <div className="flex-col-gap-16">
                            <LoginProjectsCards
                               cardBkgColor="card-bkg-color3"
                               title="Aviation"
                               description="From software architectures to system testing, we’ll look after your project from take-off to landing, combining our broad expertise with an in-depth knowledge of the rigorous safety standards in aviation."
                               scrollToRef={scrollToLogin}
                            />
-                           <div className="see-more-projects-button-div" style={{ height: isPhone && "100px" }}>
-                              <div
-                                 className="submit-button btn-with-up-arrow"
-                                 onClick={scrollToLogin}
-                                 id="see-more-projects-button"
-                              >
-                                 Login to see more projects <i class="fas fa-arrow-up margin-left-arrow"></i>
-                              </div>
-                           </div>
+                           <LoginProjectsCards
+                              cardBkgColor="card-bkg-color3"
+                              title="Aviation"
+                              description="From software architectures to system testing, we’ll look after your project from take-off to landing, combining our broad expertise with an in-depth knowledge of the rigorous safety standards in aviation."
+                              scrollToRef={scrollToLogin}
+                           />
                         </div>
                      </Col>
                   </Row>
