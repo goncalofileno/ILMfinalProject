@@ -15,6 +15,7 @@ import com.ilm.projecto_ilm_backend.ENUMS.ConvertersENUM.StateProjectEnumConvert
  */
 @Entity
 @Table(name = "project")
+@NamedQuery(name = "Project.findById", query = "SELECT p FROM ProjectEntity p WHERE p.id = :id")
 public class ProjectEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -79,7 +80,7 @@ public class ProjectEntity implements Serializable {
     /**
      * The photo of the project.
      */
-    @Column(name = "photo", nullable = false, unique = false, updatable = true)
+    @Column(name = "photo", nullable = true, unique = false, updatable = true)
     private String photo;
 
     /**
@@ -100,6 +101,9 @@ public class ProjectEntity implements Serializable {
     @Column(name = "deleted", nullable = false, unique = false, updatable = true)
     private boolean deleted;
 
+    /**
+     * The keywords of the project.
+     */
     @Column(name = "keywords", nullable = false, unique = false, updatable = true)
     private String keywords;
 

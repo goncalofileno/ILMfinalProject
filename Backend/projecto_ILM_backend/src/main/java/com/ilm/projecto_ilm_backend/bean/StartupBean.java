@@ -46,8 +46,17 @@ public class StartupBean {
     @Inject
     SupplierBean supplierBean;
 
+    /**
+     * The ResourceBean instance used for managing ResourceEntity instances.
+     */
     @Inject
     ResourceBean resourceBean;
+
+    /**
+     * The ProjectBean instance used for managing ProjectEntity instances.
+     */
+    @Inject
+    ProjectBean projectBean;
 
     /**
      * This method is called after the bean is constructed and dependency injection is complete.
@@ -60,7 +69,8 @@ public class StartupBean {
         interestBean.createDefaultInterestsIfNotExistent();
         supplierBean.createDefaultSuppliersIfNotExistent();
         resourceBean.createDefaultResourcesIfNotExistent();
-
         userBean.createDefaultUsersIfNotExistent();
+        projectBean.createDefaultProjectsIfNotExistent();
+        projectBean.createDefaultUsersInProjectIfNotExistent();
     }
 }
