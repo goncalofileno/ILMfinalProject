@@ -1,0 +1,11 @@
+/* Adicione este CSS ao seu arquivo CSS */
+.fixed-container {
+    background-color: #b8b8b8;
+    border-radius: 10px;
+    padding: 15px;
+    max-height: 254px; /* Ajuste conforme necessário */
+    overflow-y: auto;
+    width: 100%; /* Ajuste conforme necessário */
+    max-width: 500px; /* Ajuste conforme necessário */
+ }
+ 

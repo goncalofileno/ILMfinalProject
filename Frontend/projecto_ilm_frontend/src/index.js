@@ -4,6 +4,7 @@ import ReactDOM from "react-dom/client";
 import App from "./pages/App";
 import Register from "./pages/Register";
 import CreateProfilePage from "./pages/CreateProfilePage";
+import ProjectsPage from "./pages/ProjectsPage";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter as Router } from "react-router-dom";
 import { Route, Routes } from "react-router-dom";
@@ -20,6 +21,7 @@ root.render(
             <Route index element={<App />} />
             <Route path="/register" element={<Register />} />
             <Route path="/create-profile/:token" element={<CreateProfilePage />} />
+            <Route path="/projects" element={<ProjectsPage />} />
             <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
          </Routes>
       </Router>

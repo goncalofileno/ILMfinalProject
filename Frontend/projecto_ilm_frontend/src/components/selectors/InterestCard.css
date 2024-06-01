@@ -1,0 +1,43 @@
+/* InterestCard.css */
+.interest-card {
+    position: relative;
+    background-color: #f8f9fa; /* Background color of the card */
+    border-radius: 10px; /* Rounded corners */
+  }
+  
+  .interest-card-body {
+    padding-top: 2px; /* Remove top padding */
+  }
+  
+  .div-mestra-button-card {
+    width: 100%;
+    display: flex;
+    justify-content: end;
+    margin-top: 5px;
+  }
+  
+  .button-card {
+    margin-right: 5px;
+  }
+  
+  .card-title-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .remove-btn {
+    font-size: 15px; /* Font size */
+    padding: 5px; /* Padding */
+    width: 30px; /* Width */
+    height: 30px; 
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .interest-title {
+    margin-right: 9px; /* Space between title and button */
+  }
+  
