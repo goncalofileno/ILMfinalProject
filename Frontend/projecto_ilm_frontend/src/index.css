@@ -118,6 +118,15 @@ code {
    height: calc(100vh - 60px);
 }
 
+.ilm-pageb-with-aside {
+   background-color: rgb(245, 245, 245);
+   top: 0%;
+   height: calc(100vh - 60px);
+   width: 85%;
+   margin-left: 15%;
+   margin-top: 7px;
+}
+
 .ilm-pageb-noheight {
    background-color: rgb(245, 245, 245);
    margin-top: 60px;
