@@ -19,6 +19,7 @@ import java.util.List;
 @NamedQuery(name = "User.findByUsername", query = "SELECT u FROM UserEntity u WHERE u.username = :username")
 @NamedQuery(name = "User.findByAuxiliarToken", query = "SELECT u FROM UserEntity u WHERE u.auxiliarToken = :auxiliarToken")
 @NamedQuery(name = "User.checkPassFromEmail", query = "SELECT u.password FROM UserEntity u WHERE u.email = :email")
+@NamedQuery(name = "User.checkSystemUsername", query = "SELECT u FROM UserEntity u WHERE u.systemUsername = :systemUsername")
 public class UserEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -36,6 +37,12 @@ public class UserEntity implements Serializable {
      */
     @Column(name = "username", nullable = true, unique = true, updatable = true)
     private String username;
+
+    /**
+     * The system username of the user. This is a unique field in the "user" table.
+     */
+    @Column(name = "systemUsername", nullable = true, unique = true, updatable = true)
+    private String systemUsername;
 
     /**
      * The password of the user.
@@ -220,6 +227,24 @@ public class UserEntity implements Serializable {
      */
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    /**
+     * Returns the system username of this user.
+     *
+     * @return the system username of this user.
+     */
+    public String getSystemUsername() {
+        return systemUsername;
+    }
+
+    /**
+     * Sets the system username of this user.
+     *
+     * @param systemUsername the new system username of this user.
+     */
+    public void setSystemUsername(String systemUsername) {
+        this.systemUsername = systemUsername;
     }
 
     /**

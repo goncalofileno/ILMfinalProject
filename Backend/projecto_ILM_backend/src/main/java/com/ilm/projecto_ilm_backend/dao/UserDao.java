@@ -122,4 +122,13 @@ public class UserDao extends AbstractDao<UserEntity> {
         }
     }
 
+    public boolean checkSystemUsername(String systemUsername) {
+        try {
+            return em.createNamedQuery("User.checkSystemUsername").setParameter("systemUsername", systemUsername).getSingleResult() != null;
+
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
 }

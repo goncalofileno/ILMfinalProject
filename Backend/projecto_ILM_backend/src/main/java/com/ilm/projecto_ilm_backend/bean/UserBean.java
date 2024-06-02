@@ -31,6 +31,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.SecureRandom;
+import java.text.Normalizer;
 import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.List;
@@ -69,6 +70,11 @@ public class UserBean {
 
     @Inject
     EmailService emailService;
+
+    /**
+     * The logger used to log information, warning and error messages.
+     */
+    private static final Logger logger = LogManager.getLogger(UserService.class);
 
     /**
      * Creates a default user with username "admin" if it does not exist.
@@ -219,6 +225,8 @@ public class UserBean {
         user.setFirstName(userProfileDto.getFirstName());
         user.setLastName(userProfileDto.getLastName());
         user.setUsername(userProfileDto.getUsername());
+        user.setSystemUsername(generateUniqueSystemUsername(userProfileDto.getFirstName(), userProfileDto.getLastName()));
+        logger.info("System username: " + user.getSystemUsername());
         user.setLab(labDao.findbyLocal(WorkLocalENUM.valueOf(userProfileDto.getLab().toUpperCase())));
         user.setBio(userProfileDto.getBio());
         user.setPublicProfile(userProfileDto.publicProfile());
@@ -252,6 +260,34 @@ public class UserBean {
         return true;
     }
 
+    /**
+     * Generates a unique system username based on the user's first and last name.
+     *
+     * @param firstName the user's first name
+     * @param lastName the user's last name
+     * @return the generated system username
+     */
+    private String generateUniqueSystemUsername(String firstName, String lastName) {
+        // Remove caracteres especiais e espaços, e converte para minúsculas
+        String baseUsername = Normalizer.normalize(firstName + lastName, Normalizer.Form.NFD)
+                .replaceAll("[\\p{InCombiningDiacriticalMarks}]", "") // Remove diacríticos
+                .replaceAll("[^a-zA-Z0-9]", "") // Remove outros caracteres não alfanuméricos
+                .toLowerCase();
+        String systemUsername = baseUsername;
+        int suffix = 1;
+        logger.info("Base username: " + baseUsername);
+
+        while (userDao.checkSystemUsername(systemUsername)) {
+            systemUsername = baseUsername + suffix;
+            suffix++;
+        }
+
+        logger.info("Generated system username: " + systemUsername);
+        return systemUsername;
+    }
+
+
+
 
     /**
      * Saves a user's profile picture.
@@ -269,7 +305,8 @@ public class UserBean {
             UserEntity user = userDao.findByAuxiliarToken(authHeader);
 
             // Save the original image to the user's specific directory
-            String directoryPath = imgsPath.IMAGES_PATH+ user.getId();
+            String directoryPath = imgsPath.IMAGES_PATH+ "/" + user.getId();
+            logger.info("Directory path: " + directoryPath);
             File directory = new File(directoryPath);
             if (!directory.exists()) {
                 directory.mkdirs();
@@ -277,6 +314,7 @@ public class UserBean {
 
             String originalFilePath = directoryPath + "/profile_picture.jpg";
             Files.write(Paths.get(originalFilePath), imageBytes);
+            logger.info("Original file path: " + originalFilePath);
 
             // Save resized images
             ByteArrayInputStream bis = new ByteArrayInputStream(imageBytes);

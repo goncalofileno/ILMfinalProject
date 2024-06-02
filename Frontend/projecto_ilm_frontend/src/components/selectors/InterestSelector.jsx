@@ -138,7 +138,7 @@ const InterestSelector = ({ selectedInterests, setSelectedInterests }) => {
             Add
           </Button>
         </InputGroup>
-        <ListGroup>
+        <ListGroup className="suggestions-list">
           {suggestions.map((suggestion, index) => (
             <ListGroup.Item
               key={suggestion.id}
