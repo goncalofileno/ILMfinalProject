@@ -2,7 +2,7 @@
    display: flex;
    justify-content: space-between;
    align-items: center;
-   background-color: rgb(192, 23, 34);
+   background-color: rgb(30, 40, 82);
    position: fixed;
    width: 100%;
    padding: 7px 20px;
@@ -55,7 +55,7 @@
 }
 
 .language-dropdown {
-   background-color: rgba(192, 23, 34, 0.8); /* Menos evidente */
+   background-color: rgb(30, 40, 82); /* Menos evidente */
    color: white;
    border: none;
    padding: 5px 10px;

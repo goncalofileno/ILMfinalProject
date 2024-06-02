@@ -9,8 +9,13 @@ const ProjectsPage = () => {
          <AppNavbar />
          <AsideProjectsTable />
          <div className="ilm-pageb-with-aside">
-            <h1>Projects Page</h1>
-            <ProjectsTable></ProjectsTable>
+            <h1 className="page-title">
+               <span className="app-slogan-1">All </span>
+               <span className="app-slogan-2">Projects</span>
+            </h1>
+            <div className="table-margin-top">
+               <ProjectsTable></ProjectsTable>
+            </div>
          </div>
       </>
    );
