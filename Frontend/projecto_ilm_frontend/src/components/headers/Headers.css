@@ -1,5 +1,5 @@
 .ilm-headers {
-   background-color: rgb(192, 23, 34);
+   background-color: rgb(30, 40, 82);
    position: fixed;
    width: 100%;
    padding: 7px 20px;
@@ -15,4 +15,5 @@
    background-image: url("../../../../../Resources/logo.png");
    background-size: cover;
    background-position: center;
+   filter: invert(38%) sepia(80%) saturate(429%) hue-rotate(359deg) brightness(94%) contrast(95%);
 }

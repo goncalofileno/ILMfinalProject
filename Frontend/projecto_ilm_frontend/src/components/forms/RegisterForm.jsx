@@ -204,7 +204,7 @@ export default function RegisterForm({ setShowAlert }) {
                         id="cancel-register-form"
                         onClick={handleCancel}
                      >
-                        Login
+                        Cancel
                      </button>
                      <div></div>
                      <button type="submit" className="submit-button" id="submit-register-form" onClick={handleSubmit}>

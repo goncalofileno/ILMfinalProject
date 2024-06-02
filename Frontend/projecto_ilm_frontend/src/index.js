@@ -13,11 +13,9 @@ import { Alert } from "react-bootstrap";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
+
 root.render(
    <React.StrictMode>
-      <Alert variant="danger" className="alerts-message" style={{visibility: "hidden"}}>
-         This is a danger alert—check it out!
-      </Alert>
       <Router>
          <Routes>
             <Route index element={<App />} />

@@ -13,10 +13,6 @@
    text-align: center;
 }
 
-.app-slogan-2 {
-   color: rgb(192, 23, 34);
-}
-
 .ilm-description {
    text-align: justify;
    font-size: 20px;
@@ -31,11 +27,6 @@
 
 #projects-button {
    width: 70%;
-}
-
-.app-slogan {
-   font-weight: 700;
-   text-wrap: nowrap;
 }
 
 .ilm-general-subTitle {
