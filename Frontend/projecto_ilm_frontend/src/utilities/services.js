@@ -1,4 +1,4 @@
-const baseURL = "https://localhost:8443/projeto_ilm_final/rest/";
+const baseURL = "http://localhost:8080/projeto_ilm_final/rest/";
 
 async function checkUsername(username, auxiliarToken) {
    try {
@@ -214,6 +214,23 @@ async function resetPassword(newPassword, auxiliarToken) {
    }
 }
 
+async function getHomeProjects() {
+   try {
+      const response = await fetch(`${baseURL}project/homeProjects`, {
+         method: "GET",
+         headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+         },
+      });
+
+      return response;
+   } catch (error) {
+      console.error("Error getting home projects:", error);
+      throw error;
+   }
+}
+
 export {
    registerUser,
    getInterests,
@@ -227,4 +244,5 @@ export {
    loginUser,
    forgetPassword,
    resetPassword,
+   getHomeProjects,
 };

@@ -158,7 +158,7 @@ function Register() {
                            <LoginProjectsCards
                               cardBkgColor="card-bkg-color3"
                               title="Aviation"
-                              description="From software architectures to system testing, we’ll look after your project from take-off to landing, combining our broad expertise with an in-depth knowledge of the rigorous safety standards in aviation."
+                              description="From software architefasdfadfadsfadsfadsdsafctures to system testing, we’ll look after your project from take-off to landing, combining our broad expertise with an in-depth knowledge of the rigorous safety standards in aviation."
                               scrollToRef={scrollToLogin}
                            />
                            <LoginProjectsCards

@@ -78,7 +78,7 @@ public class UserBean {
         if (userDao.findById(1) == null) {
             UserEntity user = new UserEntity();
             user.setUsername("admin");
-            user.setPassword("admin");
+            user.setPassword(HashUtil.toSHA256("admin"));
             user.setEmail("admin@admin.com");
             user.setFirstName("Admin");
             user.setLastName("Admin");
@@ -105,7 +105,7 @@ public class UserBean {
         if (userDao.findById(2) == null) {
             UserEntity user = new UserEntity();
             user.setUsername("user");
-            user.setPassword("user");
+            user.setPassword(HashUtil.toSHA256("user"));
             user.setEmail("user@user.com");
             user.setFirstName("User");
             user.setLastName("User");

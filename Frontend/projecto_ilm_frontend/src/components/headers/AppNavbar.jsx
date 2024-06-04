@@ -7,10 +7,12 @@ import mailIcon from "../../resources/icons/navbar/mail-icon.png";
 import bellIcon from "../../resources/icons/navbar/notification-icon.png";
 import userProfileIcon from "../../resources/avatares/Avatar padrão.jpg";
 import testePhoto from "../../resources/avatares/teste.jpeg";
+import { useMediaQuery } from "react-responsive";
 import { FlagIcon } from "react-flag-kit";
 
 export default function AppNavbar() {
    const [dropdownOpen, setDropdownOpen] = useState(false);
+   const isPhone = useMediaQuery({ maxWidth: 768 });
 
    const toggleDropdown = () => {
       setDropdownOpen(!dropdownOpen);
@@ -65,26 +67,28 @@ export default function AppNavbar() {
             </div>
          </div>
          {/* Bottom Navbar for mobile view */}
-         <div className="bottom-navbar">
-            <div className="nav-icons">
-               <div className="nav-item">
-                  <div className="icon" style={{ backgroundImage: `url(${projectsIcon})` }}></div>
-                  <label>Projects</label>
-               </div>
-               <div className="nav-item">
-                  <div className="icon" style={{ backgroundImage: `url(${resourceIcon})` }}></div>
-                  <label>Resources</label>
-               </div>
-               <div className="nav-item">
-                  <div className="icon" style={{ backgroundImage: `url(${myProjectsIcon})` }}></div>
-                  <label>My Projects</label>
-               </div>
-               <div className="nav-item">
-                  <div className="icon" style={{ backgroundImage: `url(${mailIcon})` }}></div>
-                  <label>Mail</label>
+         {isPhone && (
+            <div className="bottom-navbar">
+               <div className="nav-icons">
+                  <div className="nav-item">
+                     <div className="icon" style={{ backgroundImage: `url(${projectsIcon})` }}></div>
+                     <label>Projects</label>
+                  </div>
+                  <div className="nav-item">
+                     <div className="icon" style={{ backgroundImage: `url(${resourceIcon})` }}></div>
+                     <label>Resources</label>
+                  </div>
+                  <div className="nav-item">
+                     <div className="icon" style={{ backgroundImage: `url(${myProjectsIcon})` }}></div>
+                     <label>My Projects</label>
+                  </div>
+                  <div className="nav-item">
+                     <div className="icon" style={{ backgroundImage: `url(${mailIcon})` }}></div>
+                     <label>Mail</label>
+                  </div>
                </div>
             </div>
-         </div>
+         )}
       </div>
    );
 }
