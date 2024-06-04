@@ -32,7 +32,6 @@
 .ilm-general-subTitle {
    font-size: 50px;
    color: rgb(60, 60, 60);
-   margin-top: 12px;
 }
 
 .flex-col-gap-16 {
@@ -109,4 +108,20 @@
 
 #alert-message-register p {
    margin-bottom: 0;
+}
+
+.align-center {
+   display: flex;
+   align-items: center;
+}
+
+.btn-arrow {
+   padding: 5px 15px;
+   border-radius: 50%;
+   border: none;
+   background-color: transparent;
+}
+
+.btn-arrow:hover {
+   background-color: rgb(243, 243, 243);
 }

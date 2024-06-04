@@ -8,6 +8,7 @@ import { Row, Col, Container, Alert } from "react-bootstrap";
 import { useMediaQuery } from "react-responsive";
 import ForgetPassModal from "../components/modals/ForgetPassModal";
 import alertStore from "../stores/alertStore";
+import { getHomeProjects } from "../utilities/services";
 
 function App() {
    const navigate = useNavigate();
@@ -17,11 +18,24 @@ function App() {
    const isTablet = useMediaQuery({ minWidth: 992, maxWidth: 1200 });
    const isSmallTablet = useMediaQuery({ minWidth: 768, maxWidth: 992 });
    const isPhone = useMediaQuery({ maxWidth: 768 });
+   const [homeProjects, setHomeProjects] = useState([]);
+   const [visibleProjects, setVisibleProjects] = useState([]);
+   const [page, setPage] = useState(null);
+   const [maxPage, setMaxPage] = useState(null);
    const [showAlert, setShowAlert] = useState(false);
-
    const [isModalActive, setIsModalActive] = useState(false);
    const { visibility, type, message, setVisibility } = alertStore();
    const headerHeight = 110;
+
+   useEffect(() => {
+      getHomeProjects()
+         .then((response) => response.json())
+         .then((data) => {
+            setHomeProjects(data);
+            setMaxPage(Math.ceil(data.length / 8) - 1);
+            setPage(0);
+         });
+   }, []);
 
    const scrollToContent = () => {
       contentRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -56,6 +70,14 @@ function App() {
          }, 3000);
       }
    }, [showAlert]);
+
+   const handlePrevious = () => {
+      setPage(page - 1);
+   };
+
+   const handleNext = () => {
+      setPage(page + 1);
+   };
 
    return (
       <>
@@ -152,74 +174,142 @@ function App() {
                </Container>
             </div>
             <div className="ilm-page2" ref={contentRef} style={{ paddingTop: "60px" }}>
-               <Container className="outer-container">
+               <Container fluid className="outer-container">
                   <Row>
-                     <h1 className="ilm-general-subTitle">Projects</h1>
+                     <Col xs={1} sm={1}></Col>
+                     <Col xs={10} sm={3}>
+                        <h1 className="ilm-general-subTitle">Projects</h1>
+                     </Col>
+                     {(isSmallTablet || isPhone) && <Col xs={1} sm={1}></Col>}
+
+                     <Col
+                        xs={12}
+                        sm={7}
+                        lg={8}
+                        className="align-center"
+                        style={{ justifyContent: isPhone && "center", marginTop: "15px" }}
+                     >
+                        <input
+                           type="text"
+                           style={{ width: !isPhone ? "50%" : "74%" }}
+                           className="ilm-search"
+                           placeholder="Search for title or description"
+                        />
+                     </Col>
                   </Row>
                   <Row className="row-margin-top-20 last-row-padd-bott">
-                     <Col lg={3} md={6} className={!isComputer && !isTablet && "col-margin-bottom-16"}>
-                        <div className="flex-col-gap-16">
-                           <LoginProjectsCards
-                              cardBkgColor="card-bkg-color1"
-                              title="Aviation"
-                              description="From software architectures to system testing, we’ll look after your project from take-off to landing, combining our broad expertise with an in-depth knowledge of the rigorous safety standards in aviation."
-                              scrollToRef={scrollToLogin}
-                           />
-                           <LoginProjectsCards
-                              cardBkgColor="card-bkg-color1"
-                              title="Aviation"
-                              description="From software architectures to system testing, we’ll look after your project from take-off to landing, combining our broad expertise with an in-depth knowledge of the rigorous safety standards in aviation."
-                              scrollToRef={scrollToLogin}
-                           />
-                        </div>
+                     <Col sm={1} xs={1} className="align-center" style={{ justifyContent: "center" }}>
+                        {page > 0 && (
+                           <button className="btn-arrow" onClick={handlePrevious}>
+                              <i class="fas fa-chevron-left fa-3x"></i>
+                           </button>
+                        )}
                      </Col>
-                     <Col lg={3} md={6} className={!isComputer && !isTablet && "col-margin-bottom-16"}>
-                        <div className="flex-col-gap-16">
-                           <LoginProjectsCards
-                              cardBkgColor="card-bkg-color4"
-                              title="Aviation"
-                              description="From software architectures to system testing, we’ll look after your project from take-off to landing, combining our broad expertise with an in-depth knowledge of the rigorous safety standards in aviation."
-                              scrollToRef={scrollToLogin}
-                           />
-                           <LoginProjectsCards
-                              cardBkgColor="card-bkg-color4"
-                              title="Aviation"
-                              description="From software architectures to system testing, we’ll look after your project from take-off to landing, combining our broad expertise with an in-depth knowledge of the rigorous safety standards in aviation."
-                              scrollToRef={scrollToLogin}
-                           />
-                        </div>
+                     <Col sm={10} xs={10}>
+                        <Row>
+                           <Col lg={3} md={6} className={!isComputer && !isTablet && "col-margin-bottom-16"}>
+                              <div className="flex-col-gap-16">
+                                 {homeProjects.slice(0 + 8 * page, 2 + 8 * page).map((component, index) => {
+                                    return index % 2 === 0 ? (
+                                       <LoginProjectsCards
+                                          key={component.index}
+                                          cardBkgColor="card-bkg-color1"
+                                          title={component.name}
+                                          description={component.description}
+                                          scrollToRef={scrollToLogin}
+                                       />
+                                    ) : (
+                                       <LoginProjectsCards
+                                          key={component.index}
+                                          cardBkgColor="card-bkg-color1"
+                                          title={component.name}
+                                          description={component.description}
+                                          scrollToRef={scrollToLogin}
+                                       />
+                                    );
+                                 })}
+                              </div>
+                           </Col>
+
+                           <Col lg={3} md={6} className={!isComputer && !isTablet && "col-margin-bottom-16"}>
+                              <div className="flex-col-gap-16">
+                                 {homeProjects.slice(2 + 8 * page, 4 + 8 * page).map((component, index) => {
+                                    return index % 2 === 0 ? (
+                                       <LoginProjectsCards
+                                          key={component.index}
+                                          cardBkgColor="card-bkg-color1"
+                                          title={component.name}
+                                          description={component.description}
+                                          scrollToRef={scrollToLogin}
+                                       />
+                                    ) : (
+                                       <LoginProjectsCards
+                                          key={component.index}
+                                          cardBkgColor="card-bkg-color1"
+                                          title={component.name}
+                                          description={component.description}
+                                          scrollToRef={scrollToLogin}
+                                       />
+                                    );
+                                 })}
+                              </div>
+                           </Col>
+                           <Col lg={3} md={6} className={!isComputer && !isTablet && "col-margin-bottom-16"}>
+                              <div className="flex-col-gap-16">
+                                 {homeProjects.slice(4 + 8 * page, 6 + 8 * page).map((component, index) => {
+                                    return index % 2 === 0 ? (
+                                       <LoginProjectsCards
+                                          key={component.index}
+                                          cardBkgColor="card-bkg-color1"
+                                          title={component.name}
+                                          description={component.description}
+                                          scrollToRef={scrollToLogin}
+                                       />
+                                    ) : (
+                                       <LoginProjectsCards
+                                          key={component.index}
+                                          cardBkgColor="card-bkg-color1"
+                                          title={component.name}
+                                          description={component.description}
+                                          scrollToRef={scrollToLogin}
+                                       />
+                                    );
+                                 })}
+                              </div>
+                           </Col>
+                           <Col lg={3} md={6} className={!isComputer && !isTablet && "col-margin-bottom-16"}>
+                              <div className="flex-col-gap-16">
+                                 {homeProjects.slice(6 + 8 * page, 8 + 8 * page).map((component, index) => {
+                                    return index % 2 === 0 ? (
+                                       <LoginProjectsCards
+                                          key={component.index}
+                                          cardBkgColor="card-bkg-color1"
+                                          title={component.name}
+                                          description={component.description}
+                                          scrollToRef={scrollToLogin}
+                                       />
+                                    ) : (
+                                       <LoginProjectsCards
+                                          key={component.index}
+                                          cardBkgColor="card-bkg-color1"
+                                          title={component.name}
+                                          description={component.description}
+                                          scrollToRef={scrollToLogin}
+                                       />
+                                    );
+                                 })}
+                              </div>
+                           </Col>
+                        </Row>
                      </Col>
-                     <Col lg={3} md={6} className={!isComputer && !isTablet && "col-margin-bottom-16"}>
-                        <div className="flex-col-gap-16">
-                           <LoginProjectsCards
-                              cardBkgColor="card-bkg-color2"
-                              title="Aviation"
-                              description="From software architectures to system testing, we’ll look after your project from take-off to landing, combining our broad expertise with an in-depth knowledge of the rigorous safety standards in aviation."
-                              scrollToRef={scrollToLogin}
-                           />
-                           <LoginProjectsCards
-                              cardBkgColor="card-bkg-color2"
-                              title="Aviation"
-                              description="From software architectures to system testing, we’ll look after your project from take-off to landing, combining our broad expertise with an in-depth knowledge of the rigorous safety standards in aviation."
-                              scrollToRef={scrollToLogin}
-                           />
-                        </div>
-                     </Col>
-                     <Col lg={3} md={6}>
-                        <div className="flex-col-gap-16">
-                           <LoginProjectsCards
-                              cardBkgColor="card-bkg-color3"
-                              title="Aviation"
-                              description="From software architectures to system testing, we’ll look after your project from take-off to landing, combining our broad expertise with an in-depth knowledge of the rigorous safety standards in aviation."
-                              scrollToRef={scrollToLogin}
-                           />
-                           <LoginProjectsCards
-                              cardBkgColor="card-bkg-color3"
-                              title="Aviation"
-                              description="From software architectures to system testing, we’ll look after your project from take-off to landing, combining our broad expertise with an in-depth knowledge of the rigorous safety standards in aviation."
-                              scrollToRef={scrollToLogin}
-                           />
-                        </div>
+
+                     <Col sm={1} xs={1} className="align-center" style={{ justifyContent: "center" }}>
+                        {page != maxPage && page != null && (
+                           <button className="btn-arrow" onClick={handleNext}>
+                              {" "}
+                              <i class="fas fa-chevron-right fa-3x "></i>
+                           </button>
+                        )}
                      </Col>
                   </Row>
                </Container>
