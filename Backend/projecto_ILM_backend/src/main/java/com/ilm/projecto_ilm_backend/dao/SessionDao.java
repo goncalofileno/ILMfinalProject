@@ -3,8 +3,10 @@ package com.ilm.projecto_ilm_backend.dao;
 import com.ilm.projecto_ilm_backend.entity.SessionEntity;
 import com.ilm.projecto_ilm_backend.entity.UserEntity;
 import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -14,6 +16,9 @@ import java.util.List;
 public class SessionDao extends AbstractDao<SessionEntity> {
 
     private static final long serialVersionUID = 1L;
+
+    @Inject
+    SystemDao systemDao;
 
     /**
      * Constructs a new SessionDao instance.
@@ -82,5 +87,29 @@ public class SessionDao extends AbstractDao<SessionEntity> {
             return false;
         }
         return false;
+    }
+
+    public int findUserIdBySessionId(String sessionId) {
+        try {
+            return (int) em.createNamedQuery("Session.findUserIdBySessionId")
+                    .setParameter("sessionId", sessionId)
+                    .getSingleResult();
+        } catch (Exception e) {
+            return -1;
+        }
+    }
+
+    public boolean isUserLogged(String sessionId) {
+        try {
+            SessionEntity session= (SessionEntity) em.createNamedQuery("Session.findBySessionId")
+                    .setParameter("sessionId", sessionId)
+                    .getSingleResult();
+
+            session.setExpiresAt(LocalDateTime.now().plusHours(systemDao.findConfigValueByName("timeout")));
+            merge(session);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

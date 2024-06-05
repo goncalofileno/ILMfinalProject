@@ -3,6 +3,7 @@ package com.ilm.projecto_ilm_backend.dao;
 import com.ilm.projecto_ilm_backend.entity.UserProjectEntity;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 
@@ -86,6 +87,29 @@ public class UserProjectDao extends AbstractDao<UserProjectEntity>{
 
         } catch (Exception e) {
             return null;
+        }
+    }
+
+
+
+    public int getNumberOfUsersByProjectId(int projectId) {
+        try {
+            return  ((Number)em.createNamedQuery("UserProject.findNumberOfUsers").setParameter("projectId",projectId).getSingleResult()).intValue();
+
+        } catch (NoResultException e) {
+            return 0;
+        }
+    }
+
+    public boolean isUserInProject(int projectId, int userId) {
+        try {
+            if  (((Number)em.createNamedQuery("UserProject.isUserInProject").setParameter("projectId",projectId).setParameter("userId",userId).getSingleResult()).intValue()>0){
+                return true;
+            }
+            else return false;
+
+        } catch (NoResultException e) {
+            return false;
         }
     }
 }

@@ -3,8 +3,10 @@ package com.ilm.projecto_ilm_backend.service;
 
 import com.ilm.projecto_ilm_backend.bean.ProjectBean;
 import com.ilm.projecto_ilm_backend.dto.user.RegisterUserDto;
+import com.ilm.projecto_ilm_backend.validator.DatabaseValidator;
 import com.ilm.projecto_ilm_backend.validator.RegexValidator;
 import jakarta.inject.Inject;
+import jakarta.ws.rs.CookieParam;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
@@ -21,6 +23,8 @@ public class ProjectService {
 
     @Inject
     ProjectBean projectBean;
+    @Inject
+    DatabaseValidator databaseValidator;
 
     private static final Logger logger = LogManager.getLogger(ProjectService.class);
 
@@ -37,6 +41,26 @@ public class ProjectService {
         } catch (Exception e) {
             logger.error("An error occurred while retrieving home projects: " + e.getMessage()+" from IP address: " + clientIP);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("An error occurred while retrieving home projects").build();
+        }
+
+    }
+
+    @GET
+    @Path("/tableProjects")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getTableProjects(@CookieParam("session-id") String sessionId) throws UnknownHostException {
+        String clientIP = InetAddress.getLocalHost().getHostAddress();
+        logger.info("Received a request to to receive all table projects a user from IP address: " + clientIP);
+
+        if(databaseValidator.checkSessionId(sessionId)) {
+            try {
+                return Response.ok(projectBean.getProjectsDtosTable(sessionId)).build();
+            } catch (Exception e) {
+                logger.error("An error occurred while retrieving home projects: " + e.getMessage() + " from IP address: " + clientIP);
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("An error occurred while retrieving home projects").build();
+            }
+        }else {
+            return Response.status(Response.Status.UNAUTHORIZED).entity("Unauthorized access").build();
         }
 
     }

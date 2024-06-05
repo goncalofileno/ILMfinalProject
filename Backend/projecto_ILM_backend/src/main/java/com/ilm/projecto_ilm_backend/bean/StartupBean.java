@@ -57,6 +57,8 @@ public class StartupBean {
      */
     @Inject
     ProjectBean projectBean;
+    @Inject
+    SystemBean systemBean;
 
     /**
      * This method is called after the bean is constructed and dependency injection is complete.
@@ -72,5 +74,6 @@ public class StartupBean {
         userBean.createDefaultUsersIfNotExistent();
         projectBean.createDefaultProjectsIfNotExistent();
         projectBean.createDefaultUsersInProjectIfNotExistent();
+        systemBean.createDefaultSystemIfNotExistent();
     }
 }

@@ -10,6 +10,7 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = "systemConfigs")
+@NamedQuery(name = "System.getValueByName", query = "SELECT sy.value FROM SystemEntity sy WHERE sy.name= :name")
 public class SystemEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;

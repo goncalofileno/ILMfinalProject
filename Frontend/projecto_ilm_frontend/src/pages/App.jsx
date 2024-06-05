@@ -34,7 +34,10 @@ function App() {
          .then((data) => {
             setHomeProjects(data);
             setVisibleProjects(data);
-            setMaxPage(Math.ceil(data.length / 8) - 1);
+            const potentialMaxPage = Math.ceil(data.length / 8) - 1;
+            if (potentialMaxPage >= 0) {
+               setMaxPage(potentialMaxPage);
+            } else setMaxPage(0);
             setPage(0);
          });
    }, []);

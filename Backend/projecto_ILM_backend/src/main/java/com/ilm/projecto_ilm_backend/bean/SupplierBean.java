@@ -4,6 +4,7 @@ import com.ilm.projecto_ilm_backend.dao.SupplierDao;
 import com.ilm.projecto_ilm_backend.entity.SupplierEntity;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 /**
  * The SupplierBean class is responsible for managing SupplierEntity instances.
@@ -15,7 +16,7 @@ public class SupplierBean {
     /**
      * The SupplierDao instance used for accessing the database.
      */
-    @EJB
+    @Inject
     SupplierDao supplierDao;
 
     /**

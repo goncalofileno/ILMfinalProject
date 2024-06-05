@@ -1,5 +1,6 @@
 package com.ilm.projecto_ilm_backend.validator;
 
+import com.ilm.projecto_ilm_backend.dao.SessionDao;
 import com.ilm.projecto_ilm_backend.dao.UserDao;
 import jakarta.ejb.EJB;
 import jakarta.inject.Inject;
@@ -10,6 +11,8 @@ public class DatabaseValidator {
 
     @Inject
     private UserDao userDao;
+    @Inject
+    private SessionDao sessionDao;
 
     /**
      * Checks if the provided email is already present in the database.
@@ -40,6 +43,10 @@ public class DatabaseValidator {
      */
     public boolean checkAuxiliarToken(String auxiliarToken) {
         return userDao.findByAuxiliarToken(auxiliarToken) != null;
+    }
+
+    public boolean checkSessionId(String sessionId) {
+        return sessionDao.isUserLogged(sessionId);
     }
 
 

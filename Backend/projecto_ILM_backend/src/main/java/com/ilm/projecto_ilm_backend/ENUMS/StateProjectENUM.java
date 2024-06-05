@@ -8,7 +8,7 @@ public enum StateProjectENUM {
      * Planning state.
      * Represented by the integer value 0.
      */
-    PLANING(0),
+    PLANNING(0),
 
     /**
      * Ready state.
