@@ -41,18 +41,13 @@ public class LabService {
     @GET
     @Path("/all")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllLabs(@Context HttpHeaders headers) throws UnknownHostException {
+    public Response getAllLabs() throws UnknownHostException {
         String clientIP = InetAddress.getLocalHost().getHostAddress();
         logger.info("Received a request to retrieve all labs from IP address: " + clientIP);
 
-        String authHeader = headers.getHeaderString(HttpHeaders.AUTHORIZATION);
-        if (databaseValidator.checkAuxiliarToken(authHeader)) {
-            List<LabDto> labs = labBean.getAllLabs();
-            return Response.ok(labs).build();
-        } else {
-            return Response.status(Response.Status.UNAUTHORIZED).entity("Invalid token").build();
+        List<LabDto> labs = labBean.getAllLabs();
+        return Response.ok(labs).build();
 
-        }
     }
 
 }

@@ -7,7 +7,6 @@
    width: 100%;
    padding: 7px 20px;
    z-index: 1000;
-
    top: 0;
    left: 0;
    height: 60px;
@@ -16,13 +15,13 @@
 
 .nav-icons-wrapper {
    display: flex;
-   justify-content: center; /* Centraliza o wrapper dos ícones */
-   flex-grow: 1; /* Permite que o wrapper cresça para ocupar o espaço */
+   justify-content: center;
+   flex-grow: 1;
 }
 
 .nav-icons {
    display: flex;
-   justify-content: center; /* Centraliza os ícones dentro do wrapper */
+   justify-content: center;
    align-items: center;
 }
 
@@ -36,7 +35,7 @@
 .nav-item label {
    font-size: 15px;
    cursor: pointer;
-   color: white; /* Assegura que as labels estejam sempre brancas */
+   color: white;
 }
 
 .icon {
@@ -44,19 +43,19 @@
    width: 30px;
    background-size: cover;
    background-position: center;
-   filter: invert(100%); /* Inverter cores de preto para branco */
+   filter: invert(100%);
    cursor: pointer;
 }
 
 .nav-right {
    display: flex;
    align-items: center;
-   justify-content: flex-end; /* Alinha os elementos à direita */
-   flex-grow: 0; /* Permite que o contêiner cresça para ocupar todo o espaço disponível à direita */
+   justify-content: flex-end;
+   flex-grow: 0;
 }
 
 .language-dropdown {
-   background-color: rgb(30, 40, 82); /* Menos evidente */
+   background-color: rgb(30, 40, 82);
    color: white;
    border: none;
    padding: 5px 10px;
@@ -76,34 +75,40 @@
    width: 50px;
    border-radius: 50%;
    border: 2px solid white;
-   background-size: cover; /* Garante que a imagem cubra toda a área da moldura */
+   background-size: cover;
    cursor: pointer;
 }
 
 .dropdown-content {
-   display: none; /* Oculto por padrão */
+   display: none;
    position: absolute;
    right: 0;
    background-color: #f9f9f9;
    color: black;
    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-   z-index: 5; /* Certifique-se que está acima de outros elementos */
-   width: 150px; /* Ajuste conforme necessário */
-   border-radius: 4px; /* Estilo opcional para bordas arredondadas */
+   z-index: 5;
+   width: 150px;
+   border-radius: 4px;
 }
 
 .dropdown-content.show {
-   display: flex; /* Usar flexbox para controlar o layout dos itens */
-   flex-direction: column; /* Itens dispostos verticalmente */
-   align-items: start; /* Alinhar itens à esquerda */
-   padding: 10px; /* Adicionar um pouco de padding para estética */
+   display: flex;
+   flex-direction: column;
+   align-items: start;
+   padding: 10px;
 }
 
-.dropdown-content a {
-   text-decoration: none; /* Opcional: remover sublinhado de links */
-   color: black; /* Cor do texto para os links */
-   padding: 5px 0; /* Espaço vertical entre links */
-   display: block; /* Fazer cada link ocupar sua própria linha */
+.dropdown-content div {
+   text-decoration: none;
+   color: black;
+   padding: 5px 0;
+   display: block;
+   width: 100%;
+   cursor: pointer;
+}
+
+.dropdown-content div:hover {
+   background-color: #f1f1f1;
 }
 
 @media (max-width: 768px) {
@@ -120,25 +125,43 @@
    }
 
    .nav-icons-wrapper {
-      display: none; /* Esconde os ícones na navbar superior */
+      display: none;
    }
 
    .bottom-navbar .nav-icons {
-      display: flex; /* Exibe os ícones na navbar inferior */
-      justify-content: center; /* Centraliza os ícones horizontalmente */
+      display: flex;
+      justify-content: center;
    }
 
    .bottom-navbar .nav-item label {
-      color: white; /* Assegura que as labels continuam brancas na navbar inferior */
+      color: white;
    }
 
    .nav-right {
-      width: auto; /* Ajusta a largura para ocupar somente o espaço necessário */
-      justify-content: flex-end; /* Alinha os elementos de idioma e notificações à direita */
+      width: auto;
+      justify-content: flex-end;
    }
 
    .nav-right .language-dropdown,
    .nav-right .icon.bell {
-      margin-right: 10px; /* Garante um espaçamento adequado à direita */
+      margin-right: 10px;
    }
+}
+
+.nav-item .icon {
+   filter: invert(100%);
+}
+
+.nav-item.active .icon,
+.nav-item:hover .icon {
+   filter: invert(60%) sepia(80%) saturate(429%) hue-rotate(359deg) brightness(94%) contrast(95%);
+}
+
+.nav-item label {
+   color: inherit;
+}
+
+.nav-item.active label,
+.nav-item:hover label {
+   color: #f39c12;
 }

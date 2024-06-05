@@ -131,8 +131,8 @@ const InterestSelector = ({ selectedInterests, setSelectedInterests }) => {
             variant="primary"
             onClick={handleAddNewInterest}
             style={{
-              backgroundColor: "rgb(192, 23, 34)",
-              borderColor: "rgb(192, 23, 34)",
+              backgroundColor: "#f39c12",
+              borderColor: "#f39c12",
             }}
           >
             Add

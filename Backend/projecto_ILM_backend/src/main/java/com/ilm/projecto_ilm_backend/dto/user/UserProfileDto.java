@@ -8,6 +8,7 @@ import java.util.List;
 
 @XmlRootElement
 public class UserProfileDto {
+    private String photo;
     private String firstName;
     private String lastName;
     private String username;
@@ -18,6 +19,15 @@ public class UserProfileDto {
     private List<InterestDto> interests;
 
     // Getters and Setters
+
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
 
     public String getFirstName() {
         return firstName;

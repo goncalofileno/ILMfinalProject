@@ -97,19 +97,14 @@ public class UserService {
     @Path("/checkUsername")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response checkUsername(@HeaderParam("username") String username, @Context HttpHeaders headers) throws UnknownHostException {
+    public Response checkUsername(@HeaderParam("username") String username) throws UnknownHostException {
         String clientIP = InetAddress.getLocalHost().getHostAddress();
         logger.info("Received a request to check if a username is already in the database from IP address: " + clientIP + " with username: " + username);
 
-        String authHeader = headers.getHeaderString(HttpHeaders.AUTHORIZATION);
-        if (databaseValidator.checkAuxiliarToken(authHeader)) {
-            if (databaseValidator.checkUsername(username)) {
-                return Response.status(Response.Status.CONFLICT).entity("Username already exists.").build();
-            } else {
-                return Response.status(Response.Status.OK).entity("Username available.").build();
-            }
+        if (databaseValidator.checkUsername(username)) {
+            return Response.status(Response.Status.CONFLICT).entity("Username already exists.").build();
         } else {
-            return Response.status(Response.Status.UNAUTHORIZED).entity("Unauthorized").build();
+            return Response.status(Response.Status.OK).entity("Username available.").build();
         }
 
     }
@@ -533,7 +528,7 @@ public class UserService {
                 profileDto.setFirstName(profileUser.getFirstName());
                 profileDto.setLastName(profileUser.getLastName());
                 profileDto.setLocation(profileUser.getLab().getLocal().toString());
-                profileDto.setProfileImage("http://localhost:8080/images/" + profileUser.getId() + "/profile_picture_avatar.jpg");
+                profileDto.setProfileImage(profileUser.getPhoto());
                 profileDto.setPublicProfile(profileUser.isPublicProfile());
 
                 if (profileUser.isPublicProfile() || requestingUser.getId() == (profileUser.getId())) {
@@ -566,6 +561,52 @@ public class UserService {
                                 return interestDto;
                             }).collect(Collectors.toList()));
                 }
+
+                return Response.status(Response.Status.OK).entity(profileDto).build();
+            } else {
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity(Collections.singletonMap("message", "User not found")).build();
+            }
+        } else {
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity(Collections.singletonMap("message", "Unauthorized: Invalid session")).build();
+        }
+    }
+
+    @GET
+    @Path("/editProfile/{systemUsername}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getEditProfile(@PathParam("systemUsername") String systemUsername, @CookieParam("session-id") String sessionId) {
+        logger.info("Received a request to get the edit profile of a user with session ID: " + sessionId);
+        UserEntity requestingUser = userBean.getUserBySessionId(sessionId);
+        if (requestingUser != null) {
+            UserEntity profileUser = userDao.getUserBySystemUsernameWithAssociations(systemUsername);
+            if (profileUser != null) {
+                UserProfileDto profileDto = new UserProfileDto();
+                profileDto.setUsername(profileUser.getUsername());
+                profileDto.setFirstName(profileUser.getFirstName());
+                profileDto.setLastName(profileUser.getLastName());
+                profileDto.setLab(profileUser.getLab().getLocal().toString());
+                profileDto.setBio(profileUser.getBio());
+                profileDto.setPublicProfile(profileUser.isPublicProfile());
+                profileDto.setPhoto(profileUser.getPhoto());
+
+                profileDto.setSkills(profileUser.getSkills().stream()
+                        .map(skill -> {
+                            SkillDto skillDto = new SkillDto();
+                            skillDto.setId(skill.getId());
+                            skillDto.setName(skill.getName());
+                            skillDto.setType(skill.getType().toString());
+                            return skillDto;
+                        }).collect(Collectors.toList()));
+
+                profileDto.setInterests(profileUser.getInterests().stream()
+                        .map(interest -> {
+                            InterestDto interestDto = new InterestDto();
+                            interestDto.setId(interest.getId());
+                            interestDto.setName(interest.getName());
+                            return interestDto;
+                        }).collect(Collectors.toList()));
 
                 return Response.status(Response.Status.OK).entity(profileDto).build();
             } else {

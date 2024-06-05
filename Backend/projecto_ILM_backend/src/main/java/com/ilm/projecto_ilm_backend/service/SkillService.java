@@ -43,17 +43,11 @@ public class SkillService {
     @GET
     @Path("/all")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllSkills(@Context HttpHeaders headers) throws UnknownHostException {
+    public Response getAllSkills() throws UnknownHostException {
         String clientIP = InetAddress.getLocalHost().getHostAddress();
         logger.info("Received a request to retrieve all skills from IP address: " + clientIP);
+        List<SkillDto> skills = skillBean.getAllSkills();
+        return Response.ok(skills).build();
 
-        String authHeader = headers.getHeaderString(HttpHeaders.AUTHORIZATION);
-        if (databaseValidator.checkAuxiliarToken(authHeader)) {
-            List<SkillDto> skills = skillBean.getAllSkills();
-            return Response.ok(skills).build();
-        } else {
-            return Response.status(Response.Status.UNAUTHORIZED).entity("Invalid token").build();
-
-        }
     }
 }

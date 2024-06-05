@@ -12,6 +12,7 @@ import { Route, Routes } from "react-router-dom";
 import "./index.css";
 import { Alert } from "react-bootstrap";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
+import EditProfilePage from "./pages/EditProfilePage";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -25,6 +26,7 @@ root.render(
             <Route path="/projects" element={<ProjectsPage />} />
             <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
             <Route path="/profile/:systemUsername" element={<ProfilePage />} />
+            <Route path="/editProfile" element={<EditProfilePage />} />
          </Routes>
       </Router>
    </React.StrictMode>

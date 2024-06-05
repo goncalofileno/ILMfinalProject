@@ -197,149 +197,212 @@ async function resetPassword(newPassword, auxiliarToken) {
 }
 
 async function loginUser(email, password) {
-   let user = {
-       mail: email,
-       password: password,
-       userAgent: navigator.userAgent, // Captura o User-Agent do navegador
-   };
+  let user = {
+    mail: email,
+    password: password,
+    userAgent: navigator.userAgent, // Captura o User-Agent do navegador
+  };
 
-   try {
-       const response = await fetch(`${baseURL}user/login`, {
-           method: "POST",
-           headers: {
-               Accept: "application/json",
-               "Content-Type": "application/json",
-           },
-           body: JSON.stringify(user),
-           credentials: "include", // Inclui os cookies na requisição
-       });
+  try {
+    const response = await fetch(`${baseURL}user/login`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(user),
+      credentials: "include", // Inclui os cookies na requisição
+    });
 
-       if (!response.ok) {
-           throw new Error(`HTTP error! status: ${response.status}`);
-       }
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
 
-       const contentType = response.headers.get("content-type");
-       if (contentType && contentType.includes("application/json")) {
-           const data = await response.json(); // Processa a resposta como JSON
-           return { status: response.status, data: data }; // Retorna um objeto com o status e os dados
-       } else {
-           throw new Error("Response is not JSON");
-       }
-   } catch (error) {
-       console.error("Error during fetching login:", error);
-       // Retorna um objeto de erro com o status e a mensagem de erro
-       return { status: error.response ? error.response.status : 500, error: error.message };
-   }
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      const data = await response.json(); // Processa a resposta como JSON
+      return { status: response.status, data: data }; // Retorna um objeto com o status e os dados
+    } else {
+      throw new Error("Response is not JSON");
+    }
+  } catch (error) {
+    console.error("Error during fetching login:", error);
+    // Retorna um objeto de erro com o status e a mensagem de erro
+    return {
+      status: error.response ? error.response.status : 500,
+      error: error.message,
+    };
+  }
 }
 
 async function getUserProfileImage() {
-   try {
-     const response = await fetch(`${baseURL}user/profileImage`, {
-       method: "GET",
-       credentials: "include", // Inclui os cookies na requisição
-     });
-     if (response.ok) {
-       const data = await response.json();
-       return data.imageUrl; // Supondo que a resposta contenha o campo imageUrl
-     } else {
-       console.error("Failed to fetch user image");
-       return null;
-     }
-   } catch (error) {
-     console.error("Error fetching user image:", error);
-     return null;
-   }
- }
+  try {
+    const response = await fetch(`${baseURL}user/profileImage`, {
+      method: "GET",
+      credentials: "include", // Inclui os cookies na requisição
+    });
+    if (response.ok) {
+      const data = await response.json();
+      return data.imageUrl; // Supondo que a resposta contenha o campo imageUrl
+    } else {
+      console.error("Failed to fetch user image");
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching user image:", error);
+    return null;
+  }
+}
 
- async function loginWithToken(token) {
-   let userAgent = navigator.userAgent; // Captura o User-Agent do navegador
+async function loginWithToken(token) {
+  let userAgent = navigator.userAgent; // Captura o User-Agent do navegador
 
-   try {
-       const response = await fetch(`${baseURL}user/loginWithToken`, {
-           method: "POST",
-           headers: {
-               Accept: "application/json",
-               "Content-Type": "application/json",
-           },
-           body: JSON.stringify({ token, userAgent }),
-           credentials: "include", // Inclui os cookies na requisição
-       });
+  try {
+    const response = await fetch(`${baseURL}user/loginWithToken`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ token, userAgent }),
+      credentials: "include", // Inclui os cookies na requisição
+    });
 
-       return response;
-   } catch (error) {
-       console.error("Error during fetching login with token:", error);
-   }
+    return response;
+  } catch (error) {
+    console.error("Error during fetching login with token:", error);
+  }
 }
 
 async function getHomeProjects() {
-   try {
-      const response = await fetch(`${baseURL}project/homeProjects`, {
-         method: "GET",
-         headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-         },
-      });
+  try {
+    const response = await fetch(`${baseURL}project/homeProjects`, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    });
 
-      return response;
-   } catch (error) {
-      console.error("Error getting home projects:", error);
-      throw error;
-   }
+    return response;
+  } catch (error) {
+    console.error("Error getting home projects:", error);
+    throw error;
+  }
 }
 
 async function logoutUser() {
-   try {
-     const response = await fetch(`${baseURL}user/logout`, {
-       method: "POST",
-       credentials: "include", // Inclui os cookies na requisição
-     });
-     return response;
-   } catch (error) {
-     console.error("Error during fetching logout:", error);
-   }
- }
+  try {
+    const response = await fetch(`${baseURL}user/logout`, {
+      method: "POST",
+      credentials: "include", // Inclui os cookies na requisição
+    });
+    return response;
+  } catch (error) {
+    console.error("Error during fetching logout:", error);
+  }
+}
 
 const getUserProfile = async (systemUsername) => {
-   try {
-     const response = await fetch(`http://localhost:8080/projeto_ilm_final/rest/user/profile/${systemUsername}`, {
-       method: 'GET',
-       credentials: 'include',
-       headers: {
-         'Content-Type': 'application/json'
-       }
-     });
- 
-     if (!response.ok) {
-       throw new Error(`HTTP error! status: ${response.status}`);
-     }
- 
-     const data = await response.json();
-     return { status: response.status, data: data };
-   } catch (error) {
-     console.error("Error fetching user profile:", error);
-     return { status: error.response ? error.response.status : 500, error: error.message };
-   }
- };
- 
- 
- export {
-   registerUser,
-   getInterests,
-   getLabs,
-   getSkills,
-   checkUsername,
-   checkAuxiliarToken,
-   createProfile,
-   uploadProfilePicture,
-   checkEmail,
-   loginUser,
-   forgetPassword,
-   resetPassword,
-   getHomeProjects,
-   getUserProfileImage,
-   loginWithToken,
-   logoutUser,
-   getUserProfile, // Exporta a nova função
- };
- 
+  try {
+    const response = await fetch(
+      `http://localhost:8080/projeto_ilm_final/rest/user/profile/${systemUsername}`,
+      {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return { status: response.status, data: data };
+  } catch (error) {
+    console.error("Error fetching user profile:", error);
+    return {
+      status: error.response ? error.response.status : 500,
+      error: error.message,
+    };
+  }
+};
+
+async function getUserEditProfile(systemUsername) {
+  try {
+    const response = await fetch(
+      `${baseURL}user/editProfile/${systemUsername}`,
+      {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      }
+    );
+    return response;
+  } catch (error) {
+    console.error("Error fetching user edit profile:", error);
+  }
+}
+
+async function updateUserProfile(userProfileDto) {
+  try {
+    const response = await fetch(`${baseURL}user/updateProfile`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(userProfileDto),
+    });
+    return response;
+  } catch (error) {
+    console.error("Error updating user profile:", error);
+  }
+}
+
+async function changeUserPassword(currentPassword, newPassword) {
+  try {
+    const response = await fetch(`${baseURL}user/changePassword`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({ currentPassword, newPassword }),
+    });
+    return response;
+  } catch (error) {
+    console.error("Error changing user password:", error);
+  }
+}
+
+export {
+  registerUser,
+  getInterests,
+  getLabs,
+  getSkills,
+  checkUsername,
+  checkAuxiliarToken,
+  createProfile,
+  uploadProfilePicture,
+  checkEmail,
+  loginUser,
+  forgetPassword,
+  resetPassword,
+  getHomeProjects,
+  getUserProfileImage,
+  loginWithToken,
+  logoutUser,
+  getUserProfile,
+  getUserEditProfile,
+  updateUserProfile,
+  changeUserPassword,
+};

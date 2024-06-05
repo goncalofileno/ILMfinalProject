@@ -7,24 +7,25 @@ import {
   Button,
   Image,
   Alert,
+  Modal,
 } from "react-bootstrap";
 import InterestSelector from "../components/selectors/InterestSelector";
 import SkillSelector from "../components/selectors/SkillSelector";
 import DefaultAvatar from "../resources/avatares/Avatar padrão.jpg";
-import "./CreateProfilePage.css";
 import {
   getLabs,
   checkUsername,
-  checkAuxiliarToken,
-  createProfile,
+  updateUserProfile,
   uploadProfilePicture,
-  loginWithToken,
+  getUserEditProfile,
+  changeUserPassword,
 } from "../utilities/services";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import InputForm from "../components/inputs/InputForm";
-import LoginHeader from "../components/headers/LoginHeader";
+import AppNavbar from "../components/headers/AppNavbar";
+import Cookies from "js-cookie";
 
-const CreateProfilePage = () => {
+const EditProfilePage = () => {
   const [username, setUsername] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -35,51 +36,54 @@ const CreateProfilePage = () => {
   const [loading, setLoading] = useState(false);
   const [labs, setLabs] = useState([]);
   const [selectedFile, setSelectedFile] = useState(null);
-  const [preview, setPreview] = useState(null);
+  const [preview, setPreview] = useState(DefaultAvatar);
   const [fileUploadError, setFileUploadError] = useState(null);
   const [selectedInterests, setSelectedInterests] = useState([]);
   const [selectedSkills, setSelectedSkills] = useState([]);
   const [formErrors, setFormErrors] = useState({});
-  const [showConfirmationAlert, setShowConfirmationAlert] = useState(false);
-  const [isFormValid, setIsFormValid] = useState(false); // Novo estado para validade do formulário
+  const [showModal, setShowModal] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmNewPassword, setConfirmNewPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
   const navigate = useNavigate();
-  const { token } = useParams();
+  const systemUsername = Cookies.get("user-systemUsername");
 
   useEffect(() => {
-    if (token) {
-      checkAuxiliarToken(token).then((response) => {
+    const fetchProfile = async () => {
+      try {
+        const response = await getUserEditProfile(systemUsername);
         if (response.status === 200) {
-          setShowConfirmationAlert(true);
-          getLabs(token)
-            .then((response) => response.json())
-            .then((data) => {
-              const formattedLabs = data.map((lab) => ({
-                ...lab,
-                local: formatLocalName(lab.local),
-              }));
-              setLabs(formattedLabs);
-            });
+          const profileData = await response.json();
+          console.log("User profile data:", profileData);
+          setUsername(profileData.username);
+          setFirstName(profileData.firstName);
+          setLastName(profileData.lastName);
+          setOffice(formatLocalName(profileData.lab));
+          setBio(profileData.bio);
+          setPublicProfile(profileData.publicProfile);
+          setSelectedInterests(profileData.interests);
+          setSelectedSkills(profileData.skills);
+          setPreview(profileData.photo || DefaultAvatar);
         } else {
-          navigate("/");
+          console.error("Error fetching user profile:", response);
         }
-      });
-    } else {
-      getLabs(token)
-        .then((response) => response.json())
-        .then((data) => {
-          const formattedLabs = data.map((lab) => ({
-            ...lab,
-            local: formatLocalName(lab.local),
-          }));
-          setLabs(formattedLabs);
-        });
-    }
-  }, [token]);
+      } catch (error) {
+        console.error("Error fetching user profile:", error);
+      }
+    };
 
-  useEffect(() => {
-    // Verifica a validade do formulário sempre que os campos são alterados
-    setIsFormValid(firstName !== "" && lastName !== "" && office !== "");
-  }, [firstName, lastName, office]);
+    fetchProfile();
+    getLabs()
+      .then((response) => response.json())
+      .then((data) => {
+        const formattedLabs = data.map((lab) => ({
+          ...lab,
+          local: formatLocalName(lab.local),
+        }));
+        setLabs(formattedLabs);
+      });
+  }, [systemUsername]);
 
   const formatLocalName = (name) => {
     return name
@@ -100,15 +104,14 @@ const CreateProfilePage = () => {
     }
     setLoading(true);
     try {
-      checkUsername(username, token).then((response) => {
-        if (response.status === 200) {
-          console.log("Username is available");
-          setUsernameValid(true);
-        } else if (response.status === 409) {
-          console.log("Username is already taken");
-          setUsernameValid(false);
-        }
-      });
+      const response = await checkUsername(username);
+      if (response.status === 200) {
+        console.log("Username is available");
+        setUsernameValid(true);
+      } else if (response.status === 409) {
+        console.log("Username is already taken");
+        setUsernameValid(false);
+      }
     } catch (error) {
       console.error("Error checking username availability", error);
       setUsernameValid(false);
@@ -136,7 +139,7 @@ const CreateProfilePage = () => {
   };
 
   const handleCancel = () => {
-    navigate("/");
+    navigate(`/profile/${systemUsername}`);
   };
 
   const handleSubmit = async (e) => {
@@ -159,76 +162,69 @@ const CreateProfilePage = () => {
         interests: selectedInterests,
       };
 
-      console.log("Creating profile...", userProfileDto);
+      console.log("Updating profile...", userProfileDto);
 
-      const response = await createProfile(userProfileDto, token);
+      const response = await updateUserProfile(userProfileDto);
       if (response.ok) {
         if (selectedFile) {
-          const uploadResponse = await uploadProfilePicture(
-            selectedFile,
-            token
-          );
+          const uploadResponse = await uploadProfilePicture(selectedFile);
           if (uploadResponse.ok) {
-            console.log("Profile created and picture uploaded successfully");
-            // Chama a função de login com token
-            const loginResponse = await loginWithToken(token);
-            if (loginResponse.ok) {
-              navigate("/projects");
-            } else {
-              console.error("Error during login after profile creation");
-            }
+            console.log("Profile updated and picture uploaded successfully");
+            navigate(`/profile/${systemUsername}`);
           } else {
             const uploadErrorData = await uploadResponse.json();
             console.error("Error uploading profile picture:", uploadErrorData);
             setFileUploadError("Error uploading profile picture");
           }
         } else {
-          console.log("Profile created successfully");
-          // Chama a função de login com token
-          const loginResponse = await loginWithToken(token);
-          if (loginResponse.ok) {
-            navigate("/projects");
-          } else {
-            console.error("Error during login after profile creation");
-          }
+          console.log("Profile updated successfully");
+          navigate(`/profile/${systemUsername}`);
         }
       } else {
         const errorData = await response.json();
-        console.error("Error creating profile:", errorData);
-        setFileUploadError("Error creating profile");
+        console.error("Error updating profile:", errorData);
+        setFileUploadError("Error updating profile");
       }
     } catch (error) {
-      console.error("Error creating profile", error);
-      setFileUploadError("Error creating profile");
+      console.error("Error updating profile", error);
+      setFileUploadError("Error updating profile");
     } finally {
       setLoading(false);
     }
   };
 
+  const handlePasswordChange = async () => {
+    if (newPassword !== confirmNewPassword) {
+      setPasswordError("New passwords do not match.");
+      return;
+    }
+
+    try {
+      const response = await changeUserPassword(currentPassword, newPassword);
+      if (response.ok) {
+        setPasswordError("");
+        setShowModal(false);
+      } else {
+        const errorData = await response.json();
+        setPasswordError(errorData.message || "Error changing password.");
+      }
+    } catch (error) {
+      console.error("Error changing password", error);
+      setPasswordError("Error changing password.");
+    }
+  };
+
   return (
     <>
-      <LoginHeader />
+      <AppNavbar />
       <Container className="ilm-form" style={{ marginTop: "80px" }}>
-        {showConfirmationAlert && (
-          <Alert variant="success" className="text-center">
-            Your account has been successfully confirmed!
-          </Alert>
-        )}
         <Row className="justify-content-md-center mt-4">
           <Col md="10">
-            <h2 className="text-center mb-4">Create Profile</h2>
+            <h2 className="text-center mb-4">Edit Profile</h2>
             <Form onSubmit={handleSubmit}>
               <Row>
                 <Col md={6}>
-                  {preview ? (
-                    <Image src={preview} className="profile-image mb-3" fluid />
-                  ) : (
-                    <Image
-                      src={DefaultAvatar}
-                      className="profile-image mb-3"
-                      fluid
-                    />
-                  )}
+                  <Image src={preview} className="profile-image mb-3" fluid />
                   <Form.Group controlId="formFileUpload" className="mb-3">
                     <Form.Label className="custom-label">Photo</Form.Label>
                     <Form.Control
@@ -344,6 +340,15 @@ const CreateProfilePage = () => {
                       onChange={(e) => setPublicProfile(e.target.checked)}
                     />
                   </Form.Group>
+                  <Form.Group controlId="formChangePassword" className="mb-3">
+                    <Button
+                      variant="link"
+                      onClick={() => setShowModal(true)}
+                      style={{ padding: "0" }}
+                    >
+                      Change Password
+                    </Button>
+                  </Form.Group>
                 </Col>
               </Row>
 
@@ -364,26 +369,84 @@ const CreateProfilePage = () => {
 
               <Row className="mt-4 justify-content-end">
                 <Col md="auto" className="button-group">
-                  {isFormValid && (
-                    <Button
-                      variant="primary"
-                      type="submit"
-                      style={{
-                        backgroundColor: "#f39c12",
-                        borderColor: "#f39c12",
-                      }}
-                    >
-                      Next
-                    </Button>
-                  )}
+                  <Button
+                    variant="secondary"
+                    onClick={handleCancel}
+                    style={{ marginRight: "10px" }}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    variant="primary"
+                    type="submit"
+                    style={{
+                      backgroundColor: "#f39c12",
+                      borderColor: "#f39c12",
+                    }}
+                  >
+                    Save
+                  </Button>
                 </Col>
               </Row>
             </Form>
           </Col>
         </Row>
       </Container>
+
+      {/* Modal for changing password */}
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Change Password</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {passwordError && (
+            <Alert variant="danger" className="mt-2">
+              {passwordError}
+            </Alert>
+          )}
+          <Form>
+            <Form.Group controlId="formCurrentPassword" className="mb-3">
+              <Form.Label className="custom-label">Current Password</Form.Label>
+              <Form.Control
+                type="password"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                className="custom-focus"
+              />
+            </Form.Group>
+            <Form.Group controlId="formNewPassword" className="mb-3">
+              <Form.Label className="custom-label">New Password</Form.Label>
+              <Form.Control
+                type="password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                className="custom-focus"
+              />
+            </Form.Group>
+            <Form.Group controlId="formConfirmNewPassword" className="mb-3">
+              <Form.Label className="custom-label">
+                Confirm New Password
+              </Form.Label>
+              <Form.Control
+                type="password"
+                value={confirmNewPassword}
+                onChange={(e) => setConfirmNewPassword(e.target.value)}
+                className="custom-focus"
+              />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={handlePasswordChange}>
+            Change Password
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 };
 
-export default CreateProfilePage;
+export default EditProfilePage;

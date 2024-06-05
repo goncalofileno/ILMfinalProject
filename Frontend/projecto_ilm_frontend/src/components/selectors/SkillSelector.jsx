@@ -147,8 +147,8 @@ const SkillSelector = ({ selectedSkills, setSelectedSkills }) => {
             variant="primary"
             onClick={handleAddNewSkill}
             style={{
-              backgroundColor: "rgb(192, 23, 34)",
-              borderColor: "rgb(192, 23, 34)",
+              backgroundColor: "#f39c12",
+              borderColor: "#f39c12",
             }}
           >
             Add

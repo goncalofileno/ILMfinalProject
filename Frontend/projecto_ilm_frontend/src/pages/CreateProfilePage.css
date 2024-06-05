@@ -4,7 +4,7 @@
    max-width: 200px;
    max-height: 200px;
    object-fit: cover;
-   border: 3px solid #c01722;
+   border: 3px solid rgb(30, 40, 82);
    border-radius: 50%;
    display: block;
    margin-left: auto;

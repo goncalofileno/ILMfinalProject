@@ -15,5 +15,5 @@
    background-image: url("../../../../../Resources/logo.png");
    background-size: cover;
    background-position: center;
-   filter: invert(38%) sepia(80%) saturate(429%) hue-rotate(359deg) brightness(94%) contrast(95%);
+   filter: invert(50%) sepia(80%) saturate(429%) hue-rotate(359deg) brightness(94%) contrast(95%);
 }
