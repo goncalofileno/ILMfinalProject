@@ -3,17 +3,11 @@ package com.ilm.projecto_ilm_backend.bean;
 import com.ilm.projecto_ilm_backend.ENUMS.SkillTypeENUM;
 import com.ilm.projecto_ilm_backend.ENUMS.UserTypeENUM;
 import com.ilm.projecto_ilm_backend.ENUMS.WorkLocalENUM;
-import com.ilm.projecto_ilm_backend.dao.InterestDao;
-import com.ilm.projecto_ilm_backend.dao.LabDao;
-import com.ilm.projecto_ilm_backend.dao.SkillDao;
-import com.ilm.projecto_ilm_backend.dao.UserDao;
+import com.ilm.projecto_ilm_backend.dao.*;
 import com.ilm.projecto_ilm_backend.dto.user.RegisterUserDto;
 import com.ilm.projecto_ilm_backend.dto.user.UserProfileDto;
+import com.ilm.projecto_ilm_backend.entity.*;
 import com.ilm.projecto_ilm_backend.utilities.EmailService;
-import com.ilm.projecto_ilm_backend.entity.InterestEntity;
-import com.ilm.projecto_ilm_backend.entity.LabEntity;
-import com.ilm.projecto_ilm_backend.entity.SkillEntity;
-import com.ilm.projecto_ilm_backend.entity.UserEntity;
 import com.ilm.projecto_ilm_backend.service.UserService;
 import com.ilm.projecto_ilm_backend.utilities.HashUtil;
 import com.ilm.projecto_ilm_backend.utilities.imgsPath;
@@ -35,6 +29,7 @@ import java.text.Normalizer;
 import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -68,8 +63,17 @@ public class UserBean {
     @Inject
     SkillDao skillDao;
 
+    /**
+     * The EmailService instance used for sending emails.
+     */
     @Inject
     EmailService emailService;
+
+    /**
+     * The SessionDao instance used for accessing the database.
+     */
+    @Inject
+    SessionDao sessionDao;
 
     /**
      * The logger used to log information, warning and error messages.
@@ -256,6 +260,9 @@ public class UserBean {
                 .collect(Collectors.toList());
         user.setInterests(interestEntities);
 
+        user.setProfileCreated(true);
+
+
         userDao.merge(user);
         return true;
     }
@@ -358,20 +365,60 @@ public class UserBean {
         return resizedImage;
     }
 
-    /**
-     * Logs in a user.
-     *
-     * @param registerUserDto the DTO containing user login details
-     * @return the token of the logged in user, or null if login failed
-     */
-    public String loginUser(RegisterUserDto registerUserDto) {
+    public String loginUser(RegisterUserDto registerUserDto, String clientIpAddress, String userAgent) {
         if (userDao.checkPassFromEmail(registerUserDto.getMail(), HashUtil.toSHA256(registerUserDto.getPassword()))) {
             UserEntity userEntity = userDao.findByEmail(registerUserDto.getMail());
-            userEntity.setToken(generateNewToken());
-            userDao.merge(userEntity);
-            return userEntity.getToken();
+            logger.info("User found: " + userEntity.getUsername());
+
+            logger.info("Checking for existing session for user id: " + userEntity.getId());
+            SessionEntity existingSession = sessionDao.findByUserId(userEntity.getId());
+
+            if (existingSession != null) {
+                logger.info("Session found: " + existingSession.getSessionId());
+                existingSession.setExpiresAt(LocalDateTime.now().plusDays(1));
+                sessionDao.merge(existingSession);
+                return existingSession.getSessionId();
+            } else {
+                logger.info("Session not found");
+                SessionEntity sessionEntity = new SessionEntity();
+                sessionEntity.setSessionId(UUID.randomUUID().toString());
+                sessionEntity.setUser(userEntity);
+                sessionEntity.setCreatedAt(LocalDateTime.now());
+                sessionEntity.setExpiresAt(LocalDateTime.now().plusDays(1));
+                sessionEntity.setIpAddress(clientIpAddress);
+                sessionEntity.setUserAgent(userAgent);
+
+                sessionDao.persist(sessionEntity);
+
+                return sessionEntity.getSessionId();
+            }
+        } else {
+            return null;
         }
-        else return null;
+    }
+
+    public String createSessionForUser(UserEntity userEntity, String clientIpAddress, String userAgent) {
+        logger.info("Checking for existing session for user id: " + userEntity.getId());
+        SessionEntity existingSession = sessionDao.findByUserId(userEntity.getId());
+
+        if (existingSession != null) {
+            logger.info("Session found: " + existingSession.getSessionId());
+            existingSession.setExpiresAt(LocalDateTime.now().plusDays(1));
+            sessionDao.merge(existingSession);
+            return existingSession.getSessionId();
+        } else {
+            logger.info("Session not found");
+            SessionEntity sessionEntity = new SessionEntity();
+            sessionEntity.setSessionId(UUID.randomUUID().toString());
+            sessionEntity.setUser(userEntity);
+            sessionEntity.setCreatedAt(LocalDateTime.now());
+            sessionEntity.setExpiresAt(LocalDateTime.now().plusDays(1));
+            sessionEntity.setIpAddress(clientIpAddress);
+            sessionEntity.setUserAgent(userAgent);
+
+            sessionDao.persist(sessionEntity);
+            return sessionEntity.getSessionId();
+        }
     }
 
    public boolean sendForgetPassLink(String email){
@@ -399,5 +446,14 @@ public class UserBean {
         }
         return false;
    }
+
+   public UserEntity getUserBySessionId(String sessionId){
+        SessionEntity session = sessionDao.findBySessionId(sessionId);
+        if(session != null){
+            return session.getUser();
+        }
+        return null;
+   }
+
 }
 

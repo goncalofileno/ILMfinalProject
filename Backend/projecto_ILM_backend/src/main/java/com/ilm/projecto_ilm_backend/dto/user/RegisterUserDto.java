@@ -25,20 +25,27 @@ public class RegisterUserDto {
     private String password;
 
     /**
+     * The user agent of the client.
+     */
+    private String userAgent;
+
+    /**
      * Default no-argument constructor.
      */
     public RegisterUserDto() {
     }
 
     /**
-     * Parameterized constructor to initialize the RegisterUserDto with the given email and password.
+     * Parameterized constructor to initialize the RegisterUserDto with the given email, password, and userAgent.
      *
-     * @param mail     the email of the user
-     * @param password the password of the user
+     * @param mail      the email of the user
+     * @param password  the password of the user
+     * @param userAgent the user agent of the client
      */
-    public RegisterUserDto(String mail, String password) {
+    public RegisterUserDto(String mail, String password, String userAgent) {
         this.mail = mail;
         this.password = password;
+        this.userAgent = userAgent;
     }
 
     /**
@@ -75,5 +82,23 @@ public class RegisterUserDto {
      */
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    /**
+     * Returns the user agent of the client.
+     *
+     * @return the user agent of the client
+     */
+    public String getUserAgent() {
+        return userAgent;
+    }
+
+    /**
+     * Sets the user agent of the client.
+     *
+     * @param userAgent the user agent to set
+     */
+    public void setUserAgent(String userAgent) {
+        this.userAgent = userAgent;
     }
 }

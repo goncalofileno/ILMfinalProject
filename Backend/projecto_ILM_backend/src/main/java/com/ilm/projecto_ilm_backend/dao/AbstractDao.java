@@ -9,6 +9,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.CriteriaDelete;
 import jakarta.persistence.criteria.CriteriaQuery;
+import java.util.logging.Logger;
 
 /**
  * AbstractDao is a generic class that provides common database operations.
@@ -20,6 +21,8 @@ import jakarta.persistence.criteria.CriteriaQuery;
 public abstract class AbstractDao<T extends Serializable> implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    private static final Logger logger = Logger.getLogger(AbstractDao.class.getName());
 
     /**
      * The class of the entity.
@@ -37,8 +40,10 @@ public abstract class AbstractDao<T extends Serializable> implements Serializabl
      *
      * @param clazz the class of the entity
      */
-    public AbstractDao(Class<T> clazz)
-    {
+    public AbstractDao(Class<T> clazz) {
+        if (clazz == null) {
+            throw new IllegalArgumentException("Class type cannot be null");
+        }
         this.clazz = clazz;
     }
 
@@ -48,8 +53,10 @@ public abstract class AbstractDao<T extends Serializable> implements Serializabl
      * @param id the primary key
      * @return the entity
      */
-    public T find(Object id)
-    {
+    public T find(Object id) {
+        if (id == null) {
+            throw new IllegalArgumentException("ID cannot be null");
+        }
         return em.find(clazz, id);
     }
 
@@ -58,9 +65,12 @@ public abstract class AbstractDao<T extends Serializable> implements Serializabl
      *
      * @param entity the entity to persist
      */
-    public void persist(final T entity)
-    {
+    public void persist(final T entity) {
+        if (entity == null) {
+            throw new IllegalArgumentException("Entity cannot be null");
+        }
         em.persist(entity);
+        logger.info("Entity persisted: " + entity);
     }
 
     /**
@@ -68,9 +78,12 @@ public abstract class AbstractDao<T extends Serializable> implements Serializabl
      *
      * @param entity the entity to merge
      */
-    public void merge(final T entity)
-    {
+    public void merge(final T entity) {
+        if (entity == null) {
+            throw new IllegalArgumentException("Entity cannot be null");
+        }
         em.merge(entity);
+        logger.info("Entity merged: " + entity);
     }
 
     /**
@@ -78,9 +91,12 @@ public abstract class AbstractDao<T extends Serializable> implements Serializabl
      *
      * @param entity the entity to remove
      */
-    public void remove(final T entity)
-    {
+    public void remove(final T entity) {
+        if (entity == null) {
+            throw new IllegalArgumentException("Entity cannot be null");
+        }
         em.remove(em.contains(entity) ? entity : em.merge(entity));
+        logger.info("Entity removed: " + entity);
     }
 
     /**
@@ -88,8 +104,7 @@ public abstract class AbstractDao<T extends Serializable> implements Serializabl
      *
      * @return a list of entities
      */
-    public List<T> findAll()
-    {
+    public List<T> findAll() {
         final CriteriaQuery<T> criteriaQuery = em.getCriteriaBuilder().createQuery(clazz);
         criteriaQuery.select(criteriaQuery.from(clazz));
         return em.createQuery(criteriaQuery).getResultList();
@@ -98,11 +113,11 @@ public abstract class AbstractDao<T extends Serializable> implements Serializabl
     /**
      * Deletes all entities of the given type.
      */
-    public void deleteAll()
-    {
+    public void deleteAll() {
         final CriteriaDelete<T> criteriaDelete = em.getCriteriaBuilder().createCriteriaDelete(clazz);
         criteriaDelete.from(clazz);
         em.createQuery(criteriaDelete).executeUpdate();
+        logger.info("All entities deleted for class: " + clazz.getName());
     }
 
     /**
@@ -110,6 +125,6 @@ public abstract class AbstractDao<T extends Serializable> implements Serializabl
      */
     public void flush() {
         em.flush();
+        logger.info("Persistence context flushed for class: " + clazz.getName());
     }
 }
-
