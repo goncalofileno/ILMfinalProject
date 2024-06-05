@@ -312,7 +312,7 @@ public class UserBean {
             UserEntity user = userDao.findByAuxiliarToken(authHeader);
 
             // Save the original image to the user's specific directory
-            String directoryPath = imgsPath.IMAGES_PATH+ "/" + user.getId();
+            String directoryPath = imgsPath.IMAGES_PATH + "/" + user.getId();
             logger.info("Directory path: " + directoryPath);
             File directory = new File(directoryPath);
             if (!directory.exists()) {
@@ -335,11 +335,17 @@ public class UserBean {
             String thumbnailFilePath = directoryPath + "/profile_picture_thumbnail.jpg";
             ImageIO.write(thumbnailImage, "jpg", new File(thumbnailFilePath));
 
-            // Update the user's photo paths in the database
+            // Construct the URLs
+            String baseUrl = "http://localhost:8080/images/" + user.getId();
+            String originalUrl = baseUrl + "/profile_picture.jpg";
+            String avatarUrl = baseUrl + "/profile_picture_avatar.jpg";
+            String thumbnailUrl = baseUrl + "/profile_picture_thumbnail.jpg";
+
+            // Update the user's photo URLs in the database
             user = userDao.findById(user.getId());
-            user.setPhoto(originalFilePath); // Set path for original image
-            user.setAvatarPhoto(avatarFilePath); // Set path for avatar
-            user.setThumbnailPhoto(thumbnailFilePath); // Set path for thumbnail
+            user.setPhoto(originalUrl); // Set URL for original image
+            user.setAvatarPhoto(avatarUrl); // Set URL for avatar
+            user.setThumbnailPhoto(thumbnailUrl); // Set URL for thumbnail
             userDao.merge(user);
 
             return true;
@@ -348,6 +354,7 @@ public class UserBean {
             return false;
         }
     }
+
 
     /**
      * Resizes an image to a specific width and height.

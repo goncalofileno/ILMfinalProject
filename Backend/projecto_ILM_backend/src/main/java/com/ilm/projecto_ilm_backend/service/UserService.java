@@ -408,8 +408,8 @@ public class UserService {
         logger.info("Received a request to get the profile image of a user with session ID: " + sessionId);
         UserEntity user = userBean.getUserBySessionId(sessionId);
         if (user != null) {
-            // Construa a URL da imagem do perfil baseada no ID do usuário e no nome do arquivo da imagem
-            String imageUrl = "http://localhost:8080/images/" + user.getId() + "/profile_picture_avatar.jpg";
+            // Retorna a URL da imagem do perfil diretamente da entidade do usuário
+            String imageUrl = user.getAvatarPhoto(); // ou qualquer campo que você esteja usando para armazenar a URL da foto
             return Response.status(Response.Status.OK).entity(Collections.singletonMap("imageUrl", imageUrl)).build();
         } else {
             return Response.status(Response.Status.UNAUTHORIZED).build();
