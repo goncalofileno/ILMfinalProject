@@ -53,7 +53,7 @@ function App() {
          setVisibleProjects(filteredProjects);
          const potentialMaxPage = Math.ceil(filteredProjects.length / 8) - 1;
          if (potentialMaxPage >= 0) {
-            setMaxPage(Math.ceil(potentialMaxPage));
+            setMaxPage(potentialMaxPage);
          } else setMaxPage(0);
          setPage(0);
       }
