@@ -50,8 +50,12 @@ function App() {
                project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                project.description.toLowerCase().includes(searchTerm.toLowerCase())
          );
+
          setVisibleProjects(filteredProjects);
-         setMaxPage(Math.ceil(filteredProjects.length / 8) - 1);
+         const potentialMaxPage = Math.ceil(filteredProjects.length / 8) - 1;
+         if (potentialMaxPage >= 0) {
+            setMaxPage(Math.ceil(potentialMaxPage));
+         } else setMaxPage(0);
          setPage(0);
       }
    }, [searchTerm]);
