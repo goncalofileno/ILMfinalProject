@@ -20,6 +20,7 @@ function App() {
    const isPhone = useMediaQuery({ maxWidth: 768 });
    const [homeProjects, setHomeProjects] = useState([]);
    const [visibleProjects, setVisibleProjects] = useState([]);
+   const [searchTerm, setSearchTerm] = useState("");
    const [page, setPage] = useState(null);
    const [maxPage, setMaxPage] = useState(null);
    const [showAlert, setShowAlert] = useState(false);
@@ -32,10 +33,28 @@ function App() {
          .then((response) => response.json())
          .then((data) => {
             setHomeProjects(data);
+            setVisibleProjects(data);
             setMaxPage(Math.ceil(data.length / 8) - 1);
             setPage(0);
          });
    }, []);
+
+   useEffect(() => {
+      if (searchTerm === "") {
+         setVisibleProjects(homeProjects);
+         setMaxPage(Math.ceil(homeProjects.length / 8) - 1);
+         setPage(0);
+      } else {
+         const filteredProjects = homeProjects.filter(
+            (project) =>
+               project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+               project.description.toLowerCase().includes(searchTerm.toLowerCase())
+         );
+         setVisibleProjects(filteredProjects);
+         setMaxPage(Math.ceil(filteredProjects.length / 8) - 1);
+         setPage(0);
+      }
+   }, [searchTerm]);
 
    const scrollToContent = () => {
       contentRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -194,6 +213,8 @@ function App() {
                            style={{ width: !isPhone ? "50%" : "74%" }}
                            className="ilm-search"
                            placeholder="Search for title or description"
+                           value={searchTerm}
+                           onChange={(e) => setSearchTerm(e.target.value)}
                         />
                      </Col>
                   </Row>
@@ -209,7 +230,7 @@ function App() {
                         <Row>
                            <Col lg={3} md={6} className={!isComputer && !isTablet && "col-margin-bottom-16"}>
                               <div className="flex-col-gap-16">
-                                 {homeProjects.slice(0 + 8 * page, 2 + 8 * page).map((component, index) => {
+                                 {visibleProjects.slice(0 + 8 * page, 2 + 8 * page).map((component, index) => {
                                     return index % 2 === 0 ? (
                                        <LoginProjectsCards
                                           key={component.index}
@@ -233,11 +254,11 @@ function App() {
 
                            <Col lg={3} md={6} className={!isComputer && !isTablet && "col-margin-bottom-16"}>
                               <div className="flex-col-gap-16">
-                                 {homeProjects.slice(2 + 8 * page, 4 + 8 * page).map((component, index) => {
+                                 {visibleProjects.slice(2 + 8 * page, 4 + 8 * page).map((component, index) => {
                                     return index % 2 === 0 ? (
                                        <LoginProjectsCards
                                           key={component.index}
-                                          cardBkgColor="card-bkg-color1"
+                                          cardBkgColor="card-bkg-color2"
                                           title={component.name}
                                           description={component.description}
                                           scrollToRef={scrollToLogin}
@@ -245,7 +266,7 @@ function App() {
                                     ) : (
                                        <LoginProjectsCards
                                           key={component.index}
-                                          cardBkgColor="card-bkg-color1"
+                                          cardBkgColor="card-bkg-color2"
                                           title={component.name}
                                           description={component.description}
                                           scrollToRef={scrollToLogin}
@@ -256,11 +277,11 @@ function App() {
                            </Col>
                            <Col lg={3} md={6} className={!isComputer && !isTablet && "col-margin-bottom-16"}>
                               <div className="flex-col-gap-16">
-                                 {homeProjects.slice(4 + 8 * page, 6 + 8 * page).map((component, index) => {
+                                 {visibleProjects.slice(4 + 8 * page, 6 + 8 * page).map((component, index) => {
                                     return index % 2 === 0 ? (
                                        <LoginProjectsCards
                                           key={component.index}
-                                          cardBkgColor="card-bkg-color1"
+                                          cardBkgColor="card-bkg-color3"
                                           title={component.name}
                                           description={component.description}
                                           scrollToRef={scrollToLogin}
@@ -268,7 +289,7 @@ function App() {
                                     ) : (
                                        <LoginProjectsCards
                                           key={component.index}
-                                          cardBkgColor="card-bkg-color1"
+                                          cardBkgColor="card-bkg-color3"
                                           title={component.name}
                                           description={component.description}
                                           scrollToRef={scrollToLogin}
@@ -279,11 +300,11 @@ function App() {
                            </Col>
                            <Col lg={3} md={6} className={!isComputer && !isTablet && "col-margin-bottom-16"}>
                               <div className="flex-col-gap-16">
-                                 {homeProjects.slice(6 + 8 * page, 8 + 8 * page).map((component, index) => {
+                                 {visibleProjects.slice(6 + 8 * page, 8 + 8 * page).map((component, index) => {
                                     return index % 2 === 0 ? (
                                        <LoginProjectsCards
                                           key={component.index}
-                                          cardBkgColor="card-bkg-color1"
+                                          cardBkgColor="card-bkg-color4"
                                           title={component.name}
                                           description={component.description}
                                           scrollToRef={scrollToLogin}
@@ -291,7 +312,7 @@ function App() {
                                     ) : (
                                        <LoginProjectsCards
                                           key={component.index}
-                                          cardBkgColor="card-bkg-color1"
+                                          cardBkgColor="card-bkg-color4"
                                           title={component.name}
                                           description={component.description}
                                           scrollToRef={scrollToLogin}
