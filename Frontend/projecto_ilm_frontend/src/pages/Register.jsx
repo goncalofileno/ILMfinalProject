@@ -26,6 +26,8 @@ function App() {
    const [showAlert, setShowAlert] = useState(false);
    const [isModalActive, setIsModalActive] = useState(false);
    const { visibility, type, message, setVisibility } = alertStore();
+   const [registerMessage, setRegisterMessage] = useState("");
+   const [registerMessageType, setRegisterMessageType] = useState("");
    const headerHeight = 110;
 
    useEffect(() => {
@@ -175,13 +177,17 @@ function App() {
                         ref={loginFormRef}
                      >
                         <Alert
-                           variant="danger"
+                           variant={registerMessageType}
                            id="alert-message-register"
                            style={{ visibility: showAlert ? "visible" : "hidden" }}
                         >
-                           Invalid data. Please try again.
+                           {registerMessage}
                         </Alert>
-                        <RegisterForm setShowAlert={setShowAlert} />
+                        <RegisterForm
+                           setShowAlert={setShowAlert}
+                           setRegisterMessage={setRegisterMessage}
+                           setRegisterMessageType={setRegisterMessageType}
+                        />
                      </Col>
                      {isPhone && (
                         <Col>

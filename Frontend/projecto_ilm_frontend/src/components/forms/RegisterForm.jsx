@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { registerUser, checkEmail } from "../../utilities/services";
 import PasswordForm from "../inputs/PasswordForm";
 
-export default function RegisterForm({ setShowAlert }) {
+export default function RegisterForm({ setShowAlert, setRegisterMessage, setRegisterMessageType }) {
    const [email, setEmail] = useState("");
    const [password, setPassword] = useState("");
    const [strength, setStrength] = useState(0);
@@ -23,22 +23,32 @@ export default function RegisterForm({ setShowAlert }) {
    const handleSubmit = (e) => {
       e.preventDefault();
       if (warningTypePassword === "incorrect") setShowTooltip(true);
-      if (email !== "" && password !== "" && confirmPassword !== "") {
-         if (
-            warningTypeEmail === "success" &&
-            warningTypePassword === "success" &&
-            warningTypeConfirmPassword === "success"
-         ) {
-            registerUser(email, password).then((response) => {
-               if (response.status === 201) {
-                  setShowAlert(true);
-                  setTimeout(() => {
-                     setShowAlert(false);
-                     navigate("/");
-                  }, 2000);
-               }
-            });
-         }
+      if (
+         email !== "" &&
+         password !== "" &&
+         confirmPassword !== "" &&
+         warningTypeEmail === "success" &&
+         warningTypePassword === "success" &&
+         warningTypeConfirmPassword === "success"
+      ) {
+         registerUser(email, password).then((response) => {
+            if (response.status === 201) {
+               setRegisterMessageType("success");
+               setRegisterMessage("Registered successfully. Please Verify your email.");
+               setShowAlert(true);
+               setTimeout(() => {
+                  setShowAlert(false);
+                  navigate("/");
+               }, 2000);
+            }
+         });
+      } else {
+         setRegisterMessageType("danger");
+         setRegisterMessage("Invalid data. Please try again.");
+         setShowAlert(true);
+         setTimeout(() => {
+            setShowAlert(false);
+         }, 2000);
       }
    };
 
