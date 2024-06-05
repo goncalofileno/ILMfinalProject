@@ -1,10 +1,16 @@
 package com.ilm.projecto_ilm_backend.dao;
 
+import com.ilm.projecto_ilm_backend.dto.project.HomeProjectDto;
 import com.ilm.projecto_ilm_backend.entity.ProjectEntity;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The ProjectDao class provides database operations for ProjectEntity instances.
@@ -57,5 +63,17 @@ public class ProjectDao extends AbstractDao<ProjectEntity>{
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public ArrayList<HomeProjectDto> findAllNamesAndDescriptionsHome() {
+        TypedQuery<Object[]> query = em.createNamedQuery("Project.findNameAndDescriptionHome", Object[].class);
+        List<Object[]> results = query.getResultList();
+
+        ArrayList<HomeProjectDto> projects = new ArrayList<>();
+
+        for (int i = 0; i < results.size(); i++) {
+            projects.add(new HomeProjectDto((String) results.get(i)[0], (String) results.get(i)[1]));
+        }
+        return projects;
     }
 }

@@ -4,6 +4,7 @@ import com.ilm.projecto_ilm_backend.ENUMS.StateProjectENUM;
 import com.ilm.projecto_ilm_backend.ENUMS.UserInProjectTypeENUM;
 import com.ilm.projecto_ilm_backend.ENUMS.WorkLocalENUM;
 import com.ilm.projecto_ilm_backend.dao.*;
+import com.ilm.projecto_ilm_backend.dto.project.HomeProjectDto;
 import com.ilm.projecto_ilm_backend.entity.*;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -80,6 +81,52 @@ public class ProjectBean {
             project2.setSkillInProject(skillEntities2);
             projectDao.merge(project2);
         }
+//        if (projectDao.findById(3) == null) {
+//            ProjectEntity project3 = new ProjectEntity();
+//            project3.setId(3);
+//            project3.setName("Project 3");
+//            project3.setDescription("Description of Project 3 Description of Project 3 Description of Project 3 Description of Project 3 Description of Project 3");
+//            project3.setStartDate(LocalDateTime.now().minus(1, ChronoUnit.YEARS));
+//            project3.setInitialDate(LocalDateTime.now().minus(1, ChronoUnit.YEARS));
+//            project3.setEndDate(LocalDateTime.now().plus(1, ChronoUnit.YEARS));
+//            project3.setStatus(StateProjectENUM.PLANING);
+//            project3.setMotivation("Motivation of Project 3 Motivation of Project 3 Motivation of Project 3 Motivation of Project 3 Motivation of Project 3");
+//            project3.setMaxMembers(15);
+//            LabEntity lab3 = new LabEntity();
+//            lab3 = labDao.findbyLocal(WorkLocalENUM.COIMBRA);
+//            project3.setLab(lab3);
+//            project3.setKeywords("Keyword1, Keyword2, Keyword3, Keyword4, Keyword5, Keyword6");
+//            List<SkillEntity> skillEntities3 = new ArrayList<>();
+//            SkillEntity skill3 = skillDao.findById(3);
+//            skillEntities3.add(skill3);
+//            SkillEntity skill4 = skillDao.findById(4);
+//            skillEntities3.add(skill4);
+//            project3.setSkillInProject(skillEntities3);
+//            projectDao.merge(project3);
+//        }
+//        if (projectDao.findById(4) == null) {
+//            ProjectEntity project4 = new ProjectEntity();
+//            project4.setId(4);
+//            project4.setName("Project 4");
+//            project4.setDescription("Description of Project 4 Description of Project 4 Description of Project 4 Description of Project 4 Description of Project 4");
+//            project4.setStartDate(LocalDateTime.now().minus(1, ChronoUnit.YEARS));
+//            project4.setInitialDate(LocalDateTime.now().minus(1, ChronoUnit.YEARS));
+//            project4.setEndDate(LocalDateTime.now().plus(1, ChronoUnit.YEARS));
+//            project4.setStatus(StateProjectENUM.PLANING);
+//            project4.setMotivation("Motivation of Project 4 Motivation of Project 4 Motivation of Project 4 Motivation of Project 4 Motivation of Project 4");
+//            project4.setMaxMembers(15);
+//            LabEntity lab4 = new LabEntity();
+//            lab4 = labDao.findbyLocal(WorkLocalENUM.COIMBRA);
+//            project4.setLab(lab4);
+//            project4.setKeywords("Keyword1, Keyword2, Keyword3, Keyword4, Keyword5, Keyword6");
+//            List<SkillEntity> skillEntities4 = new ArrayList<>();
+//            SkillEntity skill3 = skillDao.findById(3);
+//            skillEntities4.add(skill3);
+//            SkillEntity skill4 = skillDao.findById(4);
+//            skillEntities4.add(skill4);
+//            project4.setSkillInProject(skillEntities4);
+//            projectDao.merge(project4);
+//        }
     }
 
     public void createDefaultUsersInProjectIfNotExistent() {
@@ -111,5 +158,37 @@ public class ProjectBean {
         userProjectEntity4.setType(UserInProjectTypeENUM.MEMBER);
         userProjectDao.merge(userProjectEntity4);
 
+//        ProjectEntity project3 = projectDao.findById(3);
+//        UserProjectEntity userProjectEntity5 = new UserProjectEntity();
+//        userProjectEntity3.setId(5);
+//        userProjectEntity3.setProject(project3);
+//        userProjectEntity3.setUser(userDao.findById(2));
+//        userProjectEntity3.setType(UserInProjectTypeENUM.CREATOR);
+//        userProjectDao.merge(userProjectEntity5);
+//        UserProjectEntity userProjectEntity6 = new UserProjectEntity();
+//        userProjectEntity4.setId(6);
+//        userProjectEntity4.setProject(project3);
+//        userProjectEntity4.setUser(userDao.findById(1));
+//        userProjectEntity4.setType(UserInProjectTypeENUM.MEMBER);
+//        userProjectDao.merge(userProjectEntity6);
+//
+//        ProjectEntity project4 = projectDao.findById(4);
+//        UserProjectEntity userProjectEntity7 = new UserProjectEntity();
+//        userProjectEntity3.setId(7);
+//        userProjectEntity3.setProject(project4);
+//        userProjectEntity3.setUser(userDao.findById(2));
+//        userProjectEntity3.setType(UserInProjectTypeENUM.CREATOR);
+//        userProjectDao.merge(userProjectEntity7);
+//        UserProjectEntity userProjectEntity8 = new UserProjectEntity();
+//        userProjectEntity4.setId(8);
+//        userProjectEntity4.setProject(project4);
+//        userProjectEntity4.setUser(userDao.findById(1));
+//        userProjectEntity4.setType(UserInProjectTypeENUM.MEMBER);
+//        userProjectDao.merge(userProjectEntity8);
+
+    }
+
+    public ArrayList<HomeProjectDto> getProjectsDtosHome() {
+        return projectDao.findAllNamesAndDescriptionsHome();
     }
 }
