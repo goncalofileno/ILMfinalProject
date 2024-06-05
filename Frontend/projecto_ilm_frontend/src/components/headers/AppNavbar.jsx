@@ -8,6 +8,7 @@ import bellIcon from "../../resources/icons/navbar/notification-icon.png";
 import userProfileIcon from "../../resources/avatares/Avatar padrão.jpg";
 import { getUserProfileImage, logoutUser } from "../../utilities/services";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie"; // Importando a biblioteca de cookies
 
 export default function AppNavbar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -24,6 +25,15 @@ export default function AppNavbar() {
       navigate("/"); // Redireciona para a página de login
     } else {
       console.error("Failed to logout");
+    }
+  };
+
+  const handleMyProfile = () => {
+    const systemUsername = Cookies.get("user-systemUsername");
+    if (systemUsername) {
+      navigate(`/profile/${systemUsername}`);
+    } else {
+      console.error("System username not found in cookies");
     }
   };
 
@@ -98,10 +108,8 @@ export default function AppNavbar() {
             ></div>
             {dropdownOpen && (
               <div className={`dropdown-content ${dropdownOpen ? "show" : ""}`}>
-                <a href="#edit-profile">Edit Profile</a>
-                <a href="#logout" onClick={handleLogout}>
-                  Logout
-                </a>
+                <div onClick={handleMyProfile}>My Profile</div>
+                <div onClick={handleLogout}>Logout</div>
               </div>
             )}
           </div>

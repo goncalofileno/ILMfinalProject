@@ -1,23 +1,31 @@
 package com.ilm.projecto_ilm_backend.dto.user;
 
 import com.ilm.projecto_ilm_backend.dto.interest.InterestDto;
+import com.ilm.projecto_ilm_backend.dto.project.ProjectProfileDto;
 import com.ilm.projecto_ilm_backend.dto.skill.SkillDto;
-import jakarta.xml.bind.annotation.XmlRootElement;
 
 import java.util.List;
 
-@XmlRootElement
-public class UserProfileDto {
+public class ShowProfileDto {
+    private String username;
     private String firstName;
     private String lastName;
-    private String username;
-    private String lab;
-    private boolean publicProfile;
+    private String location;
+    private String profileImage;
     private String bio;
+    private List<ProjectProfileDto> projects;
     private List<SkillDto> skills;
     private List<InterestDto> interests;
+    private boolean publicProfile;
 
     // Getters and Setters
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     public String getFirstName() {
         return firstName;
@@ -35,20 +43,28 @@ public class UserProfileDto {
         this.lastName = lastName;
     }
 
-    public String getUsername() {
-        return username;
+    public String getLocation() {
+        return location;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setLocation(String location) {
+        this.location = location;
     }
 
-    public String getLab() {
-        return lab;
+    public String getProfileImage() {
+        return profileImage;
     }
 
-    public void setLab(String lab) {
-        this.lab = lab;
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
     }
 
     public boolean isPublicProfile() {
@@ -59,12 +75,12 @@ public class UserProfileDto {
         this.publicProfile = publicProfile;
     }
 
-    public String getBio() {
-        return bio;
+    public List<ProjectProfileDto> getProjects() {
+        return projects;
     }
 
-    public void setBio(String bio) {
-        this.bio = bio;
+    public void setProjects(List<ProjectProfileDto> projects) {
+        this.projects = projects;
     }
 
     public List<SkillDto> getSkills() {
@@ -82,4 +98,5 @@ public class UserProfileDto {
     public void setInterests(List<InterestDto> interests) {
         this.interests = interests;
     }
+
 }

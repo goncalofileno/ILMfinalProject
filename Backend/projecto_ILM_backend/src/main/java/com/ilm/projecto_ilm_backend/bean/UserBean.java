@@ -233,7 +233,7 @@ public class UserBean {
         logger.info("System username: " + user.getSystemUsername());
         user.setLab(labDao.findbyLocal(WorkLocalENUM.valueOf(userProfileDto.getLab().toUpperCase())));
         user.setBio(userProfileDto.getBio());
-        user.setPublicProfile(userProfileDto.publicProfile());
+        user.setPublicProfile(userProfileDto.isPublicProfile());
 
         // Handle skills
         List<SkillEntity> skillEntities = userProfileDto.getSkills().stream()
@@ -453,6 +453,10 @@ public class UserBean {
             return session.getUser();
         }
         return null;
+   }
+
+   public UserEntity getUserBySystemUsername(String systemUsername){
+        return userDao.findBySystemUsername(systemUsername);
    }
 
 }

@@ -283,8 +283,30 @@ async function logoutUser() {
    }
  }
 
-
-export {
+const getUserProfile = async (systemUsername) => {
+   try {
+     const response = await fetch(`http://localhost:8080/projeto_ilm_final/rest/user/profile/${systemUsername}`, {
+       method: 'GET',
+       credentials: 'include',
+       headers: {
+         'Content-Type': 'application/json'
+       }
+     });
+ 
+     if (!response.ok) {
+       throw new Error(`HTTP error! status: ${response.status}`);
+     }
+ 
+     const data = await response.json();
+     return { status: response.status, data: data };
+   } catch (error) {
+     console.error("Error fetching user profile:", error);
+     return { status: error.response ? error.response.status : 500, error: error.message };
+   }
+ };
+ 
+ 
+ export {
    registerUser,
    getInterests,
    getLabs,
@@ -298,6 +320,8 @@ export {
    forgetPassword,
    resetPassword,
    getUserProfileImage,
-   loginWithToken, 
-   logoutUser, 
-};
+   loginWithToken,
+   logoutUser,
+   getUserProfile, // Exporta a nova função
+ };
+ 

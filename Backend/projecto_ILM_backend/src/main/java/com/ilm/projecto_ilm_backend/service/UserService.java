@@ -3,10 +3,11 @@ package com.ilm.projecto_ilm_backend.service;
 import com.ilm.projecto_ilm_backend.bean.UserBean;
 import com.ilm.projecto_ilm_backend.dao.SessionDao;
 import com.ilm.projecto_ilm_backend.dao.UserDao;
-import com.ilm.projecto_ilm_backend.dto.user.LoginWithTokenDto;
-import com.ilm.projecto_ilm_backend.dto.user.NavbarDto;
-import com.ilm.projecto_ilm_backend.dto.user.RegisterUserDto;
-import com.ilm.projecto_ilm_backend.dto.user.UserProfileDto;
+import com.ilm.projecto_ilm_backend.dto.interest.InterestDto;
+import com.ilm.projecto_ilm_backend.dto.project.ProjectProfileDto;
+import com.ilm.projecto_ilm_backend.dto.skill.SkillDto;
+import com.ilm.projecto_ilm_backend.dto.user.*;
+import com.ilm.projecto_ilm_backend.entity.ProjectEntity;
 import com.ilm.projecto_ilm_backend.entity.UserEntity;
 import com.ilm.projecto_ilm_backend.validator.RegexValidator;
 import com.ilm.projecto_ilm_backend.validator.DatabaseValidator;
@@ -23,7 +24,9 @@ import org.apache.logging.log4j.Logger;
 
 import java.net.URI;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 /**
@@ -305,8 +308,18 @@ public class UserService {
             } else {
                 String sessionId = userBean.loginUser(registerUserDto, clientIP, userAgent);
                 if (sessionId != null) {
-                    NewCookie cookie = new NewCookie("session-id", sessionId, "/", null, null, NewCookie.DEFAULT_MAX_AGE, false, false);
-                    return Response.status(Response.Status.OK).cookie(cookie).entity(Collections.singletonMap("message", "Login successful")).build();
+                    NewCookie sessionCookie = new NewCookie("session-id", sessionId, "/", null, null, NewCookie.DEFAULT_MAX_AGE, false, false);
+                    NewCookie systemUsernameCookie = new NewCookie("user-systemUsername", userEntity.getSystemUsername(), "/", null, null, NewCookie.DEFAULT_MAX_AGE, false, false);
+                    NewCookie userTypeCookie = new NewCookie("user-userType", String.valueOf(userEntity.getType()), "/", null, null, NewCookie.DEFAULT_MAX_AGE, false, false);
+
+                    Map<String, Object> responseBody = new HashMap<>();
+                    responseBody.put("message", "Login successful");
+                    return Response.status(Response.Status.OK)
+                            .cookie(sessionCookie)
+                            .cookie(systemUsernameCookie)
+                            .cookie(userTypeCookie)
+                            .entity(responseBody)
+                            .build();
                 } else {
                     return Response.status(Response.Status.UNAUTHORIZED).entity(Collections.singletonMap("error", "Unauthorized")).build();
                 }
@@ -315,8 +328,6 @@ public class UserService {
             return Response.status(Response.Status.NOT_FOUND).entity(Collections.singletonMap("error", "Email not found")).build();
         }
     }
-
-
 
     @POST
     @Path("/loginWithToken")
@@ -333,13 +344,21 @@ public class UserService {
             String sessionId = userBean.createSessionForUser(userEntity, clientIP, userAgent);
 
             if (sessionId != null) {
-                NewCookie cookie = new NewCookie("session-id", sessionId, "/", null, null, NewCookie.DEFAULT_MAX_AGE, false, false);
-                return Response.status(Response.Status.OK).cookie(cookie).build();
+                NewCookie sessionCookie = new NewCookie("session-id", sessionId, "/", null, null, NewCookie.DEFAULT_MAX_AGE, false, false);
+                NewCookie systemUsernameCookie = new NewCookie("user-systemUsername", userEntity.getSystemUsername(), "/", null, null, NewCookie.DEFAULT_MAX_AGE, false, false);
+                NewCookie userTypeCookie = new NewCookie("user-userType", String.valueOf(userEntity.getType()), "/", null, null, NewCookie.DEFAULT_MAX_AGE, false, false);
+
+                return Response.status(Response.Status.OK)
+                        .cookie(sessionCookie)
+                        .cookie(systemUsernameCookie)
+                        .cookie(userTypeCookie)
+                        .entity(Collections.singletonMap("message", "Login successful"))
+                        .build();
             } else {
-                return Response.status(Response.Status.UNAUTHORIZED).build();
+                return Response.status(Response.Status.UNAUTHORIZED).entity(Collections.singletonMap("error", "Unauthorized")).build();
             }
         } else {
-            return Response.status(Response.Status.NOT_FOUND).build();
+            return Response.status(Response.Status.NOT_FOUND).entity(Collections.singletonMap("error", "Token not found")).build();
         }
     }
 
@@ -358,8 +377,16 @@ public class UserService {
 
         if (sessionRemoved) {
             logger.info("Session removed successfully.");
-            NewCookie expiredCookie = new NewCookie("session-id", null, "/", null, null, 0, false, true);
-            return Response.ok().cookie(expiredCookie).build();
+            NewCookie expiredSessionCookie = new NewCookie("session-id", null, "/", null, null, 0, false, true);
+            NewCookie expiredSystemUsernameCookie = new NewCookie("user-systemUsername", null, "/", null, null, 0, false, true);
+            NewCookie expiredUserTypeCookie = new NewCookie("user-userType", null, "/", null, null, 0, false, true);
+
+            return Response.ok()
+                    .cookie(expiredSessionCookie)
+                    .cookie(expiredSystemUsernameCookie)
+                    .cookie(expiredUserTypeCookie)
+                    .entity(Collections.singletonMap("message", "Logout successful"))
+                    .build();
         } else {
             logger.error("Error removing session.");
             return Response.status(Response.Status.NOT_FOUND).entity("Session not found").build();
@@ -489,6 +516,65 @@ public class UserService {
             }
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
+    @GET
+    @Path("/profile/{systemUsername}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getProfile(@PathParam("systemUsername") String systemUsername, @CookieParam("session-id") String sessionId) {
+        logger.info("Received a request to get the profile of a user with session ID: " + sessionId);
+        UserEntity requestingUser = userBean.getUserBySessionId(sessionId);
+        if (requestingUser != null) {
+            UserEntity profileUser = userDao.getUserBySystemUsernameWithAssociations(systemUsername);
+            if (profileUser != null) {
+                ShowProfileDto profileDto = new ShowProfileDto();
+                profileDto.setUsername(profileUser.getUsername());
+                profileDto.setFirstName(profileUser.getFirstName());
+                profileDto.setLastName(profileUser.getLastName());
+                profileDto.setLocation(profileUser.getLab().getLocal().toString());
+                profileDto.setProfileImage("http://localhost:8080/images/" + profileUser.getId() + "/profile_picture_avatar.jpg");
+                profileDto.setPublicProfile(profileUser.isPublicProfile());
+
+                if (profileUser.isPublicProfile() || requestingUser.getId() == (profileUser.getId())) {
+                    profileDto.setBio(profileUser.getBio());
+
+                    profileDto.setProjects(profileUser.getUserProjects().stream()
+                            .map(up -> {
+                                ProjectProfileDto projectDto = new ProjectProfileDto();
+                                ProjectEntity project = up.getProject();
+                                projectDto.setName(project.getName());
+                                projectDto.setTypeMember(up.getType().toString());
+                                projectDto.setStatus(project.getStatus().toString());
+                                return projectDto;
+                            }).collect(Collectors.toList()));
+
+                    profileDto.setSkills(profileUser.getSkills().stream()
+                            .map(skill -> {
+                                SkillDto skillDto = new SkillDto();
+                                skillDto.setId(skill.getId());
+                                skillDto.setName(skill.getName());
+                                skillDto.setType(skill.getType().toString());
+                                return skillDto;
+                            }).collect(Collectors.toList()));
+
+                    profileDto.setInterests(profileUser.getInterests().stream()
+                            .map(interest -> {
+                                InterestDto interestDto = new InterestDto();
+                                interestDto.setId(interest.getId());
+                                interestDto.setName(interest.getName());
+                                return interestDto;
+                            }).collect(Collectors.toList()));
+                }
+
+                return Response.status(Response.Status.OK).entity(profileDto).build();
+            } else {
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity(Collections.singletonMap("message", "User not found")).build();
+            }
+        } else {
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity(Collections.singletonMap("message", "Unauthorized: Invalid session")).build();
         }
     }
 

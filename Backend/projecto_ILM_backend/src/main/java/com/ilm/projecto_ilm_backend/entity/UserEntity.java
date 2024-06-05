@@ -20,6 +20,7 @@ import java.util.List;
 @NamedQuery(name = "User.findByAuxiliarToken", query = "SELECT u FROM UserEntity u WHERE u.auxiliarToken = :auxiliarToken")
 @NamedQuery(name = "User.checkPassFromEmail", query = "SELECT u.password FROM UserEntity u WHERE u.email = :email")
 @NamedQuery(name = "User.checkSystemUsername", query = "SELECT u FROM UserEntity u WHERE u.systemUsername = :systemUsername")
+@NamedQuery(name = "User.findBySystemUsername", query = "SELECT u FROM UserEntity u WHERE u.systemUsername = :systemUsername")
 public class UserEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -160,13 +161,13 @@ public class UserEntity implements Serializable {
     /**
      * The interests of the user. This is a many-to-many relationship.
      */
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     private List<InterestEntity> interests;
 
     /**
      * The skills of the user. This is a many-to-many relationship.
      */
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     private List<SkillEntity> skills;
 
     /**
@@ -178,7 +179,7 @@ public class UserEntity implements Serializable {
     /**
      * The list of user projects associated with this user. This is a one-to-many relationship.
      */
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<UserProjectEntity> userProjects;
 
     /**

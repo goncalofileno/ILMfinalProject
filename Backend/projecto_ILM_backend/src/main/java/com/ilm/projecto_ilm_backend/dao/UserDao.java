@@ -131,4 +131,30 @@ public class UserDao extends AbstractDao<UserEntity> {
         }
     }
 
+    public UserEntity findBySystemUsername(String systemUsername) {
+        try {
+            return em.createNamedQuery("User.findBySystemUsername", UserEntity.class).setParameter("systemUsername", systemUsername)
+                    .getSingleResult();
+
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public UserEntity getUserBySystemUsernameWithAssociations(String systemUsername) {
+        // Carregar o usuário
+        UserEntity user = em.createQuery("SELECT u FROM UserEntity u WHERE u.systemUsername = :systemUsername", UserEntity.class)
+                .setParameter("systemUsername", systemUsername)
+                .getSingleResult();
+
+        // Inicializar as coleções
+        user.getUserProjects().size(); // Inicializar a coleção de userProjects
+        user.getSkills().size(); // Inicializar a coleção de skills
+        user.getInterests().size(); // Inicializar a coleção de interests
+
+        return user;
+    }
+
+
+
 }
