@@ -30,21 +30,15 @@ export default function AppNavbar() {
       }
    };
 
-  const handleMyProfile = () => {
-    const systemUsername = Cookies.get("user-systemUsername");
-    if (systemUsername) {
-      navigate(`/profile/${systemUsername}`);
-    } else {
-      console.error("System username not found in cookies");
-    }
-  };
+   const handleMyProfile = () => {
+      const systemUsername = Cookies.get("user-systemUsername");
+      if (systemUsername) {
+         navigate(`/profile/${systemUsername}`);
+      } else {
+         console.error("System username not found in cookies");
+      }
+   };
 
-  useEffect(() => {
-    async function fetchUserImage() {
-      const imageUrl = await getUserProfileImage();
-      console.log(imageUrl);
-      if (imageUrl) {
-        setUserImage(imageUrl);
    useEffect(() => {
       async function fetchUserImage() {
          const imageUrl = await getUserProfileImage();
@@ -98,10 +92,8 @@ export default function AppNavbar() {
                   <div className="user-image" style={{ backgroundImage: `url(${userImage})` }}></div>
                   {dropdownOpen && (
                      <div className={`dropdown-content ${dropdownOpen ? "show" : ""}`}>
-                        <a href="#edit-profile">Edit Profile</a>
-                        <a href="#logout" onClick={handleLogout}>
-                           Logout
-                        </a>
+                        <div onClick={handleMyProfile}>My Profile</div>
+                        <div onClick={handleLogout}>Logout</div>
                      </div>
                   )}
                </div>
@@ -129,44 +121,7 @@ export default function AppNavbar() {
                   </div>
                </div>
             </div>
-            <div className="nav-item">
-              <div
-                className="icon"
-                style={{ backgroundImage: `url(${mailIcon})` }}
-              ></div>
-              <label>Mail</label>
-            </div>
-          </div>
-        </div>
-        <div className="nav-right">
-          <select className="language-dropdown">
-            <option className="option-flag" value="en">
-              🇺🇸
-            </option>
-            <option className="option-flag" value="pt">
-              🇵🇹
-            </option>
-            <option className="option-flag" value="es">
-              🇪🇸
-            </option>
-          </select>
-          <div
-            className="icon bell"
-            style={{ backgroundImage: `url(${bellIcon})` }}
-          ></div>
-          <div className="user-profile" onClick={toggleDropdown}>
-            <div
-              className="user-image"
-              style={{ backgroundImage: `url(${userImage})` }}
-            ></div>
-            {dropdownOpen && (
-              <div className={`dropdown-content ${dropdownOpen ? "show" : ""}`}>
-                <div onClick={handleMyProfile}>My Profile</div>
-                <div onClick={handleLogout}>Logout</div>
-              </div>
-            )}
-          </div>
-        </div>
+         )}
       </div>
    );
 }
