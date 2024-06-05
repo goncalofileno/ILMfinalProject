@@ -9,24 +9,26 @@ import userProfileIcon from "../../resources/avatares/Avatar padrão.jpg";
 import { getUserProfileImage, logoutUser } from "../../utilities/services";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie"; // Importando a biblioteca de cookies
+import { useMediaQuery } from "react-responsive";
 
 export default function AppNavbar() {
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [userImage, setUserImage] = useState(userProfileIcon);
-  const navigate = useNavigate();
+   const [dropdownOpen, setDropdownOpen] = useState(false);
+   const [userImage, setUserImage] = useState(userProfileIcon);
+   const navigate = useNavigate();
+   const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
 
-  const toggleDropdown = () => {
-    setDropdownOpen(!dropdownOpen);
-  };
+   const toggleDropdown = () => {
+      setDropdownOpen(!dropdownOpen);
+   };
 
-  const handleLogout = async () => {
-    const response = await logoutUser();
-    if (response.ok) {
-      navigate("/"); // Redireciona para a página de login
-    } else {
-      console.error("Failed to logout");
-    }
-  };
+   const handleLogout = async () => {
+      const response = await logoutUser();
+      if (response.ok) {
+         navigate("/"); // Redireciona para a página de login
+      } else {
+         console.error("Failed to logout");
+      }
+   };
 
   const handleMyProfile = () => {
     const systemUsername = Cookies.get("user-systemUsername");
@@ -43,38 +45,89 @@ export default function AppNavbar() {
       console.log(imageUrl);
       if (imageUrl) {
         setUserImage(imageUrl);
+   useEffect(() => {
+      async function fetchUserImage() {
+         const imageUrl = await getUserProfileImage();
+         console.log(imageUrl);
+         if (imageUrl) {
+            setUserImage(imageUrl);
+         }
       }
-    }
 
-    fetchUserImage();
-  }, []);
+      fetchUserImage();
+   }, []);
 
-  return (
-    <div>
-      <div className="app-navbar">
-        <div className="logo"></div>
-        <div className="nav-icons-wrapper">
-          <div className="nav-icons">
-            <div className="nav-item">
-              <div
-                className="icon"
-                style={{ backgroundImage: `url(${projectsIcon})` }}
-              ></div>
-              <label>Projects</label>
+   return (
+      <div>
+         <div className="app-navbar">
+            <div className="logo"></div>
+            <div className="nav-icons-wrapper">
+               <div className="nav-icons">
+                  <div className="nav-item">
+                     <div className="icon" style={{ backgroundImage: `url(${projectsIcon})` }}></div>
+                     <label>Projects</label>
+                  </div>
+                  <div className="nav-item">
+                     <div className="icon" style={{ backgroundImage: `url(${resourceIcon})` }}></div>
+                     <label>Resources</label>
+                  </div>
+                  <div className="nav-item">
+                     <div className="icon" style={{ backgroundImage: `url(${myProjectsIcon})` }}></div>
+                     <label>My Projects</label>
+                  </div>
+                  <div className="nav-item">
+                     <div className="icon" style={{ backgroundImage: `url(${mailIcon})` }}></div>
+                     <label>Mail</label>
+                  </div>
+               </div>
             </div>
-            <div className="nav-item">
-              <div
-                className="icon"
-                style={{ backgroundImage: `url(${resourceIcon})` }}
-              ></div>
-              <label>Resources</label>
+            <div className="nav-right">
+               <select className="language-dropdown">
+                  <option className="option-flag" value="en">
+                     🇺🇸
+                  </option>
+                  <option className="option-flag" value="pt">
+                     🇵🇹
+                  </option>
+                  <option className="option-flag" value="es">
+                     🇪🇸
+                  </option>
+               </select>
+               <div className="icon bell" style={{ backgroundImage: `url(${bellIcon})` }}></div>
+               <div className="user-profile" onClick={toggleDropdown}>
+                  <div className="user-image" style={{ backgroundImage: `url(${userImage})` }}></div>
+                  {dropdownOpen && (
+                     <div className={`dropdown-content ${dropdownOpen ? "show" : ""}`}>
+                        <a href="#edit-profile">Edit Profile</a>
+                        <a href="#logout" onClick={handleLogout}>
+                           Logout
+                        </a>
+                     </div>
+                  )}
+               </div>
             </div>
-            <div className="nav-item">
-              <div
-                className="icon"
-                style={{ backgroundImage: `url(${myProjectsIcon})` }}
-              ></div>
-              <label>My Projects</label>
+         </div>
+         {/* Bottom Navbar for mobile view */}
+         {isMobile && (
+            <div className="bottom-navbar">
+               <div className="nav-icons">
+                  <div className="nav-item">
+                     <div className="icon" style={{ backgroundImage: `url(${projectsIcon})` }}></div>
+                     <label>Projects</label>
+                  </div>
+                  <div className="nav-item">
+                     <div className="icon" style={{ backgroundImage: `url(${resourceIcon})` }}></div>
+                     <label>Resources</label>
+                  </div>
+                  <div className="nav-item">
+                     <div className="icon" style={{ backgroundImage: `url(${myProjectsIcon})` }}></div>
+                     <label>My Projects</label>
+                  </div>
+                  <div className="nav-item">
+                     <div className="icon" style={{ backgroundImage: `url(${mailIcon})` }}></div>
+                     <label>Mail</label>
+                  </div>
+               </div>
             </div>
             <div className="nav-item">
               <div
@@ -115,39 +168,5 @@ export default function AppNavbar() {
           </div>
         </div>
       </div>
-      {/* Bottom Navbar for mobile view */}
-      <div className="bottom-navbar">
-        <div className="nav-icons">
-          <div className="nav-item">
-            <div
-              className="icon"
-              style={{ backgroundImage: `url(${projectsIcon})` }}
-            ></div>
-            <label>Projects</label>
-          </div>
-          <div className="nav-item">
-            <div
-              className="icon"
-              style={{ backgroundImage: `url(${resourceIcon})` }}
-            ></div>
-            <label>Resources</label>
-          </div>
-          <div className="nav-item">
-            <div
-              className="icon"
-              style={{ backgroundImage: `url(${myProjectsIcon})` }}
-            ></div>
-            <label>My Projects</label>
-          </div>
-          <div className="nav-item">
-            <div
-              className="icon"
-              style={{ backgroundImage: `url(${mailIcon})` }}
-            ></div>
-            <label>Mail</label>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+   );
 }
