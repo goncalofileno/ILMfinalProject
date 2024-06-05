@@ -16,6 +16,8 @@ import com.ilm.projecto_ilm_backend.ENUMS.ConvertersENUM.StateProjectEnumConvert
 @Entity
 @Table(name = "project")
 @NamedQuery(name = "Project.findById", query = "SELECT p FROM ProjectEntity p WHERE p.id = :id")
+@NamedQuery(name = "Project.findNameAndDescriptionHome", query = "SELECT p.name, p.description FROM ProjectEntity p WHERE p.status = 1 OR  p.status = 2 OR  p.status = 3 OR  p.status = 4 ")
+
 public class ProjectEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;

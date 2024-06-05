@@ -271,6 +271,23 @@ async function getUserProfileImage() {
    }
 }
 
+async function getHomeProjects() {
+   try {
+      const response = await fetch(`${baseURL}project/homeProjects`, {
+         method: "GET",
+         headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+         },
+      });
+
+      return response;
+   } catch (error) {
+      console.error("Error getting home projects:", error);
+      throw error;
+   }
+}
+
 async function logoutUser() {
    try {
      const response = await fetch(`${baseURL}user/logout`, {
@@ -319,6 +336,7 @@ const getUserProfile = async (systemUsername) => {
    loginUser,
    forgetPassword,
    resetPassword,
+   getHomeProjects,
    getUserProfileImage,
    loginWithToken,
    logoutUser,
