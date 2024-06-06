@@ -246,37 +246,45 @@ public class UserService {
     @Path("/uploadProfilePicture")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response uploadProfilePicture(Map<String, String> request, @Context HttpHeaders headers) {
+    public Response uploadProfilePicture(Map<String, String> request, @Context HttpHeaders headers, @CookieParam("session-id") String sessionId) {
         logger.info("Received a request to upload a profile picture.");
         String authHeader = headers.getHeaderString(HttpHeaders.AUTHORIZATION);
-        if (databaseValidator.checkAuxiliarToken(authHeader)) {
-            try {
-                String base64Image = request.get("file");
-                if (base64Image == null || base64Image.isEmpty()) {
-                    return Response.status(Response.Status.BAD_REQUEST).entity("File is missing").build();
-                }
-                // Remove "data:image/png;base64," or similar prefix from the string
-                if (base64Image.contains(",")) {
-                    base64Image = base64Image.split(",")[1];
-                }
-                // Delegate to UserBean to handle the file saving and updating the user's photo path
-                boolean isSaved = userBean.saveUserProfilePicture(authHeader, base64Image);
-                if (isSaved) {
-                    logger.info("Profile picture uploaded successfully.");
-                    return Response.ok("Profile picture uploaded successfully.").build();
-                } else {
-                    logger.error("Failed to save profile picture");
-                    return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Failed to save profile picture").build();
-                }
-            } catch (Exception e) {
-                logger.error("Error during file upload: " + e.getMessage(), e);
-                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error during file upload: " + e.getMessage()).build();
-            }
+
+        if (authHeader != null && databaseValidator.checkAuxiliarToken(authHeader)) {
+            return handleUploadProfilePicture(request, authHeader);
+        } else if (sessionId != null) {
+            return handleUploadProfilePicture(request, sessionId);
         } else {
             logger.error("Unauthorized request to upload profile picture.");
             return Response.status(Response.Status.UNAUTHORIZED).entity("Unauthorized").build();
         }
     }
+
+    private Response handleUploadProfilePicture(Map<String, String> request, String auth) {
+        try {
+            String base64Image = request.get("file");
+            if (base64Image == null || base64Image.isEmpty()) {
+                return Response.status(Response.Status.BAD_REQUEST).entity("File is missing").build();
+            }
+            // Remove "data:image/png;base64," or similar prefix from the string
+            if (base64Image.contains(",")) {
+                base64Image = base64Image.split(",")[1];
+            }
+            // Delegate to UserBean to handle the file saving and updating the user's photo path
+            boolean isSaved = userBean.saveUserProfilePicture(auth, base64Image);
+            if (isSaved) {
+                logger.info("Profile picture uploaded successfully.");
+                return Response.ok("Profile picture uploaded successfully.").build();
+            } else {
+                logger.error("Failed to save profile picture");
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Failed to save profile picture").build();
+            }
+        } catch (Exception e) {
+            logger.error("Error during file upload: " + e.getMessage(), e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error during file upload: " + e.getMessage()).build();
+        }
+    }
+
 
 
     /**
@@ -531,6 +539,7 @@ public class UserService {
                 profileDto.setProfileImage(profileUser.getPhoto());
                 profileDto.setPublicProfile(profileUser.isPublicProfile());
 
+                // Se o perfil for público ou o usuário logado for o proprietário do perfil
                 if (profileUser.isPublicProfile() || requestingUser.getId() == (profileUser.getId())) {
                     profileDto.setBio(profileUser.getBio());
 
@@ -572,6 +581,7 @@ public class UserService {
                     .entity(Collections.singletonMap("message", "Unauthorized: Invalid session")).build();
         }
     }
+
 
     @GET
     @Path("/editProfile/{systemUsername}")
@@ -616,6 +626,19 @@ public class UserService {
         } else {
             return Response.status(Response.Status.UNAUTHORIZED)
                     .entity(Collections.singletonMap("message", "Unauthorized: Invalid session")).build();
+        }
+    }
+
+    @POST
+    @Path("/updateProfile")
+    public Response updateProfile(UserProfileDto userProfileDto, @CookieParam("session-id") String sessionId) {
+        try {
+            logger.info("Received a request to update the profile of a user with session ID: " + sessionId);
+            userBean.updateUserProfile(userProfileDto, sessionId);
+            return Response.status(Response.Status.OK).build();
+        } catch (Exception e) {
+            logger.error("Error updating profile: " + e.getMessage());
+            return Response.status(Response.Status.BAD_REQUEST).entity(Collections.singletonMap("message", e.getMessage())).build();
         }
     }
 

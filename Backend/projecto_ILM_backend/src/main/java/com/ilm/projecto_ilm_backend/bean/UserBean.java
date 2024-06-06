@@ -29,6 +29,7 @@ import java.text.Normalizer;
 import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -88,6 +89,7 @@ public class UserBean {
         if (userDao.findById(1) == null) {
             UserEntity user = new UserEntity();
             user.setUsername("admin");
+            user.setSystemUsername("admin");
             user.setPassword(HashUtil.toSHA256("admin"));
             user.setEmail("admin@admin.com");
             user.setFirstName("Admin");
@@ -97,6 +99,8 @@ public class UserBean {
             user.setMailConfirmed(true);
             user.setProfileCreated(true);
             user.setPhoto("https://www.pngkey.com/png/full/114-1149878_setting-user-avatar-in-specific-size-without-breaking.png");
+            user.setAvatarPhoto("https://www.pngkey.com/png/full/114-1149878_setting-user-avatar-in-specific-size-without-breaking.png");
+            user.setThumbnailPhoto("https://www.pngkey.com/png/full/114-1149878_setting-user-avatar-in-specific-size-without-breaking.png");
             LabEntity lab = new LabEntity();
             lab = labDao.findbyLocal(WorkLocalENUM.COIMBRA);
             List<InterestEntity> interests = interestDao.findAll();
@@ -115,6 +119,7 @@ public class UserBean {
         if (userDao.findById(2) == null) {
             UserEntity user = new UserEntity();
             user.setUsername("user");
+            user.setSystemUsername("user");
             user.setPassword(HashUtil.toSHA256("user"));
             user.setEmail("user@user.com");
             user.setFirstName("User");
@@ -124,6 +129,8 @@ public class UserBean {
             user.setMailConfirmed(true);
             user.setProfileCreated(true);
             user.setPhoto("https://www.pngkey.com/png/full/114-1149878_setting-user-avatar-in-specific-size-without-breaking.png");
+            user.setAvatarPhoto("https://www.pngkey.com/png/full/114-1149878_setting-user-avatar-in-specific-size-without-breaking.png");
+            user.setThumbnailPhoto("https://www.pngkey.com/png/full/114-1149878_setting-user-avatar-in-specific-size-without-breaking.png");
             LabEntity lab = new LabEntity();
             lab = labDao.findbyLocal(WorkLocalENUM.PORTO);
             List<InterestEntity> interests = interestDao.findAll();
@@ -293,23 +300,20 @@ public class UserBean {
         return systemUsername;
     }
 
-
-
-
-    /**
-     * Saves a user's profile picture.
-     *
-     * @param authHeader the authorization header containing the user's token
-     * @param base64Image the profile picture as a Base64 string
-     * @return true if the profile picture was successfully saved, false otherwise
-     */
-    public boolean saveUserProfilePicture(String authHeader, String base64Image) {
+    public boolean saveUserProfilePicture(String auth, String base64Image) {
         try {
             // Decode the Base64 string back to an image
             byte[] imageBytes = Base64.getDecoder().decode(base64Image);
 
             // Extract user information from the token (assuming JWT or similar)
-            UserEntity user = userDao.findByAuxiliarToken(authHeader);
+            UserEntity user = userDao.findByAuxiliarToken(auth);
+            if (user == null) {
+                user = sessionDao.findBySessionId(auth).getUser();
+            }
+
+            if (user == null) {
+                throw new Exception("User not found");
+            }
 
             // Save the original image to the user's specific directory
             String directoryPath = imgsPath.IMAGES_PATH + "/" + user.getId();
@@ -319,27 +323,34 @@ public class UserBean {
                 directory.mkdirs();
             }
 
-            String originalFilePath = directoryPath + "/profile_picture.jpg";
-            Files.write(Paths.get(originalFilePath), imageBytes);
+            // Determine the image format
+            ByteArrayInputStream bis = new ByteArrayInputStream(imageBytes);
+            BufferedImage originalImage = ImageIO.read(bis);
+            String format = getImageFormat(originalImage);
+
+            // Save the original image
+            String originalFilePath = directoryPath + "/profile_picture." + format;
+            ImageIO.write(originalImage, format, new File(originalFilePath));
             logger.info("Original file path: " + originalFilePath);
 
             // Save resized images
-            ByteArrayInputStream bis = new ByteArrayInputStream(imageBytes);
-            BufferedImage originalImage = ImageIO.read(bis);
-
             BufferedImage avatarImage = resizeImage(originalImage, 100, 100); // Example size for avatar
-            String avatarFilePath = directoryPath + "/profile_picture_avatar.jpg";
-            ImageIO.write(avatarImage, "jpg", new File(avatarFilePath));
+            String avatarFilePath = directoryPath + "/profile_picture_avatar." + format;
+            ImageIO.write(avatarImage, format, new File(avatarFilePath));
 
             BufferedImage thumbnailImage = resizeImage(originalImage, 300, 300); // Example size for thumbnail
-            String thumbnailFilePath = directoryPath + "/profile_picture_thumbnail.jpg";
-            ImageIO.write(thumbnailImage, "jpg", new File(thumbnailFilePath));
+            String thumbnailFilePath = directoryPath + "/profile_picture_thumbnail." + format;
+            ImageIO.write(thumbnailImage, format, new File(thumbnailFilePath));
 
             // Construct the URLs
+            long timestamp = System.currentTimeMillis();
             String baseUrl = "http://localhost:8080/images/" + user.getId();
-            String originalUrl = baseUrl + "/profile_picture.jpg";
-            String avatarUrl = baseUrl + "/profile_picture_avatar.jpg";
-            String thumbnailUrl = baseUrl + "/profile_picture_thumbnail.jpg";
+            String originalUrl = baseUrl + "/profile_picture." + format + "?t=" + timestamp;
+            logger.info("Original URL: " + originalUrl);
+            String avatarUrl = baseUrl + "/profile_picture_avatar." + format + "?t=" + timestamp;
+            logger.info("Avatar URL: " + avatarUrl);
+            String thumbnailUrl = baseUrl + "/profile_picture_thumbnail." + format + "?t=" + timestamp;
+            logger.info("Thumbnail URL: " + thumbnailUrl);
 
             // Update the user's photo URLs in the database
             user = userDao.findById(user.getId());
@@ -365,11 +376,28 @@ public class UserBean {
      * @return the resized image
      */
     private BufferedImage resizeImage(BufferedImage originalImage, int width, int height) {
-        BufferedImage resizedImage = new BufferedImage(width, height, originalImage.getType());
+        BufferedImage resizedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = resizedImage.createGraphics();
         g.drawImage(originalImage, 0, 0, width, height, null);
         g.dispose();
         return resizedImage;
+    }
+
+    /**
+     * Gets the format of an image.
+     *
+     * @param image the image to check
+     * @return the format of the image (e.g., "jpg", "png")
+     * @throws IOException if an error occurs during reading
+     */
+    private String getImageFormat(BufferedImage image) throws IOException {
+        if (ImageIO.getImageWritersBySuffix("png").hasNext()) {
+            return "png";
+        } else if (ImageIO.getImageWritersBySuffix("jpg").hasNext()) {
+            return "jpg";
+        } else {
+            throw new IOException("Unsupported image format");
+        }
     }
 
     public String loginUser(RegisterUserDto registerUserDto, String clientIpAddress, String userAgent) {
@@ -465,6 +493,53 @@ public class UserBean {
    public UserEntity getUserBySystemUsername(String systemUsername){
         return userDao.findBySystemUsername(systemUsername);
    }
+
+    public void updateUserProfile(UserProfileDto userProfileDto, String sessionId) throws Exception {
+        UserEntity user = sessionDao.findBySessionId(sessionId).getUser();
+
+        if (user == null) {
+            throw new Exception("Unauthorized: Invalid session");
+        }
+
+        if (userProfileDto.getFirstName() == null || userProfileDto.getLastName() == null || userProfileDto.getLab() == null) {
+            throw new Exception("First Name, Last Name, and Office are required fields");
+        }
+
+        user.setFirstName(userProfileDto.getFirstName());
+        user.setLastName(userProfileDto.getLastName());
+        user.setUsername(userProfileDto.getUsername());
+        user.setLab(labDao.findbyLocal(userProfileDto.getLab().toUpperCase()));
+        user.setBio(userProfileDto.getBio());
+        user.setPublicProfile(userProfileDto.isPublicProfile());
+
+        // Handle skills
+        List<SkillEntity> skillEntities = userProfileDto.getSkills().stream()
+                .map(skillDto -> skillDao.findByName(skillDto.getName())
+                        .orElseGet(() -> {
+                            SkillEntity newSkill = new SkillEntity();
+                            newSkill.setName(skillDto.getName());
+                            newSkill.setType(SkillTypeENUM.valueOf(skillDto.getType()));
+                            skillDao.create(newSkill);
+                            return newSkill;
+                        }))
+                .collect(Collectors.toList());
+        user.setSkills(skillEntities);
+
+        // Handle interests
+        List<InterestEntity> interestEntities = userProfileDto.getInterests().stream()
+                .map(interestDto -> interestDao.findByName(interestDto.getName())
+                        .orElseGet(() -> {
+                            InterestEntity newInterest = new InterestEntity();
+                            newInterest.setName(interestDto.getName());
+                            interestDao.create(newInterest);
+                            return newInterest;
+                        }))
+                .collect(Collectors.toList());
+        user.setInterests(interestEntities);
+
+        userDao.merge(user);
+    }
+
 
 }
 

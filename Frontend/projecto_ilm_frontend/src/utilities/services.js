@@ -350,23 +350,6 @@ async function getUserEditProfile(systemUsername) {
   }
 }
 
-async function updateUserProfile(userProfileDto) {
-  try {
-    const response = await fetch(`${baseURL}user/updateProfile`, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify(userProfileDto),
-    });
-    return response;
-  } catch (error) {
-    console.error("Error updating user profile:", error);
-  }
-}
-
 async function changeUserPassword(currentPassword, newPassword) {
   try {
     const response = await fetch(`${baseURL}user/changePassword`, {
@@ -383,6 +366,58 @@ async function changeUserPassword(currentPassword, newPassword) {
     console.error("Error changing user password:", error);
   }
 }
+
+async function updateUserProfile(userProfileDto) {
+  try {
+    const response = await fetch(`${baseURL}user/updateProfile`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      credentials: "include", // Inclui cookies na requisição
+      body: JSON.stringify(userProfileDto),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Error updating profile");
+    }
+
+    return response;
+  } catch (error) {
+    console.error("Error updating user profile:", error);
+    throw error;
+  }
+}
+
+async function uploadProfilePictureWithSession(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = async function () {
+      const base64data = reader.result;
+      console.log("Base64 data: ", base64data);
+
+      try {
+        const response = await fetch(`${baseURL}user/uploadProfilePicture`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include", // Inclui cookies na requisição
+          body: JSON.stringify({ file: base64data }),
+        });
+
+        resolve(response);
+      } catch (error) {
+        console.error("Error during uploading profile picture:", error);
+        reject(error);
+      }
+    };
+  });
+}
+
 
 export {
   registerUser,
@@ -405,4 +440,5 @@ export {
   getUserEditProfile,
   updateUserProfile,
   changeUserPassword,
+  uploadProfilePictureWithSession,
 };

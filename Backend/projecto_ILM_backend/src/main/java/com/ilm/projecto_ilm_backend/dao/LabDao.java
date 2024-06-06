@@ -53,4 +53,12 @@ public class LabDao extends AbstractDao<LabEntity>{
             return null;
         }
     }
+
+    public LabEntity findbyLocal(String local) {
+        try {
+            return em.createNamedQuery("Lab.findByLocal", LabEntity.class).setParameter("local", WorkLocalENUM.valueOf(local)).getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }

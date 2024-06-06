@@ -16,7 +16,7 @@ import {
   getLabs,
   checkUsername,
   updateUserProfile,
-  uploadProfilePicture,
+  uploadProfilePictureWithSession,
   getUserEditProfile,
   changeUserPassword,
 } from "../utilities/services";
@@ -145,11 +145,11 @@ const EditProfilePage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
-
+  
     setLoading(true);
-
+  
     const formattedOffice = formatLabName(office);
-
+  
     try {
       const userProfileDto = {
         firstName,
@@ -161,13 +161,13 @@ const EditProfilePage = () => {
         skills: selectedSkills,
         interests: selectedInterests,
       };
-
+  
       console.log("Updating profile...", userProfileDto);
-
+  
       const response = await updateUserProfile(userProfileDto);
       if (response.ok) {
         if (selectedFile) {
-          const uploadResponse = await uploadProfilePicture(selectedFile);
+          const uploadResponse = await uploadProfilePictureWithSession(selectedFile);
           if (uploadResponse.ok) {
             console.log("Profile updated and picture uploaded successfully");
             navigate(`/profile/${systemUsername}`);
@@ -192,6 +192,8 @@ const EditProfilePage = () => {
       setLoading(false);
     }
   };
+  
+  
 
   const handlePasswordChange = async () => {
     if (newPassword !== confirmNewPassword) {
