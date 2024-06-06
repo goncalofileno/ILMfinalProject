@@ -16,3 +16,5 @@ Backend/demo/mvnw.cmd
 Backend/demo/mvnw
 
 Backend/demo/.idea/encodings.xml
+
+Backend/projecto_ILM_backend/target/classes/META-INF/persistence.xml
