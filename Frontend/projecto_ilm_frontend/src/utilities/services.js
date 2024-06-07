@@ -418,6 +418,30 @@ async function uploadProfilePictureWithSession(file) {
   });
 }
 
+async function updatePassword(currentPassword, newPassword) {
+  try {
+    const response = await fetch(`${baseURL}user/updatePassword`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      credentials: "include", // Inclui os cookies na requisição
+      body: JSON.stringify({ currentPassword, newPassword }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Error updating password");
+    }
+
+    return response;
+  } catch (error) {
+    console.error("Error updating password:", error);
+    throw error;
+  }
+}
+
 
 export {
   registerUser,
@@ -441,4 +465,5 @@ export {
   updateUserProfile,
   changeUserPassword,
   uploadProfilePictureWithSession,
+  updatePassword
 };

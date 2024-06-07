@@ -642,5 +642,40 @@ public class UserService {
         }
     }
 
+    @POST
+    @Path("/updatePassword")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updatePassword(
+            @CookieParam("session-id") String sessionId,
+            Map<String, String> passwords
+    ) {
+        String currentPassword = passwords.get("currentPassword");
+        String newPassword = passwords.get("newPassword");
+
+        logger.info("Received a request to update the password of a user with session ID: " + sessionId);
+
+        UserEntity user = userBean.getUserBySessionId(sessionId);
+        if (user == null) {
+            // Session ID is not valid
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity(Collections.singletonMap("message", "Invalid session ID"))
+                    .build();
+        }
+
+        if (!userBean.validatePassword(user, currentPassword)) {
+            // Current password is incorrect
+            return Response.status(Response.Status.FORBIDDEN)
+                    .entity(Collections.singletonMap("message", "Incorrect current password"))
+                    .build();
+        }
+
+        // Update the password
+        userBean.updatePassword(user, newPassword);
+        return Response.status(Response.Status.OK)
+                .entity(Collections.singletonMap("message", "Password updated successfully"))
+                .build();
+    }
+
 }
 

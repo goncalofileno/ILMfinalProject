@@ -4,7 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { getUserProfile } from "../utilities/services";
 import { Container, Row, Col, Card, Button, Alert } from "react-bootstrap";
 import Cookies from "js-cookie";
-import './ProfilePage.css'; // Make sure to create and include this CSS file.
+import "./ProfilePage.css"; // Make sure to create and include this CSS file.
 
 const UserProfile = () => {
   const { systemUsername } = useParams();
@@ -103,24 +103,27 @@ const UserProfile = () => {
                             variant="primary"
                             onClick={handleEditProfile}
                             className="submit-button"
+                            style={{ padding: "10px 20px" }}
                           >
                             Edit Profile
                           </Button>
                         ) : (
-                          <>
+                          <div className="button-group">
                             <Button
                               variant="primary"
-                              className="mr-2 submit-button"
+                              className="mr-3 submit-button"
+                              style={{ padding: "10px 20px" }}
                             >
-                              Send Message
+                              Send Email
                             </Button>
                             <Button
                               variant="secondary"
-                              className="secondary-button"
+                              className="invite-button"
+                              style={{ padding: "10px 20px" }}
                             >
                               Invite to Project
                             </Button>
-                          </>
+                          </div>
                         )}
                       </Col>
                     </Row>
@@ -130,16 +133,15 @@ const UserProfile = () => {
                       </Alert>
                     ) : (
                       <>
-                        
                         <Row>
                           <Col md={loggedInUsername === systemUsername ? 6 : 12}>
-                          <Row className="mt-4">
-                          <Col md={12}>
-                            <h3 className="page-title">Projects</h3>
-                          </Col>
-                        </Row>
-                            <Card className="shadow-sm mb-4">
-                              <Card.Body>
+                            <Row className="mt-4">
+                              <Col md={12}>
+                                <h3 className="page-title">Projects</h3>
+                              </Col>
+                            </Row>
+                            <Card className="shadow-sm mb-4 card-container">
+                              <Card.Body className="card-body">
                                 {nonPendingProjects.length > 0 ? (
                                   nonPendingProjects.map((project) => (
                                     <div
@@ -172,8 +174,8 @@ const UserProfile = () => {
                                   <h3 className="page-title">Applications</h3>
                                 </Col>
                               </Row>
-                              <Card className="shadow-sm mb-4">
-                                <Card.Body>
+                              <Card className="shadow-sm mb-4 card-container">
+                                <Card.Body className="card-body">
                                   {pendingProjects.length > 0 ? (
                                     pendingProjects.map((project) => (
                                       <div
@@ -185,7 +187,8 @@ const UserProfile = () => {
                                           {project.name}
                                         </p>
                                         <p className="mb-1">
-                                          <strong>Status:</strong> {project.status}
+                                          <strong>Status:</strong>{" "}
+                                          {project.status}
                                         </p>
                                       </div>
                                     ))
@@ -197,16 +200,16 @@ const UserProfile = () => {
                             </Col>
                           )}
                         </Row>
-                        
+  
                         <Row>
                           <Col md="6">
-                          <Row className="mt-4">
-                          <Col md={12}>
-                            <h3 className="page-title">Skills</h3>
-                          </Col>
-                        </Row>
-                            <Card className="shadow-sm mb-4">
-                              <Card.Body>
+                            <Row className="mt-4">
+                              <Col md={12}>
+                                <h3 className="page-title">Skills</h3>
+                              </Col>
+                            </Row>
+                            <Card className="shadow-sm mb-4 card-container">
+                              <Card.Body className="card-body">
                                 {profile.skills && profile.skills.length > 0 ? (
                                   profile.skills.map((skill) => (
                                     <div key={skill.id} className="ilm-form mb-3">
@@ -233,11 +236,15 @@ const UserProfile = () => {
                                 <h3 className="page-title">Interests</h3>
                               </Col>
                             </Row>
-                            <Card className="shadow-sm mb-4">
-                              <Card.Body>
-                                {profile.interests && profile.interests.length > 0 ? (
+                            <Card className="shadow-sm mb-4 card-container">
+                              <Card.Body className="card-body">
+                                {profile.interests &&
+                                profile.interests.length > 0 ? (
                                   profile.interests.map((interest) => (
-                                    <div key={interest.id} className="ilm-form mb-3">
+                                    <div
+                                      key={interest.id}
+                                      className="ilm-form mb-3"
+                                    >
                                       {interest.name}
                                     </div>
                                   ))
@@ -257,7 +264,7 @@ const UserProfile = () => {
           </Container>
         </div>
       </>
-    );    
+    );
 };
 
 export default UserProfile;

@@ -19,11 +19,15 @@ import {
   uploadProfilePictureWithSession,
   getUserEditProfile,
   changeUserPassword,
+  updatePassword, // Certifique-se de importar a função updatePassword
 } from "../utilities/services";
 import { useNavigate } from "react-router-dom";
 import InputForm from "../components/inputs/InputForm";
 import AppNavbar from "../components/headers/AppNavbar";
+import PasswordForm from "../components/inputs/PasswordForm";
 import Cookies from "js-cookie";
+import "../components/modals/Modals.css"; // Adicione o CSS necessário
+import "./ResetPasswordPage.css"; // Adicione o CSS necessário
 
 const EditProfilePage = () => {
   const [username, setUsername] = useState("");
@@ -46,8 +50,24 @@ const EditProfilePage = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [passwordSuccess, setPasswordSuccess] = useState(""); // Novo estado para sucesso
+  const [strength, setStrength] = useState(0);
+  const [conditionsMet, setConditionsMet] = useState({
+    upper: false,
+    lower: false,
+    number: false,
+    special: false,
+    length: false,
+  });
+  const [warningTypePassword, setWarningTypePassword] = useState("");
+  const [warningTxtPassword, setWarningTxtPassword] = useState("");
+  const [warningTypeConfirmPassword, setWarningTypeConfirmPassword] =
+    useState("");
+  const [warningTxtConfirmPassword, setWarningTxtConfirmPassword] =
+    useState("");
   const navigate = useNavigate();
   const systemUsername = Cookies.get("user-systemUsername");
+  const [showTolltip, setShowTooltip] = useState(false);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -145,11 +165,11 @@ const EditProfilePage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
-  
+
     setLoading(true);
-  
+
     const formattedOffice = formatLabName(office);
-  
+
     try {
       const userProfileDto = {
         firstName,
@@ -161,13 +181,15 @@ const EditProfilePage = () => {
         skills: selectedSkills,
         interests: selectedInterests,
       };
-  
+
       console.log("Updating profile...", userProfileDto);
-  
+
       const response = await updateUserProfile(userProfileDto);
       if (response.ok) {
         if (selectedFile) {
-          const uploadResponse = await uploadProfilePictureWithSession(selectedFile);
+          const uploadResponse = await uploadProfilePictureWithSession(
+            selectedFile
+          );
           if (uploadResponse.ok) {
             console.log("Profile updated and picture uploaded successfully");
             navigate(`/profile/${systemUsername}`);
@@ -192,28 +214,124 @@ const EditProfilePage = () => {
       setLoading(false);
     }
   };
+
+  // const updatePassword = (e) => {
+  //   const value = e.target.value;
+  //   setNewPassword(value);
+  //   setStrength(calculateStrength(value));
+  //   validatePassword(value);
+  // };
+
+  const calculateStrength = (password) => {
+    let strength = 0;
+    if (/\S/.test(password)) {
+      strength++;
+      if (password.length >= 6) {
+        if (/[a-z]/.test(password)) strength++; // lowercase
+        if (/[A-Z]/.test(password)) strength++; // uppercase
+        if (/\d/.test(password)) strength++; // digits
+      }
+      if (strength === 4) {
+        if (/\W/.test(password)) strength++; // special characters
+      }
+    }
+    return strength;
+  };
+
+  const validatePassword = (value) => {
+    const conditions = {
+      upper: /[A-Z]/.test(value),
+      lower: /[a-z]/.test(value),
+      number: /\d/.test(value),
+      special: /\W/.test(value),
+      length: value.length >= 6,
+    };
+    setConditionsMet(conditions);
+  };
+
+  const handleOnBlurPassword = () => {
+    // Redefinir avisos
+    setPasswordError("");
+    setPasswordSuccess("");
   
+    if (strength >= 4) {
+      setWarningTypePassword("success");
+      setWarningTxtPassword("Password is strong");
+    } else {
+      setWarningTypePassword("incorrect");
+      setWarningTxtPassword("Password must be strong");
+    }
+  };
+
+  const handleOnBlurConfirmPassword = () => {
+    // Redefinir avisos
+    setPasswordError("");
+    setPasswordSuccess("");
   
+    if (newPassword === confirmNewPassword) {
+      setWarningTypeConfirmPassword("success");
+      setWarningTxtConfirmPassword("Passwords match");
+    } else {
+      setWarningTypeConfirmPassword("incorrect");
+      setWarningTxtConfirmPassword("Passwords do not match");
+    }
+  };
 
   const handlePasswordChange = async () => {
+    // Redefinir avisos
+    setPasswordError("");
+    setPasswordSuccess("");
+  
     if (newPassword !== confirmNewPassword) {
       setPasswordError("New passwords do not match.");
       return;
     }
-
+  
+    if (strength < 4) {
+      setPasswordError("Password is not strong enough.");
+      return;
+    }
+  
     try {
-      const response = await changeUserPassword(currentPassword, newPassword);
+      console.log("Changing password...");
+      console.log("Current password:", currentPassword);
+      console.log("New password:", newPassword);
+      console.log("Confirm new password:", confirmNewPassword);
+      const response = await updatePassword(currentPassword, confirmNewPassword);
       if (response.ok) {
-        setPasswordError("");
-        setShowModal(false);
+        setPasswordSuccess("Password updated successfully.");
+        setTimeout(() => {
+          setShowModal(false);
+          resetModalFields();
+        }, 3000); // Fecha o modal após 3 segundos
       } else {
         const errorData = await response.json();
         setPasswordError(errorData.message || "Error changing password.");
       }
     } catch (error) {
-      console.error("Error changing password", error);
-      setPasswordError("Error changing password.");
+      console.error("Error changing password:", error);
+      setPasswordError(error.message || "Error changing password.");
     }
+  };
+
+  const resetModalFields = () => {
+    setCurrentPassword("");
+    setNewPassword("");
+    setConfirmNewPassword("");
+    setPasswordError("");
+    setPasswordSuccess(""); // Reseta a mensagem de sucesso
+    setStrength(0);
+    setConditionsMet({
+      upper: false,
+      lower: false,
+      number: false,
+      special: false,
+      length: false,
+    });
+    setWarningTypePassword("");
+    setWarningTxtPassword("");
+    setWarningTypeConfirmPassword("");
+    setWarningTxtConfirmPassword("");
   };
 
   return (
@@ -344,9 +462,12 @@ const EditProfilePage = () => {
                   </Form.Group>
                   <Form.Group controlId="formChangePassword" className="mb-3">
                     <Button
-                      variant="link"
+                      variant="primary"
                       onClick={() => setShowModal(true)}
-                      style={{ padding: "0" }}
+                      style={{
+                        backgroundColor: "#f39c12",
+                        borderColor: "#f39c12",
+                      }}
                     >
                       Change Password
                     </Button>
@@ -396,7 +517,13 @@ const EditProfilePage = () => {
       </Container>
 
       {/* Modal for changing password */}
-      <Modal show={showModal} onHide={() => setShowModal(false)}>
+      <Modal
+        show={showModal}
+        onHide={() => {
+          setShowModal(false);
+          resetModalFields();
+        }}
+      >
         <Modal.Header closeButton>
           <Modal.Title>Change Password</Modal.Title>
         </Modal.Header>
@@ -406,43 +533,105 @@ const EditProfilePage = () => {
               {passwordError}
             </Alert>
           )}
+          {passwordSuccess && (
+            <Alert variant="success" className="mt-2">
+              {passwordSuccess}
+            </Alert>
+          )}
           <Form>
-            <Form.Group controlId="formCurrentPassword" className="mb-3">
-              <Form.Label className="custom-label">Current Password</Form.Label>
-              <Form.Control
-                type="password"
-                value={currentPassword}
-                onChange={(e) => setCurrentPassword(e.target.value)}
-                className="custom-focus"
-              />
-            </Form.Group>
-            <Form.Group controlId="formNewPassword" className="mb-3">
-              <Form.Label className="custom-label">New Password</Form.Label>
-              <Form.Control
-                type="password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                className="custom-focus"
-              />
-            </Form.Group>
-            <Form.Group controlId="formConfirmNewPassword" className="mb-3">
-              <Form.Label className="custom-label">
-                Confirm New Password
-              </Form.Label>
-              <Form.Control
-                type="password"
-                value={confirmNewPassword}
-                onChange={(e) => setConfirmNewPassword(e.target.value)}
-                className="custom-focus"
-              />
-            </Form.Group>
+            <PasswordForm
+              label="Current Password"
+              type="password"
+              value={currentPassword}
+              setValue={(e) => setCurrentPassword(e.target.value)}
+              warningType=""
+              warningTxt=""
+              handleOnBlur={() => {}}
+              showTolltip={false}
+              setShowTooltip={() => {}}
+              conditionsMet={{}}
+              onBlurActive={false}
+            />
+            <PasswordForm
+              label="New Password"
+              type="password"
+              value={newPassword}
+              setValue={(e) => {
+                const value = e.target.value;
+                setNewPassword(value);
+                setStrength(calculateStrength(value));
+                validatePassword(value);
+              }}
+              warningType={warningTypePassword}
+              warningTxt={warningTxtPassword}
+              handleOnBlur={handleOnBlurPassword}
+              showTolltip={showTolltip}
+              setShowTooltip={setShowTooltip}
+              conditionsMet={conditionsMet}
+              onBlurActive={true}
+            />
+            <div id="div-password-container">
+              <div id="pass-strength">
+                <div>Password Strength</div>
+                <meter max="5" value={strength}></meter>
+              </div>
+              <div id="pass-strength-string">
+                <div></div>
+                <div
+                  style={{
+                    color:
+                      strength === 0
+                        ? "black"
+                        : strength === 1
+                        ? "red"
+                        : strength === 2
+                        ? "orange"
+                        : strength === 3
+                        ? "yellow"
+                        : strength === 4
+                        ? "green"
+                        : strength === 5 && "green",
+                  }}
+                >
+                  {strength === 0 && "None"}
+                  {strength === 1 && "Weak"}
+                  {strength === 2 && "Fair"}
+                  {strength === 3 && "Good"}
+                  {strength === 4 && "Strong"}
+                  {strength === 5 && "Very Strong"}
+                </div>
+              </div>
+            </div>
+            <InputForm
+              label="Confirm New Password"
+              type="password"
+              value={confirmNewPassword}
+              setValue={setConfirmNewPassword}
+              warningType={warningTypeConfirmPassword}
+              warningTxt={warningTxtConfirmPassword}
+              handleOnBlur={handleOnBlurConfirmPassword}
+              onBlurActive={true}
+            />
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>
+          <Button
+            variant="secondary"
+            onClick={() => {
+              setShowModal(false);
+              resetModalFields();
+            }}
+          >
             Cancel
           </Button>
-          <Button variant="primary" onClick={handlePasswordChange}>
+          <Button
+            variant="primary"
+            onClick={handlePasswordChange}
+            style={{
+              backgroundColor: "#f39c12",
+              borderColor: "#f39c12",
+            }}
+          >
             Change Password
           </Button>
         </Modal.Footer>

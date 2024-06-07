@@ -540,6 +540,15 @@ public class UserBean {
         userDao.merge(user);
     }
 
+    public boolean validatePassword(UserEntity user, String password) {
+        return user.getPassword().equals(HashUtil.toSHA256(password));
+    }
+
+    public boolean updatePassword(UserEntity user, String newPassword) {
+        user.setPassword(HashUtil.toSHA256(newPassword));
+        userDao.merge(user);
+        return true;
+    }
 
 }
 
