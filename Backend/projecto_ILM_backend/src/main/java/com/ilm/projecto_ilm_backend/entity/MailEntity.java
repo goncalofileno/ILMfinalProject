@@ -11,8 +11,9 @@ import java.time.LocalDateTime;
  * Each instance of this class corresponds to a single row in the table.
  */
 @Entity
-@Table(name = "message")
-public class MessageEntity implements Serializable {
+@Table(name = "mail")
+@NamedQuery(name = "Mail.getMailsReceivedByUserId", query = "SELECT m FROM MailEntity m WHERE m.receiver.id = :userId")
+public class MailEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
@@ -24,10 +25,22 @@ public class MessageEntity implements Serializable {
     private int id;
 
     /**
+     * The subject of the message.
+     */
+    @Column(name = "subject", nullable = false, unique = false, updatable = true)
+    private String subject;
+
+    /**
      * The text of the message.
      */
     @Column(name = "text", nullable = false, unique = false, updatable = true)
     private String text;
+
+    /**
+     * The deleted status of the message.
+     */
+    @Column(name = "deleted", nullable = false, unique = false, updatable = true)
+    private boolean deleted;
 
     /**
      * The date of the message.
@@ -52,29 +65,12 @@ public class MessageEntity implements Serializable {
      * The user receiver of the message. This is a many-to-one relationship with the UserEntity class.
      */
     @ManyToOne
-    private UserEntity receiverUser;
-
-    /**
-     * The project receiver of the message. This is a many-to-one relationship with the ProjectEntity class.
-     */
-    @ManyToOne
-    private ProjectEntity receiverProject;
+    private UserEntity receiver;
 
     /**
      * Default constructor.
      */
-    public MessageEntity() {
-    }
-
-    /**
-     * Method to check the constraints before persisting or updating the entity.
-     */
-    @PrePersist
-    @PreUpdate
-    private void validateReceivers() {
-        if ((receiverUser == null && receiverProject == null) || (receiverUser != null && receiverProject != null)) {
-            throw new IllegalStateException("Message must have either a receiverUser or a receiverProject, but not both.");
-        }
+    public MailEntity() {
     }
 
     /**
@@ -93,6 +89,42 @@ public class MessageEntity implements Serializable {
      */
     public void setId(int id) {
         this.id = id;
+    }
+
+    /**
+     * Returns the subject of this message.
+     *
+     * @return the subject of this message.
+     */
+    public String getSubject() {
+        return subject;
+    }
+
+    /**
+     * Sets the subject of this message.
+     *
+     * @param subject the new subject of this message.
+     */
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
+
+    /**
+     * Returns the deleted status of this message.
+     *
+     * @return true if the message has been deleted, false otherwise.
+     */
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    /**
+     * Sets the deleted status of this message.
+     *
+     * @param deleted the new deleted status of this message.
+     */
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 
     /**
@@ -172,34 +204,16 @@ public class MessageEntity implements Serializable {
      *
      * @return the user receiver of this message.
      */
-    public UserEntity getReceiverUser() {
-        return receiverUser;
+    public UserEntity getReceiver() {
+        return receiver;
     }
 
     /**
      * Sets the user receiver of this message.
      *
-     * @param receiverUser the new user receiver of this message.
+     * @param receiver the new user receiver of this message.
      */
-    public void setReceiverUser(UserEntity receiverUser) {
-        this.receiverUser = receiverUser;
-    }
-
-    /**
-     * Returns the project receiver of this message.
-     *
-     * @return the project receiver of this message.
-     */
-    public ProjectEntity getReceiverProject() {
-        return receiverProject;
-    }
-
-    /**
-     * Sets the project receiver of this message.
-     *
-     * @param receiverProject the new project receiver of this message.
-     */
-    public void setReceiverProject(ProjectEntity receiverProject) {
-        this.receiverProject = receiverProject;
+    public void setReceiver(UserEntity receiver) {
+        this.receiver = receiver;
     }
 }

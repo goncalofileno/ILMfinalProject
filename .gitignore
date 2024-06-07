@@ -18,3 +18,5 @@ Backend/demo/mvnw
 Backend/demo/.idea/encodings.xml
 
 Backend/projecto_ILM_backend/target/classes/META-INF/persistence.xml
+
+Frontend/projecto_ilm_frontend/src/components/inputs/PasswordForm.css
