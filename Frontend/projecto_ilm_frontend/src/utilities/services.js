@@ -442,6 +442,124 @@ async function updatePassword(currentPassword, newPassword) {
   }
 }
 
+async function getReceivedMessages(sessionId) {
+  try {
+    const response = await fetch(`${baseURL}mail/received`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: `session-id=${sessionId}`,
+      },
+      credentials: "include",
+    });
+    return response;
+  } catch (error) {
+    console.error("Error fetching received messages:", error);
+  }
+}
+
+async function getSentMessages(sessionId) {
+  try {
+    const response = await fetch(`${baseURL}mail/sent`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: `session-id=${sessionId}`,
+      },
+      credentials: "include",
+    });
+    return response;
+  } catch (error) {
+    console.error("Error fetching sent messages:", error);
+  }
+}
+
+async function markMailAsSeen(sessionId, mailId) {
+  try {
+    const response = await fetch(`${baseURL}mail/seen/${mailId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: `session-id=${sessionId}`,
+      },
+      credentials: "include",
+    });
+    return response;
+  } catch (error) {
+    console.error("Error marking mail as seen:", error);
+  }
+}
+
+async function markMailAsDeleted(sessionId, mailId) {
+  try {
+    const response = await fetch(`${baseURL}mail/deleted/${mailId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: `session-id=${sessionId}`,
+      },
+      credentials: "include",
+    });
+    return response;
+  } catch (error) {
+    console.error("Error marking mail as deleted:", error);
+  }
+}
+
+async function sendMail(sessionId, mailDto) {
+  try {
+    const response = await fetch(`${baseURL}mail/send`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: `session-id=${sessionId}`,
+      },
+      credentials: "include",
+      body: JSON.stringify(mailDto),
+    });
+    return response;
+  } catch (error) {
+    console.error("Error sending mail:", error);
+  }
+}
+
+async function getContacts(sessionId) {
+  try {
+      const response = await fetch(`${baseURL}mail/contacts`, {
+          method: "GET",
+          headers: {
+              "Content-Type": "application/json",
+              "Cookie": `session-id=${sessionId}`
+          },
+          credentials: "include"
+      });
+      return response;
+  } catch (error) {
+      console.error("Error fetching contacts:", error);
+  }
+}
+
+async function getUnreadNumber(sessionId) {
+  try {
+    const response = await fetch(`${baseURL}mail/unreadNumber`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: `session-id=${sessionId}`,
+      },
+      credentials: "include",
+    });
+    if (response.ok) {
+      return await response.json();
+    } else {
+      console.error("Failed to fetch unread number:", response.statusText);
+      return { unreadNumber: 0 }; // Retorna 0 em caso de falha
+    }
+  } catch (error) {
+    console.error("Error fetching unread number:", error);
+    return { unreadNumber: 0 }; // Retorna 0 em caso de erro
+  }
+}
 
 export {
   registerUser,
@@ -465,5 +583,12 @@ export {
   updateUserProfile,
   changeUserPassword,
   uploadProfilePictureWithSession,
-  updatePassword
+  updatePassword,
+  getReceivedMessages,
+  getSentMessages,
+  markMailAsSeen,
+  markMailAsDeleted,
+  sendMail,
+  getContacts,
+  getUnreadNumber,
 };

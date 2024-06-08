@@ -13,23 +13,27 @@ public class MailDto {
     private LocalDateTime date;
     private String senderName;
     private String senderMail;
+    private String senderPhoto;
     private String receiverName;
     private String receiverMail;
+    private String receiverPhoto;
     private boolean seen;
     private boolean deleted;
 
     public MailDto() {
     }
 
-    public MailDto(int id, String subject, String text, LocalDateTime date, String senderName, String senderMail, String receiverName, String receiverMail, boolean seen, boolean deleted) {
+    public MailDto(int id, String subject, String text, LocalDateTime date, String senderName, String senderMail, String senderPhoto, String receiverName, String receiverMail, String receiverPhoto, boolean seen, boolean deleted) {
         this.id = id;
         this.subject = subject;
         this.text = text;
         this.date = date;
         this.senderName = senderName;
         this.senderMail = senderMail;
+        this.senderPhoto = senderPhoto;
         this.receiverName = receiverName;
         this.receiverMail = receiverMail;
+        this.receiverPhoto = receiverPhoto;
         this.seen = seen;
         this.deleted = deleted;
     }
@@ -82,6 +86,14 @@ public class MailDto {
         this.senderMail = senderMail;
     }
 
+    public String getSenderPhoto() {
+        return senderPhoto;
+    }
+
+    public void setSenderPhoto(String senderPhoto) {
+        this.senderPhoto = senderPhoto;
+    }
+
     public String getReceiverName() {
         return receiverName;
     }
@@ -98,6 +110,14 @@ public class MailDto {
         this.receiverMail = receiverMail;
     }
 
+    public String getReceiverPhoto() {
+        return receiverPhoto;
+    }
+
+    public void setReceiverPhoto(String receiverPhoto) {
+        this.receiverPhoto = receiverPhoto;
+    }
+
     public boolean isSeen() {
         return seen;
     }
@@ -112,5 +132,23 @@ public class MailDto {
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    @Override
+    public String toString() {
+        return "MailDto{" +
+                "id=" + id +
+                ", subject='" + subject + '\'' +
+                ", text='" + text + '\'' +
+                ", date=" + date +
+                ", senderName='" + senderName + '\'' +
+                ", senderMail='" + senderMail + '\'' +
+                ", senderPhoto='" + senderPhoto + '\'' +
+                ", receiverName='" + receiverName + '\'' +
+                ", receiverMail='" + receiverMail + '\'' +
+                ", receiverPhoto='" + receiverPhoto + '\'' +
+                ", seen=" + seen +
+                ", deleted=" + deleted +
+                '}';
     }
 }

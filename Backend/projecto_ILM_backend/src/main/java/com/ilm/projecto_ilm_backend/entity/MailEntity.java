@@ -13,6 +13,9 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "mail")
 @NamedQuery(name = "Mail.getMailsReceivedByUserId", query = "SELECT m FROM MailEntity m WHERE m.receiver.id = :userId")
+@NamedQuery(name = "Mail.getMailsSentByUserId", query = "SELECT m FROM MailEntity m WHERE m.sender.id = :userId")
+@NamedQuery(name = "Mail.findById", query = "SELECT m FROM MailEntity m WHERE m.id = :id")
+@NamedQuery(name = "Mail.getUnseenMailsCount", query = "SELECT COUNT(m) FROM MailEntity m WHERE m.receiver.id = :userId AND m.seen = false")
 public class MailEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 

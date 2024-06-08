@@ -1,0 +1,20 @@
+.contact-suggestions {
+    position: absolute;
+    z-index: 1000;
+    background-color: white;
+    border: 1px solid #ddd;
+    width: 100%;
+    max-height: 150px;
+    overflow-y: auto;
+  }
+  
+  .contact-suggestion {
+    padding: 8px;
+    cursor: pointer;
+  }
+  
+  .contact-suggestion.active,
+  .contact-suggestion:hover {
+    background-color: #f1f1f1;
+  }
+  

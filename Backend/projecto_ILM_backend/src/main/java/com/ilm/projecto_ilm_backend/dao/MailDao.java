@@ -29,5 +29,22 @@ public class MailDao extends AbstractDao<MailEntity> {
         return em.createNamedQuery("Mail.getMailsReceivedByUserId", MailEntity.class).setParameter("userId", userId).getResultList();
     }
 
+    public List<MailEntity> getMailsSentByUserId(int userId) {
+        return em.createNamedQuery("Mail.getMailsSentByUserId", MailEntity.class).setParameter("userId", userId).getResultList();
+    }
+
+    public MailEntity findById(int id) {
+       try {
+           return em.createNamedQuery("Mail.findById", MailEntity.class).setParameter("id", id).getSingleResult();
+       } catch (Exception e) {
+           return null;
+       }
+    }
+
+    public int getUnreadNumber(int userId) {
+        return em.createNamedQuery("Mail.getUnseenMailsCount", Long.class).setParameter("userId", userId).getSingleResult().intValue();
+    }
+
+
 
 }

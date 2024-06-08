@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { getUserProfileImage, logoutUser } from "../../utilities/services";
+import { getUserProfileImage, logoutUser, getUnreadNumber } from "../../utilities/services";
 import Cookies from "js-cookie"; // Importando a biblioteca de cookies
 import { useMediaQuery } from "react-responsive";
+import useMailStore from "../../stores/useMailStore"; // Importando a store zustand
 import "./AppNavbar.css";
 import projectsIcon from "../../resources/icons/navbar/projects-icon.png";
 import resourceIcon from "../../resources/icons/navbar/resource-icon.png";
@@ -17,6 +18,7 @@ export default function AppNavbar() {
   const navigate = useNavigate();
   const location = useLocation(); // Obter a localização atual
   const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
+  const { unreadCount, setUnreadCount } = useMailStore();
 
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
@@ -48,11 +50,23 @@ export default function AppNavbar() {
       }
     }
 
+    async function fetchUnreadCount() {
+      const sessionId = Cookies.get("session-id");
+      if (sessionId) {
+        const result = await getUnreadNumber(sessionId);
+        setUnreadCount(result.unreadNumber);
+      }
+    }
+
     fetchUserImage();
-  }, []);
+    fetchUnreadCount();
+  }, [setUnreadCount]);
 
   const getNavItemClass = (path) => {
-    return location.pathname === path ? "nav-item active" : "nav-item";
+    if (path === "/mail/inbox" || path === "/mail/sent") {
+      return location.pathname.startsWith("/mail") ? "nav-item active" : "nav-item";
+    }
+    return location.pathname.startsWith(path) ? "nav-item active" : "nav-item";
   };
 
   const getNavIconStyle = (path) => {
@@ -64,7 +78,7 @@ export default function AppNavbar() {
           ? resourceIcon
           : path === "/myprojects"
           ? myProjectsIcon
-          : path === "/mail"
+          : path === "/mail/inbox" || path === "/mail/sent"
           ? mailIcon
           : ""
       })`,
@@ -93,9 +107,10 @@ export default function AppNavbar() {
               <div className="icon" style={getNavIconStyle("/myprojects")}></div>
               <label>My Projects</label>
             </div>
-            <div className={getNavItemClass("/mail")} onClick={() => handleNavigation("/mail")}>
-              <div className="icon" style={getNavIconStyle("/mail")}></div>
+            <div className={getNavItemClass("/mail/inbox")} onClick={() => handleNavigation("/mail/inbox")}>
+              <div className="icon" style={getNavIconStyle("/mail/inbox")}></div>
               <label>Mail</label>
+              {unreadCount > 0 && <span className="badge">{unreadCount}</span>}
             </div>
           </div>
         </div>
@@ -112,7 +127,7 @@ export default function AppNavbar() {
             </option>
           </select>
           <div
-            className="icon bell"
+            className="icon"
             style={{ backgroundImage: `url(${bellIcon})` }}
           ></div>
           <div className="user-profile" onClick={toggleDropdown}>
@@ -145,9 +160,10 @@ export default function AppNavbar() {
               <div className="icon" style={getNavIconStyle("/myprojects")}></div>
               <label>My Projects</label>
             </div>
-            <div className={getNavItemClass("/mail")} onClick={() => handleNavigation("/mail")}>
-              <div className="icon" style={getNavIconStyle("/mail")}></div>
+            <div className={getNavItemClass("/mail/inbox")} onClick={() => handleNavigation("/mail/inbox")}>
+              <div className="icon mail-icon" style={getNavIconStyle("/mail/inbox")}></div>
               <label>Mail</label>
+              {unreadCount > 0 && <span className="badge">{unreadCount}</span>}
             </div>
           </div>
         </div>
