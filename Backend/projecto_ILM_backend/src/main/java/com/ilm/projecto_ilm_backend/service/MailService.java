@@ -12,7 +12,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Path("/mail")
 public class MailService {
@@ -28,12 +30,19 @@ public class MailService {
     @GET
     @Path("/received")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getReceivedMessages(@CookieParam("session-id") String sessionId) {
+    public Response getReceivedMessages(@CookieParam("session-id") String sessionId,
+                                        @QueryParam("page") @DefaultValue("1") int page,
+                                        @QueryParam("pageSize") @DefaultValue("10") int pageSize) {
 
         logger.info("Received a request to get received mails for session ID: " + sessionId);
 
-        if(databaseValidator.checkSessionId(sessionId)) {
-            return Response.ok(mailBean.getMailsReceivedBySessionId(sessionId)).build();
+        if (databaseValidator.checkSessionId(sessionId)) {
+            List<MailDto> mails = mailBean.getMailsReceivedBySessionId(sessionId, page, pageSize);
+            int totalMails = mailBean.getTotalMailsReceivedBySessionId(sessionId);
+            Map<String, Object> response = new HashMap<>();
+            response.put("mails", mails);
+            response.put("totalMails", totalMails);
+            return Response.ok(response).build();
         } else {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
@@ -137,5 +146,25 @@ public class MailService {
         }
     }
 
+    @GET
+    @Path("/search")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response searchMails(@CookieParam("session-id") String sessionId,
+                                @QueryParam("query") String query,
+                                @QueryParam("page") @DefaultValue("1") int page,
+                                @QueryParam("pageSize") @DefaultValue("10") int pageSize) {
+        logger.info("Received a request to search mails for session ID: " + sessionId);
+
+        if (databaseValidator.checkSessionId(sessionId)) {
+            List<MailDto> mails = mailBean.searchMailsBySessionId(sessionId, query, page, pageSize);
+            int totalMails = mailBean.getTotalSearchResultsBySessionId(sessionId, query);
+            Map<String, Object> response = new HashMap<>();
+            response.put("mails", mails);
+            response.put("totalMails", totalMails);
+            return Response.ok(response).build();
+        } else {
+            return Response.status(Response.Status.UNAUTHORIZED).entity(Collections.singletonMap("message", "Invalid session ID")).build();
+        }
+    }
 
 }

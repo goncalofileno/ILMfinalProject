@@ -16,7 +16,6 @@
   }
   
   .mail-table tr:hover {
-    background-color: #f1f1f1;
     cursor: pointer;
   }
   
@@ -43,4 +42,24 @@
   .unread td {
     font-weight: 900; /* Heavier font-weight */
   }
+
+  .pagination-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px; /* Adicione margem superior para distanciar da tabela */
+  }
+
+  .mail-table td {
+    position: relative;
+  }
+  
+  .mail-table td .fa-trash {
+    cursor: pointer;
+    color: #f39c12;
+  }
+  
+  .mail-table td .fa-trash:hover {
+    color: red;
+  }
+  
   

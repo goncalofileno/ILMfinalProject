@@ -442,9 +442,9 @@ async function updatePassword(currentPassword, newPassword) {
   }
 }
 
-async function getReceivedMessages(sessionId) {
+async function getReceivedMessages(sessionId, page = 1, pageSize = 10) {
   try {
-    const response = await fetch(`${baseURL}mail/received`, {
+    const response = await fetch(`${baseURL}mail/received?page=${page}&pageSize=${pageSize}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -452,11 +452,12 @@ async function getReceivedMessages(sessionId) {
       },
       credentials: "include",
     });
-    return response;
+    return response.json(); 
   } catch (error) {
     console.error("Error fetching received messages:", error);
   }
 }
+
 
 async function getSentMessages(sessionId) {
   try {
@@ -525,17 +526,17 @@ async function sendMail(sessionId, mailDto) {
 
 async function getContacts(sessionId) {
   try {
-      const response = await fetch(`${baseURL}mail/contacts`, {
-          method: "GET",
-          headers: {
-              "Content-Type": "application/json",
-              "Cookie": `session-id=${sessionId}`
-          },
-          credentials: "include"
-      });
-      return response;
+    const response = await fetch(`${baseURL}mail/contacts`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: `session-id=${sessionId}`,
+      },
+      credentials: "include",
+    });
+    return response;
   } catch (error) {
-      console.error("Error fetching contacts:", error);
+    console.error("Error fetching contacts:", error);
   }
 }
 
@@ -560,6 +561,23 @@ async function getUnreadNumber(sessionId) {
     return { unreadNumber: 0 }; // Retorna 0 em caso de erro
   }
 }
+
+async function searchMails(sessionId, query, page = 1, pageSize = 10) {
+  try {
+    const response = await fetch(`${baseURL}mail/search?query=${query}&page=${page}&pageSize=${pageSize}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: `session-id=${sessionId}`,
+      },
+      credentials: "include",
+    });
+    return response.json(); // Assumindo que a resposta JSON será um objeto com 'mails' e 'totalMails'
+  } catch (error) {
+    console.error("Error searching mails:", error);
+  }
+}
+
 
 export {
   registerUser,
@@ -591,4 +609,5 @@ export {
   sendMail,
   getContacts,
   getUnreadNumber,
+  searchMails,
 };

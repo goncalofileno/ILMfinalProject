@@ -1,39 +1,98 @@
 import React, { useEffect, useState } from "react";
-import { getReceivedMessages, markMailAsSeen } from "../../utilities/services"; // Importar markMailAsSeen
+import {
+  getReceivedMessages,
+  markMailAsSeen,
+  searchMails,
+  markMailAsDeleted,
+} from "../../utilities/services";
 import Cookies from "js-cookie";
 import useMailStore from "../../stores/useMailStore"; // Importar a store zustand
-import { Modal, Button, Form } from "react-bootstrap";
+import { Modal, Button, Form, InputGroup, Pagination } from "react-bootstrap";
 import "./MailTable.css";
+import { FaTrash } from "react-icons/fa";
 
 const MailTable = () => {
   const [receivedMails, setReceivedMails] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedMail, setSelectedMail] = useState(null);
+  const [searchInput, setSearchInput] = useState("");
+  const [totalMails, setTotalMails] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
   const { unreadCount, decrementUnreadCount } = useMailStore();
   const sessionId = Cookies.get("session-id");
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [mailToDelete, setMailToDelete] = useState(null);
+  const [hoveredMailId, setHoveredMailId] = useState(null);
+
+  const handleDeleteClick = (e, mail) => {
+    e.stopPropagation(); // Adicionar para evitar a propagação do evento de clique
+    setMailToDelete(mail);
+    setShowDeleteModal(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (mailToDelete) {
+      await markMailAsDeleted(sessionId, mailToDelete.id);
+      setReceivedMails((prevMails) =>
+        prevMails.filter((m) => m.id !== mailToDelete.id)
+      );
+      setShowDeleteModal(false);
+      setMailToDelete(null);
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setShowDeleteModal(false);
+    setMailToDelete(null);
+  };
 
   useEffect(() => {
-    const fetchMails = async () => {
-      try {
-        const receivedResponse = await getReceivedMessages(sessionId);
+    fetchMails(currentPage);
+  }, [sessionId, currentPage]);
 
-        if (receivedResponse.ok) {
-          const receivedData = await receivedResponse.json();
-          // Ordenar os e-mails pela data mais recente primeiro
-          receivedData.sort((a, b) => new Date(b.date) - new Date(a.date));
-          setReceivedMails(receivedData);
-        }
-      } catch (error) {
-        console.error("Error fetching mails:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchMails = async (page) => {
+    setLoading(true);
+    try {
+      const result = await getReceivedMessages(sessionId, page, pageSize);
+      const { mails, totalMails } = result;
+      mails.sort((a, b) => new Date(b.date) - new Date(a.date));
+      setReceivedMails(mails);
+      setTotalMails(totalMails);
+    } catch (error) {
+      console.error("Error fetching mails:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    fetchMails();
-  }, [sessionId]);
+  const handleSearch = async () => {
+    setLoading(true);
+    try {
+      const result = await searchMails(
+        sessionId,
+        searchInput,
+        currentPage,
+        pageSize
+      );
+      const { mails, totalMails } = result;
+      mails.sort((a, b) => new Date(b.date) - new Date(a.date));
+      setReceivedMails(mails);
+      setTotalMails(totalMails);
+    } catch (error) {
+      console.error("Error searching mails:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  const handleDoubleClick = async (mail) => {
+  const handleClearSearch = () => {
+    setSearchInput("");
+    fetchMails(1);
+    setCurrentPage(1);
+  };
+
+  const handleSingleClick = async (mail) => {
     if (!mail.seen) {
       await markMailAsSeen(sessionId, mail.id);
       setReceivedMails((prevMails) =>
@@ -64,12 +123,40 @@ const MailTable = () => {
     return `${date.getDate()}/${date.getMonth() + 1}`;
   };
 
+  const totalPages = Math.ceil(totalMails / pageSize);
+
   if (loading) {
     return <div>Loading...</div>;
   }
 
   return (
     <div>
+      <InputGroup className="mb-3">
+        <Form.Control
+          type="text"
+          placeholder="Search mails"
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+        />
+        <Button
+          variant="primary"
+          onClick={handleSearch}
+          style={{
+            backgroundColor: "#f39c12",
+            borderColor: "#f39c12",
+          }}
+        >
+          Search
+        </Button>
+        <Button
+          variant="secondary"
+          onClick={handleClearSearch}
+          style={{ marginLeft: "10px" }}
+        >
+          Clear Search
+        </Button>
+      </InputGroup>
+
       <table className="mail-table">
         <thead>
           <tr>
@@ -82,8 +169,10 @@ const MailTable = () => {
           {receivedMails.map((mail) => (
             <tr
               key={mail.id}
-              onDoubleClick={() => handleDoubleClick(mail)}
+              onClick={() => handleSingleClick(mail)}
               className={!mail.seen ? "unread" : ""}
+              onMouseEnter={() => setHoveredMailId(mail.id)}
+              onMouseLeave={() => setHoveredMailId(null)}
             >
               <td>
                 <div className="sender-info">
@@ -98,11 +187,49 @@ const MailTable = () => {
               <td>
                 <strong>{mail.subject}</strong> - {mail.text.slice(0, 30)}...
               </td>
-              <td>{formatDate(mail.date)}</td>
+              <td>
+                {hoveredMailId === mail.id ? (
+                  <FaTrash onClick={(e) => handleDeleteClick(e, mail)} />
+                ) : (
+                  formatDate(mail.date)
+                )}
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
+
+      <div className="pagination-container">
+        <Pagination className="pagination">
+          <Pagination.First
+            onClick={() => setCurrentPage(1)}
+            disabled={currentPage === 1}
+          />
+          <Pagination.Prev
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+          />
+          {Array.from({ length: totalPages }, (_, index) => (
+            <Pagination.Item
+              key={index + 1}
+              active={index + 1 === currentPage}
+              onClick={() => setCurrentPage(index + 1)}
+            >
+              {index + 1}
+            </Pagination.Item>
+          ))}
+          <Pagination.Next
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            }
+            disabled={currentPage === totalPages}
+          />
+          <Pagination.Last
+            onClick={() => setCurrentPage(totalPages)}
+            disabled={currentPage === totalPages}
+          />
+        </Pagination>
+      </div>
 
       {selectedMail && (
         <Modal show={true} onHide={handleCloseModal}>
@@ -149,6 +276,23 @@ const MailTable = () => {
           <Modal.Footer>
             <Button variant="secondary" onClick={handleCloseModal}>
               Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      )}
+
+      {showDeleteModal && (
+        <Modal show={true} onHide={handleCancelDelete}>
+          <Modal.Header closeButton>
+            <Modal.Title>Confirm Delete</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>Are you sure you want to delete this mail?</Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleCancelDelete}>
+              Cancel
+            </Button>
+            <Button variant="danger" onClick={handleConfirmDelete}>
+              Delete
             </Button>
           </Modal.Footer>
         </Modal>
