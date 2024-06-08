@@ -8,6 +8,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @XmlRootElement
 public class ProjectTableDto {
@@ -15,8 +16,8 @@ public class ProjectTableDto {
     private String name;
     private WorkLocalENUM lab;
     private StateProjectENUM status;
-    private LocalDate startDate;
-    private LocalDate finalDate;
+    private Date startDate;
+    private Date finalDate;
     private int numberOfMembers;
     private int maxMembers;
     private boolean isMember;
@@ -25,7 +26,7 @@ public class ProjectTableDto {
     public ProjectTableDto() {
     }
 
-    public ProjectTableDto(String name, WorkLocalENUM lab, StateProjectENUM status, int numberOfMembers, LocalDate startDate, LocalDate finalDate, int maxMembers, boolean isMember) {
+    public ProjectTableDto(String name, WorkLocalENUM lab, StateProjectENUM status, int numberOfMembers, Date startDate, Date finalDate, int maxMembers, boolean isMember) {
         this.name = name;
         this.lab = lab;
         this.status = status;
@@ -77,19 +78,19 @@ public class ProjectTableDto {
         this.maxMembers = maxMembers;
     }
 
-    public LocalDate getStartDate() {
+    public Date getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDate startDate) {
+    public void setStartDate(Date startDate) {
         this.startDate = startDate;
     }
 
-    public LocalDate getFinalDate() {
+    public Date getFinalDate() {
         return finalDate;
     }
 
-    public void setFinalDate(LocalDate finalDate) {
+    public void setFinalDate(Date finalDate) {
         this.finalDate = finalDate;
     }
 

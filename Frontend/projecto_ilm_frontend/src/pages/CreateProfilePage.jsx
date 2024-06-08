@@ -23,6 +23,7 @@ import {
 import { useNavigate, useParams } from "react-router-dom";
 import InputForm from "../components/inputs/InputForm";
 import LoginHeader from "../components/headers/LoginHeader";
+import { formatLab } from "../utilities/converters";
 
 const CreateProfilePage = () => {
   const [username, setUsername] = useState("");
@@ -55,7 +56,7 @@ const CreateProfilePage = () => {
             .then((data) => {
               const formattedLabs = data.map((lab) => ({
                 ...lab,
-                local: formatLocalName(lab.local),
+                local: formatLab(lab.local),
               }));
               setLabs(formattedLabs);
             });

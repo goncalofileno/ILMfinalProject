@@ -2,7 +2,7 @@ table {
    text-align: left;
    margin-left: 50%;
    transform: translate(-50%);
-   width: 85%;
+   width: 100%;
    overflow: hidden;
    border-collapse: collapse;
    border-radius: 15px;

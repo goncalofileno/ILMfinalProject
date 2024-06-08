@@ -14,6 +14,7 @@ import { getSkills } from "../../utilities/services";
 import { useParams } from "react-router-dom";
 import SkillCard from "./SkillCard"; // Importação do novo componente SkillCard
 import "./SkillSelector.css"; // Certifique-se de que o caminho está correto
+import { formatSkill } from "../../utilities/converters";
 
 const SkillSelector = ({ selectedSkills, setSelectedSkills }) => {
   const [allSkills, setAllSkills] = useState([]);
@@ -74,14 +75,6 @@ const SkillSelector = ({ selectedSkills, setSelectedSkills }) => {
         handleAddNewSkill();
       }
     }
-  };
-
-  const formatSkill = (skill) => {
-    return skill
-      .toLowerCase()
-      .split(" ")
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(" ");
   };
 
   const handleAddSkill = (skill) => {

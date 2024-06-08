@@ -13,7 +13,7 @@ import InterestSelector from "../components/selectors/InterestSelector";
 import SkillSelector from "../components/selectors/SkillSelector";
 import DefaultAvatar from "../resources/avatares/Avatar padrão.jpg";
 import {
-  getLabs,
+  getLabsWithSessionId,
   checkUsername,
   updateUserProfile,
   uploadProfilePictureWithSession,
@@ -28,6 +28,7 @@ import PasswordForm from "../components/inputs/PasswordForm";
 import Cookies from "js-cookie";
 import "../components/modals/Modals.css"; // Adicione o CSS necessário
 import "./ResetPasswordPage.css"; // Adicione o CSS necessário
+import { formatLab } from "../utilities/converters";
 
 const EditProfilePage = () => {
   const [username, setUsername] = useState("");
@@ -94,12 +95,12 @@ const EditProfilePage = () => {
     };
 
     fetchProfile();
-    getLabs()
+    getLabsWithSessionId()
       .then((response) => response.json())
       .then((data) => {
         const formattedLabs = data.map((lab) => ({
           ...lab,
-          local: formatLocalName(lab.local),
+          local: formatLab(lab.local),
         }));
         setLabs(formattedLabs);
       });
@@ -253,7 +254,7 @@ const EditProfilePage = () => {
     // Redefinir avisos
     setPasswordError("");
     setPasswordSuccess("");
-  
+
     if (strength >= 4) {
       setWarningTypePassword("success");
       setWarningTxtPassword("Password is strong");
@@ -267,7 +268,7 @@ const EditProfilePage = () => {
     // Redefinir avisos
     setPasswordError("");
     setPasswordSuccess("");
-  
+
     if (newPassword === confirmNewPassword) {
       setWarningTypeConfirmPassword("success");
       setWarningTxtConfirmPassword("Passwords match");
@@ -281,23 +282,26 @@ const EditProfilePage = () => {
     // Redefinir avisos
     setPasswordError("");
     setPasswordSuccess("");
-  
+
     if (newPassword !== confirmNewPassword) {
       setPasswordError("New passwords do not match.");
       return;
     }
-  
+
     if (strength < 4) {
       setPasswordError("Password is not strong enough.");
       return;
     }
-  
+
     try {
       console.log("Changing password...");
       console.log("Current password:", currentPassword);
       console.log("New password:", newPassword);
       console.log("Confirm new password:", confirmNewPassword);
-      const response = await updatePassword(currentPassword, confirmNewPassword);
+      const response = await updatePassword(
+        currentPassword,
+        confirmNewPassword
+      );
       if (response.ok) {
         setPasswordSuccess("Password updated successfully.");
         setTimeout(() => {
