@@ -77,8 +77,8 @@ public class ProjectDao extends AbstractDao<ProjectEntity>{
         return projects;
     }
 
-    public List<Object[]> getProjectTableDtoInfo() {
-        return em.createNamedQuery("Project.getProjectTableDtoInfo", Object[].class).getResultList();
+    public List<Object[]> getProjectTableDtoInfo(int page) {
+        return em.createNamedQuery("Project.getProjectTableDtoInfo", Object[].class).setFirstResult(16*(page-1)).setMaxResults(16).getResultList();
     }
     public long countProjects() {
         try {

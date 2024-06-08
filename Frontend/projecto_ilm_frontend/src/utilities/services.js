@@ -113,6 +113,21 @@ async function getLabs(auxiliarToken) {
   }
 }
 
+async function getLabsWithSessionId() {
+  try {
+    return await fetch(`${baseURL}lab/all`, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+  } catch (error) {
+    console.error("Error during fetching labs:", error);
+  }
+}
+
 async function createProfile(userProfileDto, auxiliarToken) {
   try {
     const response = await fetch(`${baseURL}user/createProfile`, {
@@ -283,6 +298,27 @@ async function getHomeProjects() {
         "Content-Type": "application/json",
       },
     });
+
+    return response;
+  } catch (error) {
+    console.error("Error getting home projects:", error);
+    throw error;
+  }
+}
+
+async function getTableProjects(page) {
+  try {
+    const response = await fetch(
+      `${baseURL}project/tableProjects?page=${page}`,
+      {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      }
+    );
 
     return response;
   } catch (error) {
@@ -610,4 +646,6 @@ export {
   getContacts,
   getUnreadNumber,
   searchMails,
+  getTableProjects,
+  getLabsWithSessionId,
 };

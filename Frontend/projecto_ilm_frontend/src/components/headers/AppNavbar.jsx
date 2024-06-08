@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { getUserProfileImage, logoutUser, getUnreadNumber } from "../../utilities/services";
+import {
+  getUserProfileImage,
+  logoutUser,
+  getUnreadNumber,
+} from "../../utilities/services";
 import Cookies from "js-cookie"; // Importando a biblioteca de cookies
 import { useMediaQuery } from "react-responsive";
 import useMailStore from "../../stores/useMailStore"; // Importando a store zustand
@@ -64,7 +68,9 @@ export default function AppNavbar() {
 
   const getNavItemClass = (path) => {
     if (path === "/mail/inbox" || path === "/mail/sent") {
-      return location.pathname.startsWith("/mail") ? "nav-item active" : "nav-item";
+      return location.pathname.startsWith("/mail")
+        ? "nav-item active"
+        : "nav-item";
     }
     return location.pathname.startsWith(path) ? "nav-item active" : "nav-item";
   };
@@ -92,23 +98,44 @@ export default function AppNavbar() {
   return (
     <div>
       <div className="app-navbar">
-        <div className="logo"></div>
+        <div
+          className="logo"
+          onClick={() => handleNavigation("/projects")}
+        ></div>
         <div className="nav-icons-wrapper">
           <div className="nav-icons">
-            <div className={getNavItemClass("/projects")} onClick={() => handleNavigation("/projects")}>
+            <div
+              className={getNavItemClass("/projects")}
+              onClick={() => handleNavigation("/projects")}
+            >
               <div className="icon" style={getNavIconStyle("/projects")}></div>
               <label>Projects</label>
             </div>
-            <div className={getNavItemClass("/resources")} onClick={() => handleNavigation("/resources")}>
+            <div
+              className={getNavItemClass("/resources")}
+              onClick={() => handleNavigation("/resources")}
+            >
               <div className="icon" style={getNavIconStyle("/resources")}></div>
               <label>Resources</label>
             </div>
-            <div className={getNavItemClass("/myprojects")} onClick={() => handleNavigation("/myprojects")}>
-              <div className="icon" style={getNavIconStyle("/myprojects")}></div>
+            <div
+              className={getNavItemClass("/myprojects")}
+              onClick={() => handleNavigation("/myprojects")}
+            >
+              <div
+                className="icon"
+                style={getNavIconStyle("/myprojects")}
+              ></div>
               <label>My Projects</label>
             </div>
-            <div className={getNavItemClass("/mail/inbox")} onClick={() => handleNavigation("/mail/inbox")}>
-              <div className="icon" style={getNavIconStyle("/mail/inbox")}></div>
+            <div
+              className={getNavItemClass("/mail/inbox")}
+              onClick={() => handleNavigation("/mail/inbox")}
+            >
+              <div
+                className="icon"
+                style={getNavIconStyle("/mail/inbox")}
+              ></div>
               <label>Mail</label>
               {unreadCount > 0 && <span className="badge">{unreadCount}</span>}
             </div>
@@ -117,13 +144,13 @@ export default function AppNavbar() {
         <div className="nav-right">
           <select className="language-dropdown">
             <option className="option-flag" value="en">
-              🇺🇸 
+              🇺🇸
             </option>
             <option className="option-flag" value="pt">
-              🇵🇹 
+              🇵🇹
             </option>
             <option className="option-flag" value="es">
-              🇪🇸 
+              🇪🇸
             </option>
           </select>
           <div
@@ -148,20 +175,38 @@ export default function AppNavbar() {
       {isMobile && (
         <div className="bottom-navbar">
           <div className="nav-icons">
-            <div className={getNavItemClass("/projects")} onClick={() => handleNavigation("/projects")}>
+            <div
+              className={getNavItemClass("/projects")}
+              onClick={() => handleNavigation("/projects")}
+            >
               <div className="icon" style={getNavIconStyle("/projects")}></div>
               <label>Projects</label>
             </div>
-            <div className={getNavItemClass("/resources")} onClick={() => handleNavigation("/resources")}>
+            <div
+              className={getNavItemClass("/resources")}
+              onClick={() => handleNavigation("/resources")}
+            >
               <div className="icon" style={getNavIconStyle("/resources")}></div>
               <label>Resources</label>
             </div>
-            <div className={getNavItemClass("/myprojects")} onClick={() => handleNavigation("/myprojects")}>
-              <div className="icon" style={getNavIconStyle("/myprojects")}></div>
+            <div
+              className={getNavItemClass("/myprojects")}
+              onClick={() => handleNavigation("/myprojects")}
+            >
+              <div
+                className="icon"
+                style={getNavIconStyle("/myprojects")}
+              ></div>
               <label>My Projects</label>
             </div>
-            <div className={getNavItemClass("/mail/inbox")} onClick={() => handleNavigation("/mail/inbox")}>
-              <div className="icon mail-icon" style={getNavIconStyle("/mail/inbox")}></div>
+            <div
+              className={getNavItemClass("/mail/inbox")}
+              onClick={() => handleNavigation("/mail/inbox")}
+            >
+              <div
+                className="icon mail-icon"
+                style={getNavIconStyle("/mail/inbox")}
+              ></div>
               <label>Mail</label>
               {unreadCount > 0 && <span className="badge">{unreadCount}</span>}
             </div>

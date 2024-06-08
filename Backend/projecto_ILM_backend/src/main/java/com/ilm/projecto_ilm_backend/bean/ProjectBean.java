@@ -12,6 +12,7 @@ import jakarta.inject.Inject;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import java.time.LocalDateTime;
@@ -115,18 +116,19 @@ public class ProjectBean {
         return projectDao.findAllNamesAndDescriptionsHome();
     }
 
-    public ArrayList<ProjectTableDto> getProjectsDtosTable(String sessionId) {
+    public ArrayList<ProjectTableDto> getProjectsDtosTable(String sessionId, int page) {
         ArrayList<ProjectTableDto> projectsTableDtos = new ArrayList<>();
-        List<Object[]> projectsInfo = projectDao.getProjectTableDtoInfo();
-        ProjectTableDto projectTableDto=new ProjectTableDto();
+        List<Object[]> projectsInfo = projectDao.getProjectTableDtoInfo(page);
 
         for (Object[] projectInfo : projectsInfo) {
+            ProjectTableDto projectTableDto=new ProjectTableDto();
             projectTableDto.setName((String) projectInfo[1]);
             projectTableDto.setLab(((LabEntity) projectInfo[2]).getLocal());
             projectTableDto.setStatus((StateProjectENUM) projectInfo[3]);
-            projectTableDto.setStartDate((LocalDate) projectInfo[4]);
-            projectTableDto.setFinalDate((LocalDate) projectInfo[5]);
+            projectTableDto.setStartDate( (Date) projectInfo[4]);
+            projectTableDto.setFinalDate((Date) projectInfo[5]);
             projectTableDto.setMaxMembers((int) projectInfo[6]);
+            projectTableDto.setNumberOfMembers(userProjectDao.getNumberOfUsersByProjectId((int)projectInfo[0]));
             projectTableDto.setMember(userProjectDao.isUserInProject((int) projectInfo[0], sessionDao.findUserIdBySessionId(sessionId)));
             projectsTableDtos.add(projectTableDto);
 
