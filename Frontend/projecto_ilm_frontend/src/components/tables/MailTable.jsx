@@ -9,7 +9,7 @@ import Cookies from "js-cookie";
 import useMailStore from "../../stores/useMailStore"; // Importar a store zustand
 import { Modal, Button, Form, InputGroup, Pagination } from "react-bootstrap";
 import "./MailTable.css";
-import { FaTrash } from "react-icons/fa";
+import { FaTrash } from 'react-icons/fa';
 
 const MailTable = () => {
   const [receivedMails, setReceivedMails] = useState([]);
@@ -18,15 +18,14 @@ const MailTable = () => {
   const [searchInput, setSearchInput] = useState("");
   const [totalMails, setTotalMails] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 10;
+  const pageSize = 8;
   const { unreadCount, decrementUnreadCount } = useMailStore();
   const sessionId = Cookies.get("session-id");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [mailToDelete, setMailToDelete] = useState(null);
-  const [hoveredMailId, setHoveredMailId] = useState(null);
+  const [hoveredMailId, setHoveredMailId] = useState(null); 
 
-  const handleDeleteClick = (e, mail) => {
-    e.stopPropagation(); // Adicionar para evitar a propagação do evento de clique
+  const handleDeleteClick = (mail) => {
     setMailToDelete(mail);
     setShowDeleteModal(true);
   };
@@ -39,6 +38,9 @@ const MailTable = () => {
       );
       setShowDeleteModal(false);
       setMailToDelete(null);
+      if (!mailToDelete.seen) {
+        decrementUnreadCount();
+      }
     }
   };
 
@@ -125,6 +127,65 @@ const MailTable = () => {
 
   const totalPages = Math.ceil(totalMails / pageSize);
 
+  const renderPaginationItems = () => {
+    const items = [];
+    const maxPagesToShow = 5;
+
+    if (totalPages <= maxPagesToShow) {
+      for (let number = 1; number <= totalPages; number++) {
+        items.push(
+          <Pagination.Item
+            key={number}
+            active={number === currentPage}
+            onClick={() => setCurrentPage(number)}
+          >
+            {number}
+          </Pagination.Item>
+        );
+      }
+    } else {
+      let startPage, endPage;
+      if (currentPage <= 3) {
+        startPage = 1;
+        endPage = maxPagesToShow - 1;
+      } else if (currentPage + 1 >= totalPages) {
+        startPage = totalPages - (maxPagesToShow - 2);
+        endPage = totalPages - 1;
+      } else {
+        startPage = currentPage - 2;
+        endPage = currentPage + 1;
+      }
+
+      for (let number = startPage; number <= endPage; number++) {
+        items.push(
+          <Pagination.Item
+            key={number}
+            active={number === currentPage}
+            onClick={() => setCurrentPage(number)}
+          >
+            {number}
+          </Pagination.Item>
+        );
+      }
+
+      items.push(
+        <Pagination.Ellipsis key="ellipsis" disabled />
+      );
+
+      items.push(
+        <Pagination.Item
+          key={totalPages}
+          active={totalPages === currentPage}
+          onClick={() => setCurrentPage(totalPages)}
+        >
+          {totalPages}
+        </Pagination.Item>
+      );
+    }
+
+    return items;
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -189,7 +250,7 @@ const MailTable = () => {
               </td>
               <td>
                 {hoveredMailId === mail.id ? (
-                  <FaTrash onClick={(e) => handleDeleteClick(e, mail)} />
+                  <FaTrash onClick={() => handleDeleteClick(mail)} />
                 ) : (
                   formatDate(mail.date)
                 )}
@@ -209,15 +270,7 @@ const MailTable = () => {
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
           />
-          {Array.from({ length: totalPages }, (_, index) => (
-            <Pagination.Item
-              key={index + 1}
-              active={index + 1 === currentPage}
-              onClick={() => setCurrentPage(index + 1)}
-            >
-              {index + 1}
-            </Pagination.Item>
-          ))}
+          {renderPaginationItems()}
           <Pagination.Next
             onClick={() =>
               setCurrentPage((prev) => Math.min(prev + 1, totalPages))
@@ -286,7 +339,9 @@ const MailTable = () => {
           <Modal.Header closeButton>
             <Modal.Title>Confirm Delete</Modal.Title>
           </Modal.Header>
-          <Modal.Body>Are you sure you want to delete this mail?</Modal.Body>
+          <Modal.Body>
+            Are you sure you want to delete this mail?
+          </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleCancelDelete}>
               Cancel

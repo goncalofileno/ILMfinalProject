@@ -42,8 +42,8 @@ public class MailBean {
             }
         }
 
-        for (int i = 0; i < 30; i++) {
-            if (maildao.findById(i + 30) == null) {
+        for (int i = 0; i < 500; i++) {
+            if (maildao.findById(i + 500) == null) {
                 MailEntity mail = new MailEntity();
                 mail.setSubject("Subject " + i);
                 mail.setText("Text " + i);

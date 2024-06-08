@@ -97,5 +97,5 @@ public class MailDao extends AbstractDao<MailEntity> {
         q.setParameter("query", searchQuery);
         return q.getSingleResult().intValue();
     }
-    
+
 }
