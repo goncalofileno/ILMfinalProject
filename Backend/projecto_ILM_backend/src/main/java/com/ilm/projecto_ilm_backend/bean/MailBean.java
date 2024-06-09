@@ -202,6 +202,64 @@ public class MailBean {
         return maildao.getTotalSearchResults(userId, query);
     }
 
+    public List<MailDto> searchSentMailsBySessionId(String sessionId, String query, int page, int pageSize) {
+        int userId = sessionDao.findBySessionId(sessionId).getUser().getId();
+        List<MailEntity> mails = maildao.searchSentMails(userId, query, page, pageSize);
+        List<MailDto> mailDtos = new ArrayList<>();
+        for (MailEntity mail : mails) {
+            MailDto mailDto = new MailDto();
+            mailDto.setId(mail.getId());
+            mailDto.setSubject(mail.getSubject());
+            mailDto.setText(mail.getText());
+            mailDto.setDate(mail.getDate());
+            mailDto.setSenderName(mail.getSender().getFirstName() + " " + mail.getSender().getLastName());
+            mailDto.setSenderMail(mail.getSender().getEmail());
+            mailDto.setSenderPhoto(mail.getSender().getAvatarPhoto());
+            mailDto.setReceiverName(mail.getReceiver().getFirstName() + " " + mail.getReceiver().getLastName());
+            mailDto.setReceiverMail(mail.getReceiver().getEmail());
+            mailDto.setReceiverPhoto(mail.getReceiver().getAvatarPhoto());
+            mailDto.setSeen(mail.isSeen());
+            mailDto.setDeleted(mail.isDeleted());
+            mailDtos.add(mailDto);
+        }
+        return mailDtos;
+    }
+
+    public int getTotalSentSearchResultsBySessionId(String sessionId, String query) {
+        int userId = sessionDao.findBySessionId(sessionId).getUser().getId();
+        return maildao.getTotalSentSearchResults(userId, query);
+    }
+
+    public List<MailDto> getMailsSentBySessionId(String sessionId, int page, int pageSize) {
+        int userId = sessionDao.findBySessionId(sessionId).getUser().getId();
+        List<MailEntity> mails = maildao.getMailsSentByUserId(userId, page, pageSize);
+        List<MailDto> mailDtos = new ArrayList<>();
+        for (MailEntity mail : mails) {
+            MailDto mailDto = new MailDto();
+            mailDto.setId(mail.getId());
+            mailDto.setSubject(mail.getSubject());
+            mailDto.setText(mail.getText());
+            mailDto.setDate(mail.getDate());
+            mailDto.setSenderName(mail.getSender().getFirstName() + " " + mail.getSender().getLastName());
+            mailDto.setSenderMail(mail.getSender().getEmail());
+            mailDto.setSenderPhoto(mail.getSender().getAvatarPhoto());
+            mailDto.setReceiverName(mail.getReceiver().getFirstName() + " " + mail.getReceiver().getLastName());
+            mailDto.setReceiverMail(mail.getReceiver().getEmail());
+            mailDto.setReceiverPhoto(mail.getReceiver().getAvatarPhoto());
+            mailDto.setSeen(mail.isSeen());
+            mailDto.setDeleted(mail.isDeleted());
+            mailDtos.add(mailDto);
+        }
+        return mailDtos;
+    }
+
+    public int getTotalMailsSentBySessionId(String sessionId) {
+        int userId = sessionDao.findBySessionId(sessionId).getUser().getId();
+        return maildao.getTotalMailsSentByUserId(userId);
+    }
+
+
+
 
 
 

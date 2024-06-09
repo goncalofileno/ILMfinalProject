@@ -495,21 +495,25 @@ async function getReceivedMessages(sessionId, page = 1, pageSize = 10) {
 }
 
 
-async function getSentMessages(sessionId) {
+async function getSentMessages(sessionId, page = 1, pageSize = 10) {
   try {
-    const response = await fetch(`${baseURL}mail/sent`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Cookie: `session-id=${sessionId}`,
-      },
-      credentials: "include",
-    });
-    return response;
+    const response = await fetch(
+      `${baseURL}mail/sent?page=${page}&pageSize=${pageSize}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `session-id=${sessionId}`,
+        },
+        credentials: "include",
+      }
+    );
+    return response.json();
   } catch (error) {
     console.error("Error fetching sent messages:", error);
   }
 }
+
 
 async function markMailAsSeen(sessionId, mailId) {
   try {
@@ -614,6 +618,26 @@ async function searchMails(sessionId, query, page = 1, pageSize = 10) {
   }
 }
 
+async function searchSentMails(sessionId, query, page, pageSize) {
+  try {
+    const response = await fetch(
+      `${baseURL}mail/searchSent?query=${query}&page=${page}&pageSize=${pageSize}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `session-id=${sessionId}`,
+        },
+        credentials: "include",
+      }
+    );
+    return response.json();
+  } catch (error) {
+    console.error("Error searching sent mails:", error);
+  }
+}
+
+
 
 export {
   registerUser,
@@ -648,4 +672,5 @@ export {
   searchMails,
   getTableProjects,
   getLabsWithSessionId,
+  searchSentMails,
 };

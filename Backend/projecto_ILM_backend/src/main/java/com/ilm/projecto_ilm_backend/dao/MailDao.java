@@ -98,4 +98,60 @@ public class MailDao extends AbstractDao<MailEntity> {
         return q.getSingleResult().intValue();
     }
 
+    public List<MailEntity> searchSentMails(int userId, String query, int page, int pageSize) {
+        String searchQuery = "%" + query + "%";
+        TypedQuery<MailEntity> q = em.createQuery(
+                "SELECT m FROM MailEntity m WHERE m.sender.id = :userId AND m.deleted = false AND " +
+                        "(m.subject LIKE :query OR " +
+                        "m.text LIKE :query OR " +
+                        "m.sender.firstName LIKE :query OR " +
+                        "m.sender.lastName LIKE :query OR " +
+                        "m.sender.email LIKE :query OR " +
+                        "m.receiver.firstName LIKE :query OR " +
+                        "m.receiver.lastName LIKE :query OR " +
+                        "m.receiver.email LIKE :query)", MailEntity.class);
+        q.setParameter("userId", userId);
+        q.setParameter("query", searchQuery);
+        q.setFirstResult((page - 1) * pageSize);
+        q.setMaxResults(pageSize);
+        return q.getResultList();
+    }
+
+    public int getTotalSentSearchResults(int userId, String query) {
+        String searchQuery = "%" + query + "%";
+        TypedQuery<Long> q = em.createQuery(
+                "SELECT COUNT(m) FROM MailEntity m WHERE m.sender.id = :userId AND m.deleted = false AND " +
+                        "(m.subject LIKE :query OR " +
+                        "m.text LIKE :query OR " +
+                        "m.sender.firstName LIKE :query OR " +
+                        "m.sender.lastName LIKE :query OR " +
+                        "m.sender.email LIKE :query OR " +
+                        "m.receiver.firstName LIKE :query OR " +
+                        "m.receiver.lastName LIKE :query OR " +
+                        "m.receiver.email LIKE :query)", Long.class);
+        q.setParameter("userId", userId);
+        q.setParameter("query", searchQuery);
+        return q.getSingleResult().intValue();
+    }
+
+    public List<MailEntity> getMailsSentByUserId(int userId, int page, int pageSize) {
+        TypedQuery<MailEntity> q = em.createQuery(
+                "SELECT m FROM MailEntity m WHERE m.sender.id = :userId AND m.deleted = false ORDER BY m.date DESC",
+                MailEntity.class);
+        q.setParameter("userId", userId);
+        q.setFirstResult((page - 1) * pageSize);
+        q.setMaxResults(pageSize);
+        return q.getResultList();
+    }
+
+    public int getTotalMailsSentByUserId(int userId) {
+        TypedQuery<Long> q = em.createQuery(
+                "SELECT COUNT(m) FROM MailEntity m WHERE m.sender.id = :userId AND m.deleted = false",
+                Long.class);
+        q.setParameter("userId", userId);
+        return q.getSingleResult().intValue();
+    }
+
+
+
 }

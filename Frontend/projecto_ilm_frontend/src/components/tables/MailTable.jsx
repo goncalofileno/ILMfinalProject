@@ -6,10 +6,10 @@ import {
   markMailAsDeleted,
 } from "../../utilities/services";
 import Cookies from "js-cookie";
-import useMailStore from "../../stores/useMailStore"; // Importar a store zustand
+import useMailStore from "../../stores/useMailStore";
 import { Modal, Button, Form, InputGroup, Pagination } from "react-bootstrap";
+import { FaTrash } from "react-icons/fa";
 import "./MailTable.css";
-import { FaTrash } from 'react-icons/fa';
 
 const MailTable = () => {
   const [receivedMails, setReceivedMails] = useState([]);
@@ -23,7 +23,7 @@ const MailTable = () => {
   const sessionId = Cookies.get("session-id");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [mailToDelete, setMailToDelete] = useState(null);
-  const [hoveredMailId, setHoveredMailId] = useState(null); 
+  const [hoveredMailId, setHoveredMailId] = useState(null);
 
   const handleDeleteClick = (mail) => {
     setMailToDelete(mail);
@@ -168,9 +168,7 @@ const MailTable = () => {
         );
       }
 
-      items.push(
-        <Pagination.Ellipsis key="ellipsis" disabled />
-      );
+      items.push(<Pagination.Ellipsis key="ellipsis" disabled />);
 
       items.push(
         <Pagination.Item
@@ -221,9 +219,9 @@ const MailTable = () => {
       <table className="mail-table">
         <thead>
           <tr>
-            <th>Sender</th>
-            <th>Subject</th>
-            <th>Time</th>
+            <th className="centered-cell max-width-150">Sender</th>
+            <th className="left-aligned-cell">Subject</th>
+            <th className="centered-cell max-width-100">Time</th>
           </tr>
         </thead>
         <tbody>
@@ -235,7 +233,7 @@ const MailTable = () => {
               onMouseEnter={() => setHoveredMailId(mail.id)}
               onMouseLeave={() => setHoveredMailId(null)}
             >
-              <td>
+              <td className="centered-cell max-width-150">
                 <div className="sender-info">
                   <img
                     src={mail.senderPhoto}
@@ -245,10 +243,10 @@ const MailTable = () => {
                   <span>{mail.senderName}</span>
                 </div>
               </td>
-              <td>
+              <td className="left-aligned-cell">
                 <strong>{mail.subject}</strong> - {mail.text.slice(0, 30)}...
               </td>
-              <td>
+              <td className="centered-cell max-width-100">
                 {hoveredMailId === mail.id ? (
                   <FaTrash onClick={() => handleDeleteClick(mail)} />
                 ) : (
@@ -354,6 +352,7 @@ const MailTable = () => {
       )}
     </div>
   );
+
 };
 
 export default MailTable;
