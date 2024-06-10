@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import {
-  getReceivedMessages,
   markMailAsSeen,
   searchMails,
   markMailAsDeleted,
@@ -12,20 +11,20 @@ import { FaTrash } from "react-icons/fa";
 import "./MailTable.css";
 
 const MailTable = () => {
-  const [receivedMails, setReceivedMails] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedMail, setSelectedMail] = useState(null);
   const [searchInput, setSearchInput] = useState("");
   const [totalMails, setTotalMails] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 8;
-  const { unreadCount, decrementUnreadCount } = useMailStore();
+  const { receivedMails, fetchMailsInInbox, decrementUnreadCount, setReceivedMails } = useMailStore();
   const sessionId = Cookies.get("session-id");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [mailToDelete, setMailToDelete] = useState(null);
   const [hoveredMailId, setHoveredMailId] = useState(null);
 
-  const handleDeleteClick = (mail) => {
+  const handleDeleteClick = (mail, event) => {
+    event.stopPropagation(); // Impede a propagação do evento
     setMailToDelete(mail);
     setShowDeleteModal(true);
   };
@@ -33,9 +32,7 @@ const MailTable = () => {
   const handleConfirmDelete = async () => {
     if (mailToDelete) {
       await markMailAsDeleted(sessionId, mailToDelete.id);
-      setReceivedMails((prevMails) =>
-        prevMails.filter((m) => m.id !== mailToDelete.id)
-      );
+      fetchMailsInInbox();
       setShowDeleteModal(false);
       setMailToDelete(null);
       if (!mailToDelete.seen) {
@@ -50,23 +47,9 @@ const MailTable = () => {
   };
 
   useEffect(() => {
-    fetchMails(currentPage);
-  }, [sessionId, currentPage]);
-
-  const fetchMails = async (page) => {
     setLoading(true);
-    try {
-      const result = await getReceivedMessages(sessionId, page, pageSize);
-      const { mails, totalMails } = result;
-      mails.sort((a, b) => new Date(b.date) - new Date(a.date));
-      setReceivedMails(mails);
-      setTotalMails(totalMails);
-    } catch (error) {
-      console.error("Error fetching mails:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    fetchMailsInInbox().finally(() => setLoading(false));
+  }, [fetchMailsInInbox, currentPage, sessionId]);
 
   const handleSearch = async () => {
     setLoading(true);
@@ -90,16 +73,14 @@ const MailTable = () => {
 
   const handleClearSearch = () => {
     setSearchInput("");
-    fetchMails(1);
+    fetchMailsInInbox();
     setCurrentPage(1);
   };
 
   const handleSingleClick = async (mail) => {
     if (!mail.seen) {
       await markMailAsSeen(sessionId, mail.id);
-      setReceivedMails((prevMails) =>
-        prevMails.map((m) => (m.id === mail.id ? { ...m, seen: true } : m))
-      );
+      fetchMailsInInbox();
       decrementUnreadCount();
     }
     setSelectedMail(mail);
@@ -248,7 +229,7 @@ const MailTable = () => {
               </td>
               <td className="centered-cell max-width-100">
                 {hoveredMailId === mail.id ? (
-                  <FaTrash onClick={() => handleDeleteClick(mail)} />
+                  <FaTrash onClick={(event) => handleDeleteClick(mail, event)} />
                 ) : (
                   formatDate(mail.date)
                 )}
@@ -352,7 +333,6 @@ const MailTable = () => {
       )}
     </div>
   );
-
 };
 
 export default MailTable;

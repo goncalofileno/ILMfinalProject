@@ -7,6 +7,7 @@ import com.ilm.projecto_ilm_backend.dto.mail.ContactDto;
 import com.ilm.projecto_ilm_backend.dto.mail.MailDto;
 import com.ilm.projecto_ilm_backend.entity.MailEntity;
 import com.ilm.projecto_ilm_backend.entity.UserEntity;
+import com.ilm.projecto_ilm_backend.service.websockets.MailWebSocket;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -42,7 +43,7 @@ public class MailBean {
             }
         }
 
-        for (int i = 0; i < 500; i++) {
+        for (int i = 0; i < 30; i++) {
             if (maildao.findById(i + 500) == null) {
                 MailEntity mail = new MailEntity();
                 mail.setSubject("Subject " + i);
@@ -150,11 +151,20 @@ public class MailBean {
             mail.setDeleted(false);
 
             maildao.persist(mail);
+
+            if(sessionDao.findByUserId(receiver.getId()) != null) {
+                String receiverSessionId = sessionDao.findByUserId(receiver.getId()).getSessionId();
+                MailWebSocket.notifyNewMail(receiverSessionId, sender.getFirstName(), sender.getLastName());
+            }
+
             return true;
         } else {
             return false;
         }
     }
+
+
+
 
     public List<ContactDto> getContactsBySessionId(String sessionId) {
         List<ContactDto> contacts = new ArrayList<>();

@@ -6,21 +6,22 @@ import Register from "./pages/Register";
 import CreateProfilePage from "./pages/CreateProfilePage";
 import ProjectsPage from "./pages/ProjectsPage";
 import ProfilePage from "./pages/ProfilePage";
-import InboxMailPage from "./pages/InboxMailPage"; // Alteração aqui
-import SentMailPage from "./pages/SentMailPage"; // Alteração aqui
+import InboxMailPage from "./pages/InboxMailPage";
+import SentMailPage from "./pages/SentMailPage";
 import reportWebVitals from "./reportWebVitals";
-import { BrowserRouter as Router } from "react-router-dom";
-import { Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
 import "./index.css";
 import { Alert } from "react-bootstrap";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import EditProfilePage from "./pages/EditProfilePage";
+import MailWebSocket from "./utilities/websockets/MailWebSocket";
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
-
-root.render(
-  <React.StrictMode>
-    <Router>
+const AppWithWebSocket = () => {
+  const location = useLocation();
+  const isInbox = location.pathname === "/mail/inbox";
+  return (
+    <>
+      <MailWebSocket isInbox={isInbox} />
       <Routes>
         <Route index element={<App />} />
         <Route path="/register" element={<Register />} />
@@ -32,6 +33,16 @@ root.render(
         <Route path="/mail/inbox" element={<InboxMailPage />} />
         <Route path="/mail/sent" element={<SentMailPage />} />
       </Routes>
+    </>
+  );
+};
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+
+root.render(
+  <React.StrictMode>
+    <Router>
+      <AppWithWebSocket />
     </Router>
   </React.StrictMode>
 );

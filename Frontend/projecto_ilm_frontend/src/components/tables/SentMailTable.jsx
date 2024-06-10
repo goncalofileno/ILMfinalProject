@@ -78,7 +78,8 @@ const SentMailTable = () => {
     setSelectedMail(mail);
   };
 
-  const handleDeleteClick = (mail) => {
+  const handleDeleteClick = (mail, event) => {
+    event.stopPropagation(); // Impede a propagação do evento
     setMailToDelete(mail);
     setShowDeleteModal(true);
   };
@@ -241,7 +242,7 @@ const SentMailTable = () => {
               </td>
               <td className="centered-cell max-width-100">
                 {hoveredMailId === mail.id ? (
-                  <FaTrash onClick={() => handleDeleteClick(mail)} />
+                  <FaTrash onClick={(event) => handleDeleteClick(mail, event)} />
                 ) : (
                   formatDate(mail.date)
                 )}
@@ -343,7 +344,6 @@ const SentMailTable = () => {
       )}
     </div>
   );
-
 };
 
 export default SentMailTable;

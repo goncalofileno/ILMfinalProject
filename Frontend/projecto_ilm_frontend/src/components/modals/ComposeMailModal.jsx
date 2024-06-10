@@ -71,6 +71,7 @@ const ComposeMailModal = ({ show, handleClose }) => {
 
   const handleSendMail = async () => {
     if (!selectedContact || !subject || !message) {
+      setSuccess(""); // Clear success message if there is an error
       setError("Please fill in all fields.");
       return;
     }
@@ -82,6 +83,7 @@ const ComposeMailModal = ({ show, handleClose }) => {
     );
 
     if (!contact) {
+      setSuccess(""); // Clear success message if there is an error
       setError("Contact does not exist.");
       return;
     }
@@ -95,16 +97,19 @@ const ComposeMailModal = ({ show, handleClose }) => {
       });
 
       if (response.ok) {
+        setError(""); // Clear error message if the mail is sent successfully
         setSuccess("Mail sent successfully.");
         setTimeout(() => {
           handleClose();
           resetFields();
         }, 2000); // Close the modal after 2 seconds
       } else {
+        setSuccess(""); // Clear success message if there is an error
         setError("Failed to send mail.");
       }
     } catch (error) {
       console.error("Failed to send mail:", error);
+      setSuccess(""); // Clear success message if there is an error
       setError("Failed to send mail.");
     }
   };

@@ -112,4 +112,12 @@ public class SessionDao extends AbstractDao<SessionEntity> {
             return false;
         }
     }
+
+    public List<SessionEntity> findExpiredSessions(LocalDateTime currentTime) {
+        return em.createQuery("SELECT s FROM SessionEntity s WHERE s.expiresAt < :currentTime", SessionEntity.class)
+                .setParameter("currentTime", currentTime)
+                .getResultList();
+    }
+
+
 }
