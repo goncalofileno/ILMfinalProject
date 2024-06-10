@@ -2,7 +2,6 @@ package com.ilm.projecto_ilm_backend.validator;
 
 import com.ilm.projecto_ilm_backend.dao.SessionDao;
 import com.ilm.projecto_ilm_backend.entity.SessionEntity;
-import com.ilm.projecto_ilm_backend.service.UserService;
 import jakarta.ejb.Schedule;
 import jakarta.ejb.Singleton;
 import jakarta.ejb.Startup;
@@ -22,7 +21,7 @@ public class SessionCleanupService {
     @Inject
     private SessionDao sessionDao;
 
-    @Schedule(hour = "*", minute = "*/1", persistent = false)
+    @Schedule(hour = "*", minute = "*/5", persistent = false)
     public void cleanUpExpiredSessions() {
         logger.info("Cleaning up expired sessions...");
         List<SessionEntity> expiredSessions = sessionDao.findExpiredSessions(LocalDateTime.now());

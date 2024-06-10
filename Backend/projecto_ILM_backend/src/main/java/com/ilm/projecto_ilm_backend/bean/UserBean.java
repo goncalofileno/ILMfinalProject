@@ -4,9 +4,14 @@ import com.ilm.projecto_ilm_backend.ENUMS.SkillTypeENUM;
 import com.ilm.projecto_ilm_backend.ENUMS.UserTypeENUM;
 import com.ilm.projecto_ilm_backend.ENUMS.WorkLocalENUM;
 import com.ilm.projecto_ilm_backend.dao.*;
+import com.ilm.projecto_ilm_backend.dto.interest.InterestDto;
+import com.ilm.projecto_ilm_backend.dto.project.ProjectProfileDto;
+import com.ilm.projecto_ilm_backend.dto.skill.SkillDto;
 import com.ilm.projecto_ilm_backend.dto.user.RegisterUserDto;
+import com.ilm.projecto_ilm_backend.dto.user.ShowProfileDto;
 import com.ilm.projecto_ilm_backend.dto.user.UserProfileDto;
 import com.ilm.projecto_ilm_backend.entity.*;
+import com.ilm.projecto_ilm_backend.security.UnauthorizedException;
 import com.ilm.projecto_ilm_backend.utilities.EmailService;
 import com.ilm.projecto_ilm_backend.service.UserService;
 import com.ilm.projecto_ilm_backend.utilities.HashUtil;
@@ -14,6 +19,7 @@ import com.ilm.projecto_ilm_backend.utilities.imgsPath;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.mail.MessagingException;
+import jakarta.ws.rs.NotFoundException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -107,7 +113,6 @@ public class UserBean {
             user.setInterests(interests);
             List<SkillEntity> skills = skillDao.findAll();
             user.setSkills(skills);
-            user.setSkills(skills);
             user.setLab(lab);
             user.setPublicProfile(false);
             user.setDeleted(false);
@@ -128,11 +133,11 @@ public class UserBean {
             user.setRegistrationDate(LocalDateTime.now());
             user.setMailConfirmed(true);
             user.setProfileCreated(true);
-            user.setPhoto("https://www.pngkey.com/png/full/114-1149878_setting-user-avatar-in-specific-size-without-breaking.png");
-            user.setAvatarPhoto("https://www.pngkey.com/png/full/114-1149878_setting-user-avatar-in-specific-size-without-breaking.png");
-            user.setThumbnailPhoto("https://www.pngkey.com/png/full/114-1149878_setting-user-avatar-in-specific-size-without-breaking.png");
-            LabEntity lab = new LabEntity();
-            lab = labDao.findbyLocal(WorkLocalENUM.PORTO);
+            user.setPhoto("https://e7.pngegg.com/pngimages/799/987/png-clipart-computer-icons-avatar-icon-design-avatar-heroes-computer-wallpaper-thumbnail.png");
+            user.setAvatarPhoto("https://e7.pngegg.com/pngimages/799/987/png-clipart-computer-icons-avatar-icon-design-avatar-heroes-computer-wallpaper-thumbnail.png");
+            user.setThumbnailPhoto("https://e7.pngegg.com/pngimages/799/987/png-clipart-computer-icons-avatar-icon-design-avatar-heroes-computer-wallpaper-thumbnail.png");
+            LabEntity lab;
+            lab = labDao.findbyLocal(WorkLocalENUM.TOMAR);
             List<InterestEntity> interests = interestDao.findAll();
             user.setInterests(interests);
             List<SkillEntity> skills = skillDao.findAll();
@@ -207,6 +212,7 @@ public class UserBean {
 
     /**
      * Confirms the user's email.
+     *
      * @param token
      * @return
      */
@@ -224,7 +230,7 @@ public class UserBean {
      * Creates a new user profile.
      *
      * @param userProfileDto the DTO containing user profile details
-     * @param auxiliarToken the token used to authenticate the user
+     * @param auxiliarToken  the token used to authenticate the user
      * @return true if the profile was successfully created, false otherwise
      */
     public boolean createProfile(UserProfileDto userProfileDto, String auxiliarToken) {
@@ -278,7 +284,7 @@ public class UserBean {
      * Generates a unique system username based on the user's first and last name.
      *
      * @param firstName the user's first name
-     * @param lastName the user's last name
+     * @param lastName  the user's last name
      * @return the generated system username
      */
     private String generateUniqueSystemUsername(String firstName, String lastName) {
@@ -371,8 +377,8 @@ public class UserBean {
      * Resizes an image to a specific width and height.
      *
      * @param originalImage the original image
-     * @param width the desired width
-     * @param height the desired height
+     * @param width         the desired width
+     * @param height        the desired height
      * @return the resized image
      */
     private BufferedImage resizeImage(BufferedImage originalImage, int width, int height) {
@@ -456,9 +462,9 @@ public class UserBean {
         }
     }
 
-   public boolean sendForgetPassLink(String email){
+    public boolean sendForgetPassLink(String email) {
         UserEntity user = userDao.findByEmail(email);
-        if(user != null){
+        if (user != null) {
             user.setAuxiliarToken(generateNewToken());
             userDao.merge(user);
             try {
@@ -472,27 +478,27 @@ public class UserBean {
         return false;
     }
 
-    public boolean resetPassword(String token, String newPassword){
+    public boolean resetPassword(String token, String newPassword) {
         UserEntity user = userDao.findByAuxiliarToken(token);
-        if(user != null){
+        if (user != null) {
             user.setPassword(HashUtil.toSHA256(newPassword));
             userDao.merge(user);
             return true;
         }
         return false;
-   }
+    }
 
-   public UserEntity getUserBySessionId(String sessionId){
+    public UserEntity getUserBySessionId(String sessionId) {
         SessionEntity session = sessionDao.findBySessionId(sessionId);
-        if(session != null){
+        if (session != null) {
             return session.getUser();
         }
         return null;
-   }
+    }
 
-   public UserEntity getUserBySystemUsername(String systemUsername){
+    public UserEntity getUserBySystemUsername(String systemUsername) {
         return userDao.findBySystemUsername(systemUsername);
-   }
+    }
 
     public void updateUserProfile(UserProfileDto userProfileDto, String sessionId) throws Exception {
         UserEntity user = sessionDao.findBySessionId(sessionId).getUser();
@@ -548,6 +554,101 @@ public class UserBean {
         user.setPassword(HashUtil.toSHA256(newPassword));
         userDao.merge(user);
         return true;
+    }
+
+    public UserProfileDto getEditProfile(String systemUsername, String sessionId) {
+        logger.info("Received a request to get the edit profile of a user with session ID: " + sessionId);
+        UserEntity requestingUser = getUserBySessionId(sessionId);
+        if (requestingUser != null) {
+            UserEntity profileUser = userDao.getUserBySystemUsernameWithAssociations(systemUsername);
+            if (profileUser != null) {
+                UserProfileDto profileDto = new UserProfileDto();
+                profileDto.setUsername(profileUser.getUsername());
+                profileDto.setFirstName(profileUser.getFirstName());
+                profileDto.setLastName(profileUser.getLastName());
+                profileDto.setLab(profileUser.getLab().getLocal().toString());
+                profileDto.setBio(profileUser.getBio());
+                profileDto.setPublicProfile(profileUser.isPublicProfile());
+                profileDto.setPhoto(profileUser.getPhoto());
+
+                profileDto.setSkills(profileUser.getSkills().stream()
+                        .map(skill -> {
+                            SkillDto skillDto = new SkillDto();
+                            skillDto.setId(skill.getId());
+                            skillDto.setName(skill.getName());
+                            skillDto.setType(skill.getType().toString());
+                            return skillDto;
+                        }).collect(Collectors.toList()));
+
+                profileDto.setInterests(profileUser.getInterests().stream()
+                        .map(interest -> {
+                            InterestDto interestDto = new InterestDto();
+                            interestDto.setId(interest.getId());
+                            interestDto.setName(interest.getName());
+                            return interestDto;
+                        }).collect(Collectors.toList()));
+
+                return profileDto;
+            } else {
+                throw new NotFoundException("User not found");
+            }
+        } else {
+            throw new UnauthorizedException("Unauthorized: Invalid session");
+        }
+    }
+
+    public ShowProfileDto getProfile(String systemUsername, String sessionId) {
+        logger.info("Received a request to get the profile of a user with session ID: " + sessionId);
+        UserEntity requestingUser = getUserBySessionId(sessionId);
+        if (requestingUser != null) {
+            UserEntity profileUser = userDao.getUserBySystemUsernameWithAssociations(systemUsername);
+            if (profileUser != null) {
+                ShowProfileDto profileDto = new ShowProfileDto();
+                profileDto.setUsername(profileUser.getUsername());
+                profileDto.setFirstName(profileUser.getFirstName());
+                profileDto.setLastName(profileUser.getLastName());
+                profileDto.setLocation(profileUser.getLab().getLocal().toString());
+                profileDto.setProfileImage(profileUser.getPhoto());
+                profileDto.setPublicProfile(profileUser.isPublicProfile());
+
+                if (profileUser.isPublicProfile() || requestingUser.getId() == (profileUser.getId())) {
+                    profileDto.setBio(profileUser.getBio());
+
+                    profileDto.setProjects(profileUser.getUserProjects().stream()
+                            .map(up -> {
+                                ProjectProfileDto projectDto = new ProjectProfileDto();
+                                ProjectEntity project = up.getProject();
+                                projectDto.setName(project.getName());
+                                projectDto.setTypeMember(up.getType().toString());
+                                projectDto.setStatus(project.getStatus().toString());
+                                return projectDto;
+                            }).collect(Collectors.toList()));
+
+                    profileDto.setSkills(profileUser.getSkills().stream()
+                            .map(skill -> {
+                                SkillDto skillDto = new SkillDto();
+                                skillDto.setId(skill.getId());
+                                skillDto.setName(skill.getName());
+                                skillDto.setType(skill.getType().toString());
+                                return skillDto;
+                            }).collect(Collectors.toList()));
+
+                    profileDto.setInterests(profileUser.getInterests().stream()
+                            .map(interest -> {
+                                InterestDto interestDto = new InterestDto();
+                                interestDto.setId(interest.getId());
+                                interestDto.setName(interest.getName());
+                                return interestDto;
+                            }).collect(Collectors.toList()));
+                }
+
+                return profileDto;
+            } else {
+                throw new NotFoundException("User not found");
+            }
+        } else {
+            throw new UnauthorizedException("Unauthorized: Invalid session");
+        }
     }
 
 }

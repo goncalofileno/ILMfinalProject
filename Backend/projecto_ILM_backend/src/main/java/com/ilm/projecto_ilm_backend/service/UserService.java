@@ -3,12 +3,9 @@ package com.ilm.projecto_ilm_backend.service;
 import com.ilm.projecto_ilm_backend.bean.UserBean;
 import com.ilm.projecto_ilm_backend.dao.SessionDao;
 import com.ilm.projecto_ilm_backend.dao.UserDao;
-import com.ilm.projecto_ilm_backend.dto.interest.InterestDto;
-import com.ilm.projecto_ilm_backend.dto.project.ProjectProfileDto;
-import com.ilm.projecto_ilm_backend.dto.skill.SkillDto;
 import com.ilm.projecto_ilm_backend.dto.user.*;
-import com.ilm.projecto_ilm_backend.entity.ProjectEntity;
 import com.ilm.projecto_ilm_backend.entity.UserEntity;
+import com.ilm.projecto_ilm_backend.security.UnauthorizedException;
 import com.ilm.projecto_ilm_backend.validator.RegexValidator;
 import com.ilm.projecto_ilm_backend.validator.DatabaseValidator;
 import com.ilm.projecto_ilm_backend.validator.UserProfileValidator;
@@ -26,7 +23,6 @@ import java.net.URI;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 
 /**
@@ -286,7 +282,6 @@ public class UserService {
     }
 
 
-
     /**
      * Logs in a user.
      *
@@ -523,62 +518,22 @@ public class UserService {
     }
 
     @GET
-    @Path("/profile/{systemUsername}")
+    @Path("profile/{systemUsername}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getProfile(@PathParam("systemUsername") String systemUsername, @CookieParam("session-id") String sessionId) {
-        logger.info("Received a request to get the profile of a user with session ID: " + sessionId);
-        UserEntity requestingUser = userBean.getUserBySessionId(sessionId);
-        if (requestingUser != null) {
-            UserEntity profileUser = userDao.getUserBySystemUsernameWithAssociations(systemUsername);
-            if (profileUser != null) {
-                ShowProfileDto profileDto = new ShowProfileDto();
-                profileDto.setUsername(profileUser.getUsername());
-                profileDto.setFirstName(profileUser.getFirstName());
-                profileDto.setLastName(profileUser.getLastName());
-                profileDto.setLocation(profileUser.getLab().getLocal().toString());
-                profileDto.setProfileImage(profileUser.getPhoto());
-                profileDto.setPublicProfile(profileUser.isPublicProfile());
-
-                // Se o perfil for público ou o usuário logado for o proprietário do perfil
-                if (profileUser.isPublicProfile() || requestingUser.getId() == (profileUser.getId())) {
-                    profileDto.setBio(profileUser.getBio());
-
-                    profileDto.setProjects(profileUser.getUserProjects().stream()
-                            .map(up -> {
-                                ProjectProfileDto projectDto = new ProjectProfileDto();
-                                ProjectEntity project = up.getProject();
-                                projectDto.setName(project.getName());
-                                projectDto.setTypeMember(up.getType().toString());
-                                projectDto.setStatus(project.getStatus().toString());
-                                return projectDto;
-                            }).collect(Collectors.toList()));
-
-                    profileDto.setSkills(profileUser.getSkills().stream()
-                            .map(skill -> {
-                                SkillDto skillDto = new SkillDto();
-                                skillDto.setId(skill.getId());
-                                skillDto.setName(skill.getName());
-                                skillDto.setType(skill.getType().toString());
-                                return skillDto;
-                            }).collect(Collectors.toList()));
-
-                    profileDto.setInterests(profileUser.getInterests().stream()
-                            .map(interest -> {
-                                InterestDto interestDto = new InterestDto();
-                                interestDto.setId(interest.getId());
-                                interestDto.setName(interest.getName());
-                                return interestDto;
-                            }).collect(Collectors.toList()));
-                }
-
-                return Response.status(Response.Status.OK).entity(profileDto).build();
-            } else {
-                return Response.status(Response.Status.NOT_FOUND)
-                        .entity(Collections.singletonMap("message", "User not found")).build();
-            }
-        } else {
+        try {
+            ShowProfileDto profileDto = userBean.getProfile(systemUsername, sessionId);
+            return Response.status(Response.Status.OK).entity(profileDto).build();
+        } catch (NotFoundException e) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity(Collections.singletonMap("message", e.getMessage())).build();
+        } catch (UnauthorizedException e) {
             return Response.status(Response.Status.UNAUTHORIZED)
-                    .entity(Collections.singletonMap("message", "Unauthorized: Invalid session")).build();
+                    .entity(Collections.singletonMap("message", e.getMessage())).build();
+        } catch (Exception e) {
+            logger.error("Error fetching profile: " + e.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(Collections.singletonMap("message", "Internal Server Error")).build();
         }
     }
 
@@ -587,45 +542,19 @@ public class UserService {
     @Path("/editProfile/{systemUsername}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getEditProfile(@PathParam("systemUsername") String systemUsername, @CookieParam("session-id") String sessionId) {
-        logger.info("Received a request to get the edit profile of a user with session ID: " + sessionId);
-        UserEntity requestingUser = userBean.getUserBySessionId(sessionId);
-        if (requestingUser != null) {
-            UserEntity profileUser = userDao.getUserBySystemUsernameWithAssociations(systemUsername);
-            if (profileUser != null) {
-                UserProfileDto profileDto = new UserProfileDto();
-                profileDto.setUsername(profileUser.getUsername());
-                profileDto.setFirstName(profileUser.getFirstName());
-                profileDto.setLastName(profileUser.getLastName());
-                profileDto.setLab(profileUser.getLab().getLocal().toString());
-                profileDto.setBio(profileUser.getBio());
-                profileDto.setPublicProfile(profileUser.isPublicProfile());
-                profileDto.setPhoto(profileUser.getPhoto());
-
-                profileDto.setSkills(profileUser.getSkills().stream()
-                        .map(skill -> {
-                            SkillDto skillDto = new SkillDto();
-                            skillDto.setId(skill.getId());
-                            skillDto.setName(skill.getName());
-                            skillDto.setType(skill.getType().toString());
-                            return skillDto;
-                        }).collect(Collectors.toList()));
-
-                profileDto.setInterests(profileUser.getInterests().stream()
-                        .map(interest -> {
-                            InterestDto interestDto = new InterestDto();
-                            interestDto.setId(interest.getId());
-                            interestDto.setName(interest.getName());
-                            return interestDto;
-                        }).collect(Collectors.toList()));
-
-                return Response.status(Response.Status.OK).entity(profileDto).build();
-            } else {
-                return Response.status(Response.Status.NOT_FOUND)
-                        .entity(Collections.singletonMap("message", "User not found")).build();
-            }
-        } else {
+        try {
+            UserProfileDto profileDto = userBean.getEditProfile(systemUsername, sessionId);
+            return Response.status(Response.Status.OK).entity(profileDto).build();
+        } catch (NotFoundException e) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity(Collections.singletonMap("message", e.getMessage())).build();
+        } catch (UnauthorizedException e) {
             return Response.status(Response.Status.UNAUTHORIZED)
-                    .entity(Collections.singletonMap("message", "Unauthorized: Invalid session")).build();
+                    .entity(Collections.singletonMap("message", e.getMessage())).build();
+        } catch (Exception e) {
+            logger.error("Error fetching profile: " + e.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(Collections.singletonMap("message", "Internal Server Error")).build();
         }
     }
 
