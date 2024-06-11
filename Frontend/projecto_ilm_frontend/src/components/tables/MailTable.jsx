@@ -10,11 +10,10 @@ import { Modal, Button, Form, InputGroup, Pagination } from "react-bootstrap";
 import { FaTrash } from "react-icons/fa";
 import ComposeMailModal from "../modals/ComposeMailModal";
 import "./MailTable.css";
-<<<<<<< Updated upstream
+
 import DOMPurify from "dompurify";
-=======
+
 import TablePagination from "../paginations/TablePagination";
->>>>>>> Stashed changes
 
 const MailTable = () => {
   const [loading, setLoading] = useState(true);
@@ -33,13 +32,12 @@ const MailTable = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [mailToDelete, setMailToDelete] = useState(null);
   const [hoveredMailId, setHoveredMailId] = useState(null);
-<<<<<<< Updated upstream
+
   const [showComposeModal, setShowComposeModal] = useState(false);
   const [preFilledContact, setPreFilledContact] = useState("");
   const [preFilledSubject, setPreFilledSubject] = useState("");
-=======
+
   const [trigger, setTrigger] = useState(false);
->>>>>>> Stashed changes
 
   const handleDeleteClick = (mail, event) => {
     event.stopPropagation(); // Prevent event propagation
