@@ -128,6 +128,21 @@ async function getLabsWithSessionId() {
   }
 }
 
+async function getAllStatus() {
+  try {
+    return await fetch(`${baseURL}project/allStatus`, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+  } catch (error) {
+    console.error("Error during fetching labs:", error);
+  }
+}
+
 async function createProfile(userProfileDto, auxiliarToken) {
   try {
     const response = await fetch(`${baseURL}user/createProfile`, {
@@ -306,10 +321,27 @@ async function getHomeProjects() {
   }
 }
 
-async function getTableProjects(page) {
+async function getTableProjects(
+  page,
+  lab,
+  status,
+  slotsAvailable,
+  nameAsc,
+  statusAsc,
+  labAsc,
+  startDateAsc,
+  endDateAsc,
+  keyword
+) {
+  console.log("nameAsc: ", nameAsc);
+  console.log("statusAsc: ", statusAsc);
+  console.log("labAsc: ", labAsc);
+  console.log("startDateAsc: ", startDateAsc);
+  console.log("endDateAsc: ", endDateAsc);
+
   try {
     const response = await fetch(
-      `${baseURL}project/tableProjects?page=${page}`,
+      `${baseURL}project/tableProjects?page=${page}&lab=${lab}&status=${status}&slotsAvailable=${slotsAvailable}&nameAsc=${nameAsc}&statusAsc=${statusAsc}&labAsc=${labAsc}&startDateAsc=${startDateAsc}&endDateAsc=${endDateAsc}&keyword=${keyword}`,
       {
         method: "GET",
         headers: {
@@ -322,7 +354,7 @@ async function getTableProjects(page) {
 
     return response;
   } catch (error) {
-    console.error("Error getting home projects:", error);
+    console.error("Error getting table projects:", error);
     throw error;
   }
 }
@@ -480,15 +512,18 @@ async function updatePassword(currentPassword, newPassword) {
 
 async function getReceivedMessages(sessionId, page = 1, pageSize = 10) {
   try {
-    const response = await fetch(`${baseURL}mail/received?page=${page}&pageSize=${pageSize}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Cookie: `session-id=${sessionId}`,
-      },
-      credentials: "include",
-    });
-    return response.json(); 
+    const response = await fetch(
+      `${baseURL}mail/received?page=${page}&pageSize=${pageSize}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `session-id=${sessionId}`,
+        },
+        credentials: "include",
+      }
+    );
+    return response.json();
   } catch (error) {
     console.error("Error fetching received messages:", error);
   }
@@ -604,14 +639,17 @@ async function getUnreadNumber(sessionId) {
 
 async function searchMails(sessionId, query, page = 1, pageSize = 10) {
   try {
-    const response = await fetch(`${baseURL}mail/search?query=${query}&page=${page}&pageSize=${pageSize}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Cookie: `session-id=${sessionId}`,
-      },
-      credentials: "include",
-    });
+    const response = await fetch(
+      `${baseURL}mail/search?query=${query}&page=${page}&pageSize=${pageSize}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `session-id=${sessionId}`,
+        },
+        credentials: "include",
+      }
+    );
     return response.json(); // Assumindo que a resposta JSON será um objeto com 'mails' e 'totalMails'
   } catch (error) {
     console.error("Error searching mails:", error);
@@ -715,6 +753,7 @@ export {
   searchMails,
   getTableProjects,
   getLabsWithSessionId,
+  getAllStatus,
   searchSentMails,
   getUserProjects,
   inviteUserToProject,

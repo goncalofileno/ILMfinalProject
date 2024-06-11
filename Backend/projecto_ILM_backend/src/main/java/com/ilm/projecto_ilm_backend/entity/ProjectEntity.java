@@ -15,12 +15,27 @@ import com.ilm.projecto_ilm_backend.ENUMS.ConvertersENUM.StateProjectEnumConvert
  */
 @Entity
 @Table(name = "project")
-@NamedQueries({
-        @NamedQuery(name = "Project.findById", query = "SELECT p FROM ProjectEntity p WHERE p.id = :id"),
-        @NamedQuery(name = "Project.findNameAndDescriptionHome", query = "SELECT p.name, p.description FROM ProjectEntity p WHERE p.status = 1 OR  p.status = 2 OR  p.status = 3 OR  p.status = 4"),
-        @NamedQuery(name = "Project.getProjectTableDtoInfo", query = "SELECT p.id,p.name, p.lab, p.status, FUNCTION('DATE', p.startDate), FUNCTION('DATE', p.endDate), p.maxMembers FROM ProjectEntity p"),
-        @NamedQuery(name = "Project.countProjects", query = "SELECT COUNT(p) FROM ProjectEntity p")
-})
+@NamedQuery(name = "Project.findById", query = "SELECT p FROM ProjectEntity p WHERE p.id = :id")
+@NamedQuery(name = "Project.findNameAndDescriptionHome", query = "SELECT p.name, p.description FROM ProjectEntity p WHERE p.status = 1 OR  p.status = 2 OR  p.status = 3 OR  p.status = 4 ")
+@NamedQuery(
+        name = "Project.getProjectTableDtoInfo",
+        query = "SELECT p.id, p.name, p.lab, p.status, FUNCTION('DATE', p.startDate), FUNCTION('DATE', p.endDate), p.maxMembers " +
+                "FROM ProjectEntity p LEFT JOIN UserProjectEntity up ON p.id = up.project.id " +
+                "WHERE (:lab IS NULL OR p.lab = :lab) " +
+                "AND (:status IS NULL OR p.status = :status) " +
+                "AND (:keyword IS NULL OR LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%')))" +
+                "GROUP BY p.id, p.name, p.lab, p.status, p.startDate, p.endDate, p.maxMembers " +
+                "HAVING (:slotsAvailable = FALSE OR p.maxMembers > COUNT(up))")
+@NamedQuery(name = "Project.getNumberOfProjectsTableDtoInfo",
+        query = "SELECT COUNT(p) " +
+        "FROM ProjectEntity p " +
+        "WHERE (:lab IS NULL OR p.lab = :lab) " +
+        "AND (:status IS NULL OR p.status = :status) " +
+        "AND (:keyword IS NULL OR (LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%'))))" +
+        "AND (:slotsAvailable = FALSE OR p.maxMembers > " +
+        "(SELECT COUNT(up) FROM UserProjectEntity up WHERE up.project.id = p.id))")
+@NamedQuery(name = "Project.countProjects", query = "SELECT COUNT(p) FROM ProjectEntity p")
+
 public class ProjectEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;

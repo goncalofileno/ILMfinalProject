@@ -266,29 +266,11 @@ const MailTable = () => {
         </tbody>
       </table>
 
-      <div className="pagination-container">
-        <Pagination className="pagination">
-          <Pagination.First
-            onClick={() => setCurrentPage(1)}
-            disabled={currentPage === 1}
-          />
-          <Pagination.Prev
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
-          />
-          {renderPaginationItems()}
-          <Pagination.Next
-            onClick={() =>
-              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-            }
-            disabled={currentPage === totalPages}
-          />
-          <Pagination.Last
-            onClick={() => setCurrentPage(totalPages)}
-            disabled={currentPage === totalPages}
-          />
-        </Pagination>
-      </div>
+      <TablePagination
+        totalPages={totalPages}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+      />
 
       {selectedMail && (
         <Modal show={true} onHide={handleCloseModal}>

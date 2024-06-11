@@ -8,9 +8,12 @@ import com.ilm.projecto_ilm_backend.dto.mail.MailDto;
 import com.ilm.projecto_ilm_backend.dto.project.HomeProjectDto;
 import com.ilm.projecto_ilm_backend.dto.project.ProjectProfileDto;
 import com.ilm.projecto_ilm_backend.dto.project.ProjectTableDto;
+
+import com.ilm.projecto_ilm_backend.dto.project.ProjectTableInfoDto;
 import com.ilm.projecto_ilm_backend.entity.*;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -25,25 +28,27 @@ import java.util.stream.Collectors;
 public class ProjectBean {
 
     @Inject
-    ProjectDao projectDao;
+    private ProjectDao projectDao;
 
     @Inject
-    LabDao labDao;
+    private LabDao labDao;
 
     @Inject
-    UserDao userDao;
+    private UserDao userDao;
 
     @Inject
-    SkillDao skillDao;
+    private SkillDao skillDao;
 
     @Inject
-    UserProjectDao userProjectDao;
+    private UserProjectDao userProjectDao;
     @Inject
     SessionDao sessionDao;
     @Inject
     MailBean mailBean;
 
-    int numberOfProjectsToCreate = 20;
+    private int numberOfProjectsToCreate=20;
+
+    private static final int NUMBER_OF_PROJECTS_PER_PAGE=15;
 
     public void createDefaultProjectsIfNotExistent() {
 
@@ -92,7 +97,7 @@ public class ProjectBean {
 //        userProjectEntity2.setType(UserInProjectTypeENUM.MEMBER);
 //        userProjectDao.merge(userProjectEntity2);
 
-        if (userProjectDao.countUserProjects() < 20) {
+        if(userProjectDao.countUserProjects()<20) {
 
             for (int i = 1; i < numberOfProjectsToCreate + 1; i++) {
 
@@ -121,9 +126,19 @@ public class ProjectBean {
         return projectDao.findAllNamesAndDescriptionsHome();
     }
 
-    public ArrayList<ProjectTableDto> getProjectsDtosTable(String sessionId, int page) {
+    public ProjectTableInfoDto getProjectTableInfo(String sessionId, int page, String labName, String status, boolean slotsAvailable, String nameAsc,
+                                                   String statusAsc,String labAsc,String startDateAsc,String endDateAsc, String keyword) {
+
+        LabEntity lab;
+        StateProjectENUM state;
+        if(labName == null || labName.equals("")) lab=null;
+        else lab=labDao.findbyLocal(WorkLocalENUM.valueOf(labName));
+        if(status == null || status.equals("")) state=null;
+        else state=StateProjectENUM.valueOf(status);
+        if(keyword == null || keyword.equals("")) keyword=null;
+        List<Object[]> projectsInfo = projectDao.getProjectTableDtoInfo(page,NUMBER_OF_PROJECTS_PER_PAGE,lab, state, slotsAvailable,nameAsc,
+                statusAsc, labAsc,startDateAsc, endDateAsc, keyword);
         ArrayList<ProjectTableDto> projectsTableDtos = new ArrayList<>();
-        List<Object[]> projectsInfo = projectDao.getProjectTableDtoInfo(page);
 
         for (Object[] projectInfo : projectsInfo) {
             ProjectTableDto projectTableDto = new ProjectTableDto();
@@ -137,11 +152,28 @@ public class ProjectBean {
             projectTableDto.setMember(userProjectDao.isUserInProject((int) projectInfo[0], sessionDao.findUserIdBySessionId(sessionId)));
             projectsTableDtos.add(projectTableDto);
 
-//          projectsTableDtos.add(new ProjectTableDto((String) projectInfo[1], ((LabEntity) projectInfo[2]).getLocal(), (StateProjectENUM) projectInfo[3], userProjectDao.getNumberOfUsersByProjectId((int) projectInfo[0]), (LocalDate) projectInfo[4], (LocalDate) projectInfo[5], (int) projectInfo[6], userProjectDao.isUserInProject((int) projectInfo[0], userId)));
-
         }
 
-        return projectsTableDtos;
+        ProjectTableInfoDto projectTableInfoDto=new ProjectTableInfoDto();
+
+        projectTableInfoDto.setTableProjects(projectsTableDtos);
+        System.out.println("number of projects: "+projectDao.getNumberOfProjectsTableDtoInfo(lab,state, slotsAvailable,keyword));
+        projectTableInfoDto.setMaxPageNumber(calculateMaximumPageTableProjects( projectDao.getNumberOfProjectsTableDtoInfo(lab,state, slotsAvailable,keyword)));
+
+        return projectTableInfoDto;
+    }
+
+    public ArrayList<StateProjectENUM> getAllStatus() {
+        ArrayList<StateProjectENUM> status = new ArrayList<>();
+        for (StateProjectENUM state : StateProjectENUM.values()) {
+            status.add(state);
+        }
+        return status;
+    }
+
+
+    public int calculateMaximumPageTableProjects(int numberOfProjects){
+        return (int) Math.ceil((double) numberOfProjects/NUMBER_OF_PROJECTS_PER_PAGE);
     }
 
     public List<ProjectProfileDto> getProjectsByUserRoleToInvite(int userId, UserInProjectTypeENUM... roles) {
@@ -196,5 +228,6 @@ public class ProjectBean {
 
         return "User invited successfully";
     }
+
 
 }

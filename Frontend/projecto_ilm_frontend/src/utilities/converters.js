@@ -11,6 +11,14 @@ function formatStatus(status) {
   return status;
 }
 
+function formatStatusDropDown(status) {
+  if (status === "IN_PROGRESS") {
+    status = "In Progress";
+    return status;
+  }
+  return status.charAt(0) + status.slice(1).toLowerCase();
+}
+
 const formatSkill = (skill) => {
   return skill
     .toLowerCase()
@@ -19,4 +27,4 @@ const formatSkill = (skill) => {
     .join(" ");
 };
 
-export { formatLab, formatStatus, formatSkill };
+export { formatLab, formatStatus, formatStatusDropDown, formatSkill };

@@ -1,9 +1,12 @@
 package com.ilm.projecto_ilm_backend.dao;
 
+import com.ilm.projecto_ilm_backend.ENUMS.StateProjectENUM;
 import com.ilm.projecto_ilm_backend.dto.project.HomeProjectDto;
+import com.ilm.projecto_ilm_backend.entity.LabEntity;
 import com.ilm.projecto_ilm_backend.entity.ProjectEntity;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
@@ -77,9 +80,49 @@ public class ProjectDao extends AbstractDao<ProjectEntity>{
         return projects;
     }
 
-    public List<Object[]> getProjectTableDtoInfo(int page) {
-        return em.createNamedQuery("Project.getProjectTableDtoInfo", Object[].class).setFirstResult(16*(page-1)).setMaxResults(16).getResultList();
+    public List<Object[]> getProjectTableDtoInfo(int page, int projectsPerPage, LabEntity lab, StateProjectENUM status, boolean slotsAvailable, String nameAsc,
+                                                 String  statusAsc,
+                                                 String  labAsc,
+                                                 String  startDateAsc,
+                                                 String endDateAsc, String keyword) {
+        String baseQueryString = em
+                .createNamedQuery("Project.getProjectTableDtoInfo", Object[].class)
+                .unwrap(org.hibernate.query.Query.class)
+                .getQueryString();
+
+        // Append the ORDER BY clause dynamically
+        StringBuilder queryString = new StringBuilder(baseQueryString);
+
+        if (nameAsc != null && !nameAsc.equals("")) {
+            queryString.append(" ORDER BY p.name ").append(nameAsc.equals("true") ? "ASC" : "DESC");
+        } else if (statusAsc != null && !statusAsc.equals("")) {
+            queryString.append(" ORDER BY p.status ").append(statusAsc.equals("true") ? "ASC" : "DESC");
+        } else if (labAsc != null && !labAsc.equals("")) {
+            queryString.append(" ORDER BY p.lab ").append(labAsc.equals("true") ? "ASC" : "DESC");
+        } else if (startDateAsc != null && !startDateAsc.equals("")) {
+            queryString.append(" ORDER BY p.startDate ").append(startDateAsc.equals("true") ? "ASC" : "DESC");
+        } else if (endDateAsc != null && !endDateAsc.equals("")) {
+            queryString.append(" ORDER BY p.endDate ").append(endDateAsc.equals("true") ? "ASC" : "DESC");
+        }
+
+        // Create the query using the dynamically constructed query string
+        TypedQuery<Object[]> query = em.createQuery(queryString.toString(), Object[].class);
+
+        // Set parameters
+        query.setParameter("lab", lab);
+        query.setParameter("status", status);
+        query.setParameter("slotsAvailable", slotsAvailable);
+        query.setParameter("keyword", keyword);
+
+        // Set pagination
+        query.setFirstResult(projectsPerPage * (page - 1));
+        query.setMaxResults(projectsPerPage);
+
+        return query.getResultList();
+
+        //return em.createNamedQuery("Project.getProjectTableDtoInfo", Object[].class).setParameter("lab",lab).setParameter("status",status).setParameter("slotsAvailable", slotsAvailable).setFirstResult(projectsPerPage*(page-1)).setMaxResults(projectsPerPage).getResultList();
     }
+
     public long countProjects() {
         try {
             return  em.createNamedQuery("Project.countProjects", Long.class)
@@ -95,4 +138,15 @@ public class ProjectDao extends AbstractDao<ProjectEntity>{
                 .setParameter("name", name)
                 .getSingleResult();
     }
+
+    public int getNumberOfProjectsTableDtoInfo(LabEntity lab, StateProjectENUM status, boolean slotsAvailable, String keyword) {
+        try {
+            return  em.createNamedQuery("Project.getNumberOfProjectsTableDtoInfo", Long.class).setParameter("lab",lab).setParameter("status",status).setParameter("slotsAvailable",slotsAvailable)
+                    .setParameter("keyword",keyword).getSingleResult().intValue();
+
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
 }
