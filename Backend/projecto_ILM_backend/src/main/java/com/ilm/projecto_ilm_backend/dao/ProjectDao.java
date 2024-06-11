@@ -149,15 +149,4 @@ public class ProjectDao extends AbstractDao<ProjectEntity>{
                 .setParameter("name", name)
                 .getSingleResult();
     }
-
-    public int getNumberOfProjectsTableDtoInfo(LabEntity lab, StateProjectENUM status, boolean slotsAvailable, String keyword) {
-        try {
-            return  em.createNamedQuery("Project.getNumberOfProjectsTableDtoInfo", Long.class).setParameter("lab",lab).setParameter("status",status).setParameter("slotsAvailable",slotsAvailable)
-                    .setParameter("keyword",keyword).getSingleResult().intValue();
-
-        } catch (Exception e) {
-            return 0;
-        }
-    }
-
 }

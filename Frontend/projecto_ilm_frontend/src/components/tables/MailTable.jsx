@@ -13,10 +13,6 @@ import "./MailTable.css";
 import DOMPurify from "dompurify";
 import TablePagination from "../paginations/TablePagination";
 
-import DOMPurify from "dompurify";
-
-import TablePagination from "../paginations/TablePagination";
-
 const MailTable = () => {
   const [loading, setLoading] = useState(true);
   const [selectedMail, setSelectedMail] = useState(null);
@@ -34,10 +30,6 @@ const MailTable = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [mailToDelete, setMailToDelete] = useState(null);
   const [hoveredMailId, setHoveredMailId] = useState(null);
-  const [showComposeModal, setShowComposeModal] = useState(false);
-  const [preFilledContact, setPreFilledContact] = useState("");
-  const [preFilledSubject, setPreFilledSubject] = useState("");
-
   const [showComposeModal, setShowComposeModal] = useState(false);
   const [preFilledContact, setPreFilledContact] = useState("");
   const [preFilledSubject, setPreFilledSubject] = useState("");
@@ -261,7 +253,7 @@ const MailTable = () => {
                 </div>
               </td>
               <td className="left-aligned-cell">
-                <strong>{mail.subject}</strong> - {mail.text.slice(0, 30)}...
+                <strong>{mail.subject}</strong>
               </td>
               <td className="centered-cell max-width-100">
                 {hoveredMailId === mail.id ? (
