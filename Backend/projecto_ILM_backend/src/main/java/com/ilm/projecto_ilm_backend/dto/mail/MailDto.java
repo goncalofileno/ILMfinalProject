@@ -38,6 +38,18 @@ public class MailDto {
         this.deleted = deleted;
     }
 
+    public MailDto(String subject, String text, String senderName, String senderMail, String receiverName, String receiverMail) {
+        this.subject = subject;
+        this.text = text;
+        this.senderName = senderName;
+        this.senderMail = senderMail;
+        this.receiverName = receiverName;
+        this.receiverMail = receiverMail;
+        this.date = LocalDateTime.now();
+        this.seen = false;
+        this.deleted = false;
+    }
+
     public int getId() {
         return id;
     }

@@ -13,6 +13,7 @@ public class ShowProfileDto {
     private String location;
     private String profileImage;
     private String bio;
+    private String email;
     private List<ProjectProfileDto> projects;
     private List<SkillDto> skills;
     private List<InterestDto> interests;
@@ -99,4 +100,11 @@ public class ShowProfileDto {
         this.interests = interests;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }

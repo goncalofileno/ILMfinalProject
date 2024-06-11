@@ -143,4 +143,12 @@ public class ProjectDao extends AbstractDao<ProjectEntity>{
         }
     }
 
+
+    public ProjectEntity findByName(String name) {
+        return em.createQuery("SELECT p FROM ProjectEntity p WHERE p.name = :name", ProjectEntity.class)
+                .setParameter("name", name)
+                .getSingleResult();
+    }
+    
+
 }

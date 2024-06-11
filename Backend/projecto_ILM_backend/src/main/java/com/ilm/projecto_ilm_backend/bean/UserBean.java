@@ -607,6 +607,7 @@ public class UserBean {
                 profileDto.setUsername(profileUser.getUsername());
                 profileDto.setFirstName(profileUser.getFirstName());
                 profileDto.setLastName(profileUser.getLastName());
+                profileDto.setEmail(profileUser.getEmail());
                 profileDto.setLocation(profileUser.getLab().getLocal().toString());
                 profileDto.setProfileImage(profileUser.getPhoto());
                 profileDto.setPublicProfile(profileUser.isPublicProfile());

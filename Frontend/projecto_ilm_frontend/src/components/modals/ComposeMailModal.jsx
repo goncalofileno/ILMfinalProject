@@ -1,19 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { Modal, Button, Form, Alert } from "react-bootstrap";
+import { Modal, Button, Form, Alert, ListGroup, InputGroup } from "react-bootstrap";
 import { sendMail, getContacts } from "../../utilities/services";
 import Cookies from "js-cookie";
-import "./ComposeMailModal.css"; // Certifique-se de criar este arquivo CSS
+import "./ComposeMailModal.css";
 
-const ComposeMailModal = ({ show, handleClose }) => {
+const ComposeMailModal = ({ show, handleClose, preFilledContact, preFilledSubject }) => {
   const [contacts, setContacts] = useState([]);
   const [filteredContacts, setFilteredContacts] = useState([]);
-  const [selectedContact, setSelectedContact] = useState("");
-  const [subject, setSubject] = useState("");
+  const [selectedContact, setSelectedContact] = useState(preFilledContact || "");
+  const [subject, setSubject] = useState(preFilledSubject || "");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const [activeSuggestion, setActiveSuggestion] = useState(0);
-  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(-1);
 
   useEffect(() => {
     const fetchContacts = async () => {
@@ -31,47 +30,57 @@ const ComposeMailModal = ({ show, handleClose }) => {
     fetchContacts();
   }, []);
 
+  useEffect(() => {
+    setSelectedContact(preFilledContact || "");
+  }, [preFilledContact]);
+
+  useEffect(() => {
+    setSubject(preFilledSubject || "");
+  }, [preFilledSubject]);
+
   const handleContactChange = (e) => {
     const input = e.target.value;
     setSelectedContact(input);
+    setSelectedSuggestionIndex(-1);
 
-    if (input === "") {
+    if (input) {
+      const filtered = contacts.filter(
+        (contact) =>
+          contact.name.toLowerCase().includes(input.toLowerCase()) &&
+          !selectedContact.includes(contact.email)
+      );
+      setFilteredContacts(filtered);
+    } else {
       setFilteredContacts([]);
-      setShowSuggestions(false);
-      return;
     }
+  };
 
-    const filtered = contacts.filter((contact) =>
-      contact.name.toLowerCase().includes(input.toLowerCase())
-    );
-    setFilteredContacts(filtered);
-    setShowSuggestions(true);
+  const handleKeyDown = (e) => {
+    if (e.key === "ArrowDown") {
+      setSelectedSuggestionIndex((prevIndex) =>
+        Math.min(prevIndex + 1, filteredContacts.length - 1)
+      );
+    } else if (e.key === "ArrowUp") {
+      setSelectedSuggestionIndex((prevIndex) => Math.max(prevIndex - 1, 0));
+    } else if (e.key === "Enter") {
+      e.preventDefault();
+      if (
+        selectedSuggestionIndex >= 0 &&
+        selectedSuggestionIndex < filteredContacts.length
+      ) {
+        handleSelectContact(filteredContacts[selectedSuggestionIndex]);
+      }
+    }
   };
 
   const handleSelectContact = (contact) => {
     setSelectedContact(`${contact.name} <${contact.email}>`);
     setFilteredContacts([]);
-    setShowSuggestions(false);
-  };
-
-  const handleKeyDown = (e) => {
-    if (e.key === "ArrowDown") {
-      setActiveSuggestion((prev) => (prev + 1) % filteredContacts.length);
-    } else if (e.key === "ArrowUp") {
-      setActiveSuggestion((prev) =>
-        prev === 0 ? filteredContacts.length - 1 : prev - 1
-      );
-    } else if (e.key === "Enter") {
-      e.preventDefault();
-      if (filteredContacts.length > 0) {
-        handleSelectContact(filteredContacts[activeSuggestion]);
-      }
-    }
   };
 
   const handleSendMail = async () => {
     if (!selectedContact || !subject || !message) {
-      setSuccess(""); // Clear success message if there is an error
+      setSuccess("");
       setError("Please fill in all fields.");
       return;
     }
@@ -83,7 +92,7 @@ const ComposeMailModal = ({ show, handleClose }) => {
     );
 
     if (!contact) {
-      setSuccess(""); // Clear success message if there is an error
+      setSuccess("");
       setError("Contact does not exist.");
       return;
     }
@@ -97,32 +106,30 @@ const ComposeMailModal = ({ show, handleClose }) => {
       });
 
       if (response.ok) {
-        setError(""); // Clear error message if the mail is sent successfully
+        setError("");
         setSuccess("Mail sent successfully.");
         setTimeout(() => {
           handleClose();
           resetFields();
-        }, 2000); // Close the modal after 2 seconds
+        }, 2000);
       } else {
-        setSuccess(""); // Clear success message if there is an error
+        setSuccess("");
         setError("Failed to send mail.");
       }
     } catch (error) {
       console.error("Failed to send mail:", error);
-      setSuccess(""); // Clear success message if there is an error
+      setSuccess("");
       setError("Failed to send mail.");
     }
   };
 
   const resetFields = () => {
-    setSelectedContact("");
-    setSubject("");
+    setSelectedContact(preFilledContact || "");
+    setSubject(preFilledSubject || "");
     setMessage("");
     setError("");
     setSuccess("");
     setFilteredContacts([]);
-    setShowSuggestions(false);
-    setActiveSuggestion(0);
   };
 
   const handleModalClose = () => {
@@ -141,28 +148,30 @@ const ComposeMailModal = ({ show, handleClose }) => {
         <Form>
           <Form.Group controlId="formContact">
             <Form.Label>Contact</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Enter contact name or email"
-              value={selectedContact}
-              onChange={handleContactChange}
-              onKeyDown={handleKeyDown}
-              autoComplete="off"
-            />
-            {showSuggestions && filteredContacts.length > 0 && (
-              <div className="contact-suggestions">
+            <InputGroup className="mb-3">
+              <Form.Control
+                type="text"
+                placeholder="Enter contact name or email"
+                value={selectedContact}
+                onChange={handleContactChange}
+                onKeyDown={handleKeyDown}
+                autoComplete="off"
+                className="custom-focus"
+              />
+            </InputGroup>
+            {filteredContacts.length > 0 && (
+              <ListGroup className={`suggestions-list ${filteredContacts.length > 0 ? 'show' : ''}`}>
                 {filteredContacts.map((contact, index) => (
-                  <div
+                  <ListGroup.Item
                     key={contact.email}
-                    className={`contact-suggestion ${
-                      index === activeSuggestion ? "active" : ""
-                    }`}
+                    action
                     onClick={() => handleSelectContact(contact)}
+                    active={index === selectedSuggestionIndex}
                   >
-                    {contact.name}
-                  </div>
+                    {`${contact.name} <${contact.email}>`}
+                  </ListGroup.Item>
                 ))}
-              </div>
+              </ListGroup>
             )}
           </Form.Group>
           <Form.Group controlId="formSubject">
@@ -172,6 +181,7 @@ const ComposeMailModal = ({ show, handleClose }) => {
               placeholder="Enter subject"
               value={subject}
               onChange={(e) => setSubject(e.target.value)}
+              className="custom-focus"
             />
           </Form.Group>
           <Form.Group controlId="formMessage">
@@ -182,6 +192,7 @@ const ComposeMailModal = ({ show, handleClose }) => {
               placeholder="Enter your message"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
+              className="custom-focus"
             />
           </Form.Group>
         </Form>
