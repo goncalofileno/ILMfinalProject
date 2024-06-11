@@ -9,7 +9,12 @@ import ProfilePage from "./pages/ProfilePage";
 import InboxMailPage from "./pages/InboxMailPage";
 import SentMailPage from "./pages/SentMailPage";
 import reportWebVitals from "./reportWebVitals";
-import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  useLocation,
+} from "react-router-dom";
 import "./index.css";
 import { Alert } from "react-bootstrap";
 import ResetPasswordPage from "./pages/ResetPasswordPage";

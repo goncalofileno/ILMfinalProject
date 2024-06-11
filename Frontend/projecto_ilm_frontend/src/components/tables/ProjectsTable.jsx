@@ -17,7 +17,11 @@ export default function ProjectsTable({
   setKeyword,
   keywordButton,
   setKeywordButton,
+  navigateTableProjectsTrigger,
+  setNavigateTableProjectsTrigger,
 }) {
+  const NUMBER_OF_PROJECTS_PAGE = 15;
+
   function statusColor(status) {
     if (status === "PLANNING") {
       return "rgb(255, 255, 0)";
@@ -56,7 +60,10 @@ export default function ProjectsTable({
           />
           <Button
             variant="primary"
-            onClick={() => setKeywordButton(!keywordButton)}
+            onClick={() => {
+              setKeywordButton(!keywordButton);
+              setNavigateTableProjectsTrigger(!navigateTableProjectsTrigger);
+            }}
             style={{
               backgroundColor: "#f39c12",
               borderColor: "#f39c12",
@@ -66,7 +73,10 @@ export default function ProjectsTable({
           </Button>
           <Button
             variant="secondary"
-            onClick={handleClearSearch}
+            onClick={() => {
+              handleClearSearch();
+              setNavigateTableProjectsTrigger(!navigateTableProjectsTrigger);
+            }}
             style={{ marginLeft: "10px" }}
           >
             Clear Search
@@ -100,13 +110,39 @@ export default function ProjectsTable({
               </td>
             </tr>
           ))}
+          {Array(NUMBER_OF_PROJECTS_PAGE - projects.length)
+            .fill()
+            .map((index) => (
+              <tr key={index + projects.length}>
+                <td className="row-no-content"></td>
+                <td className="row-no-content"></td>
+                <td className="row-no-content"></td>
+                <td className="row-no-content"></td>
+                <td className="row-no-content"></td>
+                <td className="row-no-content"></td>
+              </tr>
+            ))}
         </tbody>
       </table>
-      <TablePagination
-        totalPages={totalPages}
-        currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
-      />
+      <div id="align-div-buttons">
+        <div id="flex-row-table-projects">
+          <button className="submit-button" id="btn-add-project-table-projects">
+            Add Project
+          </button>
+          <TablePagination
+            totalPages={totalPages}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            setNavigateTableProjectsTrigger={setNavigateTableProjectsTrigger}
+          />
+          <button
+            className="submit-button"
+            id="btn-projects-statistics-table-projects"
+          >
+            Projects Statistics
+          </button>
+        </div>
+      </div>
     </>
   );
 }

@@ -1,51 +1,55 @@
 .aside {
-   display: flex;
-   flex-direction: column;
-   gap: 30px;
-   width: 25%;
-   position: fixed;
-   left: 0%;
-   top: 0%;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  width: 25%;
+  position: fixed;
+  left: 0%;
+  top: 0%;
 
-   padding: 20px;
-   padding-top: 50px;
-   padding-right: 12%;
-   margin-top: 60px;
-   height: calc(100vh - 60px);
+  padding: 20px;
+  padding-top: 50px;
+  padding-right: 12%;
+  margin-top: 60px;
+  height: calc(100vh - 60px);
 }
 .aside-background {
-   width: 100%;
-   position: fixed;
-   left: 0%;
-   top: 0%;
-   background-color: rgb(30, 40, 82);
-   padding: 20px;
-   padding-top: 50px;
-   padding-right: 12%;
-   margin-top: 60px;
-   height: calc(100vh - 60px);
+  width: 100%;
+  position: fixed;
+  left: 0%;
+  top: 0%;
+  background-color: rgb(30, 40, 82);
+  padding: 20px;
+  padding-top: 50px;
+  padding-right: 12%;
+  margin-top: 60px;
+  height: calc(100vh - 60px);
 }
 
 #label-slots {
-   margin-bottom: 0;
+  margin-bottom: 0;
 }
 #slots-switch {
-   width: 100%;
-   align-items: center;
-   justify-content: center;
-   gap: 6%;
-   display: flex;
-   flex-direction: row;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 6%;
+  display: flex;
+  flex-direction: row;
 }
 
 #select-lab {
-   margin-top: 30%;
+  margin-top: 30%;
 }
 
 .custom-focus {
-   cursor: pointer;
+  cursor: pointer;
 }
 
 .custom-switch .form-check-input {
-   cursor: pointer;
+  cursor: pointer;
+}
+
+.div-control-form {
+  width: 100%;
 }

@@ -10,7 +10,11 @@ import { Modal, Button, Form, InputGroup, Pagination } from "react-bootstrap";
 import { FaTrash } from "react-icons/fa";
 import ComposeMailModal from "../modals/ComposeMailModal";
 import "./MailTable.css";
+<<<<<<< Updated upstream
 import DOMPurify from "dompurify";
+=======
+import TablePagination from "../paginations/TablePagination";
+>>>>>>> Stashed changes
 
 const MailTable = () => {
   const [loading, setLoading] = useState(true);
@@ -29,9 +33,13 @@ const MailTable = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [mailToDelete, setMailToDelete] = useState(null);
   const [hoveredMailId, setHoveredMailId] = useState(null);
+<<<<<<< Updated upstream
   const [showComposeModal, setShowComposeModal] = useState(false);
   const [preFilledContact, setPreFilledContact] = useState("");
   const [preFilledSubject, setPreFilledSubject] = useState("");
+=======
+  const [trigger, setTrigger] = useState(false);
+>>>>>>> Stashed changes
 
   const handleDeleteClick = (mail, event) => {
     event.stopPropagation(); // Prevent event propagation
@@ -227,7 +235,7 @@ const MailTable = () => {
           <tr>
             <th className="centered-cell max-width-150">Sender</th>
             <th className="left-aligned-cell">Subject</th>
-            <th className="centered-cell max-width-100">Time</th>
+            <th className="centered-cell max-width-100">Date</th>
           </tr>
         </thead>
         <tbody>
@@ -270,6 +278,7 @@ const MailTable = () => {
         totalPages={totalPages}
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
+        setNavigateTableProjectsTrigger={setTrigger}
       />
 
       {selectedMail && (

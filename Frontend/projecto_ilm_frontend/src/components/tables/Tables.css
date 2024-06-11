@@ -70,4 +70,28 @@ td {
 
 #search-table-projects {
   width: 50%;
+  cursor: text;
+}
+
+#flex-row-table-projects {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 90%;
+}
+
+#btn-add-project-table-projects,
+#btn-projects-statistics-table-projects {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+#align-div-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.row-no-content {
+  height: 34px;
 }

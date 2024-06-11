@@ -84,7 +84,7 @@ public class ProjectDao extends AbstractDao<ProjectEntity>{
                                                  String  statusAsc,
                                                  String  labAsc,
                                                  String  startDateAsc,
-                                                 String endDateAsc, String keyword) {
+                                                 String endDateAsc, String keyword,int userId) {
         String baseQueryString = em
                 .createNamedQuery("Project.getProjectTableDtoInfo", Object[].class)
                 .unwrap(org.hibernate.query.Query.class)
