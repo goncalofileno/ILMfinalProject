@@ -1,127 +1,127 @@
 .app-slogan {
-   margin-top: 20px;
-   font-size: 60px;
+  margin-top: 20px;
+  font-size: 60px;
 }
 
 @media (max-width: 1200px) {
-   .app-slogan {
-      font-size: 52px;
-   }
+  .app-slogan {
+    font-size: 52px;
+  }
 }
 
 .app-slogan-1 {
-   text-align: center;
+  text-align: center;
 }
 
 .ilm-description {
-   text-align: justify;
-   font-size: 20px;
-   margin-top: 5vh;
+  text-align: justify;
+  font-size: 20px;
+  margin-top: 5vh;
 }
 
 .div-project-button {
-   display: flex;
-   justify-content: center;
-   margin-top: 12vh;
+  display: flex;
+  justify-content: center;
+  margin-top: 12vh;
 }
 
 #projects-button {
-   width: 70%;
+  width: 70%;
 }
 
 .ilm-general-subTitle {
-   font-size: 50px;
-   color: rgb(60, 60, 60);
+  font-size: 50px;
+  color: rgb(60, 60, 60);
 }
 
 .flex-col-gap-16 {
-   display: flex;
-   flex-direction: column;
-   gap: 16px;
-   align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
 }
 
 .row-margin-top-20 {
-   margin-top: 15px;
+  margin-top: 30px;
 }
 
 .see-more-projects-button-div {
-   display: flex;
-   justify-content: center;
-   width: 100%;
-   height: 100%;
-   align-items: center;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  align-items: center;
 }
 .btn-with-up-arrow {
-   width: 90%;
-   text-align: center;
+  width: 90%;
+  text-align: center;
 }
 .btn-with-up-arrow:hover .margin-left-arrow {
-   transform: translate(0px, -6px);
-   transition: all 0.5s cubic-bezier(0.215, 0.61, 0.355, 1) 0s;
+  transform: translate(0px, -6px);
+  transition: all 0.5s cubic-bezier(0.215, 0.61, 0.355, 1) 0s;
 }
 
 #last-column-projects {
-   height: 100%;
-   gap: 0px;
+  height: 100%;
+  gap: 0px;
 }
 
 .last-row-padd-bott {
-   padding-bottom: 15px;
+  padding-bottom: 15px;
 }
 
 .align-items-center {
-   display: flex;
-   justify-content: center;
-   flex-direction: column;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
 }
 
 .col-margin-bottom-16 {
-   margin-bottom: 16px;
+  margin-bottom: 16px;
 }
 
 #loginForm-button {
-   display: flex;
-   justify-content: center;
+  display: flex;
+  justify-content: center;
 }
 
 .div-see-login-button {
-   display: flex;
-   justify-content: center;
+  display: flex;
+  justify-content: center;
 }
 
 #loginForm-button {
-   width: 60%;
-   margin-top: 80px;
-   margin-bottom: 100px;
+  width: 60%;
+  margin-top: 80px;
+  margin-bottom: 100px;
 }
 
 #alert-message-register {
-   padding-bottom: 4px;
-   padding-top: 2px;
-   display: flex;
-   flex-direction: column;
-   align-items: center;
-   width: 80%;
-   margin-bottom: 8px;
+  padding-bottom: 4px;
+  padding-top: 2px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 80%;
+  margin-bottom: 8px;
 }
 
 #alert-message-register p {
-   margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 .align-center {
-   display: flex;
-   align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .btn-arrow {
-   padding: 5px 15px;
-   border-radius: 50%;
-   border: none;
-   background-color: transparent;
+  padding: 5px 15px;
+  border-radius: 50%;
+  border: none;
+  background-color: transparent;
 }
 
 .btn-arrow:hover {
-   background-color: rgb(243, 243, 243);
+  background-color: rgb(243, 243, 243);
 }
