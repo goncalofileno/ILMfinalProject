@@ -83,20 +83,6 @@ public class ProjectBean {
     }
 
     public void createDefaultUsersInProjectIfNotExistent() {
-//        ProjectEntity project1 = projectDao.findById(1);
-//        UserProjectEntity userProjectEntity1 = new UserProjectEntity();
-//        userProjectEntity1.setId(1);
-//        userProjectEntity1.setProject(project1);
-//        userProjectEntity1.setUser(userDao.findById(1));
-//        userProjectEntity1.setType(UserInProjectTypeENUM.CREATOR);
-//        userProjectDao.merge(userProjectEntity1);
-//        UserProjectEntity userProjectEntity2 = new UserProjectEntity();
-//        userProjectEntity2.setId(2);
-//        userProjectEntity2.setProject(project1);
-//        userProjectEntity2.setUser(userDao.findById(2));
-//        userProjectEntity2.setType(UserInProjectTypeENUM.MEMBER);
-//        userProjectDao.merge(userProjectEntity2);
-
         if(userProjectDao.countUserProjects()<20) {
 
             for (int i = 1; i < numberOfProjectsToCreate + 1; i++) {
@@ -228,6 +214,7 @@ public class ProjectBean {
 
         return "User invited successfully";
     }
+
 
 
 }
