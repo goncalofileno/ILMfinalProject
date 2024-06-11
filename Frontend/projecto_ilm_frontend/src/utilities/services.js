@@ -675,6 +675,49 @@ async function searchSentMails(sessionId, query, page, pageSize) {
   }
 }
 
+async function getUserProjects(sessionId) {
+  try {
+    const response = await fetch(`${baseURL}project/userOwnerProjectsToInvite`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Cookie: `session-id=${sessionId}`,
+      },
+      credentials: 'include',
+    });
+
+    if (response.ok) {
+      return await response.json();
+    } else {
+      console.error('Failed to fetch user projects:', response.statusText);
+      return [];
+    }
+  } catch (error) {
+    console.error('Error fetching user projects:', error);
+    return [];
+  }
+}
+
+async function inviteUserToProject(sessionId, projectName, systemUsername) {
+  try {
+    const response = await fetch(
+      `${baseURL}project/inviteUser?projectName=${projectName}&systemUsername=${systemUsername}`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Cookie: `session-id=${sessionId}`,
+        },
+        credentials: 'include',
+      }
+    );
+
+    return response;
+  } catch (error) {
+    console.error('Error inviting user to project:', error);
+  }
+}
+
 
 
 export {
@@ -712,4 +755,6 @@ export {
   getLabsWithSessionId,
   getAllStatus,
   searchSentMails,
+  getUserProjects,
+  inviteUserToProject,
 };

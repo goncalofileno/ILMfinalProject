@@ -14,14 +14,15 @@ import java.util.List;
  */
 @Entity
 @Table(name = "user")
-@NamedQuery(name = "User.findByEmail", query = "SELECT u FROM UserEntity u WHERE u.email = :email")
-@NamedQuery(name = "User.findById", query = "SELECT u FROM UserEntity u WHERE u.id = :id")
-@NamedQuery(name = "User.findByUsername", query = "SELECT u FROM UserEntity u WHERE u.username = :username")
-@NamedQuery(name = "User.findByAuxiliarToken", query = "SELECT u FROM UserEntity u WHERE u.auxiliarToken = :auxiliarToken")
-@NamedQuery(name = "User.checkPassFromEmail", query = "SELECT u.password FROM UserEntity u WHERE u.email = :email")
-@NamedQuery(name = "User.checkSystemUsername", query = "SELECT u FROM UserEntity u WHERE u.systemUsername = :systemUsername")
-@NamedQuery(name = "User.findBySystemUsername", query = "SELECT u FROM UserEntity u WHERE u.systemUsername = :systemUsername")
-
+@NamedQueries({
+        @NamedQuery(name = "User.findByEmail", query = "SELECT u FROM UserEntity u WHERE u.email = :email"),
+        @NamedQuery(name = "User.findById", query = "SELECT u FROM UserEntity u WHERE u.id = :id"),
+        @NamedQuery(name = "User.findByUsername", query = "SELECT u FROM UserEntity u WHERE u.username = :username"),
+        @NamedQuery(name = "User.findByAuxiliarToken", query = "SELECT u FROM UserEntity u WHERE u.auxiliarToken = :auxiliarToken"),
+        @NamedQuery(name = "User.checkPassFromEmail", query = "SELECT u.password FROM UserEntity u WHERE u.email = :email"),
+        @NamedQuery(name = "User.checkSystemUsername", query = "SELECT u FROM UserEntity u WHERE u.systemUsername = :systemUsername"),
+        @NamedQuery(name = "User.findBySystemUsername", query = "SELECT u FROM UserEntity u WHERE u.systemUsername = :systemUsername")
+})
 public class UserEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;

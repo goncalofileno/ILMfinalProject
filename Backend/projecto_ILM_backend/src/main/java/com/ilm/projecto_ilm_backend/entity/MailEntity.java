@@ -36,7 +36,7 @@ public class MailEntity implements Serializable {
     /**
      * The text of the message.
      */
-    @Column(name = "text", nullable = false, unique = false, updatable = true)
+    @Column(name = "text", nullable = false, unique = false, updatable = true, columnDefinition = "TEXT")
     private String text;
 
     /**

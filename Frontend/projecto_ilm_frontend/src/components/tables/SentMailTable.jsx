@@ -289,6 +289,7 @@ const SentMailTable = () => {
                   type="text"
                   readOnly
                   value={`${selectedMail.receiverName} <${selectedMail.receiverMail}>`}
+                  className="custom-focus"
                 />
               </Form.Group>
               <Form.Group controlId="formSubject">
@@ -297,6 +298,7 @@ const SentMailTable = () => {
                   type="text"
                   readOnly
                   value={selectedMail.subject}
+                  className="custom-focus"
                 />
               </Form.Group>
               <Form.Group controlId="formMessage">
@@ -306,6 +308,7 @@ const SentMailTable = () => {
                   rows={8}
                   readOnly
                   value={selectedMail.text}
+                  className="custom-focus"
                 />
               </Form.Group>
               <Form.Group controlId="formDate">
@@ -314,6 +317,7 @@ const SentMailTable = () => {
                   type="text"
                   readOnly
                   value={new Date(selectedMail.date).toLocaleString()}
+                  className="custom-focus"
                 />
               </Form.Group>
             </Form>

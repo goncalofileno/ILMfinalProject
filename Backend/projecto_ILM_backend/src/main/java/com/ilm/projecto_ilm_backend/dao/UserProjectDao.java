@@ -1,5 +1,6 @@
 package com.ilm.projecto_ilm_backend.dao;
 
+import com.ilm.projecto_ilm_backend.ENUMS.UserInProjectTypeENUM;
 import com.ilm.projecto_ilm_backend.entity.UserProjectEntity;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
@@ -121,5 +122,20 @@ public class UserProjectDao extends AbstractDao<UserProjectEntity>{
         } catch (Exception e) {
             return 0;
         }
+    }
+
+    public boolean isUserCreatorOrManager(int userId, int projectId) {
+        return em.createNamedQuery("UserProject.isUserInProject", Long.class)
+                .setParameter("userId", userId)
+                .setParameter("projectId", projectId)
+                .getSingleResult() > 0;
+    }
+
+    public boolean isUserAlreadyInvited(int userId, int projectId) {
+        return em.createNamedQuery("UserProject.isUserAlreadyInvited", Long.class)
+                .setParameter("userId", userId)
+                .setParameter("projectId", projectId)
+                .setParameter("invited", UserInProjectTypeENUM.INVITED)
+                .getSingleResult() > 0;
     }
 }

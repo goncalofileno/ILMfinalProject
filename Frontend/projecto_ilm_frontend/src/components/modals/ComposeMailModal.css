@@ -1,20 +1,20 @@
-.contact-suggestions {
-    position: absolute;
-    z-index: 1000;
-    background-color: white;
-    border: 1px solid #ddd;
-    width: 100%;
-    max-height: 150px;
-    overflow-y: auto;
-  }
-  
-  .contact-suggestion {
-    padding: 8px;
-    cursor: pointer;
-  }
-  
-  .contact-suggestion.active,
-  .contact-suggestion:hover {
-    background-color: #f1f1f1;
-  }
-  
+/* ComposeMailModal.css */
+.suggestions-list {
+  position: absolute;
+  z-index: 1000; /* Ensure it appears above other content */
+  width: 96%; /* Adjust to ensure it fits within the input group */
+  max-height: 150px; /* Adjust as needed */
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: white; /* Ensure the background is white */
+  display: none; /* Hide the list by default */
+}
+
+.suggestions-list.show {
+  display: block; /* Only show when there are suggestions */
+}
+
+.custom-focus:focus {
+  box-shadow: 0 0 5px 2px rgba(243, 156, 18, 0.5);
+}
