@@ -41,6 +41,7 @@ public class ProjectBean {
 
     @Inject
     private UserProjectDao userProjectDao;
+
     @Inject
     SessionDao sessionDao;
     @Inject
@@ -122,8 +123,9 @@ public class ProjectBean {
         if(status == null || status.equals("")) state=null;
         else state=StateProjectENUM.valueOf(status);
         if(keyword == null || keyword.equals("")) keyword=null;
+        int userId=sessionDao.findUserIdBySessionId(sessionId);
         List<Object[]> projectsInfo = projectDao.getProjectTableDtoInfo(page,NUMBER_OF_PROJECTS_PER_PAGE,lab, state, slotsAvailable,nameAsc,
-                statusAsc, labAsc,startDateAsc, endDateAsc, keyword);
+                statusAsc, labAsc,startDateAsc, endDateAsc, keyword, userId);
         ArrayList<ProjectTableDto> projectsTableDtos = new ArrayList<>();
 
         for (Object[] projectInfo : projectsInfo) {

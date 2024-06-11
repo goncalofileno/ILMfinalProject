@@ -12,6 +12,8 @@ export default function AsideProjectsTable({
   setSelectedStatus,
   slotsAvailable,
   setSlotsAvailable,
+  navigateTableProjectsTrigger,
+  setNavigateTableProjectsTrigger,
 }) {
   const [labs, setLabs] = useState([]);
   const [status, setStatus] = useState([]);
@@ -32,7 +34,7 @@ export default function AsideProjectsTable({
   return (
     <div className="aside-background">
       <div className="aside">
-        <div id="first-div">
+        <div className="div-control-form" id="first-div">
           <Form.Label className="custom-label" style={{ color: "white" }}>
             Lab
           </Form.Label>
@@ -40,7 +42,10 @@ export default function AsideProjectsTable({
             as="select"
             className="custom-focus"
             value={selectedLab}
-            onChange={(e) => setSelectedLab(e.target.value)}
+            onChange={(e) => {
+              setSelectedLab(e.target.value);
+              setNavigateTableProjectsTrigger(!navigateTableProjectsTrigger);
+            }}
           >
             <option value="">All Labs</option>
             {labs.map((lab, index) => (
@@ -51,7 +56,7 @@ export default function AsideProjectsTable({
             ))}
           </Form.Control>
         </div>
-        <div>
+        <div className="div-control-form">
           <Form.Label className="custom-label" style={{ color: "white" }}>
             Status
           </Form.Label>
@@ -59,7 +64,10 @@ export default function AsideProjectsTable({
             as="select"
             className="custom-focus"
             value={selectedStatus}
-            onChange={(e) => setSelectedStatus(e.target.value)}
+            onChange={(e) => {
+              setSelectedStatus(e.target.value);
+              setNavigateTableProjectsTrigger(!navigateTableProjectsTrigger);
+            }}
           >
             {" "}
             <option value="">All Status</option>
@@ -81,7 +89,10 @@ export default function AsideProjectsTable({
           <Form.Check
             type="switch"
             checked={slotsAvailable}
-            onChange={(e) => setSlotsAvailable(e.target.checked)}
+            onChange={(e) => {
+              setSlotsAvailable(e.target.checked);
+              setNavigateTableProjectsTrigger(!navigateTableProjectsTrigger);
+            }}
           />
         </div>
       </div>

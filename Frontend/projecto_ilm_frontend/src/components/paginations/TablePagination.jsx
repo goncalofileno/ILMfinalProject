@@ -4,18 +4,22 @@ export default function TablePagination({
   totalPages,
   currentPage,
   setCurrentPage,
+  setNavigateTableProjectsTrigger,
 }) {
   const renderPaginationItems = () => {
     const items = [];
     const maxPagesToShow = 5;
-
+    console.log("current page", currentPage);
     if (totalPages <= maxPagesToShow) {
       for (let number = 1; number <= totalPages; number++) {
         items.push(
           <Pagination.Item
             key={number}
             active={number === currentPage}
-            onClick={() => setCurrentPage(number)}
+            onClick={() => {
+              setCurrentPage(number);
+              setNavigateTableProjectsTrigger((prev) => !prev);
+            }}
           >
             {number}
           </Pagination.Item>
@@ -39,7 +43,10 @@ export default function TablePagination({
           <Pagination.Item
             key={number}
             active={number === currentPage}
-            onClick={() => setCurrentPage(number)}
+            onClick={() => {
+              setCurrentPage(number);
+              setNavigateTableProjectsTrigger((prev) => !prev);
+            }}
           >
             {number}
           </Pagination.Item>
@@ -52,7 +59,10 @@ export default function TablePagination({
         <Pagination.Item
           key={totalPages}
           active={totalPages === currentPage}
-          onClick={() => setCurrentPage(totalPages)}
+          onClick={() => {
+            setCurrentPage(totalPages);
+            setNavigateTableProjectsTrigger((prev) => !prev);
+          }}
         >
           {totalPages}
         </Pagination.Item>
@@ -66,7 +76,10 @@ export default function TablePagination({
     <div className="pagination-container">
       <Pagination className="pagination">
         <Pagination.First
-          onClick={() => setCurrentPage(1)}
+          onClick={() => {
+            setCurrentPage(1);
+            setNavigateTableProjectsTrigger((prev) => !prev);
+          }}
           disabled={currentPage === 1}
         />
         <Pagination.Prev
@@ -75,13 +88,17 @@ export default function TablePagination({
         />
         {renderPaginationItems()}
         <Pagination.Next
-          onClick={() =>
-            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-          }
+          onClick={() => {
+            setCurrentPage((prev) => Math.max(prev - 1, 1));
+            setNavigateTableProjectsTrigger((prev) => !prev);
+          }}
           disabled={currentPage === totalPages}
         />
         <Pagination.Last
-          onClick={() => setCurrentPage(totalPages)}
+          onClick={() => {
+            setCurrentPage(totalPages);
+            setNavigateTableProjectsTrigger((prev) => !prev);
+          }}
           disabled={currentPage === totalPages}
         />
       </Pagination>

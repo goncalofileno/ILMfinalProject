@@ -4,21 +4,41 @@ import ProjectsTable from "../components/tables/ProjectsTable";
 import AsideProjectsTable from "../components/asides/AsideProjectsTable";
 import { getTableProjects } from "../utilities/services";
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
+function useQuery() {
+  return new URLSearchParams(useLocation().search);
+}
 
 const ProjectsPage = () => {
-  const [totalPages, setTotalPages] = useState(20);
-  const [currentPage, setCurrentPage] = useState(1);
+  const query = useQuery();
+  const navigate = useNavigate();
+  const [totalPages, setTotalPages] = useState(null);
+  const [currentPage, setCurrentPage] = useState(
+    parseInt(query.get("currentPage")) || 1
+  );
   const [projects, setProjects] = useState([]);
-  const [selectedLab, setSelectedLab] = useState("");
-  const [selectedStatus, setSelectedStatus] = useState("");
-  const [slotsAvailable, setSlotsAvailable] = useState(false);
-  const [nameAsc, setNameAsc] = useState("");
-  const [statusAsc, setStatusAsc] = useState("");
-  const [labAsc, setLabAsc] = useState("");
-  const [startDateAsc, setStartDateAsc] = useState("");
-  const [endDateAsc, setEndDateAsc] = useState("");
-  const [keyword, setKeyword] = useState("");
+  const [selectedLab, setSelectedLab] = useState(
+    query.get("selectedLab") || ""
+  );
+  const [selectedStatus, setSelectedStatus] = useState(
+    query.get("selectedStatus") || ""
+  );
+  const [slotsAvailable, setSlotsAvailable] = useState(
+    query.get("slotsAvailable") === "true"
+  );
+  const [nameAsc, setNameAsc] = useState(query.get("nameAsc") || "");
+  const [statusAsc, setStatusAsc] = useState(query.get("statusAsc") || "");
+  const [labAsc, setLabAsc] = useState(query.get("labAsc") || "");
+  const [startDateAsc, setStartDateAsc] = useState(
+    query.get("startDateAsc") || ""
+  );
+  const [endDateAsc, setEndDateAsc] = useState(query.get("endDateAsc") || "");
+  const [keyword, setKeyword] = useState(query.get("search_query") || "");
   const [keywordButton, setKeywordButton] = useState(false);
+  const [navigateTableProjectsTrigger, setNavigateTableProjectsTrigger] =
+    useState(false);
 
   const sortByName = () => {
     if (statusAsc !== "") setStatusAsc("");
@@ -27,6 +47,7 @@ const ProjectsPage = () => {
     if (endDateAsc !== "") setEndDateAsc("");
     if (nameAsc === "") setNameAsc(true);
     else setNameAsc(!nameAsc);
+    setNavigateTableProjectsTrigger((prev) => !prev);
   };
 
   const sortByStatus = () => {
@@ -36,6 +57,7 @@ const ProjectsPage = () => {
     if (endDateAsc !== "") setEndDateAsc("");
     if (statusAsc === "") setStatusAsc(true);
     else setStatusAsc(!statusAsc);
+    setNavigateTableProjectsTrigger((prev) => !prev);
   };
 
   const sortByLab = () => {
@@ -45,6 +67,7 @@ const ProjectsPage = () => {
     if (endDateAsc !== "") setEndDateAsc("");
     if (labAsc === "") setLabAsc(true);
     else setLabAsc(!labAsc);
+    setNavigateTableProjectsTrigger((prev) => !prev);
   };
 
   const sortByStartDate = () => {
@@ -54,6 +77,7 @@ const ProjectsPage = () => {
     if (endDateAsc !== "") setEndDateAsc("");
     if (startDateAsc === "") setStartDateAsc(true);
     else setStartDateAsc(!startDateAsc);
+    setNavigateTableProjectsTrigger((prev) => !prev);
   };
 
   const sortByEndDate = () => {
@@ -83,18 +107,24 @@ const ProjectsPage = () => {
         setProjects(data.tableProjects);
         setTotalPages(data.maxPageNumber);
       });
-  }, [
-    currentPage,
-    selectedLab,
-    selectedStatus,
-    slotsAvailable,
-    nameAsc,
-    statusAsc,
-    labAsc,
-    startDateAsc,
-    endDateAsc,
-    keywordButton,
-  ]);
+
+    const queryParamsObj = {};
+
+    if (currentPage) queryParamsObj.currentPage = currentPage;
+    if (selectedLab) queryParamsObj.selectedLab = selectedLab;
+    if (selectedStatus) queryParamsObj.selectedStatus = selectedStatus;
+    if (slotsAvailable) queryParamsObj.slotsAvailable = slotsAvailable;
+    if (nameAsc) queryParamsObj.nameAsc = nameAsc;
+    if (statusAsc) queryParamsObj.statusAsc = statusAsc;
+    if (labAsc) queryParamsObj.labAsc = labAsc;
+    if (startDateAsc) queryParamsObj.startDateAsc = startDateAsc;
+    if (endDateAsc) queryParamsObj.endDateAsc = endDateAsc;
+    if (keyword) queryParamsObj.search_query = keyword;
+
+    const queryParams = new URLSearchParams(queryParamsObj).toString();
+
+    navigate(`/projects?${queryParams}`);
+  }, [navigateTableProjectsTrigger]);
 
   return (
     <>
@@ -106,6 +136,8 @@ const ProjectsPage = () => {
         setSelectedStatus={setSelectedStatus}
         slotsAvailable={slotsAvailable}
         setSlotsAvailable={setSlotsAvailable}
+        navigateTableProjectsTrigger={navigateTableProjectsTrigger}
+        setNavigateTableProjectsTrigger={setNavigateTableProjectsTrigger}
       />
       <div className="ilm-pageb-with-aside">
         <h1 className="page-title">
@@ -127,6 +159,8 @@ const ProjectsPage = () => {
             setKeyword={setKeyword}
             keywordButton={keywordButton}
             setKeywordButton={setKeywordButton}
+            navigateTableProjectsTrigger={navigateTableProjectsTrigger}
+            setNavigateTableProjectsTrigger={setNavigateTableProjectsTrigger}
           ></ProjectsTable>
         </div>
       </div>

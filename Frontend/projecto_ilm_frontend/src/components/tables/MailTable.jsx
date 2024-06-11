@@ -13,6 +13,10 @@ import "./MailTable.css";
 import DOMPurify from "dompurify";
 import TablePagination from "../paginations/TablePagination";
 
+import DOMPurify from "dompurify";
+
+import TablePagination from "../paginations/TablePagination";
+
 const MailTable = () => {
   const [loading, setLoading] = useState(true);
   const [selectedMail, setSelectedMail] = useState(null);
@@ -33,6 +37,12 @@ const MailTable = () => {
   const [showComposeModal, setShowComposeModal] = useState(false);
   const [preFilledContact, setPreFilledContact] = useState("");
   const [preFilledSubject, setPreFilledSubject] = useState("");
+
+  const [showComposeModal, setShowComposeModal] = useState(false);
+  const [preFilledContact, setPreFilledContact] = useState("");
+  const [preFilledSubject, setPreFilledSubject] = useState("");
+
+  const [trigger, setTrigger] = useState(false);
 
   const handleDeleteClick = (mail, event) => {
     event.stopPropagation(); // Prevent event propagation
@@ -228,7 +238,7 @@ const MailTable = () => {
           <tr>
             <th className="centered-cell max-width-150">Sender</th>
             <th className="left-aligned-cell">Subject</th>
-            <th className="centered-cell max-width-100">Time</th>
+            <th className="centered-cell max-width-100">Date</th>
           </tr>
         </thead>
         <tbody>
@@ -271,6 +281,7 @@ const MailTable = () => {
         totalPages={totalPages}
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
+        setNavigateTableProjectsTrigger={setTrigger}
       />
 
       {selectedMail && (

@@ -190,7 +190,7 @@ code {
 }
 
 .table-margin-top {
-  margin-top: 30px;
+  margin-top: 15px;
 }
 
 .page-title {
@@ -211,4 +211,15 @@ code {
 
 .ilm-search::placeholder {
   color: rgb(30, 40, 82);
+}
+
+.active > .page-link,
+.page-link.active {
+  background-color: #f39c12;
+  border-color: #f39c12;
+  color: white;
+}
+
+.page-link {
+  color: #f39c12;
 }
