@@ -4,7 +4,9 @@ import com.ilm.projecto_ilm_backend.ENUMS.StateProjectENUM;
 import com.ilm.projecto_ilm_backend.ENUMS.UserInProjectTypeENUM;
 import com.ilm.projecto_ilm_backend.ENUMS.WorkLocalENUM;
 import com.ilm.projecto_ilm_backend.dao.*;
+import com.ilm.projecto_ilm_backend.dto.mail.MailDto;
 import com.ilm.projecto_ilm_backend.dto.project.HomeProjectDto;
+import com.ilm.projecto_ilm_backend.dto.project.ProjectProfileDto;
 import com.ilm.projecto_ilm_backend.dto.project.ProjectTableDto;
 import com.ilm.projecto_ilm_backend.entity.*;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -17,6 +19,7 @@ import java.util.List;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class ProjectBean {
@@ -37,12 +40,14 @@ public class ProjectBean {
     UserProjectDao userProjectDao;
     @Inject
     SessionDao sessionDao;
+    @Inject
+    MailBean mailBean;
 
-    int numberOfProjectsToCreate=20;
+    int numberOfProjectsToCreate = 20;
 
     public void createDefaultProjectsIfNotExistent() {
 
-        if(projectDao.countProjects()<numberOfProjectsToCreate) {
+        if (projectDao.countProjects() < numberOfProjectsToCreate) {
             for (int i = 0; i < numberOfProjectsToCreate; i++) {
 
                 ProjectEntity project = new ProjectEntity();
@@ -87,9 +92,9 @@ public class ProjectBean {
 //        userProjectEntity2.setType(UserInProjectTypeENUM.MEMBER);
 //        userProjectDao.merge(userProjectEntity2);
 
-        if(userProjectDao.countUserProjects()<20) {
+        if (userProjectDao.countUserProjects() < 20) {
 
-            for (int i = 1; i < numberOfProjectsToCreate+1; i++) {
+            for (int i = 1; i < numberOfProjectsToCreate + 1; i++) {
 
                 ProjectEntity project = projectDao.findById(i);
 
@@ -121,14 +126,14 @@ public class ProjectBean {
         List<Object[]> projectsInfo = projectDao.getProjectTableDtoInfo(page);
 
         for (Object[] projectInfo : projectsInfo) {
-            ProjectTableDto projectTableDto=new ProjectTableDto();
+            ProjectTableDto projectTableDto = new ProjectTableDto();
             projectTableDto.setName((String) projectInfo[1]);
             projectTableDto.setLab(((LabEntity) projectInfo[2]).getLocal());
             projectTableDto.setStatus((StateProjectENUM) projectInfo[3]);
-            projectTableDto.setStartDate( (Date) projectInfo[4]);
+            projectTableDto.setStartDate((Date) projectInfo[4]);
             projectTableDto.setFinalDate((Date) projectInfo[5]);
             projectTableDto.setMaxMembers((int) projectInfo[6]);
-            projectTableDto.setNumberOfMembers(userProjectDao.getNumberOfUsersByProjectId((int)projectInfo[0]));
+            projectTableDto.setNumberOfMembers(userProjectDao.getNumberOfUsersByProjectId((int) projectInfo[0]));
             projectTableDto.setMember(userProjectDao.isUserInProject((int) projectInfo[0], sessionDao.findUserIdBySessionId(sessionId)));
             projectsTableDtos.add(projectTableDto);
 
@@ -138,4 +143,58 @@ public class ProjectBean {
 
         return projectsTableDtos;
     }
+
+    public List<ProjectProfileDto> getProjectsByUserRoleToInvite(int userId, UserInProjectTypeENUM... roles) {
+        List<UserProjectEntity> userProjects = userProjectDao.findByUserId(userId);
+        return userProjects.stream()
+                .filter(up -> List.of(roles).contains(up.getType()) &&
+                        up.getProject().getStatus() != StateProjectENUM.CANCELED &&
+                        up.getProject().getStatus() != StateProjectENUM.FINISHED)
+                .map(up -> {
+                    ProjectProfileDto dto = new ProjectProfileDto();
+                    dto.setName(up.getProject().getName());
+                    dto.setTypeMember(up.getType().name());
+                    dto.setStatus(up.getProject().getStatus().name());
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    }
+
+    public boolean isUserCreatorOrManager(int userId, String projectName) {
+        ProjectEntity project = projectDao.findByName(projectName);
+        return userProjectDao.isUserCreatorOrManager(userId, project.getId());
+    }
+
+    public String inviteUserToProject(String sessionId, String systemUsername, String projectName) {
+        UserEntity userToInvite = userDao.findBySystemUsername(systemUsername);
+        ProjectEntity project = projectDao.findByName(projectName);
+        UserEntity sender = sessionDao.findBySessionId(sessionId).getUser();
+
+        if (userProjectDao.isUserAlreadyInvited(userToInvite.getId(), project.getId())) {
+            return "User is already invited to this project";
+        }
+
+        UserProjectEntity userProjectEntity = new UserProjectEntity();
+        userProjectEntity.setUser(userToInvite);
+        userProjectEntity.setProject(project);
+        userProjectEntity.setType(UserInProjectTypeENUM.INVITED);
+
+        userProjectDao.persist(userProjectEntity);
+
+        // Send invitation email
+        String subject = "Invite to Project " + project.getName();
+        String text = "<p>User " + "<strong>" + sender.getFirstName() + " " + sender.getLastName() +"</strong>" + " has invited you to join the project <strong>" + project.getName() + "</strong>.</p>" +
+                "<p>Click the button below to accept the invitation:</p>" +
+                "<a href=\"http://localhost:3000/project/" + project.getId() + "\" style=\"display:inline-block; padding:10px 20px; font-size:16px; color:#fff; background-color:#f39c12; text-align:center; text-decoration:none; border-radius:5px;\">Accept Invitation</a>" +
+                "<p>If the button does not work, you can also copy and paste the following link into your browser:</p>" +
+                "<p>http://localhost:3000/project/" + project.getId() + "</p>" +
+                "<p></p>" + 
+                "<p>Best regards,<br>ILM Management Team</p>";
+        MailDto mailDto = new MailDto(subject, text, sender.getFirstName() + " " + sender.getLastName(), sender.getEmail(), userToInvite.getFirstName() + " " + userToInvite.getLastName(), userToInvite.getEmail());
+
+        mailBean.sendMail(sessionId, mailDto);
+
+        return "User invited successfully";
+    }
+
 }

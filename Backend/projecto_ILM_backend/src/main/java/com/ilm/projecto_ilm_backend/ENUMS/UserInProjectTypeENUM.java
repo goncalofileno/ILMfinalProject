@@ -32,7 +32,13 @@ public enum UserInProjectTypeENUM {
      * Exmember role.
      * Represented by the integer value 4.
      */
-    EXMEMBER(4);
+    EXMEMBER(4),
+
+    /**
+     * Invited role.
+     * Represented by the integer value 5.
+     */
+    INVITED(5);
 
 
     private final int intValue;

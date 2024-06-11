@@ -8,7 +8,9 @@ import Cookies from "js-cookie";
 import useMailStore from "../../stores/useMailStore";
 import { Modal, Button, Form, InputGroup, Pagination } from "react-bootstrap";
 import { FaTrash } from "react-icons/fa";
+import ComposeMailModal from "../modals/ComposeMailModal";
 import "./MailTable.css";
+import DOMPurify from "dompurify";
 
 const MailTable = () => {
   const [loading, setLoading] = useState(true);
@@ -17,14 +19,22 @@ const MailTable = () => {
   const [totalMails, setTotalMails] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 8;
-  const { receivedMails, fetchMailsInInbox, decrementUnreadCount, setReceivedMails } = useMailStore();
+  const {
+    receivedMails,
+    fetchMailsInInbox,
+    decrementUnreadCount,
+    setReceivedMails,
+  } = useMailStore();
   const sessionId = Cookies.get("session-id");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [mailToDelete, setMailToDelete] = useState(null);
   const [hoveredMailId, setHoveredMailId] = useState(null);
+  const [showComposeModal, setShowComposeModal] = useState(false);
+  const [preFilledContact, setPreFilledContact] = useState("");
+  const [preFilledSubject, setPreFilledSubject] = useState("");
 
   const handleDeleteClick = (mail, event) => {
-    event.stopPropagation(); // Impede a propagação do evento
+    event.stopPropagation(); // Prevent event propagation
     setMailToDelete(mail);
     setShowDeleteModal(true);
   };
@@ -88,6 +98,21 @@ const MailTable = () => {
 
   const handleCloseModal = () => {
     setSelectedMail(null);
+  };
+
+  const handleReplyClick = () => {
+    setPreFilledContact(
+      `${selectedMail.senderName} <${selectedMail.senderMail}>`
+    );
+    setPreFilledSubject(`Re: ${selectedMail.subject}`);
+    setShowComposeModal(true);
+    setSelectedMail(null);
+  };
+
+  const handleCloseComposeModal = () => {
+    setShowComposeModal(false);
+    setPreFilledContact("");
+    setPreFilledSubject("");
   };
 
   const formatDate = (dateString) => {
@@ -229,7 +254,9 @@ const MailTable = () => {
               </td>
               <td className="centered-cell max-width-100">
                 {hoveredMailId === mail.id ? (
-                  <FaTrash onClick={(event) => handleDeleteClick(mail, event)} />
+                  <FaTrash
+                    onClick={(event) => handleDeleteClick(mail, event)}
+                  />
                 ) : (
                   formatDate(mail.date)
                 )}
@@ -276,6 +303,7 @@ const MailTable = () => {
                   type="text"
                   readOnly
                   value={`${selectedMail.senderName} <${selectedMail.senderMail}>`}
+                  className="custom-focus"
                 />
               </Form.Group>
               <Form.Group controlId="formSubject">
@@ -284,15 +312,25 @@ const MailTable = () => {
                   type="text"
                   readOnly
                   value={selectedMail.subject}
+                  className="custom-focus"
                 />
               </Form.Group>
               <Form.Group controlId="formMessage">
                 <Form.Label>Message</Form.Label>
-                <Form.Control
-                  as="textarea"
-                  rows={8}
-                  readOnly
-                  value={selectedMail.text}
+                <div
+                  className="custom-focus"
+                  style={{
+                    padding: "10px",
+                    border: "1px solid #ced4da",
+                    borderRadius: ".25rem",
+                    backgroundColor: "#e9ecef",
+                    overflowY: "auto",
+                    maxHeight: "400px",
+                    whiteSpace: "pre-wrap", // Preserve whitespace and new lines
+                  }}
+                  dangerouslySetInnerHTML={{
+                    __html: DOMPurify.sanitize(selectedMail.text),
+                  }}
                 />
               </Form.Group>
               <Form.Group controlId="formDate">
@@ -301,6 +339,7 @@ const MailTable = () => {
                   type="text"
                   readOnly
                   value={new Date(selectedMail.date).toLocaleString()}
+                  className="custom-focus"
                 />
               </Form.Group>
             </Form>
@@ -308,6 +347,13 @@ const MailTable = () => {
           <Modal.Footer>
             <Button variant="secondary" onClick={handleCloseModal}>
               Close
+            </Button>
+            <Button
+              variant="primary"
+              onClick={handleReplyClick}
+              style={{ backgroundColor: "#f39c12", borderColor: "#f39c12" }}
+            >
+              Reply
             </Button>
           </Modal.Footer>
         </Modal>
@@ -318,9 +364,7 @@ const MailTable = () => {
           <Modal.Header closeButton>
             <Modal.Title>Confirm Delete</Modal.Title>
           </Modal.Header>
-          <Modal.Body>
-            Are you sure you want to delete this mail?
-          </Modal.Body>
+          <Modal.Body>Are you sure you want to delete this mail?</Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleCancelDelete}>
               Cancel
@@ -330,6 +374,15 @@ const MailTable = () => {
             </Button>
           </Modal.Footer>
         </Modal>
+      )}
+
+      {showComposeModal && (
+        <ComposeMailModal
+          show={true}
+          handleClose={handleCloseComposeModal}
+          preFilledContact={preFilledContact}
+          preFilledSubject={preFilledSubject}
+        />
       )}
     </div>
   );
