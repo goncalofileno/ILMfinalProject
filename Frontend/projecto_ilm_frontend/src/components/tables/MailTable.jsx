@@ -11,6 +11,7 @@ import { FaTrash } from "react-icons/fa";
 import ComposeMailModal from "../modals/ComposeMailModal";
 import "./MailTable.css";
 import DOMPurify from "dompurify";
+import TablePagination from "../paginations/TablePagination";
 
 const MailTable = () => {
   const [loading, setLoading] = useState(true);
