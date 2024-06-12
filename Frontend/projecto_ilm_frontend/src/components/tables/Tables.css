@@ -95,3 +95,23 @@ td {
 .row-no-content {
   height: 34px;
 }
+
+#width-div-resources-page {
+  width: 146px;
+}
+
+.row-btns-table-projects-1 {
+  width: 30%;
+  display: flex;
+  justify-content: flex-start;
+}
+.row-btns-table-projects-2 {
+  width: 30%;
+  display: flex;
+  justify-content: flex-end;
+}
+.tablePagination-div {
+  display: flex;
+  justify-content: center;
+  width: 40%;
+}

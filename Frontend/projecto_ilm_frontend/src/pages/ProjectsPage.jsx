@@ -7,12 +7,8 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
-function useQuery() {
-  return new URLSearchParams(useLocation().search);
-}
-
 const ProjectsPage = () => {
-  const query = useQuery();
+  const query = new URLSearchParams(useLocation().search);
   const navigate = useNavigate();
   const [totalPages, setTotalPages] = useState(null);
   const [currentPage, setCurrentPage] = useState(
@@ -87,6 +83,7 @@ const ProjectsPage = () => {
     if (startDateAsc !== "") setStartDateAsc("");
     if (endDateAsc === "") setEndDateAsc(true);
     else setEndDateAsc(!endDateAsc);
+    setNavigateTableProjectsTrigger((prev) => !prev);
   };
 
   useEffect(() => {
@@ -111,14 +108,14 @@ const ProjectsPage = () => {
     const queryParamsObj = {};
 
     if (currentPage) queryParamsObj.currentPage = currentPage;
-    if (selectedLab) queryParamsObj.selectedLab = selectedLab;
-    if (selectedStatus) queryParamsObj.selectedStatus = selectedStatus;
+    if (selectedLab !== "") queryParamsObj.selectedLab = selectedLab;
+    if (selectedStatus !== "") queryParamsObj.selectedStatus = selectedStatus;
     if (slotsAvailable) queryParamsObj.slotsAvailable = slotsAvailable;
-    if (nameAsc) queryParamsObj.nameAsc = nameAsc;
-    if (statusAsc) queryParamsObj.statusAsc = statusAsc;
-    if (labAsc) queryParamsObj.labAsc = labAsc;
-    if (startDateAsc) queryParamsObj.startDateAsc = startDateAsc;
-    if (endDateAsc) queryParamsObj.endDateAsc = endDateAsc;
+    if (nameAsc !== "") queryParamsObj.nameAsc = nameAsc;
+    if (statusAsc !== "") queryParamsObj.statusAsc = statusAsc;
+    if (labAsc !== "") queryParamsObj.labAsc = labAsc;
+    if (startDateAsc !== "") queryParamsObj.startDateAsc = startDateAsc;
+    if (endDateAsc !== "") queryParamsObj.endDateAsc = endDateAsc;
     if (keyword) queryParamsObj.search_query = keyword;
 
     const queryParams = new URLSearchParams(queryParamsObj).toString();
@@ -138,6 +135,7 @@ const ProjectsPage = () => {
         setSlotsAvailable={setSlotsAvailable}
         navigateTableProjectsTrigger={navigateTableProjectsTrigger}
         setNavigateTableProjectsTrigger={setNavigateTableProjectsTrigger}
+        setCurrentPage={setCurrentPage}
       />
       <div className="ilm-pageb-with-aside">
         <h1 className="page-title">

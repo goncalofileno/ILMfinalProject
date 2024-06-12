@@ -93,6 +93,11 @@ public class ProjectDao extends AbstractDao<ProjectEntity>{
         // Append the ORDER BY clause dynamically
         StringBuilder queryString = new StringBuilder(baseQueryString);
 
+//        if(lab==null && status==null && !slotsAvailable && (nameAsc==null || nameAsc.equals("")) && (statusAsc==null || statusAsc.equals("")) && (labAsc==null || labAsc.equals("")) && (startDateAsc==null || startDateAsc.equals("")) && (endDateAsc==null || endDateAsc.equals("")) && (keyword==null || keyword.equals(""))){
+//            queryString.append(", up.user.id HAVING (:slotsAvailable = FALSE OR p.maxMembers > COUNT(up)) ORDER BY CASE WHEN up.user.id = :userId THEN 0 ELSE 1 END, p.name");
+//        }else {
+//            queryString.append("HAVING (:slotsAvailable = FALSE OR p.maxMembers > COUNT(up))");
+//        }
         if (nameAsc != null && !nameAsc.equals("")) {
             queryString.append(" ORDER BY p.name ").append(nameAsc.equals("true") ? "ASC" : "DESC");
         } else if (statusAsc != null && !statusAsc.equals("")) {
@@ -114,13 +119,16 @@ public class ProjectDao extends AbstractDao<ProjectEntity>{
         query.setParameter("slotsAvailable", slotsAvailable);
         query.setParameter("keyword", keyword);
 
+//        if(lab==null && status==null && !slotsAvailable && (nameAsc==null || nameAsc.equals("")) && (statusAsc==null || statusAsc.equals("")) && (labAsc==null || labAsc.equals("")) && (startDateAsc==null || startDateAsc.equals("")) && (endDateAsc==null || endDateAsc.equals("")) && (keyword==null || keyword.equals(""))) {
+//            query.setParameter("userId", userId);
+//        }
+
         // Set pagination
         query.setFirstResult(projectsPerPage * (page - 1));
         query.setMaxResults(projectsPerPage);
 
         return query.getResultList();
 
-        //return em.createNamedQuery("Project.getProjectTableDtoInfo", Object[].class).setParameter("lab",lab).setParameter("status",status).setParameter("slotsAvailable", slotsAvailable).setFirstResult(projectsPerPage*(page-1)).setMaxResults(projectsPerPage).getResultList();
     }
 
     public long countProjects() {

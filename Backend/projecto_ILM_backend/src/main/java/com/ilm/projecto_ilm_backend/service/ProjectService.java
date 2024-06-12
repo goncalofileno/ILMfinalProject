@@ -5,6 +5,7 @@ import com.ilm.projecto_ilm_backend.ENUMS.UserInProjectTypeENUM;
 import com.ilm.projecto_ilm_backend.bean.ProjectBean;
 import com.ilm.projecto_ilm_backend.bean.UserBean;
 import com.ilm.projecto_ilm_backend.dto.project.ProjectProfileDto;
+import com.ilm.projecto_ilm_backend.dto.project.ProjectTableInfoDto;
 import com.ilm.projecto_ilm_backend.dto.user.RegisterUserDto;
 import com.ilm.projecto_ilm_backend.validator.DatabaseValidator;
 import com.ilm.projecto_ilm_backend.validator.RegexValidator;
@@ -61,6 +62,8 @@ public class ProjectService {
 
         if(databaseValidator.checkSessionId(sessionId)) {
             try {
+                ProjectTableInfoDto projectTableInfoDto = projectBean.getProjectTableInfo(sessionId,page,lab,status, slotsAvailable,nameAsc,
+                        statusAsc, labAsc,startDateAsc, endDateAsc,keyword);
                 return Response.ok(projectBean.getProjectTableInfo(sessionId,page,lab,status, slotsAvailable,nameAsc,
                         statusAsc, labAsc,startDateAsc, endDateAsc,keyword)).build();
             } catch (Exception e) {

@@ -273,7 +273,7 @@ function App() {
               >
                 {page > 0 && (
                   <button className="btn-arrow" onClick={handlePrevious}>
-                    <i class="fas fa-chevron-left fa-3x"></i>
+                    <i className="fas fa-chevron-left fa-3x"></i>
                   </button>
                 )}
               </Col>
@@ -416,7 +416,7 @@ function App() {
                 {page != maxPage && page != null && (
                   <button className="btn-arrow" onClick={handleNext}>
                     {" "}
-                    <i class="fas fa-chevron-right fa-3x "></i>
+                    <i className="fas fa-chevron-right fa-3x "></i>
                   </button>
                 )}
               </Col>

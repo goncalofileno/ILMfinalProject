@@ -14,6 +14,20 @@ import java.util.List;
 @Entity
 @Table(name = "resources")
 @NamedQuery(name = "Resource.findById", query = "SELECT r FROM ResourceEntity r WHERE r.id = :id")
+@NamedQuery(
+        name = "Resource.getResourcesDetails",
+        query = "SELECT r.name, r.brand, r.type, s.id FROM ResourceEntity r " +
+                "JOIN r.supplier s"
+)
+@NamedQuery(
+        name = "Resource.getAllBrands",
+        query = "SELECT DISTINCT r.brand FROM ResourceEntity r ")
+@NamedQuery(
+        name = "Resource.getNumberOfResources",
+        query = "SELECT COUNT(r) FROM ResourceEntity r " +
+                "JOIN r.supplier s"
+)
+
 public class ResourceEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -50,11 +64,6 @@ public class ResourceEntity implements Serializable {
     @Column(name = "observation", nullable = false, unique = false, updatable = true)
     private String observation;
 
-    /**
-     * The stock of the resource.
-     */
-    @Column(name = "stock", nullable = false, unique = false, updatable = true)
-    private int stock;
 
     /**
      * The brand of the resource.
@@ -194,23 +203,6 @@ public class ResourceEntity implements Serializable {
         this.observation = observation;
     }
 
-    /**
-     * Returns the stock of this resource.
-     *
-     * @return the stock of this resource.
-     */
-    public int getStock() {
-        return stock;
-    }
-
-    /**
-     * Sets the stock of this resource.
-     *
-     * @param stock the new stock of this resource.
-     */
-    public void setStock(int stock) {
-        this.stock = stock;
-    }
 
     /**
      * Returns the brand of this resource.

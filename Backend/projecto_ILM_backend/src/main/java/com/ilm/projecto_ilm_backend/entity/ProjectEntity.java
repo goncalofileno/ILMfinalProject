@@ -26,6 +26,7 @@ import com.ilm.projecto_ilm_backend.ENUMS.ConvertersENUM.StateProjectEnumConvert
                 "AND (:keyword IS NULL OR LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%')))" +
                 "GROUP BY p.id, p.name, p.lab, p.status, p.startDate, p.endDate, p.maxMembers " +
                 "HAVING (:slotsAvailable = FALSE OR p.maxMembers > COUNT(up))")
+
 @NamedQuery(name = "Project.getNumberOfProjectsTableDtoInfo",
         query = "SELECT COUNT(p) " +
         "FROM ProjectEntity p " +

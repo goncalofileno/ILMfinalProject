@@ -41,17 +41,12 @@ public class ProjectResourceEntity implements Serializable {
     @Column(name = "stockRequested", nullable = false, unique = false, updatable = true)
     private int stockRequested;
 
-    /**
-     * The real stock of the resource in the project.
-     */
-    @Column(name = "realStock", nullable = false, unique = false, updatable = true)
-    private int realStock;
 
     /**
      * The stock accepted of the resource in the project.
      */
-    @Column(name = "stockAcepeted", nullable = false, unique = false, updatable = true)
-    private boolean stockAcepeted;
+    @Column(name = "stockAccepted", nullable = false, unique = false, updatable = true)
+    private boolean stockAccepted;
 
     /**
      * Default constructor.
@@ -131,39 +126,4 @@ public class ProjectResourceEntity implements Serializable {
         this.stockRequested = stockRequested;
     }
 
-    /**
-     * Returns the real stock of the resource in the project.
-     *
-     * @return the real stock of the resource in the project.
-     */
-    public int getRealStock() {
-        return realStock;
-    }
-
-    /**
-     * Sets the real stock of the resource in the project.
-     *
-     * @param realStock the new real stock of the resource in the project.
-     */
-    public void setRealStock(int realStock) {
-        this.realStock = realStock;
-    }
-
-    /**
-     * Returns the stock accepted of the resource in the project.
-     *
-     * @return the stock accepted of the resource in the project.
-     */
-    public boolean isStockAcepeted() {
-        return stockAcepeted;
-    }
-
-    /**
-     * Sets the stock accepted of the resource in the project.
-     *
-     * @param stockAcepeted the new stock accepted of the resource in the project.
-     */
-    public void setStockAcepeted(boolean stockAcepeted) {
-        this.stockAcepeted = stockAcepeted;
-    }
 }

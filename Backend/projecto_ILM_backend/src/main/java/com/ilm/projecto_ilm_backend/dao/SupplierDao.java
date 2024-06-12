@@ -1,10 +1,13 @@
 package com.ilm.projecto_ilm_backend.dao;
 
+import com.ilm.projecto_ilm_backend.entity.MailEntity;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.EntityManager;
 import com.ilm.projecto_ilm_backend.entity.SupplierEntity;
 import jakarta.transaction.Transactional;
+
+import java.util.List;
 
 /**
  * The SupplierDao class provides database operations for SupplierEntity instances.
@@ -71,5 +74,17 @@ public class SupplierDao extends AbstractDao<SupplierEntity> {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public String findNameById(int id) {
+        try {
+            return em.createNamedQuery("Supplier.findNameById", String.class).setParameter("id", id)
+                    .getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    public List<String> getAllNames() {
+        return em.createNamedQuery("Supplier.findAllNames", String.class).getResultList();
     }
 }

@@ -44,6 +44,7 @@ export default function ProjectsTable({
 
   const handleClearSearch = () => {
     setKeyword("");
+    setCurrentPage(1);
     setKeywordButton(!keywordButton);
   };
   return (
@@ -62,6 +63,7 @@ export default function ProjectsTable({
             variant="primary"
             onClick={() => {
               setKeywordButton(!keywordButton);
+              setCurrentPage(1);
               setNavigateTableProjectsTrigger(!navigateTableProjectsTrigger);
             }}
             style={{
@@ -126,21 +128,30 @@ export default function ProjectsTable({
       </table>
       <div id="align-div-buttons">
         <div id="flex-row-table-projects">
-          <button className="submit-button" id="btn-add-project-table-projects">
-            Add Project
-          </button>
-          <TablePagination
-            totalPages={totalPages}
-            currentPage={currentPage}
-            setCurrentPage={setCurrentPage}
-            setNavigateTableProjectsTrigger={setNavigateTableProjectsTrigger}
-          />
-          <button
-            className="submit-button"
-            id="btn-projects-statistics-table-projects"
-          >
-            Projects Statistics
-          </button>
+          <div className="row-btns-table-projects-1">
+            <button
+              className="submit-button"
+              id="btn-add-project-table-projects"
+            >
+              Add Project
+            </button>
+          </div>
+          <div className="tablePagination-div">
+            <TablePagination
+              totalPages={totalPages}
+              currentPage={currentPage}
+              setCurrentPage={setCurrentPage}
+              setNavigateTableProjectsTrigger={setNavigateTableProjectsTrigger}
+            />
+          </div>
+          <div className="row-btns-table-projects-2">
+            <button
+              className="submit-button"
+              id="btn-projects-statistics-table-projects"
+            >
+              Projects Statistics
+            </button>
+          </div>
         </div>
       </div>
     </>

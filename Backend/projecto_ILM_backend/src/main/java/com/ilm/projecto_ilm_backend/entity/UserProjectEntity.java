@@ -16,7 +16,7 @@ import java.io.Serializable;
         @NamedQuery(name = "UserProject.findById", query = "SELECT up FROM UserProjectEntity up WHERE up.id = :id"),
         @NamedQuery(name = "UserProject.findByProjectId", query = "SELECT up FROM UserProjectEntity up WHERE up.project.id = :projectId"),
         @NamedQuery(name = "UserProject.findByUserId", query = "SELECT up FROM UserProjectEntity up WHERE up.user.id = :userId"),
-        @NamedQuery(name = "UserProject.findNumberOfUsers", query = "SELECT COUNT(up) FROM UserProjectEntity up WHERE up.project.id = :projectId"),
+        @NamedQuery(name = "UserProject.findNumberOfUsers", query = "SELECT COUNT(up) FROM UserProjectEntity up WHERE up.project.id = :projectId AND (up.type=0 OR up.type=1 OR up.type=2)"),
         @NamedQuery(name = "UserProject.isUserInProject", query = "SELECT COUNT(up) FROM UserProjectEntity up WHERE up.project.id = :projectId AND up.user.id = :userId"),
         @NamedQuery(name = "UserProject.countUserProjects", query = "SELECT COUNT(up) FROM UserProjectEntity up"),
         @NamedQuery(name = "UserProject.isUserAlreadyInvited", query = "SELECT COUNT(up) FROM UserProjectEntity up WHERE up.user.id = :userId AND up.project.id = :projectId AND up.type = :invited")

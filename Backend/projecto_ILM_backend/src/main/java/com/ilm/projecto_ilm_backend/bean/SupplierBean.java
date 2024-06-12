@@ -6,6 +6,8 @@ import jakarta.ejb.EJB;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
+import java.util.List;
+
 /**
  * The SupplierBean class is responsible for managing SupplierEntity instances.
  * It is an application scoped bean, meaning there is a single instance for the entire application.
@@ -55,5 +57,8 @@ public class SupplierBean {
 
             supplierDao.persist(supplier);
         }
+    }
+    public List<String> getAllNames(){
+        return supplierDao.getAllNames();
     }
 }
