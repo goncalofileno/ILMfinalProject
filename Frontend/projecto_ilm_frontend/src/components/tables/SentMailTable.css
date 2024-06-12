@@ -78,15 +78,7 @@
   .centered-cell {
     text-align: center; /* Centraliza o conteúdo */
   }
-  
-  .max-width-40 {
-    max-width: 40px; /* Define uma largura máxima para a célula */
-  }
-  
-  .max-width-15 {
-    max-width: 15px; /* Define uma largura máxima para a célula */
-  }
-  
+
   .left-aligned-cell {
     text-align: left; /* Alinha o conteúdo à esquerda */
   }

@@ -98,6 +98,10 @@
   max-width: 15px; /* Define uma largura máxima para a célula */
 }
 
+.max-width-70 {
+  max-width: 70px; /* Define uma largura máxima para a célula */
+}
+
 .left-aligned-cell {
   text-align: left; /* Alinha o conteúdo à esquerda */
 }
@@ -116,3 +120,26 @@
   align-items: center;
   gap: 10px;
 }
+
+.no-results {
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-size: 1.2em;
+  color: #666;
+}
+
+.custom-switch2 .form-check-input:checked {
+  background-color: #f39c12;
+  border-color: #f39c12;
+}
+
+.custom-switch2 .form-check-input:checked:focus {
+  box-shadow: 0 0 0 0.2rem rgba(243, 156, 18, 0.25);
+}
+
+.custom-switch2 .form-check-input:checked:before {
+  background-color: #ffffff;
+  border-color: #f39c12;
+}
+

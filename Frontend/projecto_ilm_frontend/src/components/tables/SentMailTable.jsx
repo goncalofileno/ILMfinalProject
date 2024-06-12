@@ -233,6 +233,7 @@ const SentMailTable = () => {
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
           style={{ borderRadius: "10px" }}
+          className="custom-focus"
         />
         <Button
           variant="primary"
@@ -253,48 +254,52 @@ const SentMailTable = () => {
           Clear Search
         </Button>
       </InputGroup>
-  
-      <table id="sent-mail-table">
-        <tbody>
-          {mails.map((mail) => (
-            <tr
-              key={mail.id}
-              onClick={() => handleSingleClick(mail)}
-              onMouseEnter={() => setHoveredMailId(mail.id)}
-              onMouseLeave={() => setHoveredMailId(null)}
-            >
-              <td className="mail-cell centered-cell max-width-40">
-                <div className="sender-info">
-                  <img
-                    src={mail.receiverPhoto}
-                    alt={mail.receiverName}
-                    className="sender-photo"
-                  />
-                  <div className="sender-details">
-                    <span className="receiver-name">{mail.receiverName}</span>
-                    <span className="receiver-email">{mail.receiverMail}</span>
+
+      {mails.length === 0 ? (
+        <div className="no-results">No emails found matching your criteria.</div>
+      ) : (
+        <table id="sent-mail-table">
+          <tbody>
+            {mails.map((mail) => (
+              <tr
+                key={mail.id}
+                onClick={() => handleSingleClick(mail)}
+                onMouseEnter={() => setHoveredMailId(mail.id)}
+                onMouseLeave={() => setHoveredMailId(null)}
+              >
+                <td className="mail-cell centered-cell max-width-40">
+                  <div className="sender-info">
+                    <img
+                      src={mail.receiverPhoto}
+                      alt={mail.receiverName}
+                      className="sender-photo"
+                    />
+                    <div className="sender-details">
+                      <span className="receiver-name">{mail.receiverName}</span>
+                      <span className="receiver-email">{mail.receiverMail}</span>
+                    </div>
                   </div>
-                </div>
-              </td>
-              <td className="mail-cell left-aligned-cell">
-                <span className="mail-subject">{mail.subject}</span>
-                <span className="mail-preview">{mail.text.slice(0, 30)}...</span>
-              </td>
-              <td className="mail-cell centered-cell max-width-15">
-                {hoveredMailId === mail.id ? (
-                  <FaTrash
-                    onClick={(event) => handleDeleteClick(mail, event)}
-                    className="trash-icon"
-                  />
-                ) : (
-                  formatDate(mail.date)
-                )}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-  
+                </td>
+                <td className="mail-cell left-aligned-cell max-width-70">
+                  <span className="mail-subject">{mail.subject}</span>
+                  <span className="mail-preview">{mail.text.slice(0, 30)}...</span>
+                </td>
+                <td className="mail-cell centered-cell max-width-15">
+                  {hoveredMailId === mail.id ? (
+                    <FaTrash
+                      onClick={(event) => handleDeleteClick(mail, event)}
+                      className="trash-icon"
+                    />
+                  ) : (
+                    formatDate(mail.date)
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+
       <div className="pagination-container">
         <Pagination className="pagination">
           <Pagination.First
@@ -316,7 +321,7 @@ const SentMailTable = () => {
           />
         </Pagination>
       </div>
-  
+
       {selectedMail && (
         <Modal show={true} onHide={handleCloseModal}>
           <Modal.Header closeButton>
@@ -377,7 +382,7 @@ const SentMailTable = () => {
           </Modal.Footer>
         </Modal>
       )}
-  
+
       {showDeleteModal && (
         <Modal show={true} onHide={handleCancelDelete}>
           <Modal.Header closeButton>
