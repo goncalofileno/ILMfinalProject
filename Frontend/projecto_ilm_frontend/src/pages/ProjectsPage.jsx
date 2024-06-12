@@ -159,6 +159,11 @@ const ProjectsPage = () => {
             setKeywordButton={setKeywordButton}
             navigateTableProjectsTrigger={navigateTableProjectsTrigger}
             setNavigateTableProjectsTrigger={setNavigateTableProjectsTrigger}
+            nameAsc={nameAsc}
+            statusAsc={statusAsc}
+            labAsc={labAsc}
+            startDateAsc={startDateAsc}
+            endDateAsc={endDateAsc}
           ></ProjectsTable>
         </div>
       </div>

@@ -42,12 +42,7 @@ import com.ilm.projecto_ilm_backend.ENUMS.ConvertersENUM.StateProjectEnumConvert
                 "LEFT JOIN p.userProjects up WITH up.user.id = :userId " +
                 "ORDER BY CASE WHEN up.user.id IS NOT NULL THEN 0 ELSE 1 END, p.name ASC"
 )
-@SqlResultSetMappings({
-        @SqlResultSetMapping(
-                name = "ProjectResultMapping",
-                entities = @EntityResult(entityClass = ProjectEntity.class)
-        )
-})
+
 @NamedQuery(name = "Project.countProjects", query = "SELECT COUNT(p) FROM ProjectEntity p")
 
 public class ProjectEntity implements Serializable {
