@@ -27,4 +27,14 @@ const formatSkill = (skill) => {
     .join(" ");
 };
 
-export { formatLab, formatStatus, formatStatusDropDown, formatSkill };
+function formatResourceType(type) {
+  return type.charAt(0) + type.slice(1).toLowerCase();
+}
+
+export {
+  formatLab,
+  formatStatus,
+  formatStatusDropDown,
+  formatSkill,
+  formatResourceType,
+};

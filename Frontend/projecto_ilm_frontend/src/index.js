@@ -20,6 +20,7 @@ import { Alert } from "react-bootstrap";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import EditProfilePage from "./pages/EditProfilePage";
 import MailWebSocket from "./utilities/websockets/MailWebSocket";
+import ResourcesPage from "./pages/ResourcesPage";
 
 const AppWithWebSocket = () => {
   const location = useLocation();
@@ -37,6 +38,7 @@ const AppWithWebSocket = () => {
         <Route path="/editProfile" element={<EditProfilePage />} />
         <Route path="/mail/inbox" element={<InboxMailPage />} />
         <Route path="/mail/sent" element={<SentMailPage />} />
+        <Route path="/resources" element={<ResourcesPage />} />
       </Routes>
     </>
   );

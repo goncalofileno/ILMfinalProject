@@ -1,10 +1,16 @@
 package com.ilm.projecto_ilm_backend.dao;
 
+import com.ilm.projecto_ilm_backend.ENUMS.ResourceTypeENUM;
+import com.ilm.projecto_ilm_backend.ENUMS.StateProjectENUM;
+import com.ilm.projecto_ilm_backend.entity.LabEntity;
 import jakarta.ejb.Stateless;
 import com.ilm.projecto_ilm_backend.entity.ResourceEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
+
+import java.util.List;
 
 /**
  * The ResourceDao class provides database operations for ResourceEntity instances.
@@ -62,5 +68,22 @@ public class ResourceDao extends AbstractDao<ResourceEntity> {
         }
     }
 
+    public List<Object[]> getResourceDetails() {
+        TypedQuery<Object[]> query = em.createNamedQuery("Resource.getResourcesDetails", Object[].class);
+        return query.getResultList();
+    }
+
+    public int getNumberOfResources() {
+        try {
+            return  em.createNamedQuery("Resource.getNumberOfResources", Long.class).getSingleResult().intValue();
+
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+    public List<String> getAllBrands() {
+        return em.createNamedQuery("Resource.getAllBrands", String.class).getResultList();
+    }
 
 }

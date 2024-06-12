@@ -14,6 +14,7 @@ export default function AsideProjectsTable({
   setSlotsAvailable,
   navigateTableProjectsTrigger,
   setNavigateTableProjectsTrigger,
+  setCurrentPage,
 }) {
   const [labs, setLabs] = useState([]);
   const [status, setStatus] = useState([]);
@@ -44,6 +45,7 @@ export default function AsideProjectsTable({
             value={selectedLab}
             onChange={(e) => {
               setSelectedLab(e.target.value);
+              setCurrentPage(1);
               setNavigateTableProjectsTrigger(!navigateTableProjectsTrigger);
             }}
           >
@@ -66,6 +68,7 @@ export default function AsideProjectsTable({
             value={selectedStatus}
             onChange={(e) => {
               setSelectedStatus(e.target.value);
+              setCurrentPage(1);
               setNavigateTableProjectsTrigger(!navigateTableProjectsTrigger);
             }}
           >
@@ -91,6 +94,7 @@ export default function AsideProjectsTable({
             checked={slotsAvailable}
             onChange={(e) => {
               setSlotsAvailable(e.target.checked);
+              setCurrentPage(1);
               setNavigateTableProjectsTrigger(!navigateTableProjectsTrigger);
             }}
           />

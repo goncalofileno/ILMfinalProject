@@ -333,12 +333,6 @@ async function getTableProjects(
   endDateAsc,
   keyword
 ) {
-  console.log("nameAsc: ", nameAsc);
-  console.log("statusAsc: ", statusAsc);
-  console.log("labAsc: ", labAsc);
-  console.log("startDateAsc: ", startDateAsc);
-  console.log("endDateAsc: ", endDateAsc);
-
   try {
     const response = await fetch(
       `${baseURL}project/tableProjects?page=${page}&lab=${lab}&status=${status}&slotsAvailable=${slotsAvailable}&nameAsc=${nameAsc}&statusAsc=${statusAsc}&labAsc=${labAsc}&startDateAsc=${startDateAsc}&endDateAsc=${endDateAsc}&keyword=${keyword}`,
@@ -529,7 +523,6 @@ async function getReceivedMessages(sessionId, page = 1, pageSize = 10) {
   }
 }
 
-
 async function getSentMessages(sessionId, page = 1, pageSize = 10) {
   try {
     const response = await fetch(
@@ -548,7 +541,6 @@ async function getSentMessages(sessionId, page = 1, pageSize = 10) {
     console.error("Error fetching sent messages:", error);
   }
 }
-
 
 async function markMailAsSeen(sessionId, mailId) {
   try {
@@ -677,23 +669,26 @@ async function searchSentMails(sessionId, query, page, pageSize) {
 
 async function getUserProjects(sessionId) {
   try {
-    const response = await fetch(`${baseURL}project/userOwnerProjectsToInvite`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Cookie: `session-id=${sessionId}`,
-      },
-      credentials: 'include',
-    });
+    const response = await fetch(
+      `${baseURL}project/userOwnerProjectsToInvite`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `session-id=${sessionId}`,
+        },
+        credentials: "include",
+      }
+    );
 
     if (response.ok) {
       return await response.json();
     } else {
-      console.error('Failed to fetch user projects:', response.statusText);
+      console.error("Failed to fetch user projects:", response.statusText);
       return [];
     }
   } catch (error) {
-    console.error('Error fetching user projects:', error);
+    console.error("Error fetching user projects:", error);
     return [];
   }
 }
@@ -703,22 +698,83 @@ async function inviteUserToProject(sessionId, projectName, systemUsername) {
     const response = await fetch(
       `${baseURL}project/inviteUser?projectName=${projectName}&systemUsername=${systemUsername}`,
       {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          Cookie: `session-id=${sessionId}`,
+          "Content-Type": "application/json",
         },
-        credentials: 'include',
+        credentials: "include",
       }
     );
 
     return response;
   } catch (error) {
-    console.error('Error inviting user to project:', error);
+    console.error("Error inviting user to project:", error);
   }
 }
 
+async function getAllResources() {
+  try {
+    const response = await fetch(`${baseURL}resource`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
 
+    return response;
+  } catch (error) {
+    console.error("Error receiving all resources:", error);
+  }
+}
+
+async function getAllResourcesTypes() {
+  try {
+    const response = await fetch(`${baseURL}resource/types`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+
+    return response;
+  } catch (error) {
+    console.error("Error receiving all resources:", error);
+  }
+}
+
+async function getAllSuppliersNames() {
+  try {
+    const response = await fetch(`${baseURL}supplier/names`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+
+    return response;
+  } catch (error) {
+    console.error("Error receiving all resources:", error);
+  }
+}
+
+async function getAllBrands() {
+  try {
+    const response = await fetch(`${baseURL}resource/brands`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+
+    return response;
+  } catch (error) {
+    console.error("Error receiving all resources:", error);
+  }
+}
 
 export {
   registerUser,
@@ -757,4 +813,8 @@ export {
   searchSentMails,
   getUserProjects,
   inviteUserToProject,
+  getAllResources,
+  getAllResourcesTypes,
+  getAllSuppliersNames,
+  getAllBrands,
 };
