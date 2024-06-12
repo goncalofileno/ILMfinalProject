@@ -14,7 +14,7 @@ import {
 } from "react-bootstrap";
 import Cookies from "js-cookie";
 import { FaTrash } from "react-icons/fa";
-import "./MailTable.css";
+import "./SentMailTable.css";
 
 const SentMailTable = () => {
   const [mails, setMails] = useState([]);
@@ -114,17 +114,26 @@ const SentMailTable = () => {
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const today = new Date();
-    if (
+    const isSameDay =
       date.getDate() === today.getDate() &&
       date.getMonth() === today.getMonth() &&
-      date.getFullYear() === today.getFullYear()
-    ) {
+      date.getFullYear() === today.getFullYear();
+  
+    const isSameYear = date.getFullYear() === today.getFullYear();
+  
+    if (isSameDay) {
       return date.toLocaleTimeString([], {
         hour: "2-digit",
         minute: "2-digit",
       });
     }
-    return `${date.getDate()}/${date.getMonth() + 1}`;
+  
+    if (isSameYear) {
+      const month = date.toLocaleString("en-US", { month: "short" });
+      return `${month} ${date.getDate()}`;
+    }
+  
+    return date.toLocaleDateString("en-GB");
   };
 
   const totalPages = Math.ceil(totalMails / pageSize);
@@ -192,12 +201,13 @@ const SentMailTable = () => {
 
   return (
     <div>
-      <InputGroup className="mb-3">
+      <InputGroup className="mb-3 mail-filters">
         <Form.Control
           type="text"
           placeholder="Search mails"
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
+          style={{ borderRadius: "10px" }}
         />
         <Button
           variant="primary"
@@ -205,6 +215,7 @@ const SentMailTable = () => {
           style={{
             backgroundColor: "#f39c12",
             borderColor: "#f39c12",
+            borderRadius: "10px",
           }}
         >
           Search
@@ -212,20 +223,13 @@ const SentMailTable = () => {
         <Button
           variant="secondary"
           onClick={handleClearSearch}
-          style={{ marginLeft: "10px" }}
+          style={{ borderRadius: "10px" }}
         >
           Clear Search
         </Button>
       </InputGroup>
-
-      <table className="mail-table">
-        <thead>
-          <tr>
-            <th className="centered-cell max-width-150">Receiver</th>
-            <th className="left-aligned-cell">Subject</th>
-            <th className="centered-cell max-width-100">Time</th>
-          </tr>
-        </thead>
+  
+      <table id="sent-mail-table">
         <tbody>
           {mails.map((mail) => (
             <tr
@@ -234,23 +238,28 @@ const SentMailTable = () => {
               onMouseEnter={() => setHoveredMailId(mail.id)}
               onMouseLeave={() => setHoveredMailId(null)}
             >
-              <td className="centered-cell max-width-150">
+              <td className="mail-cell centered-cell max-width-40">
                 <div className="sender-info">
                   <img
                     src={mail.receiverPhoto}
                     alt={mail.receiverName}
                     className="sender-photo"
                   />
-                  <span>{mail.receiverName}</span>
+                  <div className="sender-details">
+                    <span className="receiver-name">{mail.receiverName}</span>
+                    <span className="receiver-email">{mail.receiverMail}</span>
+                  </div>
                 </div>
               </td>
-              <td className="left-aligned-cell">
-                <strong>{mail.subject}</strong> - {mail.text.slice(0, 30)}...
+              <td className="mail-cell left-aligned-cell">
+                <span className="mail-subject">{mail.subject}</span>
+                <span className="mail-preview">{mail.text.slice(0, 30)}...</span>
               </td>
-              <td className="centered-cell max-width-100">
+              <td className="mail-cell centered-cell max-width-15">
                 {hoveredMailId === mail.id ? (
                   <FaTrash
                     onClick={(event) => handleDeleteClick(mail, event)}
+                    className="trash-icon"
                   />
                 ) : (
                   formatDate(mail.date)
@@ -260,7 +269,7 @@ const SentMailTable = () => {
           ))}
         </tbody>
       </table>
-
+  
       <div className="pagination-container">
         <Pagination className="pagination">
           <Pagination.First
@@ -273,9 +282,7 @@ const SentMailTable = () => {
           />
           {renderPaginationItems()}
           <Pagination.Next
-            onClick={() =>
-              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-            }
+            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
             disabled={currentPage === totalPages}
           />
           <Pagination.Last
@@ -284,7 +291,7 @@ const SentMailTable = () => {
           />
         </Pagination>
       </div>
-
+  
       {selectedMail && (
         <Modal show={true} onHide={handleCloseModal}>
           <Modal.Header closeButton>
@@ -312,13 +319,20 @@ const SentMailTable = () => {
               </Form.Group>
               <Form.Group controlId="formMessage">
                 <Form.Label>Message</Form.Label>
-                <Form.Control
-                  as="textarea"
-                  rows={8}
-                  readOnly
-                  value={selectedMail.text}
+                <div
                   className="custom-focus"
-                />
+                  style={{
+                    padding: "10px",
+                    border: "1px solid #ced4da",
+                    borderRadius: ".25rem",
+                    backgroundColor: "#e9ecef",
+                    overflowY: "auto",
+                    maxHeight: "400px",
+                    whiteSpace: "pre-wrap",
+                  }}
+                >
+                  {selectedMail.text}
+                </div>
               </Form.Group>
               <Form.Group controlId="formDate">
                 <Form.Label>Date</Form.Label>
@@ -338,7 +352,7 @@ const SentMailTable = () => {
           </Modal.Footer>
         </Modal>
       )}
-
+  
       {showDeleteModal && (
         <Modal show={true} onHide={handleCancelDelete}>
           <Modal.Header closeButton>
@@ -357,6 +371,7 @@ const SentMailTable = () => {
       )}
     </div>
   );
+  
 };
 
 export default SentMailTable;

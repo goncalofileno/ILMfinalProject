@@ -13,6 +13,7 @@ import ComposeMailModal from "../modals/ComposeMailModal";
 import "./MailTable.css";
 import DOMPurify from "dompurify";
 import TablePagination from "../paginations/TablePagination";
+import TrashIcon from "../../resources/icons/other/trash-open-icon.png";
 
 const MailTable = () => {
   const [loading, setLoading] = useState(true);
@@ -65,7 +66,12 @@ const MailTable = () => {
   const fetchMails = async () => {
     setLoading(true);
     try {
-      const result = await getReceivedMessages(sessionId, currentPage, pageSize, unreadOnly);
+      const result = await getReceivedMessages(
+        sessionId,
+        currentPage,
+        pageSize,
+        unreadOnly
+      );
       const { mails, totalMails } = result;
       mails.sort((a, b) => new Date(b.date) - new Date(a.date));
       setReceivedMails(mails);
@@ -89,7 +95,13 @@ const MailTable = () => {
     setLoading(true);
     setIsSearching(true);
     try {
-      const result = await searchMails(sessionId, searchInput, currentPage, pageSize, unreadOnly);
+      const result = await searchMails(
+        sessionId,
+        searchInput,
+        currentPage,
+        pageSize,
+        unreadOnly
+      );
       const { mails, totalMails } = result;
       mails.sort((a, b) => new Date(b.date) - new Date(a.date));
       setReceivedMails(mails);
@@ -139,17 +151,26 @@ const MailTable = () => {
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const today = new Date();
-    if (
+    const isSameDay =
       date.getDate() === today.getDate() &&
       date.getMonth() === today.getMonth() &&
-      date.getFullYear() === today.getFullYear()
-    ) {
+      date.getFullYear() === today.getFullYear();
+  
+    const isSameYear = date.getFullYear() === today.getFullYear();
+  
+    if (isSameDay) {
       return date.toLocaleTimeString([], {
         hour: "2-digit",
         minute: "2-digit",
       });
     }
-    return `${date.getDate()}/${date.getMonth() + 1}`;
+  
+    if (isSameYear) {
+      const month = date.toLocaleString("en-US", { month: "short" });
+      return `${month} ${date.getDate()}`;
+    }
+  
+    return date.toLocaleDateString("en-GB");
   };
 
   const totalPages = Math.ceil(totalMails / pageSize);
@@ -161,7 +182,7 @@ const MailTable = () => {
   return (
     <div>
       <InputGroup className="mail-filters">
-        <Form.Check 
+        <Form.Check
           type="switch"
           id="unread-only-switch"
           label="Unread only"
@@ -193,46 +214,46 @@ const MailTable = () => {
         <Button
           variant="secondary"
           onClick={handleClearSearch}
-          style={{ borderRadius: "10px"}}
+          style={{ borderRadius: "10px" }}
         >
           Clear Search
         </Button>
       </InputGroup>
 
-      <table className="mail-table">
-        <thead>
-          <tr>
-            <th className="centered-cell max-width-150">Sender</th>
-            <th className="left-aligned-cell">Subject</th>
-            <th className="centered-cell max-width-100">Date</th>
-          </tr>
-        </thead>
+      <table id="mail-table">
         <tbody>
           {receivedMails.map((mail) => (
             <tr
               key={mail.id}
               onClick={() => handleSingleClick(mail)}
-              className={!mail.seen ? "unread" : ""}
+              className={`mail-row ${!mail.seen ? "unread" : ""}`}
               onMouseEnter={() => setHoveredMailId(mail.id)}
               onMouseLeave={() => setHoveredMailId(null)}
             >
-              <td className="centered-cell max-width-150">
+              <td className="mail-cell centered-cell max-width-40">
                 <div className="sender-info">
                   <img
                     src={mail.senderPhoto}
                     alt={mail.senderName}
                     className="sender-photo"
                   />
-                  <span>{mail.senderName}</span>
+                  <div className="sender-details">
+                    <span className="sender-name">{mail.senderName}</span>
+                    <span className="sender-email">{mail.senderMail}</span>
+                  </div>
                 </div>
               </td>
-              <td className="left-aligned-cell">
-                <strong>{mail.subject}</strong>
+              <td className="mail-cell left-aligned-cell">
+                <span className="mail-subject">{mail.subject}</span>
+                <span className="mail-preview">
+                  {mail.text.slice(0, 30)}...
+                </span>
               </td>
-              <td className="centered-cell max-width-100">
+              <td className="mail-cell centered-cell max-width-15">
                 {hoveredMailId === mail.id ? (
                   <FaTrash
                     onClick={(event) => handleDeleteClick(mail, event)}
+                    className="trash-icon"
                   />
                 ) : (
                   formatDate(mail.date)
@@ -248,6 +269,7 @@ const MailTable = () => {
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
         setNavigateTableProjectsTrigger={setTrigger}
+        className="pagination-container"
       />
 
       {selectedMail && (

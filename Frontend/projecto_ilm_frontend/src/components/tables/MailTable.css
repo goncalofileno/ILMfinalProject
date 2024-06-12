@@ -1,82 +1,105 @@
 /* Estilo para a tabela de emails */
-.mail-table {
+#mail-table {
   width: 100%;
   border-collapse: collapse;
+  font-family: Arial, sans-serif;
+  margin-bottom: 20px;
 }
 
-.mail-table th,
-.mail-table td {
-  padding: 10px;
-  border: 1px solid #ddd;
+#mail-table tr {
+  background: none;
+  transition: background-color 0.3s;
+  
+  background-color: rgba(30, 40, 82, 0.056);
 }
 
-.mail-table th {
-  background-color: rgb(30, 40, 82);
-  text-align: center;
-  color: white;
-}
-
-.mail-table tr:hover {
+#mail-table tr:hover {
+  background-color: rgba(243, 156, 18, 0.1); /* Cor de fundo ao passar o mouse */
   cursor: pointer;
 }
 
-.sender-info {
+#mail-table .unread {
+  background-color: rgba(254, 242, 215, 0.794); /* Cor de fundo dos emails não lidos */
+  font-weight: bold; /* Fonte mais pesada para emails não lidos */
+}
+
+#mail-table .mail-cell {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  vertical-align: middle; /* Alinha o conteúdo verticalmente no meio */
+}
+
+#mail-table .sender-info {
   display: flex;
   align-items: center;
 }
 
-.sender-photo {
+#mail-table .sender-photo {
   width: 40px;
   height: 40px;
   border-radius: 50%;
   margin-right: 10px;
 }
 
-.mail-table td strong {
+#mail-table .sender-details {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+#mail-table .sender-name {
+  font-weight: bold;
+  color: #1e2852;
+}
+
+#mail-table .sender-email {
+  font-size: 0.8em;
+  color: #666;
+}
+
+#mail-table .mail-subject {
+  font-weight: bold;
   color: #333;
 }
 
-.unread {
-  background-color: #e6f7ff; /* Slightly different background color */
+#mail-table .mail-preview {
+  display: block;
+  color: #666;
+  font-size: 0.9em;
+  margin-top: 5px;
 }
 
-.unread td {
-  font-weight: 900; /* Heavier font-weight */
+#mail-table .unread .sender-name,
+#mail-table .unread .mail-subject {
+  color: #1e2852; 
 }
 
-.pagination-container {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px; /* Adicione margem superior para distanciar da tabela */
-}
-
-.mail-table td {
-  position: relative;
-}
-
-.mail-table td .fa-trash {
+#mail-table .fa-trash,
+#mail-table .trash-icon {
   cursor: pointer;
   color: #f39c12;
+  font-size: 1.2em;
 }
 
-.mail-table td .fa-trash:hover {
+#mail-table .fa-trash:hover,
+#mail-table .trash-icon:hover {
   color: red;
 }
 
 .centered-cell {
-  text-align: center; /* Center the content */
+  text-align: center; /* Centraliza o conteúdo */
 }
 
-.max-width-150 {
-  max-width: 150px; /* Set a maximum width for the cell */
+.max-width-40 {
+  max-width: 40px; /* Define uma largura máxima para a célula */
 }
 
-.max-width-100 {
-  max-width: 100px; /* Set a maximum width for the cell */
+.max-width-15 {
+  max-width: 15px; /* Define uma largura máxima para a célula */
 }
 
 .left-aligned-cell {
-  text-align: left; /* Align the content to the left */
+  text-align: left; /* Alinha o conteúdo à esquerda */
 }
 
 .mail-filters {
@@ -87,18 +110,9 @@
   gap: 10px;
 }
 
-.custom-switch2 .form-check-input:checked {
-  background-color: #f39c12;
-  border-color: #f39c12;
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
 }
-
-.custom-switch2 .form-check-input:checked:focus {
-  box-shadow: 0 0 0 0.2rem rgba(243, 156, 18, 0.25);
-}
-
-.custom-switch2 .form-check-input:checked:before {
-  background-color: #ffffff;
-  border-color: #f39c12;
-}
-
-
