@@ -160,30 +160,7 @@ const MailTable = () => {
 
   return (
     <div>
-      <InputGroup className="mb-3">
-        <Form.Control
-          type="text"
-          placeholder="Search mails"
-          value={searchInput}
-          onChange={(e) => setSearchInput(e.target.value)}
-        />
-        <Button
-          variant="primary"
-          onClick={handleSearch}
-          style={{
-            backgroundColor: "#f39c12",
-            borderColor: "#f39c12",
-          }}
-        >
-          Search
-        </Button>
-        <Button
-          variant="secondary"
-          onClick={handleClearSearch}
-          style={{ marginLeft: "10px" }}
-        >
-          Clear Search
-        </Button>
+      <InputGroup className="mail-filters">
         <Form.Check 
           type="switch"
           id="unread-only-switch"
@@ -193,8 +170,33 @@ const MailTable = () => {
             setUnreadOnly(e.target.checked);
             setCurrentPage(1);
           }}
-          style={{ marginLeft: "10px" }}
+          className="custom-switch2"
         />
+        <Form.Control
+          type="text"
+          placeholder="Search mails"
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+          style={{ borderRadius: "10px" }}
+        />
+        <Button
+          variant="primary"
+          onClick={handleSearch}
+          style={{
+            backgroundColor: "#f39c12",
+            borderColor: "#f39c12",
+            borderRadius: "10px",
+          }}
+        >
+          Search
+        </Button>
+        <Button
+          variant="secondary"
+          onClick={handleClearSearch}
+          style={{ borderRadius: "10px"}}
+        >
+          Clear Search
+        </Button>
       </InputGroup>
 
       <table className="mail-table">
