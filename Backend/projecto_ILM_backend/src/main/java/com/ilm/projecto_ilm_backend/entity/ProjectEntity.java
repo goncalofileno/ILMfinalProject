@@ -35,6 +35,19 @@ import com.ilm.projecto_ilm_backend.ENUMS.ConvertersENUM.StateProjectEnumConvert
         "AND (:keyword IS NULL OR (LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%'))))" +
         "AND (:slotsAvailable = FALSE OR p.maxMembers > " +
         "(SELECT COUNT(up) FROM UserProjectEntity up WHERE up.project.id = p.id))")
+
+@NamedQuery(
+        name = "Project.findAllProjectsOrderedByUser",
+        query = "SELECT p.id, p.name, p.lab, p.status, FUNCTION('DATE', p.startDate), FUNCTION('DATE', p.endDate), p.maxMembers FROM ProjectEntity p " +
+                "LEFT JOIN p.userProjects up WITH up.user.id = :userId " +
+                "ORDER BY CASE WHEN up.user.id IS NOT NULL THEN 0 ELSE 1 END, p.name ASC"
+)
+@SqlResultSetMappings({
+        @SqlResultSetMapping(
+                name = "ProjectResultMapping",
+                entities = @EntityResult(entityClass = ProjectEntity.class)
+        )
+})
 @NamedQuery(name = "Project.countProjects", query = "SELECT COUNT(p) FROM ProjectEntity p")
 
 public class ProjectEntity implements Serializable {
