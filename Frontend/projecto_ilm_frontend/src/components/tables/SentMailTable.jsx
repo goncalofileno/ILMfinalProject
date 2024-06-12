@@ -14,9 +14,12 @@ import {
 } from "react-bootstrap";
 import Cookies from "js-cookie";
 import { FaTrash } from "react-icons/fa";
+import { useNavigate, useLocation } from "react-router-dom";
 import "./SentMailTable.css";
 
 const SentMailTable = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [mails, setMails] = useState([]);
   const [selectedMail, setSelectedMail] = useState(null);
   const [searchInput, setSearchInput] = useState("");
@@ -31,12 +34,19 @@ const SentMailTable = () => {
   const [hoveredMailId, setHoveredMailId] = useState(null);
 
   useEffect(() => {
-    if (isSearching) {
-      handleSearch();
+    const query = new URLSearchParams(location.search);
+    const page = query.get("page") || 1;
+    const search = query.get("search") || "";
+
+    setCurrentPage(Number(page));
+    setSearchInput(search);
+
+    if (search) {
+      handleSearch(page, search);
     } else {
-      fetchMails(currentPage);
+      fetchMails(page);
     }
-  }, [sessionId, currentPage]);
+  }, [location.search]);
 
   const fetchMails = async (page) => {
     setLoading(true);
@@ -53,14 +63,14 @@ const SentMailTable = () => {
     }
   };
 
-  const handleSearch = async () => {
+  const handleSearch = async (page, search) => {
     setLoading(true);
     setIsSearching(true);
     try {
       const result = await searchSentMails(
         sessionId,
-        searchInput,
-        currentPage,
+        search,
+        page,
         pageSize
       );
       const { mails, totalMails } = result;
@@ -78,7 +88,7 @@ const SentMailTable = () => {
     setSearchInput("");
     setCurrentPage(1);
     setIsSearching(false);
-    fetchMails(1);
+    navigate("/mail/sent");
   };
 
   const handleSingleClick = (mail) => {
@@ -111,6 +121,21 @@ const SentMailTable = () => {
     setSelectedMail(null);
   };
 
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    updateURL({ page, search: searchInput });
+  };
+
+  const updateURL = ({ page, search }) => {
+    const query = new URLSearchParams();
+
+    if (page && page !== 1) query.set("page", page);
+    if (search) query.set("search", search);
+
+    const queryString = query.toString();
+    navigate(`/mail/sent${queryString ? `?${queryString}` : ""}`);
+  };
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const today = new Date();
@@ -118,21 +143,21 @@ const SentMailTable = () => {
       date.getDate() === today.getDate() &&
       date.getMonth() === today.getMonth() &&
       date.getFullYear() === today.getFullYear();
-  
+
     const isSameYear = date.getFullYear() === today.getFullYear();
-  
+
     if (isSameDay) {
       return date.toLocaleTimeString([], {
         hour: "2-digit",
         minute: "2-digit",
       });
     }
-  
+
     if (isSameYear) {
       const month = date.toLocaleString("en-US", { month: "short" });
       return `${month} ${date.getDate()}`;
     }
-  
+
     return date.toLocaleDateString("en-GB");
   };
 
@@ -148,7 +173,7 @@ const SentMailTable = () => {
           <Pagination.Item
             key={number}
             active={number === currentPage}
-            onClick={() => setCurrentPage(number)}
+            onClick={() => handlePageChange(number)}
           >
             {number}
           </Pagination.Item>
@@ -172,7 +197,7 @@ const SentMailTable = () => {
           <Pagination.Item
             key={number}
             active={number === currentPage}
-            onClick={() => setCurrentPage(number)}
+            onClick={() => handlePageChange(number)}
           >
             {number}
           </Pagination.Item>
@@ -185,7 +210,7 @@ const SentMailTable = () => {
         <Pagination.Item
           key={totalPages}
           active={totalPages === currentPage}
-          onClick={() => setCurrentPage(totalPages)}
+          onClick={() => handlePageChange(totalPages)}
         >
           {totalPages}
         </Pagination.Item>
@@ -211,7 +236,7 @@ const SentMailTable = () => {
         />
         <Button
           variant="primary"
-          onClick={handleSearch}
+          onClick={() => updateURL({ search: searchInput, page: 1 })}
           style={{
             backgroundColor: "#f39c12",
             borderColor: "#f39c12",
@@ -273,20 +298,20 @@ const SentMailTable = () => {
       <div className="pagination-container">
         <Pagination className="pagination">
           <Pagination.First
-            onClick={() => setCurrentPage(1)}
+            onClick={() => handlePageChange(1)}
             disabled={currentPage === 1}
           />
           <Pagination.Prev
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
             disabled={currentPage === 1}
           />
           {renderPaginationItems()}
           <Pagination.Next
-            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+            onClick={() => handlePageChange(Math.min(currentPage + 1, totalPages))}
             disabled={currentPage === totalPages}
           />
           <Pagination.Last
-            onClick={() => setCurrentPage(totalPages)}
+            onClick={() => handlePageChange(totalPages)}
             disabled={currentPage === totalPages}
           />
         </Pagination>
@@ -371,7 +396,6 @@ const SentMailTable = () => {
       )}
     </div>
   );
-  
 };
 
 export default SentMailTable;

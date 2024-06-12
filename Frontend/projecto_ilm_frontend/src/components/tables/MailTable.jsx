@@ -7,15 +7,17 @@ import {
 } from "../../utilities/services";
 import Cookies from "js-cookie";
 import useMailStore from "../../stores/useMailStore";
-import { Modal, Button, Form, InputGroup, Pagination } from "react-bootstrap";
+import { Modal, Button, Form, InputGroup } from "react-bootstrap";
 import { FaTrash } from "react-icons/fa";
 import ComposeMailModal from "../modals/ComposeMailModal";
 import "./MailTable.css";
 import DOMPurify from "dompurify";
 import TablePagination from "../paginations/TablePagination";
-import TrashIcon from "../../resources/icons/other/trash-open-icon.png";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const MailTable = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [loading, setLoading] = useState(true);
   const [selectedMail, setSelectedMail] = useState(null);
   const [searchInput, setSearchInput] = useState("");
@@ -49,7 +51,7 @@ const MailTable = () => {
   const handleConfirmDelete = async () => {
     if (mailToDelete) {
       await markMailAsDeleted(sessionId, mailToDelete.id);
-      fetchMailsInInbox();
+      fetchMails();
       setShowDeleteModal(false);
       setMailToDelete(null);
       if (!mailToDelete.seen) {
@@ -63,14 +65,14 @@ const MailTable = () => {
     setMailToDelete(null);
   };
 
-  const fetchMails = async () => {
+  const fetchMails = async (page, unread, search) => {
     setLoading(true);
     try {
       const result = await getReceivedMessages(
         sessionId,
-        currentPage,
+        page,
         pageSize,
-        unreadOnly
+        unread
       );
       const { mails, totalMails } = result;
       mails.sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -84,23 +86,32 @@ const MailTable = () => {
   };
 
   useEffect(() => {
-    if (isSearching) {
-      handleSearch();
-    } else {
-      fetchMails();
-    }
-  }, [currentPage, sessionId, unreadOnly]);
+    const query = new URLSearchParams(location.search);
+    const page = query.get("page") || 1;
+    const unread = query.get("unread") === "true";
+    const search = query.get("search") || "";
 
-  const handleSearch = async () => {
+    setCurrentPage(Number(page));
+    setUnreadOnly(unread);
+    setSearchInput(search);
+
+    if (search) {
+      handleSearch(page, unread, search);
+    } else {
+      fetchMails(page, unread, search);
+    }
+  }, [location.search]);
+
+  const handleSearch = async (page, unread, search) => {
     setLoading(true);
     setIsSearching(true);
     try {
       const result = await searchMails(
         sessionId,
-        searchInput,
-        currentPage,
+        search,
+        page,
         pageSize,
-        unreadOnly
+        unread
       );
       const { mails, totalMails } = result;
       mails.sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -117,13 +128,13 @@ const MailTable = () => {
     setSearchInput("");
     setCurrentPage(1);
     setIsSearching(false);
-    fetchMails();
+    navigate("/mail/inbox");
   };
 
   const handleSingleClick = async (mail) => {
     if (!mail.seen) {
       await markMailAsSeen(sessionId, mail.id);
-      fetchMails();
+      fetchMails(currentPage, unreadOnly, searchInput);
       decrementUnreadCount();
     }
     setSelectedMail(mail);
@@ -148,6 +159,29 @@ const MailTable = () => {
     setPreFilledSubject("");
   };
 
+  const handleUnreadOnlyChange = (e) => {
+    const unread = e.target.checked;
+    setUnreadOnly(unread);
+    setCurrentPage(1);
+    updateURL({ unread, page: 1, search: searchInput });
+  };
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    updateURL({ page, unread: unreadOnly, search: searchInput });
+  };
+
+  const updateURL = ({ page, unread, search }) => {
+    const query = new URLSearchParams();
+
+    if (page && page !== 1) query.set("page", page);
+    if (unread) query.set("unread", unread);
+    if (search) query.set("search", search);
+
+    const queryString = query.toString();
+    navigate(`/mail/inbox${queryString ? `?${queryString}` : ""}`);
+  };
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const today = new Date();
@@ -155,21 +189,21 @@ const MailTable = () => {
       date.getDate() === today.getDate() &&
       date.getMonth() === today.getMonth() &&
       date.getFullYear() === today.getFullYear();
-  
+
     const isSameYear = date.getFullYear() === today.getFullYear();
-  
+
     if (isSameDay) {
       return date.toLocaleTimeString([], {
         hour: "2-digit",
         minute: "2-digit",
       });
     }
-  
+
     if (isSameYear) {
       const month = date.toLocaleString("en-US", { month: "short" });
       return `${month} ${date.getDate()}`;
     }
-  
+
     return date.toLocaleDateString("en-GB");
   };
 
@@ -187,10 +221,7 @@ const MailTable = () => {
           id="unread-only-switch"
           label="Unread only"
           checked={unreadOnly}
-          onChange={(e) => {
-            setUnreadOnly(e.target.checked);
-            setCurrentPage(1);
-          }}
+          onChange={handleUnreadOnlyChange}
           className="custom-switch2"
         />
         <Form.Control
@@ -202,7 +233,7 @@ const MailTable = () => {
         />
         <Button
           variant="primary"
-          onClick={handleSearch}
+          onClick={() => updateURL({ search: searchInput, page: 1, unread: unreadOnly })}
           style={{
             backgroundColor: "#f39c12",
             borderColor: "#f39c12",
@@ -267,7 +298,7 @@ const MailTable = () => {
       <TablePagination
         totalPages={totalPages}
         currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
+        setCurrentPage={handlePageChange}
         setNavigateTableProjectsTrigger={setTrigger}
         className="pagination-container"
       />
