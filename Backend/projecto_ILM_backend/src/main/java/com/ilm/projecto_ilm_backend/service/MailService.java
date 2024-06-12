@@ -32,13 +32,14 @@ public class MailService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getReceivedMessages(@CookieParam("session-id") String sessionId,
                                         @QueryParam("page") @DefaultValue("1") int page,
-                                        @QueryParam("pageSize") @DefaultValue("10") int pageSize) {
+                                        @QueryParam("pageSize") @DefaultValue("10") int pageSize,
+                                        @QueryParam("unread") @DefaultValue("false") boolean unread) {
 
         logger.info("Received a request to get received mails for session ID: " + sessionId);
 
         if (databaseValidator.checkSessionId(sessionId)) {
-            List<MailDto> mails = mailBean.getMailsReceivedBySessionId(sessionId, page, pageSize);
-            int totalMails = mailBean.getTotalMailsReceivedBySessionId(sessionId);
+            List<MailDto> mails = mailBean.getMailsReceivedBySessionId(sessionId, page, pageSize, unread);
+            int totalMails = mailBean.getTotalMailsReceivedBySessionId(sessionId, unread);
             Map<String, Object> response = new HashMap<>();
             response.put("mails", mails);
             response.put("totalMails", totalMails);
@@ -47,6 +48,7 @@ public class MailService {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
     }
+
 
     @GET
     @Path("/sent")
@@ -160,12 +162,13 @@ public class MailService {
     public Response searchMails(@CookieParam("session-id") String sessionId,
                                 @QueryParam("query") String query,
                                 @QueryParam("page") @DefaultValue("1") int page,
-                                @QueryParam("pageSize") @DefaultValue("10") int pageSize) {
+                                @QueryParam("pageSize") @DefaultValue("10") int pageSize,
+                                @QueryParam("unread") @DefaultValue("false") boolean unread) {
         logger.info("Received a request to search mails for session ID: " + sessionId);
 
         if (databaseValidator.checkSessionId(sessionId)) {
-            List<MailDto> mails = mailBean.searchMailsBySessionId(sessionId, query, page, pageSize);
-            int totalMails = mailBean.getTotalSearchResultsBySessionId(sessionId, query);
+            List<MailDto> mails = mailBean.searchMailsBySessionId(sessionId, query, page, pageSize, unread);
+            int totalMails = mailBean.getTotalSearchResultsBySessionId(sessionId, query, unread);
             Map<String, Object> response = new HashMap<>();
             response.put("mails", mails);
             response.put("totalMails", totalMails);
@@ -174,6 +177,7 @@ public class MailService {
             return Response.status(Response.Status.UNAUTHORIZED).entity(Collections.singletonMap("message", "Invalid session ID")).build();
         }
     }
+
 
     @GET
     @Path("/searchSent")

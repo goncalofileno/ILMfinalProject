@@ -510,10 +510,10 @@ async function updatePassword(currentPassword, newPassword) {
   }
 }
 
-async function getReceivedMessages(sessionId, page = 1, pageSize = 10) {
+async function getReceivedMessages(sessionId, page = 1, pageSize = 10, unread = false) {
   try {
     const response = await fetch(
-      `${baseURL}mail/received?page=${page}&pageSize=${pageSize}`,
+      `${baseURL}mail/received?page=${page}&pageSize=${pageSize}&unread=${unread}`,
       {
         method: "GET",
         headers: {
@@ -528,6 +528,7 @@ async function getReceivedMessages(sessionId, page = 1, pageSize = 10) {
     console.error("Error fetching received messages:", error);
   }
 }
+
 
 
 async function getSentMessages(sessionId, page = 1, pageSize = 10) {
@@ -637,10 +638,10 @@ async function getUnreadNumber(sessionId) {
   }
 }
 
-async function searchMails(sessionId, query, page = 1, pageSize = 10) {
+async function searchMails(sessionId, query, page = 1, pageSize = 10, unread = false) {
   try {
     const response = await fetch(
-      `${baseURL}mail/search?query=${query}&page=${page}&pageSize=${pageSize}`,
+      `${baseURL}mail/search?query=${query}&page=${page}&pageSize=${pageSize}&unread=${unread}`,
       {
         method: "GET",
         headers: {
@@ -650,11 +651,12 @@ async function searchMails(sessionId, query, page = 1, pageSize = 10) {
         credentials: "include",
       }
     );
-    return response.json(); // Assumindo que a resposta JSON será um objeto com 'mails' e 'totalMails'
+    return response.json(); 
   } catch (error) {
     console.error("Error searching mails:", error);
   }
 }
+
 
 async function searchSentMails(sessionId, query, page, pageSize) {
   try {

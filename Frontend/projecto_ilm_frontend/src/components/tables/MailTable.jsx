@@ -3,6 +3,7 @@ import {
   markMailAsSeen,
   searchMails,
   markMailAsDeleted,
+  getReceivedMessages,
 } from "../../utilities/services";
 import Cookies from "js-cookie";
 import useMailStore from "../../stores/useMailStore";
@@ -17,14 +18,16 @@ const MailTable = () => {
   const [loading, setLoading] = useState(true);
   const [selectedMail, setSelectedMail] = useState(null);
   const [searchInput, setSearchInput] = useState("");
-  const [totalMails, setTotalMails] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
+  const [unreadOnly, setUnreadOnly] = useState(false);
   const pageSize = 8;
   const {
     receivedMails,
     fetchMailsInInbox,
     decrementUnreadCount,
     setReceivedMails,
+    totalMails,
+    setTotalMails,
   } = useMailStore();
   const sessionId = Cookies.get("session-id");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -33,7 +36,7 @@ const MailTable = () => {
   const [showComposeModal, setShowComposeModal] = useState(false);
   const [preFilledContact, setPreFilledContact] = useState("");
   const [preFilledSubject, setPreFilledSubject] = useState("");
-
+  const [isSearching, setIsSearching] = useState(false);
   const [trigger, setTrigger] = useState(false);
 
   const handleDeleteClick = (mail, event) => {
@@ -59,20 +62,34 @@ const MailTable = () => {
     setMailToDelete(null);
   };
 
-  useEffect(() => {
+  const fetchMails = async () => {
     setLoading(true);
-    fetchMailsInInbox().finally(() => setLoading(false));
-  }, [fetchMailsInInbox, currentPage, sessionId]);
+    try {
+      const result = await getReceivedMessages(sessionId, currentPage, pageSize, unreadOnly);
+      const { mails, totalMails } = result;
+      mails.sort((a, b) => new Date(b.date) - new Date(a.date));
+      setReceivedMails(mails);
+      setTotalMails(totalMails);
+    } catch (error) {
+      console.error("Error fetching mails:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isSearching) {
+      handleSearch();
+    } else {
+      fetchMails();
+    }
+  }, [currentPage, sessionId, unreadOnly]);
 
   const handleSearch = async () => {
     setLoading(true);
+    setIsSearching(true);
     try {
-      const result = await searchMails(
-        sessionId,
-        searchInput,
-        currentPage,
-        pageSize
-      );
+      const result = await searchMails(sessionId, searchInput, currentPage, pageSize, unreadOnly);
       const { mails, totalMails } = result;
       mails.sort((a, b) => new Date(b.date) - new Date(a.date));
       setReceivedMails(mails);
@@ -86,14 +103,15 @@ const MailTable = () => {
 
   const handleClearSearch = () => {
     setSearchInput("");
-    fetchMailsInInbox();
     setCurrentPage(1);
+    setIsSearching(false);
+    fetchMails();
   };
 
   const handleSingleClick = async (mail) => {
     if (!mail.seen) {
       await markMailAsSeen(sessionId, mail.id);
-      fetchMailsInInbox();
+      fetchMails();
       decrementUnreadCount();
     }
     setSelectedMail(mail);
@@ -136,63 +154,6 @@ const MailTable = () => {
 
   const totalPages = Math.ceil(totalMails / pageSize);
 
-  const renderPaginationItems = () => {
-    const items = [];
-    const maxPagesToShow = 5;
-
-    if (totalPages <= maxPagesToShow) {
-      for (let number = 1; number <= totalPages; number++) {
-        items.push(
-          <Pagination.Item
-            key={number}
-            active={number === currentPage}
-            onClick={() => setCurrentPage(number)}
-          >
-            {number}
-          </Pagination.Item>
-        );
-      }
-    } else {
-      let startPage, endPage;
-      if (currentPage <= 3) {
-        startPage = 1;
-        endPage = maxPagesToShow - 1;
-      } else if (currentPage + 1 >= totalPages) {
-        startPage = totalPages - (maxPagesToShow - 2);
-        endPage = totalPages - 1;
-      } else {
-        startPage = currentPage - 2;
-        endPage = currentPage + 1;
-      }
-
-      for (let number = startPage; number <= endPage; number++) {
-        items.push(
-          <Pagination.Item
-            key={number}
-            active={number === currentPage}
-            onClick={() => setCurrentPage(number)}
-          >
-            {number}
-          </Pagination.Item>
-        );
-      }
-
-      items.push(<Pagination.Ellipsis key="ellipsis" disabled />);
-
-      items.push(
-        <Pagination.Item
-          key={totalPages}
-          active={totalPages === currentPage}
-          onClick={() => setCurrentPage(totalPages)}
-        >
-          {totalPages}
-        </Pagination.Item>
-      );
-    }
-
-    return items;
-  };
-
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -223,6 +184,17 @@ const MailTable = () => {
         >
           Clear Search
         </Button>
+        <Form.Check 
+          type="switch"
+          id="unread-only-switch"
+          label="Unread only"
+          checked={unreadOnly}
+          onChange={(e) => {
+            setUnreadOnly(e.target.checked);
+            setCurrentPage(1);
+          }}
+          style={{ marginLeft: "10px" }}
+        />
       </InputGroup>
 
       <table className="mail-table">

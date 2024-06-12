@@ -58,9 +58,9 @@ public class MailBean {
         }
     }
 
-    public List<MailDto> getMailsReceivedBySessionId(String sessionId, int page, int pageSize) {
+    public List<MailDto> getMailsReceivedBySessionId(String sessionId, int page, int pageSize, boolean unread) {
         int userId = sessionDao.findBySessionId(sessionId).getUser().getId();
-        List<MailEntity> mailsReceived = maildao.getMailsReceivedByUserId(userId, page, pageSize);
+        List<MailEntity> mailsReceived = maildao.getMailsReceivedByUserId(userId, page, pageSize, unread);
         List<MailDto> mailDtos = new ArrayList<>();
         for (MailEntity mail : mailsReceived) {
             MailDto mailDto = new MailDto();
@@ -81,34 +81,11 @@ public class MailBean {
         return mailDtos;
     }
 
-    public int getTotalMailsReceivedBySessionId(String sessionId) {
+    public int getTotalMailsReceivedBySessionId(String sessionId, boolean unread) {
         int userId = sessionDao.findBySessionId(sessionId).getUser().getId();
-        return maildao.getTotalMailsReceivedByUserId(userId);
+        return maildao.getTotalMailsReceivedByUserId(userId, unread);
     }
 
-
-
-    public List<MailDto> getMailsSentBySessionId(String sessionId) {
-        List<MailDto> mails = new ArrayList<>();
-        List<MailEntity> mailsSent = maildao.getMailsSentByUserId(sessionDao.findBySessionId(sessionId).getUser().getId());
-        for (MailEntity mail : mailsSent) {
-            MailDto mailDto = new MailDto();
-            mailDto.setId(mail.getId());
-            mailDto.setSubject(mail.getSubject());
-            mailDto.setText(mail.getText());
-            mailDto.setDate(mail.getDate());
-            mailDto.setSenderName(mail.getSender().getFirstName() + " " + mail.getSender().getLastName());
-            mailDto.setSenderMail(mail.getSender().getEmail());
-            mailDto.setSenderPhoto(mail.getSender().getAvatarPhoto());
-            mailDto.setReceiverName(mail.getReceiver().getFirstName() + " " + mail.getReceiver().getLastName());
-            mailDto.setReceiverMail(mail.getReceiver().getEmail());
-            mailDto.setReceiverPhoto(mail.getReceiver().getAvatarPhoto());
-            mailDto.setSeen(mail.isSeen());
-            mailDto.setDeleted(mail.isDeleted());
-            mails.add(mailDto);
-        }
-        return mails;
-    }
 
     public boolean markMailAsSeen(String sessionId, int mailId) {
         UserEntity user = sessionDao.findBySessionId(sessionId).getUser();
@@ -163,9 +140,6 @@ public class MailBean {
         }
     }
 
-
-
-
     public List<ContactDto> getContactsBySessionId(String sessionId) {
         List<ContactDto> contacts = new ArrayList<>();
         UserEntity user = sessionDao.findBySessionId(sessionId).getUser();
@@ -186,9 +160,9 @@ public class MailBean {
         return maildao.getUnreadNumber(user.getId());
     }
 
-    public List<MailDto> searchMailsBySessionId(String sessionId, String query, int page, int pageSize) {
+    public List<MailDto> searchMailsBySessionId(String sessionId, String query, int page, int pageSize, boolean unread) {
         int userId = sessionDao.findBySessionId(sessionId).getUser().getId();
-        List<MailEntity> mails = maildao.searchMails(userId, query, page, pageSize);
+        List<MailEntity> mails = maildao.searchMails(userId, query, page, pageSize, unread);
         return mails.stream().map(mail -> {
             MailDto mailDto = new MailDto();
             mailDto.setId(mail.getId());
@@ -207,10 +181,11 @@ public class MailBean {
         }).collect(Collectors.toList());
     }
 
-    public int getTotalSearchResultsBySessionId(String sessionId, String query) {
+    public int getTotalSearchResultsBySessionId(String sessionId, String query, boolean unread) {
         int userId = sessionDao.findBySessionId(sessionId).getUser().getId();
-        return maildao.getTotalSearchResults(userId, query);
+        return maildao.getTotalSearchResults(userId, query, unread);
     }
+
 
     public List<MailDto> searchSentMailsBySessionId(String sessionId, String query, int page, int pageSize) {
         int userId = sessionDao.findBySessionId(sessionId).getUser().getId();
@@ -267,11 +242,4 @@ public class MailBean {
         int userId = sessionDao.findBySessionId(sessionId).getUser().getId();
         return maildao.getTotalMailsSentByUserId(userId);
     }
-
-
-
-
-
-
-
 }

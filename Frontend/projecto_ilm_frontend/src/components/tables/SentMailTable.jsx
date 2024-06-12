@@ -23,6 +23,7 @@ const SentMailTable = () => {
   const [totalMails, setTotalMails] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [isSearching, setIsSearching] = useState(false);
   const pageSize = 8;
   const sessionId = Cookies.get("session-id");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -30,7 +31,11 @@ const SentMailTable = () => {
   const [hoveredMailId, setHoveredMailId] = useState(null);
 
   useEffect(() => {
-    fetchMails(currentPage);
+    if (isSearching) {
+      handleSearch();
+    } else {
+      fetchMails(currentPage);
+    }
   }, [sessionId, currentPage]);
 
   const fetchMails = async (page) => {
@@ -50,6 +55,7 @@ const SentMailTable = () => {
 
   const handleSearch = async () => {
     setLoading(true);
+    setIsSearching(true);
     try {
       const result = await searchSentMails(
         sessionId,
@@ -70,8 +76,9 @@ const SentMailTable = () => {
 
   const handleClearSearch = () => {
     setSearchInput("");
-    fetchMails(1);
     setCurrentPage(1);
+    setIsSearching(false);
+    fetchMails(1);
   };
 
   const handleSingleClick = (mail) => {
@@ -242,7 +249,9 @@ const SentMailTable = () => {
               </td>
               <td className="centered-cell max-width-100">
                 {hoveredMailId === mail.id ? (
-                  <FaTrash onClick={(event) => handleDeleteClick(mail, event)} />
+                  <FaTrash
+                    onClick={(event) => handleDeleteClick(mail, event)}
+                  />
                 ) : (
                   formatDate(mail.date)
                 )}
