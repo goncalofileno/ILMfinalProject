@@ -12,6 +12,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -62,19 +63,23 @@ public class NotificationBean {
         List<NotificationEntity> unreadNotifications = notificationDao.findUnreadByUserId(userId);
         List<NotificationEntity> readNotifications = notificationDao.findReadByUserId(userId, page);
 
-        unreadNotifications.forEach(notification -> notification.setReadStatus(true));
-        notificationDao.markNotificationsAsRead(unreadNotifications);
-
         int unreadCount = unreadNotifications.size();
         int neededNotifications = 5 - unreadCount;
 
-        List<NotificationEntity> resultNotifications = unreadNotifications;
+        List<NotificationEntity> resultNotifications = new ArrayList<>(unreadNotifications);
         if (unreadCount < 5) {
             resultNotifications.addAll(readNotifications.subList(0, Math.min(neededNotifications, readNotifications.size())));
         }
 
-        return resultNotifications.stream().map(this::toDto).collect(Collectors.toList());
+        List<NotificationDto> dtos = resultNotifications.stream().map(this::toDto).collect(Collectors.toList());
+
+        // Mark unread notifications as read after creating the DTOs
+        unreadNotifications.forEach(notification -> notification.setReadStatus(true));
+        notificationDao.markNotificationsAsRead(unreadNotifications);
+
+        return dtos;
     }
+
 
     public int getUnreadNotificationCount(int userId) {
         return notificationDao.countUnreadByUserId(userId);

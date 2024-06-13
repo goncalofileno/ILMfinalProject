@@ -62,12 +62,14 @@ public class NotificationService {
             try {
                 int userId = sessionDao.findUserIdBySessionId(sessionId);
                 int unreadCount = notificationBean.getUnreadNotificationCount(userId);
+                logger.info("Unread notification count retrieved successfully from IP address: " + clientIP + "with count: " + unreadCount);
                 return Response.ok(unreadCount).build();
             } catch (Exception e) {
                 logger.error("An error occurred while retrieving unread notification count: " + e.getMessage() + " from IP address: " + clientIP);
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("An error occurred while retrieving unread notification count").build();
             }
         } else {
+            logger.error("Unauthorized access from IP address: " + clientIP);
             return Response.status(Response.Status.UNAUTHORIZED).entity("Unauthorized access").build();
         }
     }

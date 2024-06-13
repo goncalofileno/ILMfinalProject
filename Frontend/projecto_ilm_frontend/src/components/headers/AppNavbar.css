@@ -183,4 +183,10 @@
    font-size: 12px;
    font-weight: bold;
  }
+
+ #notification-badge {
+  right: -6px;
+  top: -6px;
+  filter: invert(100%);
+ }
  

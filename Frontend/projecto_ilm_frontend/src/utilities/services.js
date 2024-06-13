@@ -777,6 +777,55 @@ async function getAllBrands() {
   }
 }
 
+async function getUnreadNotificationsCount(sessionId) {
+  try {
+    const response = await fetch(`${baseURL}notification/unreadCount`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      cookies: `session-id=${sessionId}`,
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch unread notifications count");
+    }
+
+    const data = await response.json();
+    console.log('Response from unread notifications count API:', data); // Log the response
+    return data; // Directly returning the number
+  } catch (error) {
+    console.error("Error fetching unread notifications count:", error);
+    return null;
+  }
+}
+
+async function fetchNotifications(sessionId, page) {
+  try {
+    const response = await fetch(`${baseURL}notification/userNotifications?page=${page}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      cookies: `session-id=${sessionId}`,
+    });
+
+    console.log('Response from fetchNotifications API:', response); // Log the response
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch notifications");
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching notifications:", error);
+    return [];
+  }
+}
+
+
+
 export {
   registerUser,
   getInterests,
@@ -818,4 +867,6 @@ export {
   getAllResourcesTypes,
   getAllSuppliersNames,
   getAllBrands,
+  getUnreadNotificationsCount,
+  fetchNotifications
 };
