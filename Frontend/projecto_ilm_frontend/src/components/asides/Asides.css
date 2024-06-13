@@ -53,3 +53,20 @@
 .div-control-form {
   width: 100%;
 }
+#your-projects-color {
+  background: linear-gradient(
+      56.26deg,
+      #f39d125e 60%,
+      rgba(192, 23, 34, 0.05) 100%
+    ),
+    rgb(226, 226, 226);
+  height: 30px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  color: black;
+  font-size: 16px;
+  font-weight: 500;
+}

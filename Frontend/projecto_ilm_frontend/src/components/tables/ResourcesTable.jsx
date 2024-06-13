@@ -16,6 +16,10 @@ export default function ResourcesTable({
   sortByType,
   sortByBrand,
   sortBySupplier,
+  nameAsc,
+  typeAsc,
+  brandAsc,
+  supplierAsc,
 }) {
   const NUMBER_OF_RESOURCES_PAGE = 15;
 
@@ -63,10 +67,42 @@ export default function ResourcesTable({
       <table className="centered-table">
         <thead>
           <tr>
-            <th onClick={sortByName}>Name</th>
-            <th onClick={sortByType}>Type</th>
-            <th onClick={sortByBrand}>Brand</th>
-            <th onClick={sortBySupplier}>Supplier</th>
+            <th onClick={sortByName}>
+              {" "}
+              <span style={{ marginRight: "10px" }}>Name</span>
+              {nameAsc ? (
+                <i class="fas fa-arrow-up fa-xs"></i>
+              ) : (
+                nameAsc === false && <i class="fas fa-arrow-down fa-xs"></i>
+              )}
+            </th>
+            <th onClick={sortByType}>
+              {" "}
+              <span style={{ marginRight: "10px" }}>Type</span>
+              {typeAsc ? (
+                <i class="fas fa-arrow-up fa-xs"></i>
+              ) : (
+                typeAsc === false && <i class="fas fa-arrow-down fa-xs"></i>
+              )}
+            </th>
+            <th onClick={sortByBrand}>
+              {" "}
+              <span style={{ marginRight: "10px" }}>Brand</span>
+              {brandAsc ? (
+                <i class="fas fa-arrow-up fa-xs"></i>
+              ) : (
+                brandAsc === false && <i class="fas fa-arrow-down fa-xs"></i>
+              )}
+            </th>
+            <th onClick={sortBySupplier}>
+              {" "}
+              <span style={{ marginRight: "10px" }}>Supplier</span>
+              {supplierAsc ? (
+                <i class="fas fa-arrow-up fa-xs"></i>
+              ) : (
+                supplierAsc === false && <i class="fas fa-arrow-down fa-xs"></i>
+              )}
+            </th>
           </tr>
         </thead>
         <tbody>

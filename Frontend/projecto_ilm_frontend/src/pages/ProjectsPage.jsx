@@ -136,6 +136,11 @@ const ProjectsPage = () => {
         setNavigateTableProjectsTrigger={setNavigateTableProjectsTrigger}
         setCurrentPage={setCurrentPage}
         setKeyword={setKeyword}
+        setNameAsc={setNameAsc}
+        setStatusAsc={setStatusAsc}
+        setLabAsc={setLabAsc}
+        setStartDateAsc={setStartDateAsc}
+        setEndDateAsc={setEndDateAsc}
       />
       <div className="ilm-pageb-with-aside">
         <h1 className="page-title">

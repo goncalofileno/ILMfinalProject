@@ -30,6 +30,7 @@ export default function ResourcesPage() {
     if (typeAsc !== "") setTypeAsc("");
     if (brandAsc !== "") setBrandAsc("");
     if (supplierAsc !== "") setSupplierAsc("");
+    if (nameAsc === "") setNameAsc(true);
     else setNameAsc(!nameAsc);
     setNavigateTableResourcesTrigger((prev) => !prev);
   };
@@ -38,6 +39,7 @@ export default function ResourcesPage() {
     if (nameAsc !== "") setNameAsc("");
     if (brandAsc !== "") setBrandAsc("");
     if (supplierAsc !== "") setSupplierAsc("");
+    if (typeAsc === "") setTypeAsc(true);
     else setTypeAsc(!typeAsc);
     setNavigateTableResourcesTrigger((prev) => !prev);
   };
@@ -46,6 +48,7 @@ export default function ResourcesPage() {
     if (nameAsc !== "") setNameAsc("");
     if (typeAsc !== "") setTypeAsc("");
     if (supplierAsc !== "") setSupplierAsc("");
+    if (brandAsc === "") setBrandAsc(true);
     else setBrandAsc(!brandAsc);
     setNavigateTableResourcesTrigger((prev) => !prev);
   };
@@ -54,6 +57,7 @@ export default function ResourcesPage() {
     if (nameAsc !== "") setNameAsc("");
     if (typeAsc !== "") setTypeAsc("");
     if (brandAsc !== "") setBrandAsc("");
+    if (supplierAsc === "") setSupplierAsc(true);
     else setSupplierAsc(!supplierAsc);
     setNavigateTableResourcesTrigger((prev) => !prev);
   };
@@ -104,6 +108,11 @@ export default function ResourcesPage() {
         setSupplier={setSupplier}
         setCurrentPage={setCurrentPage}
         setNavigateTableResourcesTrigger={setNavigateTableResourcesTrigger}
+        setKeyword={setKeyword}
+        setNameAsc={setNameAsc}
+        setTypeAsc={setTypeAsc}
+        setBrandAsc={setBrandAsc}
+        setSupplierAsc={setSupplierAsc}
       />
       <div className="ilm-pageb-with-aside">
         <h1 className="page-title">
@@ -123,6 +132,10 @@ export default function ResourcesPage() {
             sortByType={sortByType}
             sortByBrand={sortByBrand}
             sortBySupplier={sortBySupplier}
+            nameAsc={nameAsc}
+            typeAsc={typeAsc}
+            brandAsc={brandAsc}
+            supplierAsc={supplierAsc}
           />
         </div>
       </div>

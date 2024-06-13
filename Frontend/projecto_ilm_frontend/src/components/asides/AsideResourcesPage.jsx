@@ -18,6 +18,11 @@ export default function AsideResourcesPage({
   setSupplier,
   setCurrentPage,
   setNavigateTableResourcesTrigger,
+  setKeyword,
+  setNameAsc,
+  setTypeAsc,
+  setBrandAsc,
+  setSupplierAsc,
 }) {
   const [types, setTypes] = useState([]);
   const [suppliers, setSuppliers] = useState([]);
@@ -117,6 +122,29 @@ export default function AsideResourcesPage({
             ))}
           </Form.Control>
         </div>
+        <button
+          className="terciary-button"
+          style={{
+            width: "100%",
+            paddingTop: "5px",
+            paddingBottom: "5px",
+            fontWeight: "500",
+          }}
+          onClick={(e) => {
+            setBrand("");
+            setType("");
+            setSupplier("");
+            setCurrentPage(1);
+            setKeyword("");
+            setNameAsc("");
+            setTypeAsc("");
+            setBrandAsc("");
+            setSupplierAsc("");
+            setNavigateTableResourcesTrigger((prev) => !prev);
+          }}
+        >
+          Clear Filters
+        </button>
       </div>
     </div>
   );

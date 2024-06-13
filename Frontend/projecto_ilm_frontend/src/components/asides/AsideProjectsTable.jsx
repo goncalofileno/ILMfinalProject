@@ -4,7 +4,6 @@ import { Form } from "react-bootstrap";
 import { useState, useEffect } from "react";
 import { getLabsWithSessionId, getAllStatus } from "../../utilities/services";
 import { formatLab, formatStatusDropDown } from "../../utilities/converters";
-import { useNavigate } from "react-router-dom";
 
 export default function AsideProjectsTable({
   selectedLab,
@@ -17,8 +16,12 @@ export default function AsideProjectsTable({
   setNavigateTableProjectsTrigger,
   setCurrentPage,
   setKeyword,
+  setNameAsc,
+  setStatusAsc,
+  setLabAsc,
+  setStartDateAsc,
+  setEndDateAsc,
 }) {
-  const navigate = useNavigate();
   const [labs, setLabs] = useState([]);
   const [status, setStatus] = useState([]);
 
@@ -106,14 +109,24 @@ export default function AsideProjectsTable({
           <div id="your-projects-color">Your Projects</div>
         </div>
         <button
-          className="secondary-button"
-          style={{ width: "100%", paddingTop: "5px", paddingBottom: "5px" }}
-          onClick={(e) => {
+          className="terciary-button"
+          style={{
+            width: "100%",
+            paddingTop: "5px",
+            paddingBottom: "5px",
+            fontWeight: "500",
+          }}
+          onClick={() => {
             setSelectedLab("");
             setSelectedStatus("");
             setSlotsAvailable(false);
             setCurrentPage(1);
             setKeyword("");
+            setNameAsc("");
+            setStatusAsc("");
+            setLabAsc("");
+            setStartDateAsc("");
+            setEndDateAsc("");
             setNavigateTableProjectsTrigger(!navigateTableProjectsTrigger);
           }}
         >
