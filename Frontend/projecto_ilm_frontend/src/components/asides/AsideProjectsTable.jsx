@@ -4,6 +4,7 @@ import { Form } from "react-bootstrap";
 import { useState, useEffect } from "react";
 import { getLabsWithSessionId, getAllStatus } from "../../utilities/services";
 import { formatLab, formatStatusDropDown } from "../../utilities/converters";
+import { useNavigate } from "react-router-dom";
 
 export default function AsideProjectsTable({
   selectedLab,
@@ -15,7 +16,9 @@ export default function AsideProjectsTable({
   navigateTableProjectsTrigger,
   setNavigateTableProjectsTrigger,
   setCurrentPage,
+  setKeyword,
 }) {
+  const navigate = useNavigate();
   const [labs, setLabs] = useState([]);
   const [status, setStatus] = useState([]);
 
@@ -99,6 +102,23 @@ export default function AsideProjectsTable({
             }}
           />
         </div>
+        <div className="table-label-color">
+          <div id="your-projects-color">Your Projects</div>
+        </div>
+        <button
+          className="secondary-button"
+          style={{ width: "100%", paddingTop: "5px", paddingBottom: "5px" }}
+          onClick={(e) => {
+            setSelectedLab("");
+            setSelectedStatus("");
+            setSlotsAvailable(false);
+            setCurrentPage(1);
+            setKeyword("");
+            setNavigateTableProjectsTrigger(!navigateTableProjectsTrigger);
+          }}
+        >
+          Clear Filters
+        </button>
       </div>
     </div>
   );

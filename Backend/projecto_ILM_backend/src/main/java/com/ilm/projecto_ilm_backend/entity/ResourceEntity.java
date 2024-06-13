@@ -17,15 +17,25 @@ import java.util.List;
 @NamedQuery(
         name = "Resource.getResourcesDetails",
         query = "SELECT r.name, r.brand, r.type, s.id FROM ResourceEntity r " +
-                "JOIN r.supplier s"
+                "JOIN r.supplier s " +
+                "WHERE (:brand IS NULL OR r.brand = :brand) "+
+                "AND (:type IS NULL OR r.type = :type) "+
+                "AND (:supplierId IS NULL OR s.id = :supplierId) "+
+                "AND (:name IS NULL OR LOWER(r.name) LIKE LOWER(CONCAT('%', :name, '%'))) "
 )
+
 @NamedQuery(
         name = "Resource.getAllBrands",
         query = "SELECT DISTINCT r.brand FROM ResourceEntity r ")
+
 @NamedQuery(
-        name = "Resource.getNumberOfResources",
+        name = "Resource.getNumberOfResourcesDetails",
         query = "SELECT COUNT(r) FROM ResourceEntity r " +
-                "JOIN r.supplier s"
+                "JOIN r.supplier s "+
+                "WHERE (:brand IS NULL OR r.brand = :brand) "+
+                "AND (:type IS NULL OR r.type = :type) "+
+                "AND (:supplierId IS NULL OR s.id = :supplierId) "+
+                "AND (:name IS NULL OR LOWER(r.name) LIKE LOWER(CONCAT('%', :name, '%'))) "
 )
 
 public class ResourceEntity implements Serializable {

@@ -4,8 +4,7 @@ import ProjectsTable from "../components/tables/ProjectsTable";
 import AsideProjectsTable from "../components/asides/AsideProjectsTable";
 import { getTableProjects } from "../utilities/services";
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const ProjectsPage = () => {
   const query = new URLSearchParams(useLocation().search);
@@ -136,6 +135,7 @@ const ProjectsPage = () => {
         navigateTableProjectsTrigger={navigateTableProjectsTrigger}
         setNavigateTableProjectsTrigger={setNavigateTableProjectsTrigger}
         setCurrentPage={setCurrentPage}
+        setKeyword={setKeyword}
       />
       <div className="ilm-pageb-with-aside">
         <h1 className="page-title">

@@ -58,7 +58,7 @@ export default function ProjectsTable({
         <InputGroup style={{ width: "50%" }}>
           <Form.Control
             type="text"
-            placeholder="Search for title or description"
+            placeholder="Search for title"
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
             className="custom-focus"
@@ -138,9 +138,9 @@ export default function ProjectsTable({
             <th style={{ width: "15%" }}>Members</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody id="table-projects-body">
           {projects.map((project, index) => (
-            <tr key={index}>
+            <tr key={index} className={project.member && "is-member-project"}>
               <td style={{ fontWeight: "bold" }}>{project.name}</td>
 
               <td style={{ color: statusColor(project.status) }}>

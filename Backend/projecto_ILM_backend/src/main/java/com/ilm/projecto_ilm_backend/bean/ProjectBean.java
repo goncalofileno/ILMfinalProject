@@ -121,9 +121,9 @@ public class ProjectBean {
         List<Object[]>  projectsInfo;
         if(labName == null || labName.equals("")) lab=null;
         else lab=labDao.findbyLocal(WorkLocalENUM.valueOf(labName));
-        if(status == null || status.equals("")) state=null;
+        if(status.equals("")) state=null;
         else state=StateProjectENUM.valueOf(status);
-        if(keyword == null || keyword.equals("")) keyword=null;
+        if( keyword.equals("")) keyword=null;
 
         if(lab==null && (status==null || status.equals("")) && !slotsAvailable && (nameAsc==null || nameAsc.equals("")) && (statusAsc==null || statusAsc.equals("")) && (labAsc==null || labAsc.equals("")) && (startDateAsc==null || startDateAsc.equals("")) && (endDateAsc==null || endDateAsc.equals("")) && (keyword==null || keyword.equals(""))){
             int userId=sessionDao.findUserIdBySessionId(sessionId);

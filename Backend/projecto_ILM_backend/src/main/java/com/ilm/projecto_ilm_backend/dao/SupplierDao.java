@@ -84,6 +84,15 @@ public class SupplierDao extends AbstractDao<SupplierEntity> {
             return null;
         }
     }
+
+    public int findIdByName(String name) {
+        try {
+            return em.createNamedQuery("Supplier.findIdByName", int.class).setParameter("name", name)
+                    .getSingleResult();
+        } catch (Exception e) {
+            return -1;
+        }
+    }
     public List<String> getAllNames() {
         return em.createNamedQuery("Supplier.findAllNames", String.class).getResultList();
     }

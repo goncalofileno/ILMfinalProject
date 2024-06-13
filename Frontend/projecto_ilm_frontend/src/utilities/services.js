@@ -712,15 +712,28 @@ async function inviteUserToProject(sessionId, projectName, systemUsername) {
   }
 }
 
-async function getAllResources() {
+async function getAllResources(
+  page,
+  brand,
+  type,
+  supplier,
+  keyword,
+  nameAsc,
+  typeAsc,
+  brandAsc,
+  supplierAsc
+) {
   try {
-    const response = await fetch(`${baseURL}resource`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    });
+    const response = await fetch(
+      `${baseURL}resource?page=${page}&brand=${brand}&type=${type}&supplier=${supplier}&keyword=${keyword}&nameAsc=${nameAsc}&typeAsc=${typeAsc}&brandAsc=${brandAsc}&supplierAsc=${supplierAsc}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      }
+    );
 
     return response;
   } catch (error) {
