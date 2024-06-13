@@ -4,29 +4,16 @@ package com.ilm.projecto_ilm_backend.ENUMS;
  * Enum representing different types of notifications.
  */
 public enum NotificationTypeENUM {
-    /**
-     * Notification for a project.
-     * Represented by the integer value 0.
-     */
+
     PROJECT(0),
 
-    /**
-     * Notification for an invite.
-     * Represented by the integer value 1.
-     */
     INVITE(1),
 
-    /**
-     * Notification for a task.
-     * Represented by the integer value 2.
-     */
-    TASK(2),
+    INVITE_ACCEPTED(2),
 
-    /**
-     * Notification for a message.
-     * Represented by the integer value 3.
-     */
-    MESSAGE(3);
+    INVITE_REJECTED(3),
+
+    TASK(4);
 
     private final int intValue;
 

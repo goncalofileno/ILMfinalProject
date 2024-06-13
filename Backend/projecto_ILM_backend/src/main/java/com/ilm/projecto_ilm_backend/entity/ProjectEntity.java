@@ -56,6 +56,12 @@ public class ProjectEntity implements Serializable {
     private String name;
 
     /**
+     * The system name of the project.
+     */
+    @Column(name = "systemName", nullable = false, unique = true, updatable = true)
+    private String systemName;
+
+    /**
      * The description of the project.
      */
     @Column(name = "description", nullable = false, unique = false, updatable = true)
@@ -186,6 +192,15 @@ public class ProjectEntity implements Serializable {
      */
     public void setName(String name) {
         this.name = name;
+    }
+
+
+    public String getSystemName() {
+        return systemName;
+    }
+
+    public void setSystemName(String systemName) {
+        this.systemName = systemName;
     }
 
     /**

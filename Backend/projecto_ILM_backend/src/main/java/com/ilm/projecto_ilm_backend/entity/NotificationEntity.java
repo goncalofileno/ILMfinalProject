@@ -2,10 +2,12 @@ package com.ilm.projecto_ilm_backend.entity;
 
 import com.ilm.projecto_ilm_backend.ENUMS.ConvertersENUM.NotificationTypeEnumConverter;
 import com.ilm.projecto_ilm_backend.ENUMS.NotificationTypeENUM;
+import com.ilm.projecto_ilm_backend.ENUMS.StateProjectENUM;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * The NotificationEntity class represents the "notification" table in the database.
@@ -13,149 +15,118 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Table(name = "notification")
+@NamedQueries({
+        @NamedQuery(name = "NotificationEntity.findByUserId",
+                query = "SELECT n FROM NotificationEntity n WHERE n.receptor.id = :userId"),
+        @NamedQuery(name = "NotificationEntity.markAsRead",
+                query = "UPDATE NotificationEntity n SET n.readStatus = true WHERE n.receptor.id = :userId AND n.id IN :notificationIds")
+})
 public class NotificationEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    /**
-     * The unique ID of the notification. This is the primary key in the "notification" table.
-     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, unique = true, updatable = false)
     private int id;
 
-    /**
-     * The type of the notification. This is an enumerated type.
-     */
     @Convert(converter = NotificationTypeEnumConverter.class)
     @Column(name = "type", nullable = false, unique = false, updatable = false)
     private NotificationTypeENUM type;
 
-    /**
-     * The read status of the notification.
-     */
     @Column(name = "readStatus", nullable = false, unique = false, updatable = true)
     private boolean readStatus;
 
-    /**
-     * The send date of the notification.
-     */
     @Column(name = "sendDate", nullable = false, unique = false, updatable = false)
     private LocalDateTime sendDate;
 
-    /**
-     * The text of the notification.
-     */
-    @Column(name = "text", nullable = false, unique = false, updatable = false)
-    private String text;
+    @Column(name = "projectSystemName", nullable = true, unique = false, updatable = false)
+    private String projectSystemName;
 
-    /**
-     * The receptor of the notification. This is a many-to-one relationship with the UserEntity class.
-     */
+    @Column(name = "projectStatus", nullable = true, unique = false, updatable = false)
+    private StateProjectENUM projectStatus;
+
+    @Column(name = "userName", nullable = true, unique = false, updatable = false)
+    private String userName;
+
+    @Column(name = "taskName", nullable = true, unique = false, updatable = false)
+    private String taskName;
+
     @NotNull
     @ManyToOne
     private UserEntity receptor;
 
-    /**
-     * Default constructor.
-     */
-    public NotificationEntity() {
-    }
+    public NotificationEntity() {}
 
-    /**
-     * Returns the unique ID of this notification.
-     * @return the ID of this notification.
-     */
     public int getId() {
         return id;
     }
 
-    /**
-     * Sets the unique ID of this notification.
-     * @param id the new ID of this notification.
-     */
     public void setId(int id) {
         this.id = id;
     }
 
-    /**
-     * Sets the type of this notification.
-     * @param type the new type of this notification.
-     */
-    public void setType(NotificationTypeENUM type) {
-        this.type = type;
-    }
-
-    /**
-     * Returns the type of this notification.
-     * @return the type of this notification.
-     */
     public NotificationTypeENUM getType() {
         return type;
     }
 
-    /**
-     * Returns the read status of this notification.
-     * @return true if the notification has been read, false otherwise.
-     */
+    public void setType(NotificationTypeENUM type) {
+        this.type = type;
+    }
+
     public boolean isReadStatus() {
         return readStatus;
     }
 
-    /**
-     * Sets the read status of this notification.
-     * @param readStatus the new read status of this notification.
-     */
     public void setReadStatus(boolean readStatus) {
         this.readStatus = readStatus;
     }
 
-    /**
-     * Returns the send date of this notification.
-     * @return the send date of this notification.
-     */
     public LocalDateTime getSendDate() {
         return sendDate;
     }
 
-    /**
-     * Sets the send date of this notification.
-     * @param sendDate the new send date of this notification.
-     */
     public void setSendDate(LocalDateTime sendDate) {
         this.sendDate = sendDate;
     }
 
-    /**
-     * Returns the text of this notification.
-     * @return the text of this notification.
-     */
-    public String getText() {
-        return text;
+    public String getProjectSystemName() {
+        return projectSystemName;
     }
 
-    /**
-     * Sets the text of this notification.
-     * @param text the new text of this notification.
-     */
-    public void setText(String text) {
-        this.text = text;
+    public void setProjectSystemName(String projectSystemName) {
+        this.projectSystemName = projectSystemName;
     }
 
-    /**
-     * Returns the receptor of this notification.
-     * @return the receptor of this notification.
-     */
+    public StateProjectENUM getProjectStatus() {
+        return projectStatus;
+    }
+
+    public void setProjectStatus(StateProjectENUM projectStatus) {
+        this.projectStatus = projectStatus;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
     public UserEntity getReceptor() {
         return receptor;
     }
 
-    /**
-     * Sets the receptor of this notification.
-     * @param receptor the new receptor of this notification.
-     */
     public void setReceptor(UserEntity receptor) {
         this.receptor = receptor;
+    }
+
+    public String getTaskName() {
+        return taskName;
+    }
+
+    public void setTaskName(String taskName) {
+        this.taskName = taskName;
     }
 }

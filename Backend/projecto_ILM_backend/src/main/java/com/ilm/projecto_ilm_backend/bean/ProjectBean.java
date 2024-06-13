@@ -15,6 +15,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 
+import java.text.Normalizer;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,6 +23,7 @@ import java.util.List;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
@@ -59,6 +61,7 @@ public class ProjectBean {
                 ProjectEntity project = new ProjectEntity();
 
                 project.setName("project name" + i);
+                project.setSystemName(projectSystemNameGenerator(project.getName()));
                 project.setDescription("This project aims to develop an innovative software solution for managing large-scale data in real-time. The system will leverage cutting-edge technologies to handle vast amounts of information efficiently.");
                 project.setStartDate(LocalDateTime.now().minus(1, ChronoUnit.YEARS));
                 project.setInitialDate(LocalDateTime.now().minus(1, ChronoUnit.YEARS));
@@ -80,7 +83,24 @@ public class ProjectBean {
                 projectDao.merge(project);
             }
         }
+    }
 
+    private String projectSystemNameGenerator(String originalName) {
+        // Convert to lower case
+        String lowerCaseName = originalName.toLowerCase();
+
+        // Normalize and remove accents
+        String normalized = Normalizer.normalize(lowerCaseName, Normalizer.Form.NFD);
+        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+        String withoutAccents = pattern.matcher(normalized).replaceAll("");
+
+        // Replace spaces with underscores
+        String withUnderscores = withoutAccents.replaceAll("\\s+", "_");
+
+        // Remove all non-alphanumeric characters except underscores
+        String cleanSystemName = withUnderscores.replaceAll("[^a-z0-9_]", "");
+
+        return cleanSystemName;
     }
 
     public void createDefaultUsersInProjectIfNotExistent() {
@@ -106,7 +126,6 @@ public class ProjectBean {
 
             }
         }
-
     }
 
     public ArrayList<HomeProjectDto> getProjectsDtosHome() {

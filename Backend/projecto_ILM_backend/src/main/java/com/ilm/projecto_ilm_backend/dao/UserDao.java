@@ -154,4 +154,16 @@ public class UserDao extends AbstractDao<UserEntity> {
 
         return user;
     }
+
+    //recebe o systemUsername e retorna o nome completo do utilizador, firstName + " " + lastName
+    public String getFullNameBySystemUsername(String systemUsername) {
+        try {
+            return (String) em.createQuery("SELECT u.firstName || ' ' || u.lastName FROM UserEntity u WHERE u.systemUsername = :systemUsername")
+                    .setParameter("systemUsername", systemUsername)
+                    .getSingleResult();
+        }
+        catch (Exception e) {
+            return null;
+        }
+    }
 }

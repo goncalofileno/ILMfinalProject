@@ -64,6 +64,9 @@ public class StartupBean {
     @Inject
     MailBean mailBean;
 
+    @Inject
+    NotificationBean notificationBean;
+
     /**
      * This method is called after the bean is constructed and dependency injection is complete.
      * It creates default users, labs, interests, skills, suppliers, resources if they do not exist.
@@ -80,5 +83,6 @@ public class StartupBean {
         projectBean.createDefaultUsersInProjectIfNotExistent();
         systemBean.createDefaultSystemIfNotExistent();
         mailBean.createDefaultMailsIfNotExistent();
+        notificationBean.createDefaultNotificationsIfNotExistent();
     }
 }

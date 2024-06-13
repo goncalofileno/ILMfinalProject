@@ -21,7 +21,8 @@ import java.util.List;
         @NamedQuery(name = "User.findByAuxiliarToken", query = "SELECT u FROM UserEntity u WHERE u.auxiliarToken = :auxiliarToken"),
         @NamedQuery(name = "User.checkPassFromEmail", query = "SELECT u.password FROM UserEntity u WHERE u.email = :email"),
         @NamedQuery(name = "User.checkSystemUsername", query = "SELECT u FROM UserEntity u WHERE u.systemUsername = :systemUsername"),
-        @NamedQuery(name = "User.findBySystemUsername", query = "SELECT u FROM UserEntity u WHERE u.systemUsername = :systemUsername")
+        @NamedQuery(name = "User.findBySystemUsername", query = "SELECT u FROM UserEntity u WHERE u.systemUsername = :systemUsername"),
+        @NamedQuery(name = "User.getFullNameBySystemUsername)", query = "SELECT u.firstName, u.lastName FROM UserEntity u WHERE u.systemUsername = :systemUsername"),
 })
 public class UserEntity implements Serializable {
 
