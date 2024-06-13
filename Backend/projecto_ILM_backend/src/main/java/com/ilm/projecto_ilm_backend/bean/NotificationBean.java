@@ -33,6 +33,9 @@ public class NotificationBean {
         createNotification(NotificationTypeENUM.INVITE_ACCEPTED, 3, 1, null, 2);
         createNotification(NotificationTypeENUM.INVITE_REJECTED, 4, 1, null, 2);
         createNotification(NotificationTypeENUM.TASK, 5, 1, null, 2);
+        createNotification(NotificationTypeENUM.APPLIANCE, 2, 1, null, 2);
+        createNotification(NotificationTypeENUM.APPLIANCE_ACCEPTED, 3, 1, null, 2);
+        createNotification(NotificationTypeENUM.APPLIANCE_REJECTED, 4, 1, null, 2);
     }
 
     private void createNotification(NotificationTypeENUM type, int projectId, int receptorId,
@@ -55,13 +58,26 @@ public class NotificationBean {
         notificationDao.persist(notification);
     }
 
-    public List<NotificationDto> getUserNotifications(int userId) {
-        List<NotificationEntity> notifications = notificationDao.findByUserId(userId);
-        return notifications.stream().map(this::toDto).collect(Collectors.toList());
+    public List<NotificationDto> getUserNotifications(int userId, int page) {
+        List<NotificationEntity> unreadNotifications = notificationDao.findUnreadByUserId(userId);
+        List<NotificationEntity> readNotifications = notificationDao.findReadByUserId(userId, page);
+
+        unreadNotifications.forEach(notification -> notification.setReadStatus(true));
+        notificationDao.markNotificationsAsRead(unreadNotifications);
+
+        int unreadCount = unreadNotifications.size();
+        int neededNotifications = 5 - unreadCount;
+
+        List<NotificationEntity> resultNotifications = unreadNotifications;
+        if (unreadCount < 5) {
+            resultNotifications.addAll(readNotifications.subList(0, Math.min(neededNotifications, readNotifications.size())));
+        }
+
+        return resultNotifications.stream().map(this::toDto).collect(Collectors.toList());
     }
 
-    public void markNotificationAsRead(int userId, int notificationId) {
-        notificationDao.markNotificationAsRead(userId, notificationId);
+    public int getUnreadNotificationCount(int userId) {
+        return notificationDao.countUnreadByUserId(userId);
     }
 
     private NotificationDto toDto(NotificationEntity entity) {
@@ -137,6 +153,39 @@ public class NotificationBean {
         notification.setReadStatus(false);
         notification.setSendDate(LocalDateTime.now());
         notification.setTaskName(taskName);
+        notification.setProjectSystemName(projectSystemName);
+        notification.setUserName(userName);
+        notification.setReceptor(receptor);
+        notificationDao.persist(notification);
+    }
+
+    public void createApplianceNotification(String projectSystemName, String userName, UserEntity receptor) {
+        NotificationEntity notification = new NotificationEntity();
+        notification.setType(NotificationTypeENUM.APPLIANCE);
+        notification.setReadStatus(false);
+        notification.setSendDate(LocalDateTime.now());
+        notification.setProjectSystemName(projectSystemName);
+        notification.setUserName(userName);
+        notification.setReceptor(receptor);
+        notificationDao.persist(notification);
+    }
+
+    public void createApplianceAcceptedNotification(String projectSystemName, String userName, UserEntity receptor) {
+        NotificationEntity notification = new NotificationEntity();
+        notification.setType(NotificationTypeENUM.APPLIANCE_ACCEPTED);
+        notification.setReadStatus(false);
+        notification.setSendDate(LocalDateTime.now());
+        notification.setProjectSystemName(projectSystemName);
+        notification.setUserName(userName);
+        notification.setReceptor(receptor);
+        notificationDao.persist(notification);
+    }
+
+    public void createApplianceRejectedNotification(String projectSystemName, String userName, UserEntity receptor) {
+        NotificationEntity notification = new NotificationEntity();
+        notification.setType(NotificationTypeENUM.APPLIANCE_REJECTED);
+        notification.setReadStatus(false);
+        notification.setSendDate(LocalDateTime.now());
         notification.setProjectSystemName(projectSystemName);
         notification.setUserName(userName);
         notification.setReceptor(receptor);

@@ -13,7 +13,13 @@ public enum NotificationTypeENUM {
 
     INVITE_REJECTED(3),
 
-    TASK(4);
+    TASK(4),
+
+    APPLIANCE(5),
+
+    APPLIANCE_ACCEPTED(6),
+
+    APPLIANCE_REJECTED(7);
 
     private final int intValue;
 

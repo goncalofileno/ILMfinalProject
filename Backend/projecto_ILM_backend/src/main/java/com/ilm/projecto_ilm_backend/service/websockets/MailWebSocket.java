@@ -1,5 +1,9 @@
 package com.ilm.projecto_ilm_backend.service.websockets;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import com.ilm.projecto_ilm_backend.dto.notification.NotificationDto;
 import jakarta.websocket.OnClose;
 import jakarta.websocket.OnMessage;
 import jakarta.websocket.OnOpen;
@@ -16,10 +20,11 @@ import java.util.logging.Logger;
 public class MailWebSocket {
     private static final Map<String, Set<Session>> sessionMap = new ConcurrentHashMap<>();
     private static final Logger logger = Logger.getLogger(MailWebSocket.class.getName());
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @OnOpen
     public void onOpen(Session session, @PathParam("sessionId") String sessionId, @PathParam("inbox") String inbox) {
-        String key = sessionId + (inbox.equals("inbox") ? "-inbox" : "");
+        String key = sessionId;
         sessionMap.computeIfAbsent(key, k -> ConcurrentHashMap.newKeySet()).add(session);
         logger.info("Connected ... Session ID: " + sessionId + " Inbox: " + inbox);
     }
@@ -32,7 +37,7 @@ public class MailWebSocket {
 
     @OnClose
     public void onClose(Session session, @PathParam("sessionId") String sessionId, @PathParam("inbox") String inbox) {
-        String key = sessionId + (inbox.equals("inbox") ? "-inbox" : "");
+        String key = sessionId;
         Set<Session> sessions = sessionMap.get(key);
         if (sessions != null) {
             sessions.remove(session);
@@ -44,38 +49,19 @@ public class MailWebSocket {
     }
 
     public static void notifyNewMail(String sessionId, String firstName, String lastName) {
-        String keyInbox = sessionId + "-inbox";
         String keyDefault = sessionId;
-
-        boolean hasInboxSession = false;
-
-        Set<Session> inboxSessions = sessionMap.get(keyInbox);
-
-        if (inboxSessions != null) {
-            for (Session session : inboxSessions) {
+        Set<Session> defaultSessions = sessionMap.get(keyDefault);
+        if (defaultSessions != null) {
+            for (Session session : defaultSessions) {
                 if (session.isOpen()) {
-                    session.getAsyncRemote().sendText("real_time_mail:" + firstName + " " + lastName);
-                    hasInboxSession = true;
-                    logger.info("Sent real_time_mail to session: " + session.getId());
+                    session.getAsyncRemote().sendText("new_mail:" + firstName + " " + lastName);
+                    logger.info("Sent new_mail to session: " + session.getId());
                 }
             }
-        }
-
-        if (!hasInboxSession) {
-            Set<Session> defaultSessions = sessionMap.get(keyDefault);
-            if (defaultSessions != null) {
-                for (Session session : defaultSessions) {
-                    if (session.isOpen()) {
-                        session.getAsyncRemote().sendText("new_mail:" + firstName + " " + lastName);
-                        logger.info("Sent new_mail to session: " + session.getId());
-                    }
-                }
-            } else {
-                logger.warning("No sessions found for key: " + keyDefault);
-            }
+        } else {
+            logger.warning("No sessions found for key: " + keyDefault);
         }
     }
-
 
     public static void notifyTimeout(String sessionId) {
         String keyDefault = sessionId;
@@ -85,6 +71,58 @@ public class MailWebSocket {
                 if (session.isOpen()) {
                     session.getAsyncRemote().sendText("timeout");
                     logger.info("Sent timeout to session: " + session.getId());
+                }
+            }
+        } else {
+            logger.warning("No sessions found for key: " + keyDefault);
+        }
+    }
+
+    public static void sendProjectNotification(String sessionId, NotificationDto notificationDto) {
+        sendNotification(sessionId, notificationDto);
+    }
+
+    public static void sendInviteNotification(String sessionId, NotificationDto notificationDto) {
+        sendNotification(sessionId, notificationDto);
+    }
+
+    public static void sendInviteAcceptedNotification(String sessionId, NotificationDto notificationDto) {
+        sendNotification(sessionId, notificationDto);
+    }
+
+    public static void sendInviteRejectedNotification(String sessionId, NotificationDto notificationDto) {
+        sendNotification(sessionId, notificationDto);
+    }
+
+    public static void sendTaskNotification(String sessionId, NotificationDto notificationDto) {
+        sendNotification(sessionId, notificationDto);
+    }
+
+    public static void sendApplianceNotification(String sessionId, NotificationDto notificationDto) {
+        sendNotification(sessionId, notificationDto);
+    }
+
+    public static void sendApplianceAcceptedNotification(String sessionId, NotificationDto notificationDto) {
+        sendNotification(sessionId, notificationDto);
+    }
+
+    public static void sendApplianceRejectedNotification(String sessionId, NotificationDto notificationDto) {
+        sendNotification(sessionId, notificationDto);
+    }
+
+    private static void sendNotification(String sessionId, NotificationDto notificationDto) {
+        String keyDefault = sessionId;
+        Set<Session> defaultSessions = sessionMap.get(keyDefault);
+        if (defaultSessions != null) {
+            for (Session session : defaultSessions) {
+                if (session.isOpen()) {
+                    try {
+                        String message = objectMapper.writeValueAsString(notificationDto);
+                        session.getAsyncRemote().sendText(message);
+                        logger.info("Sent notification to session: " + session.getId());
+                    } catch (JsonProcessingException e) {
+                        logger.severe("Error serializing notification DTO: " + e.getMessage());
+                    }
                 }
             }
         } else {
