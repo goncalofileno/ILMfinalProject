@@ -19,6 +19,11 @@ export default function ProjectsTable({
   setKeywordButton,
   navigateTableProjectsTrigger,
   setNavigateTableProjectsTrigger,
+  nameAsc,
+  statusAsc,
+  labAsc,
+  startDateAsc,
+  endDateAsc,
 }) {
   const NUMBER_OF_PROJECTS_PAGE = 15;
 
@@ -53,7 +58,7 @@ export default function ProjectsTable({
         <InputGroup style={{ width: "50%" }}>
           <Form.Control
             type="text"
-            placeholder="Search for title or description"
+            placeholder="Search for title"
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
             className="custom-focus"
@@ -88,17 +93,54 @@ export default function ProjectsTable({
       <table className="centered-table">
         <thead>
           <tr>
-            <th onClick={sortByName}>Project</th>
-            <th onClick={sortByStatus}>Status</th>
-            <th onClick={sortByLab}>Lab</th>
-            <th onClick={sortByStartDate}>Start date</th>
-            <th onClick={sortByEndDate}>End date</th>
-            <th>Members</th>
+            <th style={{ width: "25%" }} onClick={sortByName}>
+              <span style={{ marginRight: "10px" }}>Project</span>
+              {nameAsc ? (
+                <i class="fas fa-arrow-up fa-xs"></i>
+              ) : (
+                nameAsc === false && <i class="fas fa-arrow-down fa-xs"></i>
+              )}
+            </th>
+            <th style={{ width: "15%" }} onClick={sortByStatus}>
+              <span style={{ marginRight: "10px" }}>Status</span>
+              {statusAsc ? (
+                <i class="fas fa-arrow-up fa-xs"></i>
+              ) : (
+                statusAsc === false && <i class="fas fa-arrow-down fa-xs"></i>
+              )}
+            </th>
+            <th style={{ width: "15%" }} onClick={sortByLab}>
+              <span style={{ marginRight: "10px" }}>Lab</span>
+              {labAsc ? (
+                <i class="fas fa-arrow-up fa-xs"></i>
+              ) : (
+                labAsc === false && <i class="fas fa-arrow-down fa-xs"></i>
+              )}
+            </th>
+            <th style={{ width: "15%" }} onClick={sortByStartDate}>
+              <span style={{ marginRight: "10px" }}>Start date</span>
+              {startDateAsc ? (
+                <i class="fas fa-arrow-up fa-xs"></i>
+              ) : (
+                startDateAsc === false && (
+                  <i class="fas fa-arrow-down fa-xs"></i>
+                )
+              )}
+            </th>
+            <th style={{ width: "15%" }} onClick={sortByEndDate}>
+              <span style={{ marginRight: "10px" }}>End date</span>
+              {endDateAsc ? (
+                <i class="fas fa-arrow-up fa-xs"></i>
+              ) : (
+                endDateAsc === false && <i class="fas fa-arrow-down fa-xs"></i>
+              )}
+            </th>
+            <th style={{ width: "15%" }}>Members</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody id="table-projects-body">
           {projects.map((project, index) => (
-            <tr key={index}>
+            <tr key={index} className={project.member && "is-member-project"}>
               <td style={{ fontWeight: "bold" }}>{project.name}</td>
 
               <td style={{ color: statusColor(project.status) }}>

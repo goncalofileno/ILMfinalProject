@@ -15,6 +15,12 @@ export default function AsideProjectsTable({
   navigateTableProjectsTrigger,
   setNavigateTableProjectsTrigger,
   setCurrentPage,
+  setKeyword,
+  setNameAsc,
+  setStatusAsc,
+  setLabAsc,
+  setStartDateAsc,
+  setEndDateAsc,
 }) {
   const [labs, setLabs] = useState([]);
   const [status, setStatus] = useState([]);
@@ -98,6 +104,33 @@ export default function AsideProjectsTable({
             }}
           />
         </div>
+        <div className="table-label-color">
+          <div id="your-projects-color">Your Projects</div>
+        </div>
+        <button
+          className="terciary-button"
+          style={{
+            width: "100%",
+            paddingTop: "5px",
+            paddingBottom: "5px",
+            fontWeight: "500",
+          }}
+          onClick={() => {
+            setSelectedLab("");
+            setSelectedStatus("");
+            setSlotsAvailable(false);
+            setCurrentPage(1);
+            setKeyword("");
+            setNameAsc("");
+            setStatusAsc("");
+            setLabAsc("");
+            setStartDateAsc("");
+            setEndDateAsc("");
+            setNavigateTableProjectsTrigger(!navigateTableProjectsTrigger);
+          }}
+        >
+          Clear Filters
+        </button>
       </div>
     </div>
   );

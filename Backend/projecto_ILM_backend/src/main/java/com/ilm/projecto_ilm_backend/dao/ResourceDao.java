@@ -68,14 +68,40 @@ public class ResourceDao extends AbstractDao<ResourceEntity> {
         }
     }
 
-    public List<Object[]> getResourceDetails() {
-        TypedQuery<Object[]> query = em.createNamedQuery("Resource.getResourcesDetails", Object[].class);
+    public List<Object[]> getResourceDetails(int page, int resourcesPerPage, String brand, ResourceTypeENUM type, Integer supplierId, String name,
+                                             String nameAsc, String typeAsc,String brandAsc, String supplierAsc){
+
+        String baseQueryString = em
+                .createNamedQuery("Resource.getResourcesDetails", Object[].class)
+                .unwrap(org.hibernate.query.Query.class)
+                .getQueryString();
+
+        StringBuilder queryString = new StringBuilder(baseQueryString);
+
+        if (nameAsc != null && !nameAsc.equals("")) {
+            queryString.append(" ORDER BY r.name ").append(nameAsc.equals("true") ? "ASC" : "DESC");
+        } else if (typeAsc != null && !typeAsc.equals("")) {
+            queryString.append(" ORDER BY r.type ").append(typeAsc.equals("true") ? "ASC" : "DESC");
+        } else if (brandAsc != null && !brandAsc.equals("")) {
+            queryString.append(" ORDER BY r.brand ").append(brandAsc.equals("true") ? "ASC" : "DESC");
+        } else if (supplierAsc != null && !supplierAsc.equals("")) {
+            queryString.append(" ORDER BY s.name ").append(supplierAsc.equals("true") ? "ASC" : "DESC");
+        }
+
+        TypedQuery<Object[]> query = em.createQuery(queryString.toString(), Object[].class);
+        query.setParameter("brand", brand);
+        query.setParameter("type", type);
+        query.setParameter("supplierId", supplierId);
+        query.setParameter("name", name);
+
+        query.setFirstResult(resourcesPerPage * (page - 1));
+        query.setMaxResults(resourcesPerPage);
         return query.getResultList();
     }
 
-    public int getNumberOfResources() {
+    public int getNumberOfResources(String brand, ResourceTypeENUM type, Integer supplierId, String name) {
         try {
-            return  em.createNamedQuery("Resource.getNumberOfResources", Long.class).getSingleResult().intValue();
+            return  em.createNamedQuery("Resource.getNumberOfResourcesDetails", Long.class).setParameter("brand",brand).setParameter("type",type).setParameter("supplierId",supplierId).setParameter("name",name).getSingleResult().intValue();
 
         } catch (Exception e) {
             return 0;

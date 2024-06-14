@@ -84,7 +84,7 @@ public class ProjectDao extends AbstractDao<ProjectEntity>{
                                                  String  statusAsc,
                                                  String  labAsc,
                                                  String  startDateAsc,
-                                                 String endDateAsc, String keyword,int userId) {
+                                                 String endDateAsc, String keyword) {
         String baseQueryString = em
                 .createNamedQuery("Project.getProjectTableDtoInfo", Object[].class)
                 .unwrap(org.hibernate.query.Query.class)
@@ -129,6 +129,14 @@ public class ProjectDao extends AbstractDao<ProjectEntity>{
 
         return query.getResultList();
 
+    }
+
+    public List<Object[]> findAllProjectsOrderedByUser(int page, int projectsPerPage, int userId) {
+        TypedQuery<Object[]> query = em.createNamedQuery("Project.findAllProjectsOrderedByUser", Object[].class);
+        query.setParameter("userId", userId);
+        query.setFirstResult(projectsPerPage * (page - 1));
+        query.setMaxResults(projectsPerPage);
+        return query.getResultList();
     }
 
     public long countProjects() {
