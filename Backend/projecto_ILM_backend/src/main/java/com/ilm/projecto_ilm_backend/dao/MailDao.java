@@ -71,7 +71,6 @@ public class MailDao extends AbstractDao<MailEntity> {
         return count.intValue();
     }
 
-
     public List<MailEntity> searchMails(int userId, String query, int page, int pageSize, boolean unread) {
         String searchQuery = "%" + query + "%";
         StringBuilder queryBuilder = new StringBuilder("SELECT m FROM MailEntity m WHERE m.receiver.id = :userId AND m.deleted = false AND (");
@@ -79,10 +78,7 @@ public class MailDao extends AbstractDao<MailEntity> {
                 .append("m.text LIKE :query OR ")
                 .append("m.sender.firstName LIKE :query OR ")
                 .append("m.sender.lastName LIKE :query OR ")
-                .append("m.sender.email LIKE :query OR ")
-                .append("m.receiver.firstName LIKE :query OR ")
-                .append("m.receiver.lastName LIKE :query OR ")
-                .append("m.receiver.email LIKE :query)");
+                .append("m.sender.email LIKE :query)");
 
         if (unread) {
             queryBuilder.append(" AND m.seen = false");
@@ -106,10 +102,7 @@ public class MailDao extends AbstractDao<MailEntity> {
                 .append("m.text LIKE :query OR ")
                 .append("m.sender.firstName LIKE :query OR ")
                 .append("m.sender.lastName LIKE :query OR ")
-                .append("m.sender.email LIKE :query OR ")
-                .append("m.receiver.firstName LIKE :query OR ")
-                .append("m.receiver.lastName LIKE :query OR ")
-                .append("m.receiver.email LIKE :query)");
+                .append("m.sender.email LIKE :query)");
 
         if (unread) {
             queryBuilder.append(" AND m.seen = false");
@@ -122,16 +115,12 @@ public class MailDao extends AbstractDao<MailEntity> {
         return q.getSingleResult().intValue();
     }
 
-
     public List<MailEntity> searchSentMails(int userId, String query, int page, int pageSize) {
         String searchQuery = "%" + query + "%";
         TypedQuery<MailEntity> q = em.createQuery(
                 "SELECT m FROM MailEntity m WHERE m.sender.id = :userId AND m.deleted = false AND " +
                         "(m.subject LIKE :query OR " +
                         "m.text LIKE :query OR " +
-                        "m.sender.firstName LIKE :query OR " +
-                        "m.sender.lastName LIKE :query OR " +
-                        "m.sender.email LIKE :query OR " +
                         "m.receiver.firstName LIKE :query OR " +
                         "m.receiver.lastName LIKE :query OR " +
                         "m.receiver.email LIKE :query)", MailEntity.class);
@@ -148,9 +137,6 @@ public class MailDao extends AbstractDao<MailEntity> {
                 "SELECT COUNT(m) FROM MailEntity m WHERE m.sender.id = :userId AND m.deleted = false AND " +
                         "(m.subject LIKE :query OR " +
                         "m.text LIKE :query OR " +
-                        "m.sender.firstName LIKE :query OR " +
-                        "m.sender.lastName LIKE :query OR " +
-                        "m.sender.email LIKE :query OR " +
                         "m.receiver.firstName LIKE :query OR " +
                         "m.receiver.lastName LIKE :query OR " +
                         "m.receiver.email LIKE :query)", Long.class);
@@ -176,7 +162,4 @@ public class MailDao extends AbstractDao<MailEntity> {
         q.setParameter("userId", userId);
         return q.getSingleResult().intValue();
     }
-
-
-
 }
