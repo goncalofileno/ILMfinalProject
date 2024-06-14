@@ -13,6 +13,7 @@ import java.util.Date;
 @XmlRootElement
 public class ProjectTableDto {
 
+    private String photo;
     private String name;
     private WorkLocalENUM lab;
     private StateProjectENUM status;
@@ -26,7 +27,8 @@ public class ProjectTableDto {
     public ProjectTableDto() {
     }
 
-    public ProjectTableDto(String name, WorkLocalENUM lab, StateProjectENUM status, int numberOfMembers, Date startDate, Date finalDate, int maxMembers, boolean isMember) {
+    public ProjectTableDto(String photo,String name, WorkLocalENUM lab, StateProjectENUM status, int numberOfMembers, Date startDate, Date finalDate, int maxMembers, boolean isMember) {
+        this.photo=photo;
         this.name = name;
         this.lab = lab;
         this.status = status;
@@ -37,6 +39,13 @@ public class ProjectTableDto {
         this.isMember = isMember;
     }
 
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
 
     public String getName() {
         return name;

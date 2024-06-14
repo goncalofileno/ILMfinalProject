@@ -2,6 +2,7 @@ import "./Tables.css";
 import { formatStatus, formatLab } from "../../utilities/converters";
 import TablePagination from "../paginations/TablePagination";
 import { InputGroup, Form, Button } from "react-bootstrap";
+import Cookies from "js-cookie";
 
 export default function ProjectsTable({
   projects,
@@ -25,7 +26,8 @@ export default function ProjectsTable({
   startDateAsc,
   endDateAsc,
 }) {
-  const NUMBER_OF_PROJECTS_PAGE = 15;
+  const NUMBER_OF_PROJECTS_PAGE = 8;
+  const userType = Cookies.get("user-userType");
 
   function statusColor(status) {
     if (status === "PLANNING") {
@@ -93,7 +95,7 @@ export default function ProjectsTable({
       <table className="centered-table">
         <thead>
           <tr>
-            <th style={{ width: "25%" }} onClick={sortByName}>
+            <th colSpan="2" style={{ width: "25%" }} onClick={sortByName}>
               <span style={{ marginRight: "10px" }}>Project</span>
               {nameAsc ? (
                 <i class="fas fa-arrow-up fa-xs"></i>
@@ -141,7 +143,28 @@ export default function ProjectsTable({
         <tbody id="table-projects-body">
           {projects.map((project, index) => (
             <tr key={index} className={project.member && "is-member-project"}>
-              <td style={{ fontWeight: "bold" }}>{project.name}</td>
+              <td
+                style={{
+                  width: "40px",
+                  textAlign: "end",
+                  paddingRight: "15px",
+                }}
+              >
+                <img
+                  src={project.photo}
+                  alt="project_img"
+                  className="project-img-table"
+                />
+              </td>
+              <td
+                style={{
+                  fontWeight: "bold",
+                  paddingLeft: "0px",
+                  textAlign: "start",
+                }}
+              >
+                {project.name}
+              </td>
 
               <td style={{ color: statusColor(project.status) }}>
                 {formatStatus(project.status)}
@@ -158,6 +181,7 @@ export default function ProjectsTable({
             .fill()
             .map((index) => (
               <tr key={index + projects.length}>
+                <td></td>
                 <td className="row-no-content"></td>
                 <td className="row-no-content"></td>
                 <td className="row-no-content"></td>
@@ -187,12 +211,14 @@ export default function ProjectsTable({
             />
           </div>
           <div className="row-btns-table-projects-2">
-            <button
-              className="submit-button"
-              id="btn-projects-statistics-table-projects"
-            >
-              Projects Statistics
-            </button>
+            {userType === "ADMIN" && (
+              <button
+                className="submit-button"
+                id="btn-projects-statistics-table-projects"
+              >
+                Projects Statistics
+              </button>
+            )}
           </div>
         </div>
       </div>

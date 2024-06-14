@@ -1,7 +1,7 @@
 import "./Tables.css";
 import { InputGroup, Form, Button } from "react-bootstrap";
 import TablePagination from "../paginations/TablePagination";
-
+import componentIcon from "../../resources/icons/other/application-control.png";
 import { formatResourceType } from "../../utilities/converters";
 
 export default function ResourcesTable({
@@ -20,8 +20,9 @@ export default function ResourcesTable({
   typeAsc,
   brandAsc,
   supplierAsc,
+  setIsModalActive,
 }) {
-  const NUMBER_OF_RESOURCES_PAGE = 15;
+  const NUMBER_OF_RESOURCES_PAGE = 8;
 
   const handleClick = (e) => {
     setCurrentPage(1);
@@ -110,7 +111,27 @@ export default function ResourcesTable({
           {resources.map((resource, index) => (
             <tr key={index}>
               <td style={{ fontWeight: "bold" }}>{resource.name}</td>
-              <td>{formatResourceType(resource.type)}</td>
+              <td>
+                {formatResourceType(resource.type)}
+
+                {resource.type === "COMPONENT" ? (
+                  <i
+                    style={{ marginLeft: "12px" }}
+                    className="fas fa-cogs fa-lg"
+                  ></i>
+                ) : (
+                  resource.type === "RESOURCE" && (
+                    <img
+                      style={{
+                        marginLeft: "12px",
+                        height: "22px",
+                        width: "25px",
+                      }}
+                      src={componentIcon}
+                    ></img>
+                  )
+                )}
+              </td>
               <td>{resource.brand}</td>
               <td>{resource.supplier}</td>
             </tr>
@@ -133,6 +154,7 @@ export default function ResourcesTable({
             <button
               className="submit-button"
               id="btn-add-project-table-projects"
+              onClick={() => setIsModalActive(true)}
             >
               Add Resource
             </button>

@@ -33,7 +33,7 @@ public class ResourceBean {
     @EJB
     private SupplierDao supplierDao;
 
-    private static final int NUMBER_OF_RESOURCES_PER_PAGE=15;
+    private static final int NUMBER_OF_RESOURCES_PER_PAGE=8;
 
 
     public void createDefaultResourcesIfNotExistent() {

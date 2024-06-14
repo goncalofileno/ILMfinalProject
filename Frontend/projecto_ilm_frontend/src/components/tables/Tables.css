@@ -7,6 +7,8 @@ table {
   border-collapse: collapse;
   border-radius: 15px;
   position: relative;
+  height: 67vh;
+  border-spacing: 10px;
 }
 
 td,
@@ -18,6 +20,10 @@ th {
 th {
   background-color: rgb(30, 40, 82);
   color: white;
+}
+
+.centered-table tr {
+  height: 12.5%;
 }
 
 tr:nth-child(odd) {
@@ -126,7 +132,7 @@ td {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 8px;
+  margin-top: 12px;
 }
 
 .row-no-content {
@@ -151,4 +157,18 @@ td {
   display: flex;
   justify-content: center;
   width: 40%;
+}
+
+.project-img-table {
+  width: 100px;
+  height: 40px;
+  border-radius: 10px;
+}
+
+.first-column-table-projects {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 15px;
+  align-items: center;
 }

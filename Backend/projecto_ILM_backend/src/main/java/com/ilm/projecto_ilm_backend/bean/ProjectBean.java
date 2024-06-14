@@ -54,7 +54,7 @@ public class ProjectBean {
 
     private int numberOfProjectsToCreate=20;
 
-    private static final int NUMBER_OF_PROJECTS_PER_PAGE=15;
+    private static final int NUMBER_OF_PROJECTS_PER_PAGE=8;
 
     public void createDefaultProjectsIfNotExistent() {
 
@@ -70,6 +70,7 @@ public class ProjectBean {
                 project.setInitialDate(LocalDateTime.now().minus(1, ChronoUnit.YEARS));
                 project.setEndDate(LocalDateTime.now().plus(1, ChronoUnit.YEARS));
                 project.setStatus(StateProjectENUM.IN_PROGRESS);
+                project.setPhoto("https://cdn.pixabay.com/photo/2016/03/29/08/48/project-1287781_1280.jpg");
                 project.setMotivation("This project aims to develop an innovative software solution for managing large-scale data in real-time. The system will leverage cutting-edge technologies to handle vast amounts of information efficiently.");
                 project.setMaxMembers(15);
                 LabEntity lab = labDao.findbyLocal(WorkLocalENUM.COIMBRA);
@@ -165,6 +166,7 @@ public class ProjectBean {
             projectTableDto.setStartDate((Date) projectInfo[4]);
             projectTableDto.setFinalDate((Date) projectInfo[5]);
             projectTableDto.setMaxMembers((int) projectInfo[6]);
+            projectTableDto.setPhoto((String) projectInfo[7]);
             projectTableDto.setNumberOfMembers(userProjectDao.getNumberOfUsersByProjectId((int) projectInfo[0]));
             projectTableDto.setMember(userProjectDao.isUserInProject((int) projectInfo[0], sessionDao.findUserIdBySessionId(sessionId)));
             projectsTableDtos.add(projectTableDto);
