@@ -135,7 +135,18 @@ public class UserProjectDao extends AbstractDao<UserProjectEntity>{
         return em.createNamedQuery("UserProject.isUserAlreadyInvited", Long.class)
                 .setParameter("userId", userId)
                 .setParameter("projectId", projectId)
-                .setParameter("invited", UserInProjectTypeENUM.INVITED)
+                .setParameter("invited", UserInProjectTypeENUM.PENDING_BY_INVITATION)
                 .getSingleResult() > 0;
+    }
+
+    public  UserProjectEntity findByUserIdAndProjectId(int userId, int projectId) {
+        try {
+            return em.createNamedQuery("UserProject.findByUserIdAndProjectId", UserProjectEntity.class)
+                    .setParameter("userId", userId)
+                    .setParameter("projectId", projectId)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 }

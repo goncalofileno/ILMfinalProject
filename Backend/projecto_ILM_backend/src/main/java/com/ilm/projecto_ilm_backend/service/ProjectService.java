@@ -146,9 +146,40 @@ public class ProjectService {
         }
     }
 
+    @POST
+    @Path("/respondToInvite")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response respondToInvite(@CookieParam("session-id") String sessionId, @QueryParam("projectName") String projectName, @QueryParam("response") boolean response) throws UnknownHostException {
+        String clientIP = InetAddress.getLocalHost().getHostAddress();
+        logger.info("Received a request to respond to invite from IP address: " + clientIP);
 
-
-
-
+        if (databaseValidator.checkSessionId(sessionId)) {
+            try {
+                int userId = userBean.getUserBySessionId(sessionId).getId();
+                String result;
+                if (response) {
+                    result = projectBean.acceptInvite(userId, projectName);
+                    if ("Invite accepted successfully".equals(result)) {
+                        return Response.ok(result).build();
+                    } else {
+                        return Response.status(Response.Status.CONFLICT).entity(result).build();
+                    }
+                } else {
+                    result = projectBean.rejectInvite(userId, projectName);
+                    if ("Invite rejected successfully".equals(result)) {
+                        return Response.ok(result).build();
+                    } else {
+                        return Response.status(Response.Status.CONFLICT).entity(result).build();
+                    }
+                }
+            } catch (Exception e) {
+                logger.error("An error occurred while responding to invite: " + e.getMessage() + " from IP address: " + clientIP);
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("An error occurred while responding to invite").build();
+            }
+        } else {
+            return Response.status(Response.Status.UNAUTHORIZED).entity("Unauthorized access").build();
+        }
+    }
 
 }

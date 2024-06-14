@@ -241,6 +241,21 @@ public class ProjectBean {
         return "User invited successfully";
     }
 
+    public String acceptInvite(int userId, String projectName) {
+        ProjectEntity project = projectDao.findByName(projectName);
+        UserProjectEntity userProject = userProjectDao.findByUserIdAndProjectId(userId, project.getId());
+        userProject.setType(UserInProjectTypeENUM.MEMBER_BY_INVITATION);
+        userProjectDao.merge(userProject);
+        return "Invite accepted successfully";
+    }
+
+    public String rejectInvite(int userId, String projectName) {
+        ProjectEntity project = projectDao.findByName(projectName);
+        UserProjectEntity userProject = userProjectDao.findByUserIdAndProjectId(userId, project.getId());
+        userProjectDao.remove(userProject);
+        return "Invite rejected successfully";
+    }
+
 
 
 }

@@ -1,87 +1,154 @@
 .bckg-color-ilm-page {
-    background-color: rgb(245, 245, 245);
-    width: 100%;
-    height: 92vh;
-    z-index: -1;
-    position: absolute;
-  }
-  
-  .page-title {
-    margin-left: 20px;
-    font-size: 1.5em;
-    color: rgb(30, 40, 82);
-    font-weight: 700;
-  }
-  
-  .ilm-form {
-    background: linear-gradient(56.26deg, rgba(30, 40, 82, 0.336) 0%, rgba(192, 23, 34, 0.05) 100%), rgb(255, 255, 255);
-    padding: 10px; /* Reduzido de 20px para 10px */
-    color: rgb(60, 60, 60);
-    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.15);
-    border-radius: 15px;
-    margin-bottom: 15px;
-  }
-  
-  .form-title {
-    font-size: 22px;
-    font-weight: bold;
-  }
-  
-  .submit-button {
-    background-color: rgb(30, 40, 82);
-    color: white;
-    border: 0;
-    border-radius: 15px;
-    font-size: 16px;
-    padding: 10px 20px;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
-  }
-  
-  .submit-button:hover {
-    background-color: rgb(9, 19, 63);
-  }
-  
-  .secondary-button {
-    background-color: #727272;
-    color: white;
-    border: 0;
-    border-radius: 15px;
-    font-size: 16px;
-    padding: 10px 20px;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
-  }
-  
-  .secondary-button:hover {
-    background-color: #4b4b4b;
-  }
-  
-  .invite-button {
-    background-color: #f39c12;
-    color: white;
-    border: 0;
-    border-radius: 15px;
-    font-size: 16px;
-    padding: 10px 20px;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
-  }
-  
-  .invite-button:hover {
-    background-color: #e08e0b;
-  }
-  
-  .button-group {
-    display: flex;
-    gap: 10px; /* Ajuste a distância conforme necessário */
-  }
-  
-  .card-container {
-    border-radius: 15px;
-  }
-  
-  .card-body {
-    padding: 10px; /* Ajustado o padding */
-  }
-  
+  background-color: rgb(245, 245, 245);
+  width: 100%;
+  height: 92vh;
+  z-index: -1;
+  position: absolute;
+}
+
+.page-title {
+  margin-left: 20px;
+  font-size: 1.5em;
+  color: rgb(30, 40, 82);
+  font-weight: 700;
+}
+
+.ilm-form {
+  background: linear-gradient(
+      56.26deg,
+      rgba(30, 40, 82, 0.336) 0%,
+      rgba(192, 23, 34, 0.05) 100%
+    ),
+    rgb(255, 255, 255);
+  padding: 10px;
+  color: rgb(60, 60, 60);
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.15);
+  border-radius: 15px;
+  margin-bottom: 15px;
+}
+
+.form-title {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.submit-button {
+  background-color: rgb(30, 40, 82);
+  color: white;
+  border: 0;
+  border-radius: 15px;
+  font-size: 16px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+.submit-button:hover {
+  background-color: rgb(9, 19, 63);
+}
+
+.secondary-button {
+  background-color: #727272;
+  color: white;
+  border: 0;
+  border-radius: 15px;
+  font-size: 16px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+.secondary-button:hover {
+  background-color: #4b4b4b;
+}
+
+.invite-button {
+  background-color: #f39c12;
+  color: white;
+  border: 0;
+  border-radius: 15px;
+  font-size: 16px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+.invite-button:hover {
+  background-color: #e08e0b;
+}
+
+.button-group {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.button-group-horizontal {
+  display: flex;
+  justify-content: center;
+  align-items:flex-end;
+  gap: 10px;
+}
+
+.card-container {
+  border-radius: 15px;
+  max-height: 350px; /* Define a altura máxima para o card */
+  overflow-y: auto; /* Adiciona rolagem vertical se o conteúdo exceder a altura máxima */
+  width: 95%;
+}
+
+.card-body {
+  padding: 10px;
+}
+
+/* Estilos adicionais para ajustar os layouts dos cards */
+.card-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px; /* Ajuste conforme necessário */
+}
+
+.card-column {
+  flex: 1; /* Permite que os cards ocupem largura igual */
+  min-width: 250px; /* Define uma largura mínima para manter a responsividade */
+}
+
+.nav-pills {
+  justify-content: center;
+  gap: 0px; /* Ajuste a distância conforme necessário */
+}
+
+.nav-pills .nav-link.active {
+  background-color: rgb(30, 40, 82);
+  color: white;
+}
+
+.nav-pills .nav-link {
+  color: rgb(30, 40, 82);
+}
+
+.pills-container {
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.user-info-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.profile-avatar img {
+  border: 3px solid rgb(30, 40, 82); /* Adiciona borda azul */
+  border-radius: 50%;
+}
+
+.centered-message {
+  text-align: center;
+  margin-top: 10px;
+  color: #999; /* Ajuste conforme necessário */
+}

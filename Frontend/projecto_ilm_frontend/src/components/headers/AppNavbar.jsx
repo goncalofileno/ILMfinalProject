@@ -241,7 +241,7 @@ export default function AppNavbar() {
               <div className="icon mail-icon" style={getNavIconStyle("/mail/inbox")}></div>
               <label>Mail</label>
               {unreadCount > 0 && (
-                <span id="notification-badge" className="badge">
+                <span className="badge">
                   {unreadCount}
                 </span>
               )}

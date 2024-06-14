@@ -815,6 +815,29 @@ async function fetchNotifications(sessionId, page) {
   }
 }
 
+async function respondToInvite(sessionId, projectName, response) {
+  try {
+    const endpoint = `${baseURL}project/respondToInvite?projectName=${encodeURIComponent(projectName)}&response=${response}`;
+    const fetchResponse = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      cookies: `session-id=${sessionId}`,
+    });
+
+    if (!fetchResponse.ok) {
+      throw new Error("Failed to respond to invite");
+    }
+
+    return await fetchResponse.json();
+  } catch (error) {
+    console.error("Error responding to invite:", error);
+    return { error: error.message };
+  }
+}
+
 
 
 export {
@@ -859,5 +882,6 @@ export {
   getAllSuppliersNames,
   getAllBrands,
   getUnreadNotificationsCount,
-  fetchNotifications
+  fetchNotifications,
+  respondToInvite,
 };
