@@ -24,21 +24,37 @@
     padding: 10px;
   }
   
+  .no-notifications {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    text-align: center;
+    color: #888;
+  }
+  
   .notification-item {
     padding: 10px;
     border-bottom: 1px solid #ccc;
     border-left: 5px solid transparent;
-    transition: background-color 0.3s ease, border-left 0.3s ease;
+    transition: background-color 0.3s ease, border-left 0.3s ease, transform 0.2s;
+    cursor: pointer;
   }
   
   .notification-item.unread {
     background-color: #e8f4ff; /* Light blue background for unread notifications */
-    border-left: 5px solid #007bff; /* Blue border for unread notifications */
+    border-left: 5px solid rgba(30, 40, 82, 0.313); /* Blue border for unread notifications */
   }
   
   .notification-item.read {
     background-color: #f9f9f9; /* Light gray background for read notifications */
-    border-left: 5px solid #ccc; /* Gray border for read notifications */
+    border-left: 5px solid transparent; /* No border for read notifications */
+  }
+  
+  .notification-item:hover {
+    background-color: #f39d122b; /* Slightly darker blue for hover effect */
+    transform: translateY(-2px);
+    border-left: 5px solid #f39c12; /* Darker blue border for hover effect */
   }
   
   .notification-item-header {
@@ -66,14 +82,15 @@
   
   .notification-modal-footer button {
     padding: 5px 10px;
-    background-color: #007bff;
+    background-color: #f39c12;
     color: white;
     border: none;
-    border-radius: 3px;
+    border-radius: 15px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
   }
   
   .notification-modal-footer button:hover {
-    background-color: #0056b3;
+    background-color: rgb(30, 40, 82);
   }
   

@@ -9,7 +9,6 @@ export default function TablePagination({
   const renderPaginationItems = () => {
     const items = [];
     const maxPagesToShow = 5;
-    console.log("current page", currentPage);
     if (totalPages <= maxPagesToShow) {
       for (let number = 1; number <= totalPages; number++) {
         items.push(

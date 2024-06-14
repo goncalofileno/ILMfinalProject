@@ -1,6 +1,7 @@
 package com.ilm.projecto_ilm_backend.service;
 
 import com.ilm.projecto_ilm_backend.bean.NotificationBean;
+import com.ilm.projecto_ilm_backend.dto.notification.NotificationResponseDto;
 import com.ilm.projecto_ilm_backend.validator.DatabaseValidator;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
@@ -41,7 +42,9 @@ public class NotificationService {
             try {
                 int userId = sessionDao.findUserIdBySessionId(sessionId);
                 List<NotificationDto> notifications = notificationBean.getUserNotifications(userId, page);
-                return Response.ok(notifications).build();
+                int totalNotifications = notificationBean.getTotalUserNotifications(userId);
+                NotificationResponseDto response = new NotificationResponseDto(notifications, totalNotifications);
+                return Response.ok(response).build();
             } catch (Exception e) {
                 logger.error("An error occurred while retrieving user notifications: " + e.getMessage() + " from IP address: " + clientIP);
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("An error occurred while retrieving user notifications").build();
@@ -50,6 +53,7 @@ public class NotificationService {
             return Response.status(Response.Status.UNAUTHORIZED).entity("Unauthorized access").build();
         }
     }
+
 
     @GET
     @Path("/unreadCount")

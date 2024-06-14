@@ -2,8 +2,11 @@ package com.ilm.projecto_ilm_backend.service.websockets;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.ilm.projecto_ilm_backend.dao.SessionDao;
 import com.ilm.projecto_ilm_backend.dto.notification.NotificationDto;
+import jakarta.inject.Inject;
 import jakarta.websocket.OnClose;
 import jakarta.websocket.OnMessage;
 import jakarta.websocket.OnOpen;
@@ -18,9 +21,19 @@ import java.util.logging.Logger;
 
 @ServerEndpoint("/ws/mail/{sessionId}/{inbox}")
 public class MailWebSocket {
+
+    @Inject
+    SessionDao sessionDao;
+
     private static final Map<String, Set<Session>> sessionMap = new ConcurrentHashMap<>();
     private static final Logger logger = Logger.getLogger(MailWebSocket.class.getName());
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final ObjectMapper objectMapper;
+
+    static {
+        objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+    }
 
     @OnOpen
     public void onOpen(Session session, @PathParam("sessionId") String sessionId, @PathParam("inbox") String inbox) {
@@ -83,6 +96,7 @@ public class MailWebSocket {
     }
 
     public static void sendInviteNotification(String sessionId, NotificationDto notificationDto) {
+        logger.info("Sending invite notification to session: " + sessionId);
         sendNotification(sessionId, notificationDto);
     }
 
@@ -107,6 +121,10 @@ public class MailWebSocket {
     }
 
     public static void sendApplianceRejectedNotification(String sessionId, NotificationDto notificationDto) {
+        sendNotification(sessionId, notificationDto);
+    }
+
+    public static void sendRemovedNotification(String sessionId, NotificationDto notificationDto) {
         sendNotification(sessionId, notificationDto);
     }
 

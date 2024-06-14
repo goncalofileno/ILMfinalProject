@@ -1,41 +1,62 @@
-import create from 'zustand';
-import { getUnreadNotificationsCount, fetchNotifications } from '../utilities/services';
-import Cookies from 'js-cookie';
+import create from "zustand";
+import {
+  getUnreadNotificationsCount,
+  fetchNotifications,
+} from "../utilities/services";
+import Cookies from "js-cookie";
 
-const useNotificationStore = create((set) => ({
+const useNotificationStore = create((set, get) => ({
   unreadNotificationsCount: 0,
   notifications: [],
-  setUnreadNotificationsCount: (count) => set({ unreadNotificationsCount: count }),
+  totalNotifications: 0,
+  hasMoreNotifications: true,
+  setUnreadNotificationsCount: (count) =>
+    set({ unreadNotificationsCount: count }),
   resetUnreadNotificationsCount: () => set({ unreadNotificationsCount: 0 }),
-  setNotifications: (notifications) => set({ notifications }),
-  clearNotifications: () => set({ notifications: [] }),
+  incrementUnreadNotificationsCount: () =>
+    set((state) => ({
+      unreadNotificationsCount: state.unreadNotificationsCount + 1,
+    })),
   fetchUnreadNotificationsCount: async () => {
     const sessionId = Cookies.get("session-id");
     if (sessionId) {
       const result = await getUnreadNotificationsCount(sessionId);
-      console.log("UNREAD NOTIFICATIONS COUNT", result)
-      if (typeof result === 'number') { // Check if result is a number
+      if (typeof result === "number") {
+        // Check if result is a number
         set({ unreadNotificationsCount: result });
       } else {
-        console.error("Failed to fetch unread notifications count: Invalid response format", result);
+        console.error(
+          "Failed to fetch unread notifications count: Invalid response format",
+          result
+        );
       }
     } else {
       console.error("Session ID not found in cookies");
     }
   },
-  fetchNotifications: async (page = 1) => {
+  fetchNotifications: async (page) => {
     const sessionId = Cookies.get("session-id");
-    console.log("SESSION ID", sessionId)
     if (sessionId) {
-        console.log("FETCHING NOTIFICATIONS")
       const result = await fetchNotifications(sessionId, page);
       set((state) => ({
-        notifications: page === 1 ? result : [...state.notifications, ...result],
+        notifications:
+          page === 1
+            ? result.notifications
+            : [...state.notifications, ...result.notifications],
+        totalNotifications: result.totalNotifications,
+        hasMoreNotifications:
+          state.notifications.length + result.notifications.length <
+          result.totalNotifications,
       }));
-    } else {
-      console.error("Session ID not found in cookies");
     }
   },
+  loadMoreNotifications: () => {
+    const { fetchNotifications, notifications } = get();
+    const nextPage = Math.floor(notifications.length / 5) + 1;
+    fetchNotifications(nextPage);
+  },
+  clearNotifications: () =>
+    set({ notifications: [], hasMoreNotifications: true }),
 }));
 
 export default useNotificationStore;

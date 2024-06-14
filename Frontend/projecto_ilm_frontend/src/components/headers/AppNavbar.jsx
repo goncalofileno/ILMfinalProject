@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
   getUserProfileImage,
@@ -22,6 +22,9 @@ export default function AppNavbar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [userImage, setUserImage] = useState(userProfileIcon);
+  const dropdownRef = useRef(null);
+  const modalRef = useRef(null);
+  const bellIconRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation(); // Obter a localização atual
   const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
@@ -106,13 +109,37 @@ export default function AppNavbar() {
     navigate(path);
   };
 
-  const handleBellClick = () => {
-    setModalOpen(true);
-    fetchNotifications(1);
-    resetUnreadNotificationsCount();
-  }
+  const handleBellClick = async () => {
+    if (modalOpen) {
+      setModalOpen(false);
+      clearNotifications();
+    } else {
+      setModalOpen(true);
+      await fetchNotifications(1);
+      resetUnreadNotificationsCount();
+    }
+  };
 
-  
+  const handleClickOutside = useCallback((event) => {
+    if (
+      (dropdownRef.current && dropdownRef.current.contains(event.target)) ||
+      (modalRef.current && modalRef.current.contains(event.target)) ||
+      (bellIconRef.current && bellIconRef.current.contains(event.target))
+    ) {
+      return;
+    }
+    setDropdownOpen(false);
+    setModalOpen(false);
+    clearNotifications();
+  }, [clearNotifications]);
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [handleClickOutside]);
+
   return (
     <div>
       <div className="app-navbar">
@@ -160,6 +187,7 @@ export default function AppNavbar() {
             className="icon"
             style={{ backgroundImage: `url(${bellIcon})` }}
             onClick={handleBellClick}
+            ref={bellIconRef}
           >
             {unreadNotificationsCount > 0 && (
               <span id="notification-badge" className="badge">
@@ -167,7 +195,7 @@ export default function AppNavbar() {
               </span>
             )}
           </div>
-          <div className="user-profile" onClick={toggleDropdown}>
+          <div className="user-profile" onClick={toggleDropdown} ref={dropdownRef}>
             <div
               className="user-image"
               style={{ backgroundImage: `url(${userImage})` }}
@@ -221,7 +249,7 @@ export default function AppNavbar() {
           </div>
         </div>
       )}
-      {modalOpen && <NotificationModal onClose={() => setModalOpen(false)} />}
+      {modalOpen && <NotificationModal onClose={() => setModalOpen(false)} modalRef={modalRef} />}
     </div>
   );
 }

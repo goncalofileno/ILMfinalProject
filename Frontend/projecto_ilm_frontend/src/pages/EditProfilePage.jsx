@@ -76,7 +76,6 @@ const EditProfilePage = () => {
         const response = await getUserEditProfile(systemUsername);
         if (response.status === 200) {
           const profileData = await response.json();
-          console.log("User profile data:", profileData);
           setUsername(profileData.username);
           setFirstName(profileData.firstName);
           setLastName(profileData.lastName);
@@ -127,10 +126,8 @@ const EditProfilePage = () => {
     try {
       const response = await checkUsername(username);
       if (response.status === 200) {
-        console.log("Username is available");
         setUsernameValid(true);
       } else if (response.status === 409) {
-        console.log("Username is already taken");
         setUsernameValid(false);
       }
     } catch (error) {
@@ -183,7 +180,6 @@ const EditProfilePage = () => {
         interests: selectedInterests,
       };
 
-      console.log("Updating profile...", userProfileDto);
 
       const response = await updateUserProfile(userProfileDto);
       if (response.ok) {
@@ -192,7 +188,6 @@ const EditProfilePage = () => {
             selectedFile
           );
           if (uploadResponse.ok) {
-            console.log("Profile updated and picture uploaded successfully");
             navigate(`/profile/${systemUsername}`);
           } else {
             const uploadErrorData = await uploadResponse.json();
@@ -200,7 +195,6 @@ const EditProfilePage = () => {
             setFileUploadError("Error uploading profile picture");
           }
         } else {
-          console.log("Profile updated successfully");
           navigate(`/profile/${systemUsername}`);
         }
       } else {
@@ -294,10 +288,6 @@ const EditProfilePage = () => {
     }
 
     try {
-      console.log("Changing password...");
-      console.log("Current password:", currentPassword);
-      console.log("New password:", newPassword);
-      console.log("Confirm new password:", confirmNewPassword);
       const response = await updatePassword(
         currentPassword,
         confirmNewPassword

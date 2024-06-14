@@ -119,5 +119,15 @@ public class SessionDao extends AbstractDao<SessionEntity> {
                 .getResultList();
     }
 
+    public String findSessionIdByUserId(int userId) {
+        try {
+            return em.createNamedQuery("Session.findSessionIdByUserId", String.class)
+                    .setParameter("userId", userId)
+                    .getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
 
 }

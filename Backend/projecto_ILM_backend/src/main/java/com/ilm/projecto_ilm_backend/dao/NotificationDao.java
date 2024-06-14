@@ -73,5 +73,13 @@ public class NotificationDao extends AbstractDao<NotificationEntity> {
         return count.intValue();
     }
 
+    @Transactional
+    public int countAllByUserId(int userId) {
+        Long count = em.createNamedQuery("NotificationEntity.countAllByUserId", Long.class)
+                .setParameter("userId", userId)
+                .getSingleResult();
+        return count.intValue();
+    }
+
 
 }

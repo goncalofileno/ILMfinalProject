@@ -26,7 +26,6 @@ const InterestSelector = ({ selectedInterests, setSelectedInterests }) => {
       .then((response) => response.json())
       .then((data) => {
         setAllInterests(data);
-        console.log("Fetched interests:", data);
       });
   }, [token]);
 
@@ -44,7 +43,6 @@ const InterestSelector = ({ selectedInterests, setSelectedInterests }) => {
           )
       );
       setSuggestions(filteredSuggestions);
-      console.log("Filtered suggestions:", filteredSuggestions);
     } else {
       setSuggestions([]);
     }

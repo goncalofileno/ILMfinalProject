@@ -33,7 +33,6 @@ async function checkAuxiliarToken(auxiliarToken) {
 }
 
 async function checkEmail(email) {
-  console.log("Email: ", email);
   try {
     return await fetch(`${baseURL}user/checkEmail`, {
       method: "GET",
@@ -168,8 +167,6 @@ async function uploadProfilePicture(file, token) {
     reader.readAsDataURL(file);
     reader.onloadend = async function () {
       const base64data = reader.result;
-      console.log("Base64 data: ", base64data);
-
       try {
         const response = await fetch(`${baseURL}user/uploadProfilePicture`, {
           method: "POST",
@@ -459,8 +456,6 @@ async function uploadProfilePictureWithSession(file) {
     reader.readAsDataURL(file);
     reader.onloadend = async function () {
       const base64data = reader.result;
-      console.log("Base64 data: ", base64data);
-
       try {
         const response = await fetch(`${baseURL}user/uploadProfilePicture`, {
           method: "POST",
@@ -793,7 +788,6 @@ async function getUnreadNotificationsCount(sessionId) {
     }
 
     const data = await response.json();
-    console.log('Response from unread notifications count API:', data); // Log the response
     return data; // Directly returning the number
   } catch (error) {
     console.error("Error fetching unread notifications count:", error);
@@ -811,9 +805,6 @@ async function fetchNotifications(sessionId, page) {
       credentials: "include",
       cookies: `session-id=${sessionId}`,
     });
-
-    console.log('Response from fetchNotifications API:', response); // Log the response
-
     if (!response.ok) {
       throw new Error("Failed to fetch notifications");
     }

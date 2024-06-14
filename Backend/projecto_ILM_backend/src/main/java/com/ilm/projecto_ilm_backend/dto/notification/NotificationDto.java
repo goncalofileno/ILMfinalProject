@@ -8,8 +8,10 @@ public class NotificationDto {
     private boolean readStatus;
     private LocalDateTime sendDate;
     private String projectName;
+    private String projectSystemName;
     private String projectStatus;
     private String userName;
+    private String systemUserName;
     private String userPhoto;
 
     // Getters and Setters
@@ -54,6 +56,14 @@ public class NotificationDto {
         this.projectName = projectName;
     }
 
+    public String getProjectSystemName() {
+        return projectSystemName;
+    }
+
+    public void setProjectSystemName(String projectSystemName) {
+        this.projectSystemName = projectSystemName;
+    }
+
     public String getProjectStatus() {
         return projectStatus;
     }
@@ -68,6 +78,14 @@ public class NotificationDto {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public String getSystemUserName() {
+        return systemUserName;
+    }
+
+    public void setSystemUserName(String systemUserName) {
+        this.systemUserName = systemUserName;
     }
 
     public String getUserPhoto() {

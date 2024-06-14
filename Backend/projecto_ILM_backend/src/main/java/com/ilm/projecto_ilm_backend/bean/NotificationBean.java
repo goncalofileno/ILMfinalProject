@@ -4,10 +4,12 @@ import com.ilm.projecto_ilm_backend.ENUMS.NotificationTypeENUM;
 import com.ilm.projecto_ilm_backend.ENUMS.StateProjectENUM;
 import com.ilm.projecto_ilm_backend.dao.NotificationDao;
 import com.ilm.projecto_ilm_backend.dao.ProjectDao;
+import com.ilm.projecto_ilm_backend.dao.SessionDao;
 import com.ilm.projecto_ilm_backend.dao.UserDao;
 import com.ilm.projecto_ilm_backend.dto.notification.NotificationDto;
 import com.ilm.projecto_ilm_backend.entity.NotificationEntity;
 import com.ilm.projecto_ilm_backend.entity.UserEntity;
+import com.ilm.projecto_ilm_backend.service.websockets.MailWebSocket;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -28,6 +30,9 @@ public class NotificationBean {
     @Inject
     NotificationDao notificationDao;
 
+    @Inject
+    SessionDao sessionDao;
+
     public void createDefaultNotificationsIfNotExistent() {
         createNotification(NotificationTypeENUM.PROJECT, 1, 1, StateProjectENUM.IN_PROGRESS, null);
         createNotification(NotificationTypeENUM.INVITE, 2, 1, null, 2);
@@ -37,6 +42,7 @@ public class NotificationBean {
         createNotification(NotificationTypeENUM.APPLIANCE, 2, 1, null, 2);
         createNotification(NotificationTypeENUM.APPLIANCE_ACCEPTED, 3, 1, null, 2);
         createNotification(NotificationTypeENUM.APPLIANCE_REJECTED, 4, 1, null, 2);
+        createNotification(NotificationTypeENUM.REMOVED, 4, 1, null, 2);
     }
 
     private void createNotification(NotificationTypeENUM type, int projectId, int receptorId,
@@ -54,6 +60,7 @@ public class NotificationBean {
 
         if (userId != null) {
             notification.setUserName(userDao.findById(userId).getSystemUsername());
+            notification.setSystemUserName(userDao.findById(userId).getSystemUsername());
         }
 
         notificationDao.persist(notification);
@@ -80,6 +87,10 @@ public class NotificationBean {
         return dtos;
     }
 
+    public int getTotalUserNotifications(int userId) {
+        return notificationDao.countAllByUserId(userId);
+    }
+
 
     public int getUnreadNotificationCount(int userId) {
         return notificationDao.countUnreadByUserId(userId);
@@ -94,6 +105,7 @@ public class NotificationBean {
 
         if (entity.getProjectSystemName() != null) {
             dto.setprojectName(projectDao.findNameBySystemName(entity.getProjectSystemName()));
+            dto.setProjectSystemName(entity.getProjectSystemName());
         }
 
         if (entity.getProjectStatus() != null) {
@@ -101,8 +113,9 @@ public class NotificationBean {
         }
 
         if (entity.getUserName() != null) {
-            dto.setUserName(userDao.getFullNameBySystemUsername(entity.getUserName()));
-            dto.setUserPhoto(userDao.findBySystemUsername(entity.getUserName()).getAvatarPhoto());
+            dto.setUserName(entity.getUserName());
+            dto.setUserPhoto(userDao.findBySystemUsername(entity.getSystemUserName()).getAvatarPhoto());
+            dto.setSystemUserName(entity.getSystemUserName());
         }
         return dto;
     }
@@ -117,17 +130,26 @@ public class NotificationBean {
         notification.setUserName(userName);
         notification.setReceptor(receptor);
         notificationDao.persist(notification);
+        if(sessionDao.findSessionIdByUserId(receptor.getId()) != null) {
+            MailWebSocket.sendProjectNotification(sessionDao.findSessionIdByUserId(receptor.getId()), toDto(notification));
+        }
     }
 
-    public void createInviteNotification(String projectSystemName, String userName, UserEntity receptor) {
+    public void createInviteNotification(String projectSystemName, String userName, UserEntity receptor, String systemUserName) {
         NotificationEntity notification = new NotificationEntity();
         notification.setType(NotificationTypeENUM.INVITE);
         notification.setReadStatus(false);
         notification.setSendDate(LocalDateTime.now());
         notification.setProjectSystemName(projectSystemName);
         notification.setUserName(userName);
+        notification.setSystemUserName(systemUserName);
         notification.setReceptor(receptor);
         notificationDao.persist(notification);
+        if(sessionDao.findSessionIdByUserId(receptor.getId()) != null) {
+            MailWebSocket.sendInviteNotification(sessionDao.findSessionIdByUserId(receptor.getId()), toDto(notification));
+        }else {
+            System.out.println("SESSION NOT FOUND TO SEND INVITE NOTIFICATION");
+        }
     }
 
     public void createInviteAcceptedNotification(String projectSystemName, String userName, UserEntity receptor) {
@@ -139,6 +161,9 @@ public class NotificationBean {
         notification.setUserName(userName);
         notification.setReceptor(receptor);
         notificationDao.persist(notification);
+        if(sessionDao.findSessionIdByUserId(receptor.getId()) != null) {
+            MailWebSocket.sendInviteAcceptedNotification(sessionDao.findSessionIdByUserId(receptor.getId()), toDto(notification));
+        }
     }
 
     public void createInviteRejectedNotification(String projectSystemName, String userName, UserEntity receptor) {
@@ -150,6 +175,9 @@ public class NotificationBean {
         notification.setUserName(userName);
         notification.setReceptor(receptor);
         notificationDao.persist(notification);
+        if(sessionDao.findSessionIdByUserId(receptor.getId()) != null) {
+            MailWebSocket.sendInviteRejectedNotification(sessionDao.findSessionIdByUserId(receptor.getId()), toDto(notification));
+        }
     }
 
     public void createTaskNotification(String taskName, String projectSystemName, String userName, UserEntity receptor) {
@@ -162,6 +190,9 @@ public class NotificationBean {
         notification.setUserName(userName);
         notification.setReceptor(receptor);
         notificationDao.persist(notification);
+        if(sessionDao.findSessionIdByUserId(receptor.getId()) != null) {
+            MailWebSocket.sendTaskNotification(sessionDao.findSessionIdByUserId(receptor.getId()), toDto(notification));
+        }
     }
 
     public void createApplianceNotification(String projectSystemName, String userName, UserEntity receptor) {
@@ -173,6 +204,9 @@ public class NotificationBean {
         notification.setUserName(userName);
         notification.setReceptor(receptor);
         notificationDao.persist(notification);
+        if(sessionDao.findSessionIdByUserId(receptor.getId()) != null) {
+            MailWebSocket.sendApplianceNotification(sessionDao.findSessionIdByUserId(receptor.getId()), toDto(notification));
+        }
     }
 
     public void createApplianceAcceptedNotification(String projectSystemName, String userName, UserEntity receptor) {
@@ -184,6 +218,9 @@ public class NotificationBean {
         notification.setUserName(userName);
         notification.setReceptor(receptor);
         notificationDao.persist(notification);
+        if(sessionDao.findSessionIdByUserId(receptor.getId()) != null) {
+            MailWebSocket.sendApplianceAcceptedNotification(sessionDao.findSessionIdByUserId(receptor.getId()), toDto(notification));
+        }
     }
 
     public void createApplianceRejectedNotification(String projectSystemName, String userName, UserEntity receptor) {
@@ -195,5 +232,22 @@ public class NotificationBean {
         notification.setUserName(userName);
         notification.setReceptor(receptor);
         notificationDao.persist(notification);
+        if(sessionDao.findSessionIdByUserId(receptor.getId()) != null) {
+            MailWebSocket.sendApplianceRejectedNotification(sessionDao.findSessionIdByUserId(receptor.getId()), toDto(notification));
+        }
+    }
+
+    public void createRemovedNotification(String projectSystemName, String userName, UserEntity receptor) {
+        NotificationEntity notification = new NotificationEntity();
+        notification.setType(NotificationTypeENUM.REMOVED);
+        notification.setReadStatus(false);
+        notification.setSendDate(LocalDateTime.now());
+        notification.setProjectSystemName(projectSystemName);
+        notification.setUserName(userName);
+        notification.setReceptor(receptor);
+        notificationDao.persist(notification);
+        if(sessionDao.findSessionIdByUserId(receptor.getId()) != null) {
+            MailWebSocket.sendRemovedNotification(sessionDao.findSessionIdByUserId(receptor.getId()), toDto(notification));
+        }
     }
 }

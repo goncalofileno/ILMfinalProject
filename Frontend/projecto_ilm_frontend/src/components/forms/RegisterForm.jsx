@@ -53,17 +53,13 @@ export default function RegisterForm({ setShowAlert, setRegisterMessage, setRegi
    };
 
    const handleOnBlurEmail = () => {
-      console.log("Email is being checked");
       checkEmail(email).then((response) => {
-         console.log(response);
          if (response.status == 200) {
-            console.log("Email is valid");
             setWarningTypeEmail("success");
             setWarningTxtEmail("Email is valid");
          } else if (response.status == 409 || response.status == 400) {
             setWarningTypeEmail("incorrect");
             setWarningTxtEmail("This email is invalid");
-            console.log("Email is invalid");
          }
       });
    };
