@@ -86,3 +86,4 @@ public class StartupBean {
         notificationBean.createDefaultNotificationsIfNotExistent();
     }
 }
+

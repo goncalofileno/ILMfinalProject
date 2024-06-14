@@ -41,17 +41,45 @@ public class NotificationDao extends AbstractDao<NotificationEntity> {
     }
 
     @Transactional
-    public List<NotificationEntity> findByUserId(int userId) {
-        return em.createNamedQuery("NotificationEntity.findByUserId", NotificationEntity.class)
+    public List<NotificationEntity> findUnreadByUserId(int userId) {
+        return em.createNamedQuery("NotificationEntity.findUnreadByUserId", NotificationEntity.class)
                 .setParameter("userId", userId)
                 .getResultList();
     }
 
     @Transactional
-    public void markNotificationAsRead(int userId, int notificationId) {
-        em.createNamedQuery("NotificationEntity.markAsRead")
+    public List<NotificationEntity> findReadByUserId(int userId, int page) {
+        int offset = (page - 1) * 5;
+        return em.createNamedQuery("NotificationEntity.findReadByUserId", NotificationEntity.class)
                 .setParameter("userId", userId)
-                .setParameter("notificationIds", List.of(notificationId))
-                .executeUpdate();
+                .setFirstResult(offset)
+                .setMaxResults(5)
+                .getResultList();
     }
+
+    @Transactional
+    public void markNotificationsAsRead(List<NotificationEntity> notifications) {
+        for (NotificationEntity notification : notifications) {
+            notification.setReadStatus(true);
+            em.merge(notification);
+        }
+    }
+
+    @Transactional
+    public int countUnreadByUserId(int userId) {
+        Long count = em.createNamedQuery("NotificationEntity.countUnreadByUserId", Long.class)
+                .setParameter("userId", userId)
+                .getSingleResult();
+        return count.intValue();
+    }
+
+    @Transactional
+    public int countAllByUserId(int userId) {
+        Long count = em.createNamedQuery("NotificationEntity.countAllByUserId", Long.class)
+                .setParameter("userId", userId)
+                .getSingleResult();
+        return count.intValue();
+    }
+
+
 }

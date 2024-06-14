@@ -103,10 +103,8 @@ const CreateProfilePage = () => {
     try {
       checkUsername(username, token).then((response) => {
         if (response.status === 200) {
-          console.log("Username is available");
           setUsernameValid(true);
         } else if (response.status === 409) {
-          console.log("Username is already taken");
           setUsernameValid(false);
         }
       });
@@ -160,7 +158,6 @@ const CreateProfilePage = () => {
         interests: selectedInterests,
       };
 
-      console.log("Creating profile...", userProfileDto);
 
       const response = await createProfile(userProfileDto, token);
       if (response.ok) {
@@ -170,7 +167,6 @@ const CreateProfilePage = () => {
             token
           );
           if (uploadResponse.ok) {
-            console.log("Profile created and picture uploaded successfully");
             // Chama a função de login com token
             const loginResponse = await loginWithToken(token);
             if (loginResponse.ok) {
@@ -184,7 +180,6 @@ const CreateProfilePage = () => {
             setFileUploadError("Error uploading profile picture");
           }
         } else {
-          console.log("Profile created successfully");
           // Chama a função de login com token
           const loginResponse = await loginWithToken(token);
           if (loginResponse.ok) {

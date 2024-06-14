@@ -19,7 +19,15 @@ import java.util.List;
         @NamedQuery(name = "NotificationEntity.findByUserId",
                 query = "SELECT n FROM NotificationEntity n WHERE n.receptor.id = :userId"),
         @NamedQuery(name = "NotificationEntity.markAsRead",
-                query = "UPDATE NotificationEntity n SET n.readStatus = true WHERE n.receptor.id = :userId AND n.id IN :notificationIds")
+                query = "UPDATE NotificationEntity n SET n.readStatus = true WHERE n.receptor.id = :userId AND n.id IN :notificationIds"),
+        @NamedQuery(name = "NotificationEntity.findUnreadByUserId",
+                query = "SELECT n FROM NotificationEntity n WHERE n.receptor.id = :userId AND n.readStatus = false ORDER BY n.sendDate DESC"),
+        @NamedQuery(name = "NotificationEntity.findReadByUserId",
+                query = "SELECT n FROM NotificationEntity n WHERE n.receptor.id = :userId AND n.readStatus = true ORDER BY n.sendDate DESC"),
+        @NamedQuery(name = "NotificationEntity.countUnreadByUserId",
+                query = "SELECT COUNT(n) FROM NotificationEntity n WHERE n.receptor.id = :userId AND n.readStatus = false"),
+        @NamedQuery(name = "NotificationEntity.countAllByUserId",
+                query = "SELECT COUNT(n) FROM NotificationEntity n WHERE n.receptor.id = :userId"),
 })
 public class NotificationEntity implements Serializable {
 
@@ -48,6 +56,9 @@ public class NotificationEntity implements Serializable {
 
     @Column(name = "userName", nullable = true, unique = false, updatable = false)
     private String userName;
+
+    @Column(name = "systemUserName", nullable = true, unique = false, updatable = false)
+    private String systemUserName;
 
     @Column(name = "taskName", nullable = true, unique = false, updatable = false)
     private String taskName;
@@ -112,6 +123,14 @@ public class NotificationEntity implements Serializable {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public String getSystemUserName() {
+        return systemUserName;
+    }
+
+    public void setSystemUserName(String systemUserName) {
+        this.systemUserName = systemUserName;
     }
 
     public UserEntity getReceptor() {

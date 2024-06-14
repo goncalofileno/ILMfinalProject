@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
   getUserProfileImage,
@@ -8,6 +8,8 @@ import {
 import Cookies from "js-cookie"; // Importando a biblioteca de cookies
 import { useMediaQuery } from "react-responsive";
 import useMailStore from "../../stores/useMailStore"; // Importando a store zustand
+import useNotificationStore from "../../stores/useNotificationStore"; // Importando a nova store
+import NotificationModal from "../modals/NotificationModal"; // Importando o novo componente
 import "./AppNavbar.css";
 import projectsIcon from "../../resources/icons/navbar/projects-icon.png";
 import resourceIcon from "../../resources/icons/navbar/resource-icon.png";
@@ -18,11 +20,22 @@ import userProfileIcon from "../../resources/avatares/Avatar padrão.jpg";
 
 export default function AppNavbar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
   const [userImage, setUserImage] = useState(userProfileIcon);
+  const dropdownRef = useRef(null);
+  const modalRef = useRef(null);
+  const bellIconRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation(); // Obter a localização atual
   const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
   const { unreadCount, setUnreadCount } = useMailStore();
+  const {
+    unreadNotificationsCount,
+    fetchUnreadNotificationsCount,
+    resetUnreadNotificationsCount,
+    fetchNotifications,
+    clearNotifications,
+  } = useNotificationStore();
 
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
@@ -64,7 +77,8 @@ export default function AppNavbar() {
 
     fetchUserImage();
     fetchUnreadCount();
-  }, [setUnreadCount]);
+    fetchUnreadNotificationsCount();
+  }, [setUnreadCount, fetchUnreadNotificationsCount]);
 
   const getNavItemClass = (path) => {
     if (path === "/mail/inbox" || path === "/mail/sent") {
@@ -95,13 +109,41 @@ export default function AppNavbar() {
     navigate(path);
   };
 
+  const handleBellClick = async () => {
+    if (modalOpen) {
+      setModalOpen(false);
+      clearNotifications();
+    } else {
+      setModalOpen(true);
+      await fetchNotifications(1);
+      resetUnreadNotificationsCount();
+    }
+  };
+
+  const handleClickOutside = useCallback((event) => {
+    if (
+      (dropdownRef.current && dropdownRef.current.contains(event.target)) ||
+      (modalRef.current && modalRef.current.contains(event.target)) ||
+      (bellIconRef.current && bellIconRef.current.contains(event.target))
+    ) {
+      return;
+    }
+    setDropdownOpen(false);
+    setModalOpen(false);
+    clearNotifications();
+  }, [clearNotifications]);
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [handleClickOutside]);
+
   return (
     <div>
       <div className="app-navbar">
-        <div
-          className="logo"
-          onClick={() => handleNavigation("/projects")}
-        ></div>
+        <div className="logo" onClick={() => handleNavigation("/projects")}></div>
         <div className="nav-icons-wrapper">
           <div className="nav-icons">
             <div
@@ -122,20 +164,14 @@ export default function AppNavbar() {
               className={getNavItemClass("/myprojects")}
               onClick={() => handleNavigation("/myprojects")}
             >
-              <div
-                className="icon"
-                style={getNavIconStyle("/myprojects")}
-              ></div>
+              <div className="icon" style={getNavIconStyle("/myprojects")}></div>
               <label>My Projects</label>
             </div>
             <div
               className={getNavItemClass("/mail/inbox")}
               onClick={() => handleNavigation("/mail/inbox")}
             >
-              <div
-                className="icon"
-                style={getNavIconStyle("/mail/inbox")}
-              ></div>
+              <div className="icon" style={getNavIconStyle("/mail/inbox")}></div>
               <label>Mail</label>
               {unreadCount > 0 && <span className="badge">{unreadCount}</span>}
             </div>
@@ -143,21 +179,23 @@ export default function AppNavbar() {
         </div>
         <div className="nav-right">
           <select className="language-dropdown">
-            <option className="option-flag" value="en">
-              🇺🇸
-            </option>
-            <option className="option-flag" value="pt">
-              🇵🇹
-            </option>
-            <option className="option-flag" value="es">
-              🇪🇸
-            </option>
+            <option className="option-flag" value="en">🇺🇸</option>
+            <option className="option-flag" value="pt">🇵🇹</option>
+            <option className="option-flag" value="es">🇪🇸</option>
           </select>
           <div
             className="icon"
             style={{ backgroundImage: `url(${bellIcon})` }}
-          ></div>
-          <div className="user-profile" onClick={toggleDropdown}>
+            onClick={handleBellClick}
+            ref={bellIconRef}
+          >
+            {unreadNotificationsCount > 0 && (
+              <span id="notification-badge" className="badge">
+                {unreadNotificationsCount}
+              </span>
+            )}
+          </div>
+          <div className="user-profile" onClick={toggleDropdown} ref={dropdownRef}>
             <div
               className="user-image"
               style={{ backgroundImage: `url(${userImage})` }}
@@ -193,26 +231,25 @@ export default function AppNavbar() {
               className={getNavItemClass("/myprojects")}
               onClick={() => handleNavigation("/myprojects")}
             >
-              <div
-                className="icon"
-                style={getNavIconStyle("/myprojects")}
-              ></div>
+              <div className="icon" style={getNavIconStyle("/myprojects")}></div>
               <label>My Projects</label>
             </div>
             <div
               className={getNavItemClass("/mail/inbox")}
               onClick={() => handleNavigation("/mail/inbox")}
             >
-              <div
-                className="icon mail-icon"
-                style={getNavIconStyle("/mail/inbox")}
-              ></div>
+              <div className="icon mail-icon" style={getNavIconStyle("/mail/inbox")}></div>
               <label>Mail</label>
-              {unreadCount > 0 && <span className="badge">{unreadCount}</span>}
+              {unreadCount > 0 && (
+                <span id="notification-badge" className="badge">
+                  {unreadCount}
+                </span>
+              )}
             </div>
           </div>
         </div>
       )}
+      {modalOpen && <NotificationModal onClose={() => setModalOpen(false)} modalRef={modalRef} />}
     </div>
   );
 }

@@ -15,7 +15,7 @@ export default function LoginForm({ setShowAlert, setIsModalActive }) {
    e.preventDefault();
    loginUser(email, password).then((response) => {
        if (response.status === 200) {
-           console.log("Login successful");
+         
            if (response.data && response.data.auxiliarToken) { // Verifique se response.data está definido
                navigate(`/create-profile/${response.data.auxiliarToken}`);
            } else {
@@ -23,12 +23,9 @@ export default function LoginForm({ setShowAlert, setIsModalActive }) {
            }
        } else if (response.status === 401) {
            setShowAlert(true);
-           console.log("Wrong pass");
        } else if (response.status === 404) {
-           console.log("Email not found");
            setShowAlert(true);
        } else {
-           console.log("Unexpected error");
            setShowAlert(true);
        }
    }).catch((error) => {

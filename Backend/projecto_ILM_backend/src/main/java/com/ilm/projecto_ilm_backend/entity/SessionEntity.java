@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 @NamedQuery(name = "Session.findByUserAndUserAgent", query = "SELECT s FROM SessionEntity s WHERE s.user.id = :userId AND s.userAgent = :userAgent")
 @NamedQuery(name = "Session.findByUser", query = "SELECT s FROM SessionEntity s WHERE s.user = :user")
 @NamedQuery(name = "Session.findUserIdBySessionId", query = "SELECT s.user.id FROM SessionEntity s WHERE s.sessionId = :sessionId")
+@NamedQuery(name = "Session.findSessionIdByUserId", query = "SELECT s.sessionId FROM SessionEntity s WHERE s.user.id = :userId")
 public class SessionEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;

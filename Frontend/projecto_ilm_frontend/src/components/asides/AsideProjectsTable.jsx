@@ -52,7 +52,6 @@ export default function AsideProjectsTable({
             <option value="">All Labs</option>
             {labs.map((lab, index) => (
               <option key={index} value={lab.local}>
-                {console.log(lab.local)}
                 {formatLab(lab.local)}
               </option>
             ))}

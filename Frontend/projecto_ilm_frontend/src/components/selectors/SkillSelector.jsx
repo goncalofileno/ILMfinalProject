@@ -33,7 +33,6 @@ const SkillSelector = ({ selectedSkills, setSelectedSkills }) => {
       })
       .then((data) => {
         setAllSkills(data);
-        console.log("Fetched skills:", data);
       });
   }, [token]);
 
@@ -51,7 +50,6 @@ const SkillSelector = ({ selectedSkills, setSelectedSkills }) => {
           )
       );
       setSuggestions(filteredSuggestions);
-      console.log("Filtered suggestions:", filteredSuggestions);
     } else {
       setSuggestions([]);
     }

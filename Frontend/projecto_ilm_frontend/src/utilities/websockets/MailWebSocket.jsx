@@ -1,12 +1,14 @@
 import React, { useEffect, useState, useRef } from "react";
 import Cookies from "js-cookie";
 import useMailStore from "../../stores/useMailStore";
+import useNotificationStore from "../../stores/useNotificationStore";
 import { useLocation, useNavigate } from "react-router-dom";
 import TimeoutModal from "../../components/modals/TimeoutModal";
-import MailNotificationBanner from "../../components/banners/MailNotificationBanner";
+import NotificationBanner from "../../components/banners/NotificationBanner";
 
 const MailWebSocket = () => {
   const { incrementUnreadCount, fetchMailsInInbox } = useMailStore();
+  const { incrementUnreadNotificationsCount } = useNotificationStore();
   const location = useLocation();
   const [showTimeoutModal, setShowTimeoutModal] = useState(false);
   const [notification, setNotification] = useState(null);
@@ -49,7 +51,6 @@ const MailWebSocket = () => {
         if (event.data.startsWith("new_mail:")) {
           incrementUnreadCount();
           const senderName = event.data.split(":")[1];
-          setNotification(`${senderName} sent you a new mail.`);
           if (audioEnabled) {
             audioRef.current.play();
           }
@@ -57,12 +58,22 @@ const MailWebSocket = () => {
           incrementUnreadCount();
           fetchMailsInInbox();
           const senderName = event.data.split(":")[1];
-          setNotification(`${senderName} sent you a new mail.`);
           if (audioEnabled) {
             audioRef.current.play();
           }
         } else if (event.data === "timeout") {
           setShowTimeoutModal(true);
+        } else {
+          try {
+            const notification = JSON.parse(event.data);
+            setNotification(notification);
+            incrementUnreadNotificationsCount();
+            if (audioEnabled) {
+              audioRef.current.play();
+            }
+          } catch (e) {
+            console.error("Error parsing WebSocket message:", e);
+          }
         }
       };
 
@@ -80,7 +91,7 @@ const MailWebSocket = () => {
         socket.close();
       }
     };
-  }, [incrementUnreadCount, fetchMailsInInbox, location.pathname, audioEnabled]);
+  }, [incrementUnreadCount, fetchMailsInInbox, location.pathname, audioEnabled, incrementUnreadNotificationsCount]);
 
   const handleTimeoutModalClose = () => {
     setShowTimeoutModal(false);
@@ -91,7 +102,30 @@ const MailWebSocket = () => {
   };
 
   const handleNotificationClick = () => {
-    navigate("/mail/inbox");
+    if (notification) {
+      const { type, projectSystemName, systemUserName } = notification;
+      switch (type) {
+        case "APPLIANCE_REJECTED":
+        case "APPLIANCE_ACCEPTED":
+        case "INVITE":
+        case "PROJECT":
+          navigate(`/project/${projectSystemName}`);
+          break;
+        case "APPLIANCE":
+        case "INVITE_ACCEPTED":
+          navigate(`/project/${projectSystemName}/members`);
+          break;
+        case "TASK":
+          navigate(`/project/${projectSystemName}/tasks`);
+          break;
+        case "INVITE_REJECTED":
+        case "REMOVED":
+          navigate(`/profile/${systemUserName}`);
+          break;
+        default:
+          break;
+      }
+    }
     setNotification(null);
   };
 
@@ -103,8 +137,8 @@ const MailWebSocket = () => {
     <>
       <TimeoutModal show={showTimeoutModal} handleClose={handleTimeoutModalClose} />
       {notification && (
-        <MailNotificationBanner
-          message={notification}
+        <NotificationBanner
+          notification={notification}
           onClick={handleNotificationClick}
           onEnd={handleNotificationEnd} // Adiciona a função para resetar a notificação
         />

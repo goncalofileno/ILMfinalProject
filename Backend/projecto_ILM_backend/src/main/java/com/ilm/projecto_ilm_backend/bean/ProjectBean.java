@@ -45,6 +45,9 @@ public class ProjectBean {
     private UserProjectDao userProjectDao;
 
     @Inject
+    private NotificationBean notificationBean;
+
+    @Inject
     SessionDao sessionDao;
     @Inject
     MailBean mailBean;
@@ -216,7 +219,7 @@ public class ProjectBean {
         UserProjectEntity userProjectEntity = new UserProjectEntity();
         userProjectEntity.setUser(userToInvite);
         userProjectEntity.setProject(project);
-        userProjectEntity.setType(UserInProjectTypeENUM.INVITED);
+        userProjectEntity.setType(UserInProjectTypeENUM.PENDING_BY_INVITATION);
 
         userProjectDao.persist(userProjectEntity);
 
@@ -229,9 +232,11 @@ public class ProjectBean {
                 "<p>http://localhost:3000/project/" + project.getId() + "</p>" +
                 "<p></p>" + 
                 "<p>Best regards,<br>ILM Management Team</p>";
-        MailDto mailDto = new MailDto(subject, text, sender.getFirstName() + " " + sender.getLastName(), sender.getEmail(), userToInvite.getFirstName() + " " + userToInvite.getLastName(), userToInvite.getEmail());
+        MailDto mailDto = new MailDto(subject, text, (sender.getFirstName() + " " + sender.getLastName()), sender.getEmail(), userToInvite.getFirstName() + " " + userToInvite.getLastName(), userToInvite.getEmail());
 
         mailBean.sendMail(sessionId, mailDto);
+
+        notificationBean.createInviteNotification(project.getSystemName(), userDao.getFullNameBySystemUsername(sender.getSystemUsername()), userToInvite, sender.getSystemUsername());
 
         return "User invited successfully";
     }

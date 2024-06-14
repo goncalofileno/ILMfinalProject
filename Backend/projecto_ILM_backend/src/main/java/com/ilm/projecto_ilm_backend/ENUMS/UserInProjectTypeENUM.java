@@ -4,42 +4,22 @@ package com.ilm.projecto_ilm_backend.ENUMS;
  * Enum representing different types of user roles in a project.
  */
 public enum UserInProjectTypeENUM {
-    /**
-     * Creator role.
-     * Represented by the integer value 0.
-     */
+
     CREATOR(0),
 
-    /**
-     * Manager role.
-     * Represented by the integer value 1.
-     */
     MANAGER(1),
 
-    /**
-     * Member role.
-     * Represented by the integer value 2.
-     */
     MEMBER(2),
 
-    /**
-     * Pending role.
-     * Represented by the integer value 3.
-     */
-    PENDING(3),
+    MEMBER_BY_INVITATION(3),
 
-    /**
-     * Exmember role.
-     * Represented by the integer value 4.
-     */
-    EXMEMBER(4),
+    MEMBER_BY_APPLIANCE(4),
 
-    /**
-     * Invited role.
-     * Represented by the integer value 5.
-     */
-    INVITED(5);
+    PENDING_BY_APPLIANCE(5),
 
+    PENDING_BY_INVITATION(6),
+
+    EXMEMBER(7);
 
     private final int intValue;
 
