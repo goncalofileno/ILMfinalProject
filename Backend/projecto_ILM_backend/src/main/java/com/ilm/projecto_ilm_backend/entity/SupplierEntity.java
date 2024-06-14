@@ -12,6 +12,7 @@ import java.io.Serializable;
 @NamedQuery(name = "Supplier.findByName", query = "SELECT s FROM SupplierEntity s WHERE s.name = :name")
 @NamedQuery(name = "Supplier.findById", query = "SELECT s FROM SupplierEntity s WHERE s.id = :id")
 @NamedQuery(name = "Supplier.findNameById", query = "SELECT s.name FROM SupplierEntity s WHERE s.id = :id")
+@NamedQuery(name = "Supplier.findIdByName", query = "SELECT s.id FROM SupplierEntity s WHERE s.name = :name")
 @NamedQuery(name = "Supplier.findAllNames", query = "SELECT s.name FROM SupplierEntity s ")
 
 public class SupplierEntity implements Serializable {

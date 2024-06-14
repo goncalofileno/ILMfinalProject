@@ -140,14 +140,21 @@ public class ProjectBean {
 
         LabEntity lab;
         StateProjectENUM state;
+        List<Object[]>  projectsInfo;
         if(labName == null || labName.equals("")) lab=null;
         else lab=labDao.findbyLocal(WorkLocalENUM.valueOf(labName));
-        if(status == null || status.equals("")) state=null;
+        if(status.equals("")) state=null;
         else state=StateProjectENUM.valueOf(status);
-        if(keyword == null || keyword.equals("")) keyword=null;
-        int userId=sessionDao.findUserIdBySessionId(sessionId);
-        List<Object[]> projectsInfo = projectDao.getProjectTableDtoInfo(page,NUMBER_OF_PROJECTS_PER_PAGE,lab, state, slotsAvailable,nameAsc,
-                statusAsc, labAsc,startDateAsc, endDateAsc, keyword, userId);
+        if( keyword.equals("")) keyword=null;
+
+        if(lab==null && (status==null || status.equals("")) && !slotsAvailable && (nameAsc==null || nameAsc.equals("")) && (statusAsc==null || statusAsc.equals("")) && (labAsc==null || labAsc.equals("")) && (startDateAsc==null || startDateAsc.equals("")) && (endDateAsc==null || endDateAsc.equals("")) && (keyword==null || keyword.equals(""))){
+            int userId=sessionDao.findUserIdBySessionId(sessionId);
+            projectsInfo=projectDao.findAllProjectsOrderedByUser(page, NUMBER_OF_PROJECTS_PER_PAGE,userId);
+       }else {
+             projectsInfo = projectDao.getProjectTableDtoInfo(page,NUMBER_OF_PROJECTS_PER_PAGE,lab, state, slotsAvailable,nameAsc,
+                    statusAsc, labAsc,startDateAsc, endDateAsc, keyword);
+       }
+
         ArrayList<ProjectTableDto> projectsTableDtos = new ArrayList<>();
 
         for (Object[] projectInfo : projectsInfo) {

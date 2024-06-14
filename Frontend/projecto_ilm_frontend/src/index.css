@@ -86,6 +86,21 @@ code {
   background-color: #4b4b4b;
 }
 
+.terciary-button {
+  background-color: #f39c12;
+  color: black;
+  border: 0;
+  border-radius: 15px;
+  font-size: 16px;
+  padding: 14px 0px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.215, 0.61, 0.355, 1) 0s;
+}
+
+.terciary-button:hover {
+  background-color: #d48910;
+}
+
 .form-content {
   display: flex;
   flex-direction: column;

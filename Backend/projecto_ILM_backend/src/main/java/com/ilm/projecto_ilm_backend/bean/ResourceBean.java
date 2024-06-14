@@ -95,16 +95,36 @@ public class ResourceBean {
             resource.setSerialNumber("4321-4321-4321");
             SupplierEntity supplier = new SupplierEntity();
             supplier = supplierDao.findById(4);
+            SupplierEntity supplier2 = supplierDao.findById(2);
             List<SupplierEntity> suppliers = new ArrayList<>();
             suppliers.add(supplier);
+            suppliers.add(supplier2);
             resource.setSupplier(suppliers);
-
             resourceDao.persist(resource);
         }
+
     }
 
-    public ResourceTableInfoDto getResourceDetails() {
-        List <Object[]> resources = resourceDao.getResourceDetails();
+    public ResourceTableInfoDto getResourceDetails(int page, String brand, String type, String supplierName, String searchKeyword, String nameAsc, String typeAsc, String brandAsc, String supplierAsc) {
+
+        ResourceTypeENUM typeEnum = null;
+        Integer supplierId=null;
+
+        if(brand.equals("")){
+            brand=null;
+        }
+        if(!type.equals("")&& type != null){
+           typeEnum = ResourceTypeENUM.valueOf(type);
+        }
+        if(!supplierName.equals("") && supplierName != null){
+            int potentialSupplierId=supplierDao.findIdByName(supplierName);
+            if(potentialSupplierId!=-1) supplierId=Integer.valueOf(supplierDao.findIdByName(supplierName));
+        }
+        if(searchKeyword.equals("")){
+            searchKeyword=null;
+        }
+
+        List <Object[]> resources = resourceDao.getResourceDetails(page, NUMBER_OF_RESOURCES_PER_PAGE, brand, typeEnum, supplierId, searchKeyword,  nameAsc, typeAsc, brandAsc,  supplierAsc);
         ArrayList<ResourceTableDto> resourceTableDtos = new ArrayList<>();
         ResourceTableInfoDto resourceTableInfoDto = new ResourceTableInfoDto();
 
@@ -117,13 +137,15 @@ public class ResourceBean {
             resourceTableDtos.add(resourceTableDto);
         }
 
+        int numberOfResources = resourceDao.getNumberOfResources(brand, typeEnum, supplierId, searchKeyword);
         resourceTableInfoDto.setTableResources(resourceTableDtos);
-        resourceTableInfoDto.setMaxPageNumber(calculateMaximumPageTableProjects(resourceDao.getNumberOfResources()));
+        resourceTableInfoDto.setMaxPageNumber(calculateMaximumPageTableResources(resourceDao.getNumberOfResources(brand, typeEnum, supplierId, searchKeyword)));
+
         return resourceTableInfoDto;
     }
 
-    public int calculateMaximumPageTableProjects(int numberOfProjects){
-        return (int) Math.ceil((double) numberOfProjects/NUMBER_OF_RESOURCES_PER_PAGE);
+    public int calculateMaximumPageTableResources(int numberOfResources){
+        return (int) Math.ceil((double) numberOfResources/NUMBER_OF_RESOURCES_PER_PAGE);
     }
 
     public ArrayList<ResourceTypeENUM> getAllTypes() {

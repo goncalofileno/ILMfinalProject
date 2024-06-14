@@ -3,10 +3,7 @@ package com.ilm.projecto_ilm_backend.service;
 import com.ilm.projecto_ilm_backend.bean.ResourceBean;
 import com.ilm.projecto_ilm_backend.validator.DatabaseValidator;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.CookieParam;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.apache.logging.log4j.LogManager;
@@ -24,15 +21,20 @@ public class ResourceService {
 
     private static final Logger logger = LogManager.getLogger(ProjectService.class);
 
+
+
     @GET
     @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getResources(@CookieParam("session-id") String sessionId) throws UnknownHostException {
+    public Response getResources(@CookieParam("session-id") String sessionId, @QueryParam("page") int page, @QueryParam("brand") String brand,
+                                 @QueryParam("type") String type, @QueryParam("supplier")String supplierName,@QueryParam("keyword")String searchKeyword,
+                                 @QueryParam("nameAsc")String nameAsc, @QueryParam("typeAsc")String typeAsc, @QueryParam("brandAsc")String brandAsc,
+                                 @QueryParam("supplierAsc")String supplierAsc) throws UnknownHostException {
         String clientIP = InetAddress.getLocalHost().getHostAddress();
         logger.info("Received a request to receive all resources from a user from IP address: " + clientIP);
         if(databaseValidator.checkSessionId(sessionId)) {
             try {
-                return Response.ok(resourceBean.getResourceDetails()).build();
+                return Response.ok(resourceBean.getResourceDetails(page,brand,type,supplierName,searchKeyword, nameAsc,typeAsc,brandAsc,supplierAsc)).build();
             } catch (Exception e) {
                 logger.error("An error occurred while retrieving home projects: " + e.getMessage() + " from IP address: " + clientIP);
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("An error occurred while retrieving all resources").build();
