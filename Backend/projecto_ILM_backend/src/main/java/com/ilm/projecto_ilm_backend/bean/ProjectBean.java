@@ -219,7 +219,7 @@ public class ProjectBean {
         UserProjectEntity userProjectEntity = new UserProjectEntity();
         userProjectEntity.setUser(userToInvite);
         userProjectEntity.setProject(project);
-        userProjectEntity.setType(UserInProjectTypeENUM.INVITED);
+        userProjectEntity.setType(UserInProjectTypeENUM.PENDING_BY_INVITATION);
 
         userProjectDao.persist(userProjectEntity);
 
