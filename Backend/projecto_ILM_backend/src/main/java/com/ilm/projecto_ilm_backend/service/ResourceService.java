@@ -1,6 +1,7 @@
 package com.ilm.projecto_ilm_backend.service;
 
 import com.ilm.projecto_ilm_backend.bean.ResourceBean;
+import com.ilm.projecto_ilm_backend.dto.resource.ResourceCreationDto;
 import com.ilm.projecto_ilm_backend.validator.DatabaseValidator;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
@@ -73,6 +74,29 @@ public class ResourceService {
             } catch (Exception e) {
                 logger.error("An error occurred while retrieving all resources brands: " + e.getMessage() + " from IP address: " + clientIP);
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("An error occurred while retrieving all resources brands").build();
+            }
+        }else {
+            return Response.status(Response.Status.UNAUTHORIZED).entity("Unauthorized access").build();
+        }
+    }
+
+    @POST
+    @Path("/")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response createResource(@CookieParam("session-id") String sessionId, ResourceCreationDto resourceCreationDto) throws UnknownHostException {
+        String clientIP = InetAddress.getLocalHost().getHostAddress();
+        logger.info("Received a request to create a resource from a user from IP address: " + clientIP);
+        if(databaseValidator.checkSessionId(sessionId)) {
+            try {
+                if(resourceBean.createResource(resourceCreationDto)){
+                    logger.info("A new resource named "+resourceCreationDto.getName()+" from a user from IP address: " + clientIP);
+                    return Response.ok().build();
+                }else {
+                    return Response.status(Response.Status.BAD_REQUEST).entity("This resource already exists").build();
+                }
+            } catch (Exception e) {
+                logger.error("An error occurred while creating a new resource: " + e.getMessage() + " from IP address: " + clientIP);
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("An error occurred while creating a new resource:").build();
             }
         }else {
             return Response.status(Response.Status.UNAUTHORIZED).entity("Unauthorized access").build();

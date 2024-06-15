@@ -2,6 +2,7 @@ package com.ilm.projecto_ilm_backend.bean;
 
 import com.ilm.projecto_ilm_backend.ENUMS.ResourceTypeENUM;
 import com.ilm.projecto_ilm_backend.ENUMS.StateProjectENUM;
+import com.ilm.projecto_ilm_backend.dto.resource.ResourceCreationDto;
 import com.ilm.projecto_ilm_backend.dto.resource.ResourceTableDto;
 import com.ilm.projecto_ilm_backend.dto.resource.ResourceTableInfoDto;
 import com.ilm.projecto_ilm_backend.entity.ResourceEntity;
@@ -158,5 +159,40 @@ public class ResourceBean {
 
     public List<String> getAllBrands() {
         return resourceDao.getAllBrands();
+    }
+
+    public boolean createResource(ResourceCreationDto resourceCreationDto) {
+            ResourceEntity resourceEntity;
+            resourceEntity=resourceDao.findResourceByDetails(resourceCreationDto.getName(), resourceCreationDto.getBrand(), resourceCreationDto.getType());
+            SupplierEntity supplier = supplierDao.findByName(resourceCreationDto.getSupplierName());
+            if(supplier==null){
+                supplier = new SupplierEntity();
+                supplier.setName(resourceCreationDto.getSupplierName());
+                supplier.setContact(resourceCreationDto.getSupplierContact());
+                supplierDao.persist(supplier);
+            }
+            if(resourceEntity==null){
+                resourceEntity = new ResourceEntity();
+                resourceEntity.setName(resourceCreationDto.getName());
+                resourceEntity.setDescription(resourceCreationDto.getDescription());
+                resourceEntity.setObservation(resourceCreationDto.getObservation());
+                resourceEntity.setBrand(resourceCreationDto.getBrand());
+                resourceEntity.setSerialNumber(resourceCreationDto.getSerialNumber());
+                resourceEntity.setType(resourceCreationDto.getType());
+                List<SupplierEntity> suppliers = new ArrayList<>();
+                suppliers.add(supplier);
+                resourceEntity.setSupplier(suppliers);
+                resourceDao.persist(resourceEntity);
+                return true;
+            }
+            else{
+                if(resourceDao.resourceHasSupplier(resourceEntity.getId(), supplier.getId())){
+                    return false;
+                }else {
+                    resourceEntity.addSupplier(supplier);
+                    resourceDao.merge(resourceEntity);
+                    return true;
+                }
+        }
     }
 }

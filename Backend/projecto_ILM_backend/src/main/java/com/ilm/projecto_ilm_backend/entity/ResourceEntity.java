@@ -15,6 +15,22 @@ import java.util.List;
 @Table(name = "resources")
 @NamedQuery(name = "Resource.findById", query = "SELECT r FROM ResourceEntity r WHERE r.id = :id")
 @NamedQuery(
+        name = "Resource.hasSupplier",
+        query = "SELECT COUNT(r) > 0 FROM ResourceEntity r " +
+                "JOIN r.supplier s " +
+                "WHERE r.id = :resourceId " +
+                "AND s.id = :supplierId"
+)
+@NamedQuery(
+        name = "Resource.findResourceByDetails",
+        query = "SELECT r FROM ResourceEntity r " +
+                "JOIN r.supplier s " +
+                "WHERE (r.name=:name)" +
+                "AND (r.brand = :brand) "+
+                "AND (r.type = :type) "
+)
+
+@NamedQuery(
         name = "Resource.getResourcesDetails",
         query = "SELECT r.name, r.brand, r.type, s.id FROM ResourceEntity r " +
                 "JOIN r.supplier s " +
@@ -268,5 +284,8 @@ public class ResourceEntity implements Serializable {
         this.supplier = supplier;
     }
 
+    public void addSupplier(SupplierEntity supplier) {
+        this.supplier.add(supplier);
+    }
 
 }
