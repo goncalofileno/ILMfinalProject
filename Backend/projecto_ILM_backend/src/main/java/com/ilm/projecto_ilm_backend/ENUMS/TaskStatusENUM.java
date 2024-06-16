@@ -8,7 +8,7 @@ public enum TaskStatusENUM {
      * Pending status.
      * Represented by the integer value 0.
      */
-    PENDING(0),
+    PLANNED(0),
 
     /**
      * In-progress status.

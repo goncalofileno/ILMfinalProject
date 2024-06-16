@@ -5,6 +5,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class ProjectProfileDto {
     private String name;
+    private String systemName;
     private String typeMember;
     private String status;
 
@@ -16,6 +17,14 @@ public class ProjectProfileDto {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getSystemName() {
+        return systemName;
+    }
+
+    public void setSystemName(String systemName) {
+        this.systemName = systemName;
     }
 
     public String getTypeMember() {

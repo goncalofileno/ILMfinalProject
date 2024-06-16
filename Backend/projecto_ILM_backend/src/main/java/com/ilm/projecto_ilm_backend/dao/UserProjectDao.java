@@ -139,11 +139,12 @@ public class UserProjectDao extends AbstractDao<UserProjectEntity>{
                 .getSingleResult() > 0;
     }
 
-    public  UserProjectEntity findByUserIdAndProjectId(int userId, int projectId) {
+    public  UserProjectEntity findByUserIdAndProjectIdAndType(int userId, int projectId, UserInProjectTypeENUM type) {
         try {
-            return em.createNamedQuery("UserProject.findByUserIdAndProjectId", UserProjectEntity.class)
+            return em.createNamedQuery("UserProject.findByUserIdAndProjectIdAndType", UserProjectEntity.class)
                     .setParameter("userId", userId)
                     .setParameter("projectId", projectId)
+                    .setParameter("type", type)
                     .getSingleResult();
         } catch (NoResultException e) {
             return null;

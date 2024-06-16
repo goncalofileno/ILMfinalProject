@@ -97,10 +97,9 @@
   max-height: 350px; /* Define a altura máxima para o card */
   overflow-y: auto; /* Adiciona rolagem vertical se o conteúdo exceder a altura máxima */
   width: 95%;
-}
-
-.card-body {
-  padding: 10px;
+  background-color: transparent;
+  box-shadow: none;
+  border: none;
 }
 
 /* Estilos adicionais para ajustar os layouts dos cards */
@@ -137,7 +136,6 @@
 .user-info-center {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   height: 100%;
 }
@@ -150,5 +148,72 @@
 .centered-message {
   text-align: center;
   margin-top: 10px;
-  color: #999; /* Ajuste conforme necessário */
+  font-size: 17px;
+  color: #656565; /* Ajuste conforme necessário */
 }
+
+#application-request-card {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  border: solid 1px rgb(30, 40, 82);
+  padding: 15px;
+  border-radius: 10px;
+  background-color: #f39d1286;
+  color: rgb(30, 40, 82);
+}
+
+#skill-interest-card {
+  display: flex;
+  flex-direction: column;
+  border: solid 1px rgb(30, 40, 82);
+  padding: 15px;
+  border-radius: 10px;
+  background-color: rgba(30, 40, 82, 0.293);
+  color: rgb(30, 40, 82);
+}
+
+#column-div-project{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.card-container::-webkit-scrollbar {
+  width: 7px;
+  height: 6px; /* Espessura da barra de rolagem */
+}
+
+.card-container::-webkit-scrollbar-track {
+  background: var(--tertiary-color); /* Cor do trilho da barra de rolagem */
+  border-radius: 8px;
+}
+
+.card-container::-webkit-scrollbar-thumb {
+  background: #888; /* Cor da barra de rolagem */
+  border-radius: 8px; /*Arredonda os cantos*/
+}
+
+.card-container::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Cor da barra de rolagem ao passar o mouse */
+}
+
+#container-cards{
+  height: 100%;
+}
+
+#profile-alert {
+  position: absolute;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1050; /* Para garantir que o alerta fique sobre todos os elementos */
+}
+
+.alert-center {
+  width: 50%; /* Largura desejada para o alerta */
+  margin: 0 auto;
+}
+

@@ -14,6 +14,11 @@ import java.util.List;
  */
 @Entity
 @Table(name = "task")
+@NamedQueries({
+        @NamedQuery(name = "Task.findById", query = "SELECT t FROM TaskEntity t WHERE t.id = :id"),
+        @NamedQuery(name = "Task.findAll", query = "SELECT t FROM TaskEntity t"),
+        @NamedQuery(name = "Task.findByProject", query = "SELECT t FROM TaskEntity t WHERE t.project.id = :id")
+})
 public class TaskEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -60,7 +65,7 @@ public class TaskEntity implements Serializable {
     /**
      * The out collaboration of the task.
      */
-    @Column(name = "outColaboration", nullable = false, unique = false, updatable = true)
+    @Column(name = "outColaboration", nullable = true, unique = false, updatable = true)
     private String outColaboration;
 
     /**
