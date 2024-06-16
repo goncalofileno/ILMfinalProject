@@ -7,7 +7,6 @@ import {
   ListGroup,
   InputGroup,
   Container,
-  Alert,
   Modal,
 } from "react-bootstrap";
 import { getSkills } from "../../utilities/services";
@@ -32,6 +31,7 @@ const SkillSelector = ({ selectedSkills, setSelectedSkills }) => {
         return response.json();
       })
       .then((data) => {
+        console.log(data);
         setAllSkills(data);
       });
   }, [token]);
@@ -145,18 +145,20 @@ const SkillSelector = ({ selectedSkills, setSelectedSkills }) => {
             Add
           </Button>
         </InputGroup>
-        <ListGroup className="suggestions-list">
-          {suggestions.map((suggestion, index) => (
-            <ListGroup.Item
-              key={suggestion.id}
-              action
-              onClick={() => handleAddSkill(suggestion)}
-              active={index === selectedSuggestionIndex}
-            >
-              {suggestion.name}
-            </ListGroup.Item>
-          ))}
-        </ListGroup>
+        {suggestions.length > 0 && (
+          <ListGroup className={`suggestions-list ${suggestions.length > 0 ? 'show' : ''}`}>
+            {suggestions.map((suggestion, index) => (
+              <ListGroup.Item
+                key={suggestion.id}
+                action
+                onClick={() => handleAddSkill(suggestion)}
+                active={index === selectedSuggestionIndex}
+              >
+                {suggestion.name}
+              </ListGroup.Item>
+            ))}
+          </ListGroup>
+        )}
       </Form.Group>
       <div className="fixed-container">
         <Row>

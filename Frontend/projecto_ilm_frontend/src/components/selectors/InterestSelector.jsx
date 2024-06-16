@@ -25,6 +25,7 @@ const InterestSelector = ({ selectedInterests, setSelectedInterests }) => {
     getInterests(token)
       .then((response) => response.json())
       .then((data) => {
+        console.log(data);
         setAllInterests(data);
       });
   }, [token]);
@@ -136,18 +137,20 @@ const InterestSelector = ({ selectedInterests, setSelectedInterests }) => {
             Add
           </Button>
         </InputGroup>
-        <ListGroup className="suggestions-list">
-          {suggestions.map((suggestion, index) => (
-            <ListGroup.Item
-              key={suggestion.id}
-              action
-              onClick={() => handleAddInterest(suggestion)}
-              active={index === selectedSuggestionIndex}
-            >
-              {suggestion.name}
-            </ListGroup.Item>
-          ))}
-        </ListGroup>
+        {suggestions.length > 0 && (
+          <ListGroup className={`suggestions-list ${suggestions.length > 0 ? 'show' : ''}`}>
+            {suggestions.map((suggestion, index) => (
+              <ListGroup.Item
+                key={suggestion.id}
+                action
+                onClick={() => handleAddInterest(suggestion)}
+                active={index === selectedSuggestionIndex}
+              >
+                {suggestion.name}
+              </ListGroup.Item>
+            ))}
+          </ListGroup>
+        )}
       </Form.Group>
       <div className="fixed-container">
         <Row>

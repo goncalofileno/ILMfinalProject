@@ -75,6 +75,9 @@ public class ProjectEntity implements Serializable {
     @Column(name = "description", nullable = false, unique = false, updatable = true)
     private String description;
 
+    @Column(name = "createdAt", nullable = false, unique = false, updatable = false)
+    private LocalDateTime createdAt;
+
     /**
      * The start date of the project.
      */
@@ -84,7 +87,7 @@ public class ProjectEntity implements Serializable {
     /**
      * The end initial date of the project.
      */
-    @Column(name = "initialDate", nullable = false, unique = false, updatable = true)
+    @Column(name = "inProgressDate", nullable = true, unique = false, updatable = true)
     private LocalDateTime initialDate;
 
     /**
@@ -92,6 +95,9 @@ public class ProjectEntity implements Serializable {
      */
     @Column(name = "endDate", nullable = false, unique = false, updatable = true)
     private LocalDateTime endDate;
+
+    @Column(name = "finishedDate", nullable = true, unique = false, updatable = true)
+    private LocalDateTime finishedDate;
 
     /**
      * The status of the project. This is an enumerated type.
@@ -479,5 +485,21 @@ public class ProjectEntity implements Serializable {
      */
     public void setSkillInProject(List<SkillEntity> skillInProject) {
         this.skillInProject = skillInProject;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getFinishedDate() {
+        return finishedDate;
+    }
+
+    public void setFinishedDate(LocalDateTime finishedDate) {
+        this.finishedDate = finishedDate;
     }
 }

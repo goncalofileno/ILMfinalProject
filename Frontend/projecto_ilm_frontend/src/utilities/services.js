@@ -663,10 +663,10 @@ async function searchSentMails(sessionId, query, page, pageSize) {
   }
 }
 
-async function getUserProjects(sessionId) {
+async function getUserProjects(sessionId, inviteeUsername) {
   try {
     const response = await fetch(
-      `${baseURL}project/userOwnerProjectsToInvite`,
+      `${baseURL}project/userOwnerProjectsToInvite?inviteeUsername=${inviteeUsername}`,
       {
         method: "GET",
         headers: {
@@ -678,16 +678,22 @@ async function getUserProjects(sessionId) {
     );
 
     if (response.ok) {
-      return await response.json();
+      const data = await response.json();
+      if (data.message) {
+        return { success: false, message: data.message };
+      } else {
+        return { success: true, data };
+      }
     } else {
-      console.error("Failed to fetch user projects:", response.statusText);
-      return [];
+      const errorMessage = await response.json();
+      return { success: false, message: errorMessage.message };
     }
   } catch (error) {
     console.error("Error fetching user projects:", error);
-    return [];
+    return { success: false, message: "An error occurred. Please try again." };
   }
 }
+
 
 async function inviteUserToProject(sessionId, projectName, systemUsername) {
   try {
@@ -841,7 +847,8 @@ async function respondToInvite(sessionId, projectName, response) {
     });
 
     if (!fetchResponse.ok) {
-      throw new Error("Failed to respond to invite");
+      const errorMessage = await fetchResponse.json();
+      throw new Error(errorMessage.message);
     }
 
     return await fetchResponse.json();
@@ -850,6 +857,7 @@ async function respondToInvite(sessionId, projectName, response) {
     return { error: error.message };
   }
 }
+
 
 
 

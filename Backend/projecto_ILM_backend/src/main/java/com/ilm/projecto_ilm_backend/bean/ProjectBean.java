@@ -1,32 +1,32 @@
 package com.ilm.projecto_ilm_backend.bean;
 
-import com.ilm.projecto_ilm_backend.ENUMS.StateProjectENUM;
-import com.ilm.projecto_ilm_backend.ENUMS.UserInProjectTypeENUM;
-import com.ilm.projecto_ilm_backend.ENUMS.WorkLocalENUM;
+import com.ilm.projecto_ilm_backend.ENUMS.*;
 import com.ilm.projecto_ilm_backend.dao.*;
 import com.ilm.projecto_ilm_backend.dto.mail.MailDto;
 import com.ilm.projecto_ilm_backend.dto.project.HomeProjectDto;
 import com.ilm.projecto_ilm_backend.dto.project.ProjectProfileDto;
 import com.ilm.projecto_ilm_backend.dto.project.ProjectTableDto;
-
 import com.ilm.projecto_ilm_backend.dto.project.ProjectTableInfoDto;
 import com.ilm.projecto_ilm_backend.entity.*;
-import jakarta.enterprise.context.ApplicationScoped;
+import com.ilm.projecto_ilm_backend.security.exceptions.NoProjectsForInviteeException;
+import com.ilm.projecto_ilm_backend.security.exceptions.NoProjectsToInviteException;
+import jakarta.ejb.Singleton;
+import jakarta.ejb.Startup;
 import jakarta.inject.Inject;
-
+import jakarta.transaction.Transactional;
 
 import java.text.Normalizer;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
+import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-@ApplicationScoped
+@Singleton
+@Startup
 public class ProjectBean {
 
     @Inject
@@ -42,6 +42,12 @@ public class ProjectBean {
     private SkillDao skillDao;
 
     @Inject
+    private TaskDao taskDao;
+
+    @Inject
+    private UserTaskDao userTaskDao;
+
+    @Inject
     private UserProjectDao userProjectDao;
 
     @Inject
@@ -49,23 +55,25 @@ public class ProjectBean {
 
     @Inject
     SessionDao sessionDao;
+
     @Inject
     MailBean mailBean;
 
-    private int numberOfProjectsToCreate=20;
+    @Inject
+    UserBean userBean;
 
     private static final int NUMBER_OF_PROJECTS_PER_PAGE=8;
+    private int numberOfProjectsToCreate = 20;
 
+    @Transactional
     public void createDefaultProjectsIfNotExistent() {
-
         if (projectDao.countProjects() < numberOfProjectsToCreate) {
             for (int i = 0; i < numberOfProjectsToCreate; i++) {
-
                 ProjectEntity project = new ProjectEntity();
-
                 project.setName("project name" + i);
                 project.setSystemName(projectSystemNameGenerator(project.getName()));
                 project.setDescription("This project aims to develop an innovative software solution for managing large-scale data in real-time. The system will leverage cutting-edge technologies to handle vast amounts of information efficiently.");
+                project.setCreatedAt(LocalDateTime.now());
                 project.setStartDate(LocalDateTime.now().minus(1, ChronoUnit.YEARS));
                 project.setInitialDate(LocalDateTime.now().minus(1, ChronoUnit.YEARS));
                 project.setEndDate(LocalDateTime.now().plus(1, ChronoUnit.YEARS));
@@ -87,7 +95,110 @@ public class ProjectBean {
                 projectDao.merge(project);
             }
         }
+
+        if (projectDao.findById(21) == null) {
+            ProjectEntity project = new ProjectEntity();
+            project.setName("project name" + 21);
+            project.setSystemName(projectSystemNameGenerator(project.getName()));
+            project.setDescription("This project aims to develop an innovative software solution for managing large-scale data in real-time. The system will leverage cutting-edge technologies to handle vast amounts of information efficiently.");
+            project.setStartDate(LocalDateTime.now().minus(1, ChronoUnit.YEARS));
+            project.setCreatedAt(LocalDateTime.now());
+            project.setInitialDate(LocalDateTime.now().minus(1, ChronoUnit.YEARS));
+            project.setEndDate(LocalDateTime.now().plus(1, ChronoUnit.YEARS));
+            project.setStatus(StateProjectENUM.IN_PROGRESS);
+            project.setMotivation("This project aims to develop an innovative software solution for managing large-scale data in real-time. The system will leverage cutting-edge technologies to handle vast amounts of information efficiently.");
+            project.setMaxMembers(15);
+            LabEntity lab = labDao.findbyLocal(WorkLocalENUM.COIMBRA);
+            project.setLab(lab);
+            project.setKeywords("Keyword1, Keyword2, Keyword3, Keyword4, Keyword5, Keyword6");
+
+            List<SkillEntity> skillEntities = new ArrayList<>();
+            SkillEntity skill1 = skillDao.findById(1);
+            skillEntities.add(skill1);
+            SkillEntity skill2 = skillDao.findById(2);
+            skillEntities.add(skill2);
+            project.setSkillInProject(skillEntities);
+
+            projectDao.merge(project);
+        }
     }
+
+    @Transactional
+    public void createDefaultTasksIfNotExistent() {
+        for(int i = 1; i < numberOfProjectsToCreate + 1; i++) {
+
+            TaskEntity task1 = new TaskEntity();
+            task1.setTitle("Task 1");
+            task1.setDescription("This task aims to develop the front-end of the system.");
+            task1.setInitialDate(LocalDateTime.now().minus(4, ChronoUnit.YEARS));
+            task1.setFinalDate(LocalDateTime.now().plus(3, ChronoUnit.YEARS));
+            task1.setStatus(TaskStatusENUM.PLANNED);
+            task1.setProject(projectDao.findById(i));
+            taskDao.persist(task1);
+
+            UserTaskEntity userTask1 = new UserTaskEntity();
+            userTask1.setTask(task1);
+            userTask1.setUser(userDao.findById(1));
+            userTask1.setType(UserInTaskTypeENUM.CREATOR);
+            userTaskDao.persist(userTask1);
+
+            UserTaskEntity userTask2 = new UserTaskEntity();
+            userTask2.setTask(task1);
+            userTask2.setUser(userDao.findById(2));
+            userTask2.setType(UserInTaskTypeENUM.MEMBER);
+            userTaskDao.persist(userTask2);
+
+            TaskEntity task2 = new TaskEntity();
+            task2.setTitle("Task 2");
+            task2.setDescription("This task aims to develop the back-end of the system.");
+            task2.setInitialDate(LocalDateTime.now().minus(3, ChronoUnit.YEARS));
+            task2.setFinalDate(LocalDateTime.now().plus(2, ChronoUnit.YEARS));
+            task2.setStatus(TaskStatusENUM.IN_PROGRESS);
+            task2.setProject(projectDao.findById(i));
+            List<TaskEntity> tasks = new ArrayList<>();
+            tasks.add(task1);
+            task2.setDependentTasks(tasks);
+            taskDao.persist(task2);
+
+            UserTaskEntity userTask3 = new UserTaskEntity();
+            userTask3.setTask(task2);
+            userTask3.setUser(userDao.findById(1));
+            userTask3.setType(UserInTaskTypeENUM.CREATOR);
+            userTaskDao.persist(userTask3);
+
+            UserTaskEntity userTask4 = new UserTaskEntity();
+            userTask4.setTask(task2);
+            userTask4.setUser(userDao.findById(2));
+            userTask4.setType(UserInTaskTypeENUM.MEMBER);
+            userTaskDao.persist(userTask4);
+
+            TaskEntity task3 = new TaskEntity();
+            task3.setTitle("Task 3");
+            task3.setDescription("This task aims to develop the database of the system.");
+            task3.setInitialDate(LocalDateTime.now().minus(2, ChronoUnit.YEARS));
+            task3.setFinalDate(LocalDateTime.now().plus(1, ChronoUnit.YEARS));
+            task3.setStatus(TaskStatusENUM.DONE);
+            task3.setProject(projectDao.findById(i));
+            List<TaskEntity> tasks2 = new ArrayList<>();
+            tasks2.add(task1);
+            tasks2.add(task2);
+            task3.setDependentTasks(tasks2);
+            taskDao.persist(task3);
+
+            UserTaskEntity userTask5 = new UserTaskEntity();
+            userTask5.setTask(task3);
+            userTask5.setUser(userDao.findById(1));
+            userTask5.setType(UserInTaskTypeENUM.CREATOR);
+            userTaskDao.persist(userTask5);
+
+            UserTaskEntity userTask6 = new UserTaskEntity();
+            userTask6.setTask(task3);
+            userTask6.setUser(userDao.findById(2));
+            userTask6.setType(UserInTaskTypeENUM.MEMBER);
+            userTaskDao.persist(userTask6);
+        }
+    }
+
 
     private String projectSystemNameGenerator(String originalName) {
         // Convert to lower case
@@ -108,7 +219,7 @@ public class ProjectBean {
     }
 
     public void createDefaultUsersInProjectIfNotExistent() {
-        if(userProjectDao.countUserProjects()<20) {
+        if (userProjectDao.countUserProjects() < 20) {
 
             for (int i = 1; i < numberOfProjectsToCreate + 1; i++) {
 
@@ -130,6 +241,17 @@ public class ProjectBean {
 
             }
         }
+
+        if (userProjectDao.findById(21) != null) {
+            ProjectEntity project = projectDao.findById(21);
+
+            UserProjectEntity userProjectEntity = new UserProjectEntity();
+
+            userProjectEntity.setProject(project);
+            userProjectEntity.setUser(userDao.findById(1));
+            userProjectEntity.setType(UserInProjectTypeENUM.CREATOR);
+            userProjectDao.merge(userProjectEntity);
+        }
     }
 
     public ArrayList<HomeProjectDto> getProjectsDtosHome() {
@@ -137,24 +259,24 @@ public class ProjectBean {
     }
 
     public ProjectTableInfoDto getProjectTableInfo(String sessionId, int page, String labName, String status, boolean slotsAvailable, String nameAsc,
-                                                   String statusAsc,String labAsc,String startDateAsc,String endDateAsc, String keyword) {
+                                                   String statusAsc, String labAsc, String startDateAsc, String endDateAsc, String keyword) {
 
         LabEntity lab;
         StateProjectENUM state;
-        List<Object[]>  projectsInfo;
-        if(labName == null || labName.equals("")) lab=null;
-        else lab=labDao.findbyLocal(WorkLocalENUM.valueOf(labName));
-        if(status.equals("")) state=null;
-        else state=StateProjectENUM.valueOf(status);
-        if( keyword.equals("")) keyword=null;
+        List<Object[]> projectsInfo;
+        if (labName == null || labName.equals("")) lab = null;
+        else lab = labDao.findbyLocal(WorkLocalENUM.valueOf(labName));
+        if (status.equals("")) state = null;
+        else state = StateProjectENUM.valueOf(status);
+        if (keyword.equals("")) keyword = null;
 
-        if(lab==null && (status==null || status.equals("")) && !slotsAvailable && (nameAsc==null || nameAsc.equals("")) && (statusAsc==null || statusAsc.equals("")) && (labAsc==null || labAsc.equals("")) && (startDateAsc==null || startDateAsc.equals("")) && (endDateAsc==null || endDateAsc.equals("")) && (keyword==null || keyword.equals(""))){
-            int userId=sessionDao.findUserIdBySessionId(sessionId);
-            projectsInfo=projectDao.findAllProjectsOrderedByUser(page, NUMBER_OF_PROJECTS_PER_PAGE,userId);
-       }else {
-             projectsInfo = projectDao.getProjectTableDtoInfo(page,NUMBER_OF_PROJECTS_PER_PAGE,lab, state, slotsAvailable,nameAsc,
-                    statusAsc, labAsc,startDateAsc, endDateAsc, keyword);
-       }
+        if (lab == null && (status == null || status.equals("")) && !slotsAvailable && (nameAsc == null || nameAsc.equals("")) && (statusAsc == null || statusAsc.equals("")) && (labAsc == null || labAsc.equals("")) && (startDateAsc == null || startDateAsc.equals("")) && (endDateAsc == null || endDateAsc.equals("")) && (keyword == null || keyword.equals(""))) {
+            int userId = sessionDao.findUserIdBySessionId(sessionId);
+            projectsInfo = projectDao.findAllProjectsOrderedByUser(page, NUMBER_OF_PROJECTS_PER_PAGE, userId);
+        } else {
+            projectsInfo = projectDao.getProjectTableDtoInfo(page, NUMBER_OF_PROJECTS_PER_PAGE, lab, state, slotsAvailable, nameAsc,
+                    statusAsc, labAsc, startDateAsc, endDateAsc, keyword);
+        }
 
         ArrayList<ProjectTableDto> projectsTableDtos = new ArrayList<>();
 
@@ -173,11 +295,11 @@ public class ProjectBean {
 
         }
 
-        ProjectTableInfoDto projectTableInfoDto=new ProjectTableInfoDto();
+        ProjectTableInfoDto projectTableInfoDto = new ProjectTableInfoDto();
 
         projectTableInfoDto.setTableProjects(projectsTableDtos);
-        System.out.println("number of projects: "+projectDao.getNumberOfProjectsTableDtoInfo(lab,state, slotsAvailable,keyword));
-        projectTableInfoDto.setMaxPageNumber(calculateMaximumPageTableProjects( projectDao.getNumberOfProjectsTableDtoInfo(lab,state, slotsAvailable,keyword)));
+        System.out.println("number of projects: " + projectDao.getNumberOfProjectsTableDtoInfo(lab, state, slotsAvailable, keyword));
+        projectTableInfoDto.setMaxPageNumber(calculateMaximumPageTableProjects(projectDao.getNumberOfProjectsTableDtoInfo(lab, state, slotsAvailable, keyword)));
 
         return projectTableInfoDto;
     }
@@ -195,14 +317,40 @@ public class ProjectBean {
     }
 
 
-    public int calculateMaximumPageTableProjects(int numberOfProjects){
-        return (int) Math.ceil((double) numberOfProjects/NUMBER_OF_PROJECTS_PER_PAGE);
+    public int calculateMaximumPageTableProjects(int numberOfProjects) {
+        return (int) Math.ceil((double) numberOfProjects / NUMBER_OF_PROJECTS_PER_PAGE);
     }
 
-    public List<ProjectProfileDto> getProjectsByUserRoleToInvite(int userId, UserInProjectTypeENUM... roles) {
-        List<UserProjectEntity> userProjects = userProjectDao.findByUserId(userId);
-        return userProjects.stream()
-                .filter(up -> List.of(roles).contains(up.getType()) &&
+    public List<ProjectProfileDto> getProjectsToInvite(int userId, String inviteeUsername) {
+        UserEntity invitee = userBean.getUserBySystemUsername(inviteeUsername);
+
+        if (invitee == null) {
+            throw new IllegalArgumentException("User to invite not found");
+        }
+
+        List<UserProjectEntity> userProjects = userProjectDao.findByUserId(userId).stream()
+                .filter(up -> List.of(UserInProjectTypeENUM.CREATOR, UserInProjectTypeENUM.MANAGER).contains(up.getType()))
+                .collect(Collectors.toList());
+
+        if (userProjects.isEmpty()) {
+            throw new NoProjectsToInviteException("You don't have any projects to invite the user to.");
+        }
+
+        List<UserProjectEntity> inviteeProjects = userProjectDao.findByUserId(invitee.getId());
+        Set<Integer> inviteeProjectIds = inviteeProjects.stream()
+                .filter(up -> List.of(
+                        UserInProjectTypeENUM.CREATOR,
+                        UserInProjectTypeENUM.MANAGER,
+                        UserInProjectTypeENUM.MEMBER,
+                        UserInProjectTypeENUM.MEMBER_BY_INVITATION,
+                        UserInProjectTypeENUM.MEMBER_BY_APPLIANCE,
+                        UserInProjectTypeENUM.PENDING_BY_APPLIANCE,
+                        UserInProjectTypeENUM.PENDING_BY_INVITATION).contains(up.getType()))
+                .map(up -> up.getProject().getId())
+                .collect(Collectors.toSet());
+
+        List<ProjectProfileDto> projects = userProjects.stream()
+                .filter(up -> !inviteeProjectIds.contains(up.getProject().getId()) &&
                         up.getProject().getStatus() != StateProjectENUM.CANCELED &&
                         up.getProject().getStatus() != StateProjectENUM.FINISHED)
                 .map(up -> {
@@ -213,7 +361,14 @@ public class ProjectBean {
                     return dto;
                 })
                 .collect(Collectors.toList());
+
+        if (projects.isEmpty()) {
+            throw new NoProjectsForInviteeException("The user you want to invite has no projects to be invited to.");
+        }
+
+        return projects;
     }
+
 
     public boolean isUserCreatorOrManager(int userId, String projectName) {
         ProjectEntity project = projectDao.findByName(projectName);
@@ -238,12 +393,12 @@ public class ProjectBean {
 
         // Send invitation email
         String subject = "Invite to Project " + project.getName();
-        String text = "<p>User " + "<strong>" + sender.getFirstName() + " " + sender.getLastName() +"</strong>" + " has invited you to join the project <strong>" + project.getName() + "</strong>.</p>" +
+        String text = "<p>User " + "<strong>" + sender.getFirstName() + " " + sender.getLastName() + "</strong>" + " has invited you to join the project <strong>" + project.getName() + "</strong>.</p>" +
                 "<p>Click the button below to accept the invitation:</p>" +
                 "<a href=\"http://localhost:3000/project/" + project.getId() + "\" style=\"display:inline-block; padding:10px 20px; font-size:16px; color:#fff; background-color:#f39c12; text-align:center; text-decoration:none; border-radius:5px;\">Accept Invitation</a>" +
                 "<p>If the button does not work, you can also copy and paste the following link into your browser:</p>" +
                 "<p>http://localhost:3000/project/" + project.getId() + "</p>" +
-                "<p></p>" + 
+                "<p></p>" +
                 "<p>Best regards,<br>ILM Management Team</p>";
         MailDto mailDto = new MailDto(subject, text, (sender.getFirstName() + " " + sender.getLastName()), sender.getEmail(), userToInvite.getFirstName() + " " + userToInvite.getLastName(), userToInvite.getEmail());
 
@@ -256,7 +411,7 @@ public class ProjectBean {
 
     public String acceptInvite(int userId, String projectName) {
         ProjectEntity project = projectDao.findByName(projectName);
-        UserProjectEntity userProject = userProjectDao.findByUserIdAndProjectId(userId, project.getId());
+        UserProjectEntity userProject = userProjectDao.findByUserIdAndProjectIdAndType(userId, project.getId(), UserInProjectTypeENUM.PENDING_BY_INVITATION);
         userProject.setType(UserInProjectTypeENUM.MEMBER_BY_INVITATION);
         userProjectDao.merge(userProject);
         return "Invite accepted successfully";
@@ -264,11 +419,10 @@ public class ProjectBean {
 
     public String rejectInvite(int userId, String projectName) {
         ProjectEntity project = projectDao.findByName(projectName);
-        UserProjectEntity userProject = userProjectDao.findByUserIdAndProjectId(userId, project.getId());
+        UserProjectEntity userProject = userProjectDao.findByUserIdAndProjectIdAndType(userId, project.getId(), UserInProjectTypeENUM.PENDING_BY_INVITATION);
         userProjectDao.remove(userProject);
         return "Invite rejected successfully";
     }
-
 
 
 }

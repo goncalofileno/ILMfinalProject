@@ -21,6 +21,7 @@ import java.io.Serializable;
         @NamedQuery(name = "UserProject.countUserProjects", query = "SELECT COUNT(up) FROM UserProjectEntity up"),
         @NamedQuery(name = "UserProject.isUserAlreadyInvited", query = "SELECT COUNT(up) FROM UserProjectEntity up WHERE up.user.id = :userId AND up.project.id = :projectId AND up.type = :invited"),
         @NamedQuery(name = "UserProject.findByUserIdAndProjectId", query = "SELECT up FROM UserProjectEntity up WHERE up.user.id = :userId AND up.project.id = :projectId"),
+        @NamedQuery(name = "UserProject.findByUserIdAndProjectIdAndType", query = "SELECT up FROM UserProjectEntity up WHERE up.user.id = :userId AND up.project.id = :projectId AND up.type = :type")
 })
 public class UserProjectEntity implements Serializable {
 
