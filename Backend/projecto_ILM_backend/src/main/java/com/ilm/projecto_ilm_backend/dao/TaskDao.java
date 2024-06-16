@@ -6,6 +6,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 
+import java.util.List;
+
 @Stateless
 public class TaskDao extends AbstractDao<TaskEntity> {
 
@@ -33,6 +35,15 @@ public class TaskDao extends AbstractDao<TaskEntity> {
         try {
             return em.createNamedQuery("Task.findById", TaskEntity.class).setParameter("id", id)
                     .getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public List<TaskEntity> findByProject(int id) {
+        try {
+            return em.createNamedQuery("Task.findByProject", TaskEntity.class).setParameter("id", id)
+                    .getResultList();
         } catch (Exception e) {
             return null;
         }

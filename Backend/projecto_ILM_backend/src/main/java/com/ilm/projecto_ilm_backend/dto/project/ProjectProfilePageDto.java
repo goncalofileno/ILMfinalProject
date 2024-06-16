@@ -3,33 +3,44 @@ package com.ilm.projecto_ilm_backend.dto.project;
 import com.ilm.projecto_ilm_backend.ENUMS.StateProjectENUM;
 import com.ilm.projecto_ilm_backend.dto.skill.SkillDto;
 
-import java.util.ArrayList;
+import java.time.LocalDateTime;
+import java.util.List;
 
 public class ProjectProfilePageDto {
 
     private String title;
     private StateProjectENUM state;
     private String description;
-    private String startDate;
-    private String endDate;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
+    private String photo;
+    private String lab;
     private ProjectMemberDto creator;
-    private ArrayList<ProjectMemberDto> members;
-    private ArrayList<String> keywords;
-    private ArrayList<SkillDto> skills;
-    private ArrayList<StateProjectENUM> statesToChange;
+    private List<ProjectMemberDto> members;
+    private List<String> keywords;
+    private List<SkillDto> skills;
+    private List<StateProjectENUM> statesToChange;
     private int progress;
-
-    public ProjectProfilePageDto(String title, StateProjectENUM state, String description, String startDate, String endDate, ProjectMemberDto creator, ArrayList<ProjectMemberDto> members, ArrayList<String> keywords, ArrayList<SkillDto> skills, ArrayList<StateProjectENUM> statesToChange) {
+    private int maxMembers;
+    
+    public ProjectProfilePageDto(String title, StateProjectENUM state, String description, LocalDateTime startDate, LocalDateTime endDate, String photo, String lab, ProjectMemberDto creator, List<ProjectMemberDto> members, List<String> keywords, List<SkillDto> skills, List<StateProjectENUM> statesToChange, int progress, int maxMembers) {
         this.title = title;
         this.state = state;
         this.description = description;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.photo = photo;
+        this.lab = lab;
         this.creator = creator;
         this.members = members;
         this.keywords = keywords;
         this.skills = skills;
         this.statesToChange = statesToChange;
+        this.progress = progress;
+        this.maxMembers = maxMembers;
+    }
+
+    public ProjectProfilePageDto() {
     }
 
     public String getTitle() {
@@ -56,20 +67,36 @@ public class ProjectProfilePageDto {
         this.description = description;
     }
 
-    public String getStartDate() {
+    public LocalDateTime getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(String startDate) {
+    public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
     }
 
-    public String getEndDate() {
+    public LocalDateTime getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(String endDate) {
+    public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
+    }
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
+
+    public String getLab() {
+        return lab;
+    }
+
+    public void setLab(String lab) {
+        this.lab = lab;
     }
 
     public ProjectMemberDto getCreator() {
@@ -80,35 +107,51 @@ public class ProjectProfilePageDto {
         this.creator = creator;
     }
 
-    public ArrayList<ProjectMemberDto> getMembers() {
+    public List<ProjectMemberDto> getMembers() {
         return members;
     }
 
-    public void setMembers(ArrayList<ProjectMemberDto> members) {
+    public void setMembers(List<ProjectMemberDto> members) {
         this.members = members;
     }
 
-    public ArrayList<String> getKeywords() {
+    public List<String> getKeywords() {
         return keywords;
     }
 
-    public void setKeywords(ArrayList<String> keywords) {
+    public void setKeywords(List<String> keywords) {
         this.keywords = keywords;
     }
 
-    public ArrayList<SkillDto> getSkills() {
+    public List<SkillDto> getSkills() {
         return skills;
     }
 
-    public void setSkills(ArrayList<SkillDto> skills) {
+    public void setSkills(List<SkillDto> skills) {
         this.skills = skills;
     }
 
-    public ArrayList<StateProjectENUM> getStatesToChange() {
+    public List<StateProjectENUM> getStatesToChange() {
         return statesToChange;
     }
 
-    public void setStatesToChange(ArrayList<StateProjectENUM> statesToChange) {
+    public void setStatesToChange(List<StateProjectENUM> statesToChange) {
         this.statesToChange = statesToChange;
+    }
+
+    public int getProgress() {
+        return progress;
+    }
+
+    public void setProgress(int progress) {
+        this.progress = progress;
+    }
+
+    public int getMaxMembers() {
+        return maxMembers;
+    }
+
+    public void setMaxMembers(int maxMembers) {
+        this.maxMembers = maxMembers;
     }
 }

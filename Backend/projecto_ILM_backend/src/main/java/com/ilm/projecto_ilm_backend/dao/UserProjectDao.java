@@ -1,6 +1,7 @@
 package com.ilm.projecto_ilm_backend.dao;
 
 import com.ilm.projecto_ilm_backend.ENUMS.UserInProjectTypeENUM;
+import com.ilm.projecto_ilm_backend.entity.UserEntity;
 import com.ilm.projecto_ilm_backend.entity.UserProjectEntity;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
@@ -145,6 +146,36 @@ public class UserProjectDao extends AbstractDao<UserProjectEntity>{
                     .setParameter("userId", userId)
                     .setParameter("projectId", projectId)
                     .setParameter("type", type)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
+    //retorna todos os membros do projecto pelo id do projecto, membros do projecto sao  CREATOR(0),
+    //
+    //    MANAGER(1),
+    //
+    //    MEMBER(2),
+    //
+    //    MEMBER_BY_INVITATION(3),
+    //
+    //    MEMBER_BY_APPLIANCE(4),
+
+    public List<UserProjectEntity> findMembersByProjectId(int projectId) {
+        try {
+            return em.createNamedQuery("UserProject.findMembersByProjectId", UserProjectEntity.class)
+                    .setParameter("projectId", projectId)
+                    .getResultList();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
+    public UserEntity findCreatorByProjectId(int projectId) {
+        try {
+            return em.createNamedQuery("UserProject.findCreatorByProjectId", UserEntity.class)
+                    .setParameter("projectId", projectId)
                     .getSingleResult();
         } catch (NoResultException e) {
             return null;

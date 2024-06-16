@@ -172,4 +172,14 @@ public class ProjectDao extends AbstractDao<ProjectEntity>{
                 .setParameter("systemName", systemName)
                 .getSingleResult();
     }
+
+    public ProjectEntity findBySystemName(String systemName) {
+        try {
+            return em.createQuery("SELECT p FROM ProjectEntity p WHERE p.systemName = :systemName", ProjectEntity.class)
+                    .setParameter("systemName", systemName)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
 }

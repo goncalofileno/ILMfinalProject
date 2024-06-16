@@ -5,6 +5,7 @@ import com.ilm.projecto_ilm_backend.ENUMS.UserInProjectTypeENUM;
 import com.ilm.projecto_ilm_backend.bean.ProjectBean;
 import com.ilm.projecto_ilm_backend.bean.UserBean;
 import com.ilm.projecto_ilm_backend.dto.project.ProjectProfileDto;
+import com.ilm.projecto_ilm_backend.dto.project.ProjectProfilePageDto;
 import com.ilm.projecto_ilm_backend.dto.project.ProjectTableInfoDto;
 import com.ilm.projecto_ilm_backend.dto.user.RegisterUserDto;
 import com.ilm.projecto_ilm_backend.entity.UserEntity;
@@ -198,6 +199,28 @@ public class ProjectService {
             }
         } else {
             return Response.status(Response.Status.UNAUTHORIZED).entity(Collections.singletonMap("message", "Unauthorized access")).build();
+        }
+    }
+
+    @GET
+    @Path("/projectInfoPage")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getProjectInfoPage(@CookieParam("session-id") String sessionId, @QueryParam("projectName") String systemProjectName) throws UnknownHostException {
+        String clientIP = InetAddress.getLocalHost().getHostAddress();
+        logger.info("Received a request to get project info page from IP address: " + clientIP);
+
+        if (databaseValidator.checkSessionId(sessionId)) {
+            try {
+                int userId = userBean.getUserBySessionId(sessionId).getId();
+                ProjectProfilePageDto projectProfilePageDto = projectBean.getProjectInfoPage(userId, systemProjectName);
+                return Response.ok(projectProfilePageDto).build();
+            } catch (Exception e) {
+                logger.error("An error occurred while getting project info page: " + e.getMessage() + " from IP address: " + clientIP);
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("An error occurred while getting project info page").build();
+            }
+        } else {
+            return Response.status(Response.Status.UNAUTHORIZED).entity("Unauthorized access").build();
         }
     }
 

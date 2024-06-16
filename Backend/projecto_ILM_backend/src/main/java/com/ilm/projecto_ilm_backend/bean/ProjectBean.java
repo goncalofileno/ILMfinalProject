@@ -3,10 +3,8 @@ package com.ilm.projecto_ilm_backend.bean;
 import com.ilm.projecto_ilm_backend.ENUMS.*;
 import com.ilm.projecto_ilm_backend.dao.*;
 import com.ilm.projecto_ilm_backend.dto.mail.MailDto;
-import com.ilm.projecto_ilm_backend.dto.project.HomeProjectDto;
-import com.ilm.projecto_ilm_backend.dto.project.ProjectProfileDto;
-import com.ilm.projecto_ilm_backend.dto.project.ProjectTableDto;
-import com.ilm.projecto_ilm_backend.dto.project.ProjectTableInfoDto;
+import com.ilm.projecto_ilm_backend.dto.project.*;
+import com.ilm.projecto_ilm_backend.dto.skill.SkillDto;
 import com.ilm.projecto_ilm_backend.entity.*;
 import com.ilm.projecto_ilm_backend.security.exceptions.NoProjectsForInviteeException;
 import com.ilm.projecto_ilm_backend.security.exceptions.NoProjectsToInviteException;
@@ -81,6 +79,7 @@ public class ProjectBean {
                 project.setPhoto("https://cdn.pixabay.com/photo/2016/03/29/08/48/project-1287781_1280.jpg");
                 project.setMotivation("This project aims to develop an innovative software solution for managing large-scale data in real-time. The system will leverage cutting-edge technologies to handle vast amounts of information efficiently.");
                 project.setMaxMembers(15);
+                project.setKeywords("Keyword1, Keyword2, Keyword3, Keyword4, Keyword5, Keyword6");
                 LabEntity lab = labDao.findbyLocal(WorkLocalENUM.COIMBRA);
                 project.setLab(lab);
                 project.setKeywords("Keyword1, Keyword2, Keyword3, Keyword4, Keyword5, Keyword6");
@@ -108,6 +107,7 @@ public class ProjectBean {
             project.setStatus(StateProjectENUM.IN_PROGRESS);
             project.setMotivation("This project aims to develop an innovative software solution for managing large-scale data in real-time. The system will leverage cutting-edge technologies to handle vast amounts of information efficiently.");
             project.setMaxMembers(15);
+            project.setKeywords("Keyword1, Keyword2, Keyword3, Keyword4, Keyword5, Keyword6");
             LabEntity lab = labDao.findbyLocal(WorkLocalENUM.COIMBRA);
             project.setLab(lab);
             project.setKeywords("Keyword1, Keyword2, Keyword3, Keyword4, Keyword5, Keyword6");
@@ -424,5 +424,94 @@ public class ProjectBean {
         return "Invite rejected successfully";
     }
 
+    public ProjectProfilePageDto getProjectInfoPage(int userId, String systemProjectName) {
+        ProjectEntity project = projectDao.findBySystemName(systemProjectName);
+        List<ProjectMemberDto> members = getProjectMembers(project.getId());
+        List<SkillDto> skills = getProjectSkills(project);
+        List<StateProjectENUM> statesToChange = getPossibleStatesToChange(userId, project);
+        int progress = getProgress(project.getId());
+
+        ProjectProfilePageDto projectProfilePageDto = new ProjectProfilePageDto();
+
+        UserEntity creator = userProjectDao.findCreatorByProjectId(project.getId());
+        ProjectMemberDto creatorDto = createProjectMemberDto(creator, UserInProjectTypeENUM.CREATOR);
+
+        projectProfilePageDto.setTitle(project.getName());
+        projectProfilePageDto.setState(project.getStatus());
+        projectProfilePageDto.setDescription(project.getDescription());
+        projectProfilePageDto.setStartDate(project.getStartDate());
+        projectProfilePageDto.setEndDate(project.getEndDate());
+        projectProfilePageDto.setPhoto(project.getPhoto());
+        projectProfilePageDto.setLab(project.getLab().getLocal().toString());
+        projectProfilePageDto.setMaxMembers(project.getMaxMembers());
+        projectProfilePageDto.setCreator(creatorDto);
+        projectProfilePageDto.setMembers(members);
+        projectProfilePageDto.setKeywords(List.of(project.getKeywords().split(", ")));
+        projectProfilePageDto.setSkills(skills);
+        projectProfilePageDto.setStatesToChange(statesToChange);
+        projectProfilePageDto.setProgress(progress);
+
+        return projectProfilePageDto;
+    }
+
+    private List<ProjectMemberDto> getProjectMembers(int projectId) {
+        List<UserProjectEntity> membersUserProjects = userProjectDao.findMembersByProjectId(projectId);
+        return membersUserProjects.stream().map(userProject -> {
+            UserEntity user = userProject.getUser();
+            return createProjectMemberDto(user, userProject.getType());
+        }).collect(Collectors.toList());
+    }
+
+    private ProjectMemberDto createProjectMemberDto(UserEntity user, UserInProjectTypeENUM type) {
+        ProjectMemberDto member = new ProjectMemberDto();
+        member.setName(user.getFirstName() + " " + user.getLastName());
+        member.setSystemUsername(user.getSystemUsername());
+        member.setType(type);
+        return member;
+    }
+
+    private List<SkillDto> getProjectSkills(ProjectEntity project) {
+        return project.getSkillInProject().stream().map(skill -> {
+            SkillDto skillDto = new SkillDto();
+            skillDto.setName(skill.getName());
+            skillDto.setType(skill.getType().toString());
+            return skillDto;
+        }).collect(Collectors.toList());
+    }
+
+    private List<StateProjectENUM> getPossibleStatesToChange(int userId, ProjectEntity project) {
+        if (userProjectDao.isUserCreatorOrManager(userId, project.getId())) {
+            if (project.getStatus() == StateProjectENUM.PLANNING || project.getStatus() == StateProjectENUM.READY) {
+                return List.of(StateProjectENUM.PLANNING, StateProjectENUM.READY);
+            } else {
+                return List.of(StateProjectENUM.APPROVED, StateProjectENUM.IN_PROGRESS, StateProjectENUM.CANCELED, StateProjectENUM.FINISHED);
+            }
+        }
+        return new ArrayList<>();
+    }
+
+    public int getProgress(int projectId) {
+        ProjectEntity project = projectDao.findById(projectId);
+        switch (project.getStatus()) {
+            case PLANNING:
+                return 10;
+            case READY:
+                return 20;
+            case FINISHED:
+                return 100;
+            case CANCELED:
+                return 0;
+            default:
+                List<TaskEntity> tasks = taskDao.findByProject(projectId);
+                long doneTasks = tasks.stream()
+                        .filter(task -> task.getStatus() == TaskStatusENUM.DONE)
+                        .count();
+                if (tasks.isEmpty()) {
+                    return 20; // Sem tarefas, retorno 20%
+                }
+                double progress = 20 + (70.0 * doneTasks / tasks.size()); // Progresso entre 20% e 90%
+                return (int) Math.round(progress);
+        }
+    }
 
 }

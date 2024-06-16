@@ -13,6 +13,9 @@ public class ProjectMemberDto {
         this.type = type;
     }
 
+    public ProjectMemberDto() {
+    }
+
     public String getName() {
         return name;
     }
