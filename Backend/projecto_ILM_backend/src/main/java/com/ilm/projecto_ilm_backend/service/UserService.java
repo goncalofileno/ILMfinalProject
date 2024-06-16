@@ -5,7 +5,7 @@ import com.ilm.projecto_ilm_backend.dao.SessionDao;
 import com.ilm.projecto_ilm_backend.dao.UserDao;
 import com.ilm.projecto_ilm_backend.dto.user.*;
 import com.ilm.projecto_ilm_backend.entity.UserEntity;
-import com.ilm.projecto_ilm_backend.security.UnauthorizedException;
+import com.ilm.projecto_ilm_backend.security.exceptions.UnauthorizedException;
 import com.ilm.projecto_ilm_backend.validator.RegexValidator;
 import com.ilm.projecto_ilm_backend.validator.DatabaseValidator;
 import com.ilm.projecto_ilm_backend.validator.UserProfileValidator;

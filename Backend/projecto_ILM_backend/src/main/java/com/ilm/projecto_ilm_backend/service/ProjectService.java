@@ -7,6 +7,9 @@ import com.ilm.projecto_ilm_backend.bean.UserBean;
 import com.ilm.projecto_ilm_backend.dto.project.ProjectProfileDto;
 import com.ilm.projecto_ilm_backend.dto.project.ProjectTableInfoDto;
 import com.ilm.projecto_ilm_backend.dto.user.RegisterUserDto;
+import com.ilm.projecto_ilm_backend.entity.UserEntity;
+import com.ilm.projecto_ilm_backend.security.exceptions.NoProjectsForInviteeException;
+import com.ilm.projecto_ilm_backend.security.exceptions.NoProjectsToInviteException;
 import com.ilm.projecto_ilm_backend.validator.DatabaseValidator;
 import com.ilm.projecto_ilm_backend.validator.RegexValidator;
 import jakarta.inject.Inject;
@@ -18,7 +21,10 @@ import org.apache.logging.log4j.Logger;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Path("/project")
 public class ProjectService {
@@ -39,11 +45,11 @@ public class ProjectService {
         String clientIP = InetAddress.getLocalHost().getHostAddress();
         logger.info("Received a request to to receive all home projects a user from IP address: " + clientIP);
 
-        try{
-            System.out.println("projetos :   "+projectBean.getProjectsDtosHome());
+        try {
+            System.out.println("projetos :   " + projectBean.getProjectsDtosHome());
             return Response.ok(projectBean.getProjectsDtosHome()).build();
         } catch (Exception e) {
-            logger.error("An error occurred while retrieving home projects: " + e.getMessage()+" from IP address: " + clientIP);
+            logger.error("An error occurred while retrieving home projects: " + e.getMessage() + " from IP address: " + clientIP);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("An error occurred while retrieving home projects").build();
         }
 
@@ -54,23 +60,23 @@ public class ProjectService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getTableProjects(@CookieParam("session-id") String sessionId, @QueryParam("page") int page, @QueryParam("lab") String lab, @QueryParam("status") String status,
                                      @QueryParam("slotsAvailable") boolean slotsAvailable, @QueryParam("nameAsc") String nameAsc, @QueryParam("statusAsc") String statusAsc,
-                                     @QueryParam("labAsc")String labAsc, @QueryParam("startDateAsc")String startDateAsc, @QueryParam("endDateAsc")String endDateAsc, @QueryParam("keyword") String keyword) throws UnknownHostException {
+                                     @QueryParam("labAsc") String labAsc, @QueryParam("startDateAsc") String startDateAsc, @QueryParam("endDateAsc") String endDateAsc, @QueryParam("keyword") String keyword) throws UnknownHostException {
         String clientIP = InetAddress.getLocalHost().getHostAddress();
         logger.info("Received a request to to receive all table projects a user from IP address: " + clientIP);
-        System.out.println("nameAsc "+nameAsc+" statusAsc "+statusAsc+" labAsc "+labAsc+" startDateAsc "+startDateAsc+" endDateAsc "+endDateAsc);
+        System.out.println("nameAsc " + nameAsc + " statusAsc " + statusAsc + " labAsc " + labAsc + " startDateAsc " + startDateAsc + " endDateAsc " + endDateAsc);
 
 
-        if(databaseValidator.checkSessionId(sessionId)) {
+        if (databaseValidator.checkSessionId(sessionId)) {
             try {
-                ProjectTableInfoDto projectTableInfoDto = projectBean.getProjectTableInfo(sessionId,page,lab,status, slotsAvailable,nameAsc,
-                        statusAsc, labAsc,startDateAsc, endDateAsc,keyword);
-                return Response.ok(projectBean.getProjectTableInfo(sessionId,page,lab,status, slotsAvailable,nameAsc,
-                        statusAsc, labAsc,startDateAsc, endDateAsc,keyword)).build();
+                ProjectTableInfoDto projectTableInfoDto = projectBean.getProjectTableInfo(sessionId, page, lab, status, slotsAvailable, nameAsc,
+                        statusAsc, labAsc, startDateAsc, endDateAsc, keyword);
+                return Response.ok(projectBean.getProjectTableInfo(sessionId, page, lab, status, slotsAvailable, nameAsc,
+                        statusAsc, labAsc, startDateAsc, endDateAsc, keyword)).build();
             } catch (Exception e) {
                 logger.error("An error occurred while retrieving table projects: " + e.getMessage() + " from IP address: " + clientIP);
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("An error occurred while retrieving home projects").build();
             }
-        }else {
+        } else {
             return Response.status(Response.Status.UNAUTHORIZED).entity("Unauthorized access").build();
         }
     }
@@ -83,14 +89,14 @@ public class ProjectService {
         String clientIP = InetAddress.getLocalHost().getHostAddress();
         logger.info("Received a request to to receive all project status a user from IP address: " + clientIP);
 
-        if(databaseValidator.checkSessionId(sessionId)) {
+        if (databaseValidator.checkSessionId(sessionId)) {
             try {
                 return Response.ok(projectBean.getAllStatus()).build();
             } catch (Exception e) {
                 logger.error("An error occurred while retrieving home projects: " + e.getMessage() + " from IP address: " + clientIP);
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("An error occurred while retrieving home projects").build();
             }
-        }else {
+        } else {
             return Response.status(Response.Status.UNAUTHORIZED).entity("Unauthorized access").build();
         }
     }
@@ -98,23 +104,36 @@ public class ProjectService {
     @GET
     @Path("/userOwnerProjectsToInvite")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUserProjects(@CookieParam("session-id") String sessionId) throws UnknownHostException {
+    public Response getUserProjects(@CookieParam("session-id") String sessionId, @QueryParam("inviteeUsername") String inviteeUsername) throws UnknownHostException {
         String clientIP = InetAddress.getLocalHost().getHostAddress();
         logger.info("Received a request to receive projects for user from IP address: " + clientIP);
 
         if (databaseValidator.checkSessionId(sessionId)) {
             try {
                 int userId = userBean.getUserBySessionId(sessionId).getId();
-                List<ProjectProfileDto> projects = projectBean.getProjectsByUserRoleToInvite(userId, UserInProjectTypeENUM.CREATOR, UserInProjectTypeENUM.MANAGER);
+                List<ProjectProfileDto> projects = projectBean.getProjectsToInvite(userId, inviteeUsername);
                 return Response.ok(projects).build();
+            } catch (NoProjectsToInviteException | NoProjectsForInviteeException e) {
+                Map<String, String> errorResponse = new HashMap<>();
+                errorResponse.put("message", e.getMessage());
+                return Response.status(Response.Status.OK).entity(errorResponse).build();
+            } catch (IllegalArgumentException e) {
+                Map<String, String> errorResponse = new HashMap<>();
+                errorResponse.put("message", e.getMessage());
+                return Response.status(Response.Status.NOT_FOUND).entity(errorResponse).build();
             } catch (Exception e) {
                 logger.error("An error occurred while retrieving user projects: " + e.getMessage() + " from IP address: " + clientIP);
-                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("An error occurred while retrieving user projects").build();
+                Map<String, String> errorResponse = new HashMap<>();
+                errorResponse.put("message", "An error occurred while retrieving user projects");
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorResponse).build();
             }
         } else {
-            return Response.status(Response.Status.UNAUTHORIZED).entity("Unauthorized access").build();
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("message", "Unauthorized access");
+            return Response.status(Response.Status.UNAUTHORIZED).entity(errorResponse).build();
         }
     }
+
 
     @POST
     @Path("/inviteUser")
@@ -161,25 +180,26 @@ public class ProjectService {
                 if (response) {
                     result = projectBean.acceptInvite(userId, projectName);
                     if ("Invite accepted successfully".equals(result)) {
-                        return Response.ok(result).build();
+                        return Response.ok(Collections.singletonMap("message", result)).build();
                     } else {
-                        return Response.status(Response.Status.CONFLICT).entity(result).build();
+                        return Response.status(Response.Status.CONFLICT).entity(Collections.singletonMap("message", result)).build();
                     }
                 } else {
                     result = projectBean.rejectInvite(userId, projectName);
                     if ("Invite rejected successfully".equals(result)) {
-                        return Response.ok(result).build();
+                        return Response.ok(Collections.singletonMap("message", result)).build();
                     } else {
-                        return Response.status(Response.Status.CONFLICT).entity(result).build();
+                        return Response.status(Response.Status.CONFLICT).entity(Collections.singletonMap("message", result)).build();
                     }
                 }
             } catch (Exception e) {
                 logger.error("An error occurred while responding to invite: " + e.getMessage() + " from IP address: " + clientIP);
-                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("An error occurred while responding to invite").build();
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(Collections.singletonMap("message", "An error occurred while responding to invite")).build();
             }
         } else {
-            return Response.status(Response.Status.UNAUTHORIZED).entity("Unauthorized access").build();
+            return Response.status(Response.Status.UNAUTHORIZED).entity(Collections.singletonMap("message", "Unauthorized access")).build();
         }
     }
+
 
 }

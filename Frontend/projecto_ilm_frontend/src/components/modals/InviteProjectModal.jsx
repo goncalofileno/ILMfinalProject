@@ -14,11 +14,11 @@ const InviteProjectModal = ({ show, handleClose, systemUsername }) => {
     const fetchProjects = async () => {
       const sessionId = Cookies.get('session-id');
       try {
-        const response = await getUserProjects(sessionId);
-        if (response && response.length > 0) {
-          setProjects(response);
+        const response = await getUserProjects(sessionId, systemUsername);
+        if (response.success) {
+          setProjects(response.data);
         } else {
-          setAlertMessage('You do not have permissions to invite to any existing project.');
+          setAlertMessage(response.message);
           setAlertVariant('danger');
         }
       } catch (error) {
@@ -28,9 +28,11 @@ const InviteProjectModal = ({ show, handleClose, systemUsername }) => {
     };
 
     if (show) {
+      setProjects([]);  // Clear previous projects
+      setSelectedProject('');  // Clear selected project
       fetchProjects();
     }
-  }, [show]);
+  }, [show, systemUsername]);
 
   const handleInvite = async () => {
     const sessionId = Cookies.get('session-id');
@@ -76,13 +78,12 @@ const InviteProjectModal = ({ show, handleClose, systemUsername }) => {
         {alertMessage && <Alert variant={alertVariant}>{alertMessage}</Alert>}
         {projects.length > 0 ? (
           <>
-            <Form.Group className="mt-2"> {/* Adjust the top margin here */}
+            <Form.Group className="mt-2">
               <Form.Label>Select Project</Form.Label>
               <Form.Control
                 as="select"
                 value={selectedProject}
                 onChange={(e) => setSelectedProject(e.target.value)}
-                disabled={projects.length === 0}
               >
                 <option value="">Select a project...</option>
                 {projects.map((project) => (

@@ -4,6 +4,7 @@ package com.ilm.projecto_ilm_backend.ENUMS;
  * Enum representing different states of a project.
  */
 public enum StateProjectENUM {
+
     /**
      * Planning state.
      * Represented by the integer value 0.
@@ -17,34 +18,28 @@ public enum StateProjectENUM {
     READY(1),
 
     /**
-     * Submitted state.
-     * Represented by the integer value 2.
-     */
-    SUBMITTED(2),
-
-    /**
      * Approved state.
      * Represented by the integer value 3.
      */
-    APPROVED(3),
+    APPROVED(2),
 
     /**
      * In-progress state.
      * Represented by the integer value 4.
      */
-    IN_PROGRESS(4),
+    IN_PROGRESS(3),
 
     /**
      * Canceled state.
      * Represented by the integer value 5.
      */
-    CANCELED(5),
+    CANCELED(4),
 
     /**
      * Finished state.
      * Represented by the integer value 6.
      */
-    FINISHED(6);
+    FINISHED(5);
 
     private final int intValue;
 

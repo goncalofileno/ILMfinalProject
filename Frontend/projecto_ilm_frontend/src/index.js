@@ -13,6 +13,7 @@ import {
   BrowserRouter as Router,
   Route,
   Routes,
+  Navigate,
   useLocation,
 } from "react-router-dom";
 import "./index.css";
@@ -21,6 +22,7 @@ import ResetPasswordPage from "./pages/ResetPasswordPage";
 import EditProfilePage from "./pages/EditProfilePage";
 import MailWebSocket from "./utilities/websockets/MailWebSocket";
 import ResourcesPage from "./pages/ResourcesPage";
+
 
 const AppWithWebSocket = () => {
   const location = useLocation();
@@ -34,7 +36,8 @@ const AppWithWebSocket = () => {
         <Route path="/create-profile/:token" element={<CreateProfilePage />} />
         <Route path="/projects" element={<ProjectsPage />} />
         <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
-        <Route path="/profile/:systemUsername" element={<ProfilePage />} />
+        <Route path="/profile/:systemUsername" element={<Navigate to="projects" />} />
+        <Route path="/profile/:systemUsername/:section" element={<ProfilePage />} />
         <Route path="/editProfile" element={<EditProfilePage />} />
         <Route path="/mail/inbox" element={<InboxMailPage />} />
         <Route path="/mail/sent" element={<SentMailPage />} />
