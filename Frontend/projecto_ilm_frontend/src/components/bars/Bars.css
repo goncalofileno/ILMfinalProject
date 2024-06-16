@@ -1,0 +1,26 @@
+.bar-outline {
+  width: 100%;
+  border: 1px solid black;
+  height: 20px;
+  border-radius: 5px;
+  background-color: white;
+}
+
+.bar-inside {
+  border: none;
+  background-color: rgba(1, 146, 1, 0.521);
+  height: 20px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+
+  padding-left: 15px;
+}
+
+.bar-status {
+  position: absolute;
+  z-index: 10000;
+  transform: translate(10px, -23px);
+  font-size: 16px;
+  font-weight: 500;
+}

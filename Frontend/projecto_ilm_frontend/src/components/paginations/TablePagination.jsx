@@ -4,7 +4,7 @@ export default function TablePagination({
   totalPages,
   currentPage,
   setCurrentPage,
-  setNavigateTableProjectsTrigger,
+  setNavigateTableTrigger,
 }) {
   const renderPaginationItems = () => {
     const items = [];
@@ -17,7 +17,7 @@ export default function TablePagination({
             active={number === currentPage}
             onClick={() => {
               setCurrentPage(number);
-              setNavigateTableProjectsTrigger((prev) => !prev);
+              setNavigateTableTrigger((prev) => !prev);
             }}
           >
             {number}
@@ -44,7 +44,7 @@ export default function TablePagination({
             active={number === currentPage}
             onClick={() => {
               setCurrentPage(number);
-              setNavigateTableProjectsTrigger((prev) => !prev);
+              setNavigateTableTrigger((prev) => !prev);
             }}
           >
             {number}
@@ -60,7 +60,7 @@ export default function TablePagination({
           active={totalPages === currentPage}
           onClick={() => {
             setCurrentPage(totalPages);
-            setNavigateTableProjectsTrigger((prev) => !prev);
+            setNavigateTableTrigger((prev) => !prev);
           }}
         >
           {totalPages}
@@ -77,14 +77,14 @@ export default function TablePagination({
         <Pagination.First
           onClick={() => {
             setCurrentPage(1);
-            setNavigateTableProjectsTrigger((prev) => !prev);
+            setNavigateTableTrigger((prev) => !prev);
           }}
           disabled={currentPage === 1}
         />
         <Pagination.Prev
           onClick={() => {
             setCurrentPage((prev) => Math.max(prev - 1, 1));
-            setNavigateTableProjectsTrigger((prev) => !prev);
+            setNavigateTableTrigger((prev) => !prev);
           }}
           disabled={currentPage === 1}
         />
@@ -92,14 +92,14 @@ export default function TablePagination({
         <Pagination.Next
           onClick={() => {
             setCurrentPage((prev) => Math.min(prev + 1, totalPages));
-            setNavigateTableProjectsTrigger((prev) => !prev);
+            setNavigateTableTrigger((prev) => !prev);
           }}
           disabled={currentPage === totalPages}
         />
         <Pagination.Last
           onClick={() => {
             setCurrentPage(totalPages);
-            setNavigateTableProjectsTrigger((prev) => !prev);
+            setNavigateTableTrigger((prev) => !prev);
           }}
           disabled={currentPage === totalPages}
         />

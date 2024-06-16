@@ -57,14 +57,14 @@ export default function ProjectsTable({
   return (
     <>
       <div className="search-table-div">
-        <InputGroup style={{ width: "50%" }}>
+        <InputGroup className="mail-filters" style={{ width: "50%" }}>
           <Form.Control
             type="text"
-            placeholder="Search for title"
+            placeholder="Search for name"
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
+            style={{ borderRadius: "10px", cursor: "text" }}
             className="custom-focus"
-            id="search-table-projects"
           />
           <Button
             variant="primary"
@@ -73,10 +73,7 @@ export default function ProjectsTable({
               setCurrentPage(1);
               setNavigateTableProjectsTrigger(!navigateTableProjectsTrigger);
             }}
-            style={{
-              backgroundColor: "#f39c12",
-              borderColor: "#f39c12",
-            }}
+            id="primary-btn-boot"
           >
             Search
           </Button>
@@ -86,7 +83,7 @@ export default function ProjectsTable({
               handleClearSearch();
               setNavigateTableProjectsTrigger(!navigateTableProjectsTrigger);
             }}
-            style={{ marginLeft: "10px" }}
+            style={{ borderRadius: "10px" }}
           >
             Clear Search
           </Button>
@@ -207,7 +204,7 @@ export default function ProjectsTable({
               totalPages={totalPages}
               currentPage={currentPage}
               setCurrentPage={setCurrentPage}
-              setNavigateTableProjectsTrigger={setNavigateTableProjectsTrigger}
+              setNavigateTableTrigger={setNavigateTableProjectsTrigger}
             />
           </div>
           <div className="row-btns-table-projects-2">

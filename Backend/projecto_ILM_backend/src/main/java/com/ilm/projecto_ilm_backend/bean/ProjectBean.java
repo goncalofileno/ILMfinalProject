@@ -182,6 +182,10 @@ public class ProjectBean {
         return projectTableInfoDto;
     }
 
+//    public ProjectTableInfoDto getMyProjectsPageInfo(String sessionId, int page){
+//
+//    }
+
     public ArrayList<StateProjectENUM> getAllStatus() {
         ArrayList<StateProjectENUM> status = new ArrayList<>();
         for (StateProjectENUM state : StateProjectENUM.values()) {

@@ -229,7 +229,7 @@ const MailTable = () => {
           placeholder="Search mails"
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
-          style={{ borderRadius: "10px" }}
+          style={{ borderRadius: "10px", cursor: "text" }}
           className="custom-focus"
         />
         <Button
@@ -237,11 +237,7 @@ const MailTable = () => {
           onClick={() =>
             updateURL({ search: searchInput, page: 1, unread: unreadOnly })
           }
-          style={{
-            backgroundColor: "#f39c12",
-            borderColor: "#f39c12",
-            borderRadius: "10px",
-          }}
+          id="primary-btn-boot"
         >
           Search
         </Button>
@@ -311,7 +307,7 @@ const MailTable = () => {
         totalPages={totalPages}
         currentPage={currentPage}
         setCurrentPage={handlePageChange}
-        setNavigateTableProjectsTrigger={setTrigger}
+        setNavigateTableTrigger={setTrigger}
         className="pagination-container"
       />
 

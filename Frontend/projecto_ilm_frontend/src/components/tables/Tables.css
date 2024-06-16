@@ -163,6 +163,7 @@ td {
   width: 100px;
   height: 40px;
   border-radius: 10px;
+  border: 1px solid;
 }
 
 .first-column-table-projects {
@@ -171,4 +172,14 @@ td {
   justify-content: center;
   gap: 15px;
   align-items: center;
+}
+
+.primary-btn-boot:hover {
+  background-color: #d48910;
+}
+
+.primary-btn-boot {
+  background-color: "#f39c12";
+  border-color: "#f39c12";
+  border-radius: "10px";
 }

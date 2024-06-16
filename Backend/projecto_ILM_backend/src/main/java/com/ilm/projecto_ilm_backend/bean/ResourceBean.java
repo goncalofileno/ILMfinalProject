@@ -163,7 +163,7 @@ public class ResourceBean {
 
     public boolean createResource(ResourceCreationDto resourceCreationDto) {
             ResourceEntity resourceEntity;
-            resourceEntity=resourceDao.findResourceByDetails(resourceCreationDto.getName(), resourceCreationDto.getBrand(), resourceCreationDto.getType());
+            resourceEntity=resourceDao.findResourceByDetails(resourceCreationDto.getName(), resourceCreationDto.getBrand(), resourceCreationDto.getType(),resourceCreationDto.getSupplierName());
             SupplierEntity supplier = supplierDao.findByName(resourceCreationDto.getSupplierName());
             if(supplier==null){
                 supplier = new SupplierEntity();

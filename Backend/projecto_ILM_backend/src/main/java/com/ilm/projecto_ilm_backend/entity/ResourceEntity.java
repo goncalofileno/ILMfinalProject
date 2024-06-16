@@ -27,7 +27,8 @@ import java.util.List;
                 "JOIN r.supplier s " +
                 "WHERE (r.name=:name)" +
                 "AND (r.brand = :brand) "+
-                "AND (r.type = :type) "
+                "AND (r.type = :type) "+
+                "AND (s.name=:supplierName) "
 )
 
 @NamedQuery(

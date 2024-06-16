@@ -37,29 +37,22 @@ export default function ResourcesTable({
   return (
     <>
       <div className="search-table-div">
-        <InputGroup style={{ width: "50%" }}>
+        <InputGroup className="mail-filters" style={{ width: "50%" }}>
           <Form.Control
             type="text"
-            placeholder="Search for name"
-            className="custom-focus"
-            id="search-table-projects"
+            placeholder="Search mails"
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
+            style={{ borderRadius: "10px", cursor: "text" }}
+            className="custom-focus"
           />
-          <Button
-            variant="primary"
-            style={{
-              backgroundColor: "#f39c12",
-              borderColor: "#f39c12",
-            }}
-            onClick={handleClick}
-          >
+          <Button variant="primary" onClick={handleClick} id="primary-btn-boot">
             Search
           </Button>
           <Button
             variant="secondary"
-            style={{ marginLeft: "10px" }}
             onClick={handleClean}
+            style={{ borderRadius: "10px" }}
           >
             Clear Search
           </Button>
@@ -163,6 +156,8 @@ export default function ResourcesTable({
             <TablePagination
               totalPages={totalPages}
               currentPage={currentPage}
+              setCurrentPage={setCurrentPage}
+              setNavigateTableTrigger={setNavigateTableResourcesTrigger}
             />
           </div>
           <div className="row-btns-table-projects-2"></div>
