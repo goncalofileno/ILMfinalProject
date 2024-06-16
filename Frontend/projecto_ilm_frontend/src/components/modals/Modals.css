@@ -1,35 +1,63 @@
 .ilm-modal {
-   background: linear-gradient(56.26deg, rgba(30, 40, 82, 0.336) 0%, rgba(192, 23, 34, 0.05) 100%), rgb(255, 255, 255);
-   padding: 35px 48px;
-   color: rgb(60, 60, 60);
-   box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.5);
-   border-radius: 15px;
-   z-index: 1002;
-   position: fixed;
-   top: 50%;
-   left: 50%;
-   transform: translate(-50%, -50%);
+  background: linear-gradient(
+      56.26deg,
+      rgba(30, 40, 82, 0.336) 0%,
+      rgba(192, 23, 34, 0.05) 100%
+    ),
+    rgb(255, 255, 255);
+  padding: 35px 48px;
+  color: rgb(60, 60, 60);
+  box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.5);
+  border-radius: 15px;
+  z-index: 1002;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .modal-background {
-   background-color: rgba(0, 0, 0, 0.5);
-   position: fixed;
-   height: 100%;
-   top: 0;
-   left: 0;
-   width: 100%;
-   z-index: 1001;
+  background-color: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  height: 100%;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1001;
 }
 
 .modal-content {
-   display: flex;
-   flex-direction: column;
-   width: 100%;
-   gap: 20px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 20px;
 }
 
 .modal-buttons {
-   display: flex;
-   align-items: center;
-   justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  gap: 10%;
+}
+
+#cancel-resource-btn {
+  margin-top: 10px;
+  width: 25%;
+}
+
+#create-resource-btn {
+  margin-top: 10px;
+  width: 55%;
 }

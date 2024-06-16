@@ -1,0 +1,14 @@
+.my-projects-container {
+  height: calc(95% - 37px);
+  margin-top: 3%;
+}
+
+.ilm-arrow:hover {
+  background-color: rgb(225, 225, 225);
+}
+
+.ilm-arrow {
+  padding: 5px 15px;
+  border-radius: 50%;
+  border: none;
+}

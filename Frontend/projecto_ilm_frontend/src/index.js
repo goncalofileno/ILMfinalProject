@@ -8,6 +8,7 @@ import ProjectsPage from "./pages/ProjectsPage";
 import ProfilePage from "./pages/ProfilePage";
 import InboxMailPage from "./pages/InboxMailPage";
 import SentMailPage from "./pages/SentMailPage";
+import MyProjectsPage from "./pages/MyProjectsPage";
 import reportWebVitals from "./reportWebVitals";
 import {
   BrowserRouter as Router,
@@ -39,6 +40,7 @@ const AppWithWebSocket = () => {
         <Route path="/mail/inbox" element={<InboxMailPage />} />
         <Route path="/mail/sent" element={<SentMailPage />} />
         <Route path="/resources" element={<ResourcesPage />} />
+        <Route path="/myprojects" element={<MyProjectsPage />} />
       </Routes>
     </>
   );

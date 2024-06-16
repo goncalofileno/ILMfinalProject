@@ -13,6 +13,7 @@ import java.util.Date;
 @XmlRootElement
 public class ProjectTableDto {
 
+    private String photo;
     private String name;
     private WorkLocalENUM lab;
     private StateProjectENUM status;
@@ -21,12 +22,14 @@ public class ProjectTableDto {
     private int numberOfMembers;
     private int maxMembers;
     private boolean isMember;
+    private int percentageDone;
 
 
     public ProjectTableDto() {
     }
 
-    public ProjectTableDto(String name, WorkLocalENUM lab, StateProjectENUM status, int numberOfMembers, Date startDate, Date finalDate, int maxMembers, boolean isMember) {
+    public ProjectTableDto(String photo,String name, WorkLocalENUM lab, StateProjectENUM status, int numberOfMembers, Date startDate, Date finalDate, int maxMembers, boolean isMember, int percentageDone) {
+        this.photo=photo;
         this.name = name;
         this.lab = lab;
         this.status = status;
@@ -35,8 +38,16 @@ public class ProjectTableDto {
         this.startDate=startDate;
         this.finalDate=finalDate;
         this.isMember = isMember;
+        this.percentageDone=percentageDone;
     }
 
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
 
     public String getName() {
         return name;
@@ -100,5 +111,13 @@ public class ProjectTableDto {
 
     public void setMember(boolean member) {
         isMember = member;
+    }
+
+    public int getPercentageDone() {
+        return percentageDone;
+    }
+
+    public void setPercentageDone(int percentageDone) {
+        this.percentageDone = percentageDone;
     }
 }

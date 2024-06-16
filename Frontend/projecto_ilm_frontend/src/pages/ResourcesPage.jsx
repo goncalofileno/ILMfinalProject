@@ -4,6 +4,7 @@ import ResourcesTable from "../components/tables/ResourcesTable";
 import { useEffect, useState } from "react";
 import { getAllResources } from "../utilities/services";
 import { useLocation, useNavigate } from "react-router-dom";
+import AddResourceModal from "../components/modals/AddResourceModal";
 
 export default function ResourcesPage() {
   const query = new URLSearchParams(useLocation().search);
@@ -25,6 +26,7 @@ export default function ResourcesPage() {
   );
   const [navigateTableResourcesTrigger, setNavigateTableResourcesTrigger] =
     useState(false);
+  const [isModalActive, setIsModalActive] = useState(false);
 
   const sortByName = () => {
     if (typeAsc !== "") setTypeAsc("");
@@ -99,6 +101,10 @@ export default function ResourcesPage() {
   return (
     <>
       <AppNavbar />
+      <AddResourceModal
+        isModalActive={isModalActive}
+        setIsModalActive={setIsModalActive}
+      />
       <AsideResourcesPage
         brand={brand}
         setBrand={setBrand}
@@ -136,6 +142,7 @@ export default function ResourcesPage() {
             typeAsc={typeAsc}
             brandAsc={brandAsc}
             supplierAsc={supplierAsc}
+            setIsModalActive={setIsModalActive}
           />
         </div>
       </div>

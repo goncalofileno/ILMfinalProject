@@ -1,7 +1,7 @@
 import "./Tables.css";
 import { InputGroup, Form, Button } from "react-bootstrap";
 import TablePagination from "../paginations/TablePagination";
-
+import componentIcon from "../../resources/icons/other/application-control.png";
 import { formatResourceType } from "../../utilities/converters";
 
 export default function ResourcesTable({
@@ -20,8 +20,9 @@ export default function ResourcesTable({
   typeAsc,
   brandAsc,
   supplierAsc,
+  setIsModalActive,
 }) {
-  const NUMBER_OF_RESOURCES_PAGE = 15;
+  const NUMBER_OF_RESOURCES_PAGE = 8;
 
   const handleClick = (e) => {
     setCurrentPage(1);
@@ -36,29 +37,22 @@ export default function ResourcesTable({
   return (
     <>
       <div className="search-table-div">
-        <InputGroup style={{ width: "50%" }}>
+        <InputGroup className="mail-filters" style={{ width: "50%" }}>
           <Form.Control
             type="text"
-            placeholder="Search for name"
-            className="custom-focus"
-            id="search-table-projects"
+            placeholder="Search mails"
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
+            style={{ borderRadius: "10px", cursor: "text" }}
+            className="custom-focus"
           />
-          <Button
-            variant="primary"
-            style={{
-              backgroundColor: "#f39c12",
-              borderColor: "#f39c12",
-            }}
-            onClick={handleClick}
-          >
+          <Button variant="primary" onClick={handleClick} id="primary-btn-boot">
             Search
           </Button>
           <Button
             variant="secondary"
-            style={{ marginLeft: "10px" }}
             onClick={handleClean}
+            style={{ borderRadius: "10px" }}
           >
             Clear Search
           </Button>
@@ -110,7 +104,27 @@ export default function ResourcesTable({
           {resources.map((resource, index) => (
             <tr key={index}>
               <td style={{ fontWeight: "bold" }}>{resource.name}</td>
-              <td>{formatResourceType(resource.type)}</td>
+              <td>
+                {formatResourceType(resource.type)}
+
+                {resource.type === "COMPONENT" ? (
+                  <i
+                    style={{ marginLeft: "12px" }}
+                    className="fas fa-cogs fa-lg"
+                  ></i>
+                ) : (
+                  resource.type === "RESOURCE" && (
+                    <img
+                      style={{
+                        marginLeft: "12px",
+                        height: "22px",
+                        width: "25px",
+                      }}
+                      src={componentIcon}
+                    ></img>
+                  )
+                )}
+              </td>
               <td>{resource.brand}</td>
               <td>{resource.supplier}</td>
             </tr>
@@ -133,6 +147,7 @@ export default function ResourcesTable({
             <button
               className="submit-button"
               id="btn-add-project-table-projects"
+              onClick={() => setIsModalActive(true)}
             >
               Add Resource
             </button>
@@ -141,6 +156,8 @@ export default function ResourcesTable({
             <TablePagination
               totalPages={totalPages}
               currentPage={currentPage}
+              setCurrentPage={setCurrentPage}
+              setNavigateTableTrigger={setNavigateTableResourcesTrigger}
             />
           </div>
           <div className="row-btns-table-projects-2"></div>

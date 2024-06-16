@@ -9,18 +9,28 @@
 #mail-table tr {
   background: none;
   transition: background-color 0.3s;
-  
+
   background-color: rgba(30, 40, 82, 0.056);
 }
 
 #mail-table tr:hover {
-  background-color: rgba(243, 157, 18, 0.325); /* Cor de fundo ao passar o mouse */
+  background-color: rgba(
+    243,
+    157,
+    18,
+    0.325
+  ); /* Cor de fundo ao passar o mouse */
   cursor: pointer;
 }
 
 #mail-table .unread {
-  background-color: rgba(254, 242, 215, 0.794); /* Cor de fundo dos emails não lidos */
-  font-weight:bolder;
+  background-color: rgba(
+    254,
+    242,
+    215,
+    0.794
+  ); /* Cor de fundo dos emails não lidos */
+  font-weight: bolder;
 }
 
 #mail-table .mail-cell {
@@ -71,7 +81,7 @@
 
 #mail-table .unread .sender-name,
 #mail-table .unread .mail-subject {
-  color: #1e2852; 
+  color: #1e2852;
 }
 
 #mail-table .fa-trash,
@@ -143,3 +153,12 @@
   border-color: #f39c12;
 }
 
+#primary-btn-boot {
+  background-color: #f39c12;
+  border-color: #f39c12;
+  border-radius: 10px;
+}
+
+#primary-btn-boot:hover {
+  background-color: #d48910;
+}
