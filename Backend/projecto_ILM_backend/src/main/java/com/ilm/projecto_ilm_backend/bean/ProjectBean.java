@@ -450,6 +450,7 @@ public class ProjectBean {
         projectProfilePageDto.setSkills(skills);
         projectProfilePageDto.setStatesToChange(statesToChange);
         projectProfilePageDto.setProgress(progress);
+        projectProfilePageDto.setTypeOfUserSeingProject(getUserTypeInProject(userId, project.getId()));
 
         return projectProfilePageDto;
     }
@@ -511,6 +512,23 @@ public class ProjectBean {
                 }
                 double progress = 20 + (70.0 * doneTasks / tasks.size()); // Progresso entre 20% e 90%
                 return (int) Math.round(progress);
+        }
+    }
+
+    //metodo que devolve o tipo de membro que o utilizador é num projecto, se o mesmo não for membro do projecto, verifica
+    //se o utilizador é do type ADMIN, e assim devolve ADMIN, se não devolve GUEST
+
+    public UserInProjectTypeENUM getUserTypeInProject(int userId, int projectId) {
+        UserProjectEntity userProject = userProjectDao.findByUserIdAndProjectId(userId, projectId);
+        if (userProject != null) {
+            return userProject.getType();
+        } else {
+            UserEntity user = userDao.findById(userId);
+            if (user.getType() == UserTypeENUM.ADMIN) {
+                return UserInProjectTypeENUM.ADMIN;
+            } else {
+                return UserInProjectTypeENUM.GUEST;
+            }
         }
     }
 

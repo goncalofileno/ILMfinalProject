@@ -858,6 +858,25 @@ async function respondToInvite(sessionId, projectName, response) {
   }
 }
 
+async function getProjectInfoPage(systemProjectName) {
+  try {
+    const response = await fetch(`${baseURL}project/projectInfoPage?projectName=${encodeURIComponent(systemProjectName)}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include"
+    });
+    if (!response.ok) {
+      throw new Error("Failed to fetch project info");
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching project info:", error);
+    return { error: error.message };
+  }
+}
+
 
 
 
@@ -905,4 +924,5 @@ export {
   getUnreadNotificationsCount,
   fetchNotifications,
   respondToInvite,
+  getProjectInfoPage,
 };

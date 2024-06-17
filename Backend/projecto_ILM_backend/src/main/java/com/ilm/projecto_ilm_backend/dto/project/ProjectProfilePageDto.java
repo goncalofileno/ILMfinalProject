@@ -1,6 +1,7 @@
 package com.ilm.projecto_ilm_backend.dto.project;
 
 import com.ilm.projecto_ilm_backend.ENUMS.StateProjectENUM;
+import com.ilm.projecto_ilm_backend.ENUMS.UserInProjectTypeENUM;
 import com.ilm.projecto_ilm_backend.dto.skill.SkillDto;
 
 import java.time.LocalDateTime;
@@ -22,8 +23,9 @@ public class ProjectProfilePageDto {
     private List<StateProjectENUM> statesToChange;
     private int progress;
     private int maxMembers;
-    
-    public ProjectProfilePageDto(String title, StateProjectENUM state, String description, LocalDateTime startDate, LocalDateTime endDate, String photo, String lab, ProjectMemberDto creator, List<ProjectMemberDto> members, List<String> keywords, List<SkillDto> skills, List<StateProjectENUM> statesToChange, int progress, int maxMembers) {
+    public UserInProjectTypeENUM typeOfUserSeingProject;
+
+    public ProjectProfilePageDto(String title, StateProjectENUM state, String description, LocalDateTime startDate, LocalDateTime endDate, String photo, String lab, ProjectMemberDto creator, List<ProjectMemberDto> members, List<String> keywords, List<SkillDto> skills, List<StateProjectENUM> statesToChange, int progress, int maxMembers, UserInProjectTypeENUM typeOfUserSeingProject) {
         this.title = title;
         this.state = state;
         this.description = description;
@@ -38,6 +40,7 @@ public class ProjectProfilePageDto {
         this.statesToChange = statesToChange;
         this.progress = progress;
         this.maxMembers = maxMembers;
+        this.typeOfUserSeingProject = typeOfUserSeingProject;
     }
 
     public ProjectProfilePageDto() {
@@ -153,5 +156,13 @@ public class ProjectProfilePageDto {
 
     public void setMaxMembers(int maxMembers) {
         this.maxMembers = maxMembers;
+    }
+
+    public UserInProjectTypeENUM getTypeOfUserSeingProject() {
+        return typeOfUserSeingProject;
+    }
+
+    public void setTypeOfUserSeingProject(UserInProjectTypeENUM typeOfUserSeingProject) {
+        this.typeOfUserSeingProject = typeOfUserSeingProject;
     }
 }

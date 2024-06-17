@@ -281,198 +281,208 @@ const UserProfile = () => {
                       </div>
                     </Col>
                     <Col md="6">
-                      <Tab.Container
-                        activeKey={activeKey}
-                        onSelect={(key) => navigate(`/profile/${systemUsername}/${key}`)}
-                      >
-                        <Nav
-                          variant="pills"
-                          className="flex-row pills-container"
+                      {isPrivate ? (
+                        <Alert variant="info" style={{textAlign:"center"}}>
+                          This profile is private.
+                        </Alert>
+                      ) : (
+                        <Tab.Container
+                          activeKey={activeKey}
+                          onSelect={(key) =>
+                            navigate(`/profile/${systemUsername}/${key}`)
+                          }
                         >
-                          <Nav.Item>
-                            <Nav.Link eventKey="projects">Projects</Nav.Link>
-                          </Nav.Item>
-                          {loggedInUsername === systemUsername && (
+                          <Nav
+                            variant="pills"
+                            className="flex-row pills-container"
+                          >
                             <Nav.Item>
-                              <Nav.Link eventKey="applications">
-                                Applications
+                              <Nav.Link eventKey="projects">Projects</Nav.Link>
+                            </Nav.Item>
+                            {loggedInUsername === systemUsername && (
+                              <Nav.Item>
+                                <Nav.Link eventKey="applications">
+                                  Applications
+                                </Nav.Link>
+                              </Nav.Item>
+                            )}
+                            <Nav.Item>
+                              <Nav.Link eventKey="skills">Skills</Nav.Link>
+                            </Nav.Item>
+                            <Nav.Item>
+                              <Nav.Link eventKey="interests">
+                                Interests
                               </Nav.Link>
                             </Nav.Item>
-                          )}
-                          <Nav.Item>
-                            <Nav.Link eventKey="skills">Skills</Nav.Link>
-                          </Nav.Item>
-                          <Nav.Item>
-                            <Nav.Link eventKey="interests">Interests</Nav.Link>
-                          </Nav.Item>
-                        </Nav>
-                        <Tab.Content id="container-cards">
-                          <Tab.Pane eventKey="projects">
-                            <Card className="card-container">
-                              <Card.Body className="card-body">
-                                {nonPendingProjects.length > 0 ? (
-                                  nonPendingProjects.map((project) => (
-                                    <div
-                                      key={project.name}
-                                      id="application-request-card"
-                                      className="mb-3 clickable"
-                                      onClick={() =>
-                                        handleProjectClick(project.systemName)
-                                      }
-                                    >
-                                      <p
-                                        id="column-div-project"
-                                        className="mb-1"
-                                      >
-                                        <strong>Project Name:</strong>
-                                        {project.name}
-                                      </p>
-                                      <p
-                                        id="column-div-project"
-                                        className="mb-1"
-                                      >
-                                        <strong>Type Member:</strong>{" "}
-                                        {project.typeMember}
-                                      </p>
-                                      <p
-                                        id="column-div-project"
-                                        className="mb-1"
-                                      >
-                                        <strong>Status:</strong>{" "}
-                                        {project.status}
-                                      </p>
-                                    </div>
-                                  ))
-                                ) : (
-                                  <p className="centered-message">
-                                    No projects available.
-                                  </p>
-                                )}
-                              </Card.Body>
-                            </Card>
-                          </Tab.Pane>
-                          {loggedInUsername === systemUsername && (
-                            <Tab.Pane eventKey="applications">
+                          </Nav>
+                          <Tab.Content id="container-cards">
+                            <Tab.Pane eventKey="projects">
                               <Card className="card-container">
                                 <Card.Body className="card-body">
-                                  {pendingProjects.length > 0 ? (
-                                    pendingProjects.map((project) => (
+                                  {nonPendingProjects.length > 0 ? (
+                                    nonPendingProjects.map((project) => (
                                       <div
                                         key={project.name}
                                         id="application-request-card"
-                                        className="mb-3 d-flex justify-content-between align-items-center"
+                                        className="mb-3 clickable"
+                                        onClick={() =>
+                                          handleProjectClick(project.systemName)
+                                        }
                                       >
-                                        <div>
-                                          <p className="mb-1">
-                                            <strong>Project Name:</strong>{" "}
-                                            {project.name}
-                                          </p>
-                                          <p className="mb-1">
-                                            <strong>Status:</strong>{" "}
-                                            {project.status}
-                                          </p>
-                                        </div>
-                                        {project.typeMember ===
-                                          "PENDING_BY_INVITATION" && (
-                                          <div className="button-group-horizontal">
-                                            <Button
-                                              variant="danger"
-                                              onClick={() =>
-                                                handleRejectInvite(
-                                                  project.name
-                                                )
-                                              }
-                                            >
-                                              Reject
-                                            </Button>
-                                            <Button
-                                              variant="success"
-                                              onClick={() =>
-                                                handleRespondToInvite(
-                                                  project.name,
-                                                  true
-                                                )
-                                              }
-                                            >
-                                              Accept
-                                            </Button>
-                                          </div>
-                                        )}
+                                        <p
+                                          id="column-div-project"
+                                          className="mb-1"
+                                        >
+                                          <strong>Project Name:</strong>
+                                          {project.name}
+                                        </p>
+                                        <p
+                                          id="column-div-project"
+                                          className="mb-1"
+                                        >
+                                          <strong>Type Member:</strong>{" "}
+                                          {project.typeMember}
+                                        </p>
+                                        <p
+                                          id="column-div-project"
+                                          className="mb-1"
+                                        >
+                                          <strong>Status:</strong>{" "}
+                                          {project.status}
+                                        </p>
                                       </div>
                                     ))
                                   ) : (
                                     <p className="centered-message">
-                                      No applications available.
+                                      No projects available.
                                     </p>
                                   )}
                                 </Card.Body>
                               </Card>
                             </Tab.Pane>
-                          )}
-                          <Tab.Pane eventKey="skills">
-                            <Card className="card-container">
-                              <Card.Body className="card-body">
-                                <Row>
-                                  {profile.skills &&
-                                  profile.skills.length > 0 ? (
-                                    profile.skills.map((skill) => (
-                                      <Col md="auto" key={skill.id}>
+                            {loggedInUsername === systemUsername && (
+                              <Tab.Pane eventKey="applications">
+                                <Card className="card-container">
+                                  <Card.Body className="card-body">
+                                    {pendingProjects.length > 0 ? (
+                                      pendingProjects.map((project) => (
                                         <div
-                                          id="skill-interest-card"
-                                          className="mb-3"
+                                          key={project.name}
+                                          id="application-request-card"
+                                          className="mb-3 d-flex justify-content-between align-items-center"
                                         >
-                                          <p className="mb-1">
-                                            <strong>{skill.name}</strong>
-                                          </p>
-                                          <p
-                                            className="text-muted mb-1"
-                                            style={{ fontSize: "0.85em" }}
+                                          <div>
+                                            <p className="mb-1">
+                                              <strong>Project Name:</strong>{" "}
+                                              {project.name}
+                                            </p>
+                                            <p className="mb-1">
+                                              <strong>Status:</strong>{" "}
+                                              {project.status}
+                                            </p>
+                                          </div>
+                                          {project.typeMember ===
+                                            "PENDING_BY_INVITATION" && (
+                                            <div className="button-group-horizontal">
+                                              <Button
+                                                variant="danger"
+                                                onClick={() =>
+                                                  handleRejectInvite(
+                                                    project.name
+                                                  )
+                                                }
+                                              >
+                                                Reject
+                                              </Button>
+                                              <Button
+                                                variant="success"
+                                                onClick={() =>
+                                                  handleRespondToInvite(
+                                                    project.name,
+                                                    true
+                                                  )
+                                                }
+                                              >
+                                                Accept
+                                              </Button>
+                                            </div>
+                                          )}
+                                        </div>
+                                      ))
+                                    ) : (
+                                      <p className="centered-message">
+                                        No applications available.
+                                      </p>
+                                    )}
+                                  </Card.Body>
+                                </Card>
+                              </Tab.Pane>
+                            )}
+                            <Tab.Pane eventKey="skills">
+                              <Card className="card-container">
+                                <Card.Body className="card-body">
+                                  <Row>
+                                    {profile.skills &&
+                                    profile.skills.length > 0 ? (
+                                      profile.skills.map((skill) => (
+                                        <Col md="auto" key={skill.id}>
+                                          <div
+                                            id="skill-interest-card"
+                                            className="mb-3"
                                           >
-                                            {skill.type}
-                                          </p>
-                                        </div>
+                                            <p className="mb-1">
+                                              <strong>{skill.name}</strong>
+                                            </p>
+                                            <p
+                                              className="text-muted mb-1"
+                                              style={{ fontSize: "0.85em" }}
+                                            >
+                                              {skill.type}
+                                            </p>
+                                          </div>
+                                        </Col>
+                                      ))
+                                    ) : (
+                                      <Col>
+                                        <p className="centered-message">
+                                          No skills available.
+                                        </p>
                                       </Col>
-                                    ))
-                                  ) : (
-                                    <Col>
-                                      <p className="centered-message">
-                                        No skills available.
-                                      </p>
-                                    </Col>
-                                  )}
-                                </Row>
-                              </Card.Body>
-                            </Card>
-                          </Tab.Pane>
-                          <Tab.Pane eventKey="interests">
-                            <Card className="card-container">
-                              <Card.Body className="card-body">
-                                <Row>
-                                  {profile.interests &&
-                                  profile.interests.length > 0 ? (
-                                    profile.interests.map((interest) => (
-                                      <Col md="auto" key={interest.id}>
-                                        <div
-                                          id="skill-interest-card"
-                                          className="mb-3"
-                                        >
-                                          {interest.name}
-                                        </div>
+                                    )}
+                                  </Row>
+                                </Card.Body>
+                              </Card>
+                            </Tab.Pane>
+                            <Tab.Pane eventKey="interests">
+                              <Card className="card-container">
+                                <Card.Body className="card-body">
+                                  <Row>
+                                    {profile.interests &&
+                                    profile.interests.length > 0 ? (
+                                      profile.interests.map((interest) => (
+                                        <Col md="auto" key={interest.id}>
+                                          <div
+                                            id="skill-interest-card"
+                                            className="mb-3"
+                                          >
+                                            {interest.name}
+                                          </div>
+                                        </Col>
+                                      ))
+                                    ) : (
+                                      <Col>
+                                        <p className="centered-message">
+                                          No interests available.
+                                        </p>
                                       </Col>
-                                    ))
-                                  ) : (
-                                    <Col>
-                                      <p className="centered-message">
-                                        No interests available.
-                                      </p>
-                                    </Col>
-                                  )}
-                                </Row>
-                              </Card.Body>
-                            </Card>
-                          </Tab.Pane>
-                        </Tab.Content>
-                      </Tab.Container>
+                                    )}
+                                  </Row>
+                                </Card.Body>
+                              </Card>
+                            </Tab.Pane>
+                          </Tab.Content>
+                        </Tab.Container>
+                      )}
                     </Col>
                   </Row>
                 </Card.Body>
