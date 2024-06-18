@@ -3,11 +3,78 @@ import AsideMyProjectsPage from "../components/asides/AsideMyProjectsPage";
 import MyProjectCard from "../components/cards/MyProjectCard";
 import "./MyProjectsPage.css";
 import { Col, Row, Container } from "react-bootstrap";
+import { useEffect, useState } from "react";
+import { getMyProjectsTable } from "../utilities/services";
+import { useNavigate } from "react-router-dom";
+import { formatLab } from "../utilities/converters";
+
 export default function MyProjectsPage() {
+  const navigate = useNavigate();
+  const [projects, setProjects] = useState([]);
+  const [totalPages, setTotalPages] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedLab, setSelectedLab] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState("");
+  const [selectedTypeMember, setSelectedTypeMember] = useState("");
+  const [slotsAvailable, setSlotsAvailable] = useState(false);
+  const [keyword, setKeyword] = useState("");
+  const [navigateTableProjectsTrigger, setNavigateTableProjectsTrigger] =
+    useState(false);
+
+  useEffect(() => {
+    getMyProjectsTable(
+      currentPage,
+      selectedLab,
+      selectedStatus,
+      slotsAvailable,
+      keyword,
+      selectedTypeMember
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        setProjects(data.tableProjects);
+        setTotalPages(data.maxPageNumber);
+      });
+
+    const queryParamsObj = {};
+
+    if (currentPage) queryParamsObj.currentPage = currentPage;
+    if (selectedLab !== "") queryParamsObj.selectedLab = selectedLab;
+    if (selectedStatus !== "") queryParamsObj.selectedStatus = selectedStatus;
+    if (slotsAvailable) queryParamsObj.slotsAvailable = slotsAvailable;
+    if (keyword) queryParamsObj.search_query = keyword;
+
+    const queryParams = new URLSearchParams(queryParamsObj).toString();
+
+    navigate(`/myprojects?${queryParams}`);
+  }, [navigateTableProjectsTrigger]);
+
+  const handlePreviousClick = () => {
+    setCurrentPage(currentPage - 1);
+    setNavigateTableProjectsTrigger(!navigateTableProjectsTrigger);
+  };
+
+  const handleNextClick = () => {
+    setCurrentPage(currentPage + 1);
+    setNavigateTableProjectsTrigger(!navigateTableProjectsTrigger);
+  };
   return (
     <>
       <AppNavbar />
-      <AsideMyProjectsPage />
+      <AsideMyProjectsPage
+        selectedLab={selectedLab}
+        setSelectedLab={setSelectedLab}
+        selectedStatus={selectedStatus}
+        setSelectedStatus={setSelectedStatus}
+        selectedTypeMember={selectedTypeMember}
+        setSelectedTypeMember={setSelectedTypeMember}
+        navigateTableProjectsTrigger={navigateTableProjectsTrigger}
+        setNavigateTableProjectsTrigger={setNavigateTableProjectsTrigger}
+        setCurrentPage={setCurrentPage}
+        setKeyword={setKeyword}
+      />
+
+      {console.log(projects)}
       <div className="ilm-pageb-with-aside">
         <h1 className="page-title">
           <span className="app-slogan-1">My </span>
@@ -20,36 +87,119 @@ export default function MyProjectsPage() {
               className="align-center"
               style={{ justifyContent: "center" }}
             >
-              {" "}
-              <button className="btn-arrow">
-                <i className="fas fa-chevron-left fa-3x ilm-arrow"></i>
-              </button>
+              {currentPage > 1 && (
+                <button className="btn-arrow" onClick={handlePreviousClick}>
+                  <i className="fas fa-chevron-left fa-3x ilm-arrow"></i>
+                </button>
+              )}
             </Col>
+
             <Col sm={10} style={{ height: "100%" }}>
               <Row style={{ height: "100%" }}>
                 <Col style={{ height: "100%" }}>
-                  <div style={{ height: "45%", marginBottom: "10%" }}>
-                    <MyProjectCard></MyProjectCard>
-                  </div>
-                  <div style={{ height: "45%" }}>
-                    <MyProjectCard></MyProjectCard>
-                  </div>
+                  {projects.slice(0, 4).map((project, index) => {
+                    return index === 0 ? (
+                      <div style={{ height: "45%", marginBottom: "10%" }}>
+                        <MyProjectCard
+                          name={project.name}
+                          lab={formatLab(project.lab)}
+                          members={project.numberOfMembers}
+                          maxMembers={project.maxMembers}
+                          startDate={project.startDate}
+                          endDate={project.finalDate}
+                          progress={project.percentageDone}
+                          status={project.status}
+                          typeMember={project.userInProjectType}
+                        ></MyProjectCard>
+                      </div>
+                    ) : (
+                      index === 3 && (
+                        <div style={{ height: "45%" }}>
+                          <MyProjectCard
+                            name={project.name}
+                            lab={formatLab(project.lab)}
+                            members={project.numberOfMembers}
+                            maxMembers={project.maxMembers}
+                            startDate={project.startDate}
+                            endDate={project.finalDate}
+                            progress={project.percentageDone}
+                            status={project.status}
+                            typeMember={project.userInProjectType}
+                          ></MyProjectCard>
+                        </div>
+                      )
+                    );
+                  })}
                 </Col>
                 <Col>
-                  <div style={{ height: "45%", marginBottom: "10%" }}>
-                    <MyProjectCard></MyProjectCard>
-                  </div>
-                  <div style={{ height: "45%" }}>
-                    <MyProjectCard></MyProjectCard>
-                  </div>
+                  {projects.slice(1, 5).map((project, index) => {
+                    return index === 0 ? (
+                      <div style={{ height: "45%", marginBottom: "10%" }}>
+                        <MyProjectCard
+                          name={project.name}
+                          lab={formatLab(project.lab)}
+                          members={project.numberOfMembers}
+                          maxMembers={project.maxMembers}
+                          startDate={project.startDate}
+                          endDate={project.finalDate}
+                          progress={project.percentageDone}
+                          status={project.status}
+                          typeMember={project.userInProjectType}
+                        ></MyProjectCard>
+                      </div>
+                    ) : (
+                      index === 3 && (
+                        <div style={{ height: "45%" }}>
+                          <MyProjectCard
+                            name={project.name}
+                            lab={formatLab(project.lab)}
+                            members={project.numberOfMembers}
+                            maxMembers={project.maxMembers}
+                            startDate={project.startDate}
+                            endDate={project.finalDate}
+                            progress={project.percentageDone}
+                            status={project.status}
+                            typeMember={project.userInProjectType}
+                          ></MyProjectCard>
+                        </div>
+                      )
+                    );
+                  })}
                 </Col>
                 <Col>
-                  <div style={{ height: "45%", marginBottom: "10%" }}>
-                    <MyProjectCard></MyProjectCard>
-                  </div>
-                  <div style={{ height: "45%" }}>
-                    <MyProjectCard></MyProjectCard>
-                  </div>
+                  {projects.slice(2, 6).map((project, index) => {
+                    return index === 0 ? (
+                      <div style={{ height: "45%", marginBottom: "10%" }}>
+                        <MyProjectCard
+                          name={project.name}
+                          lab={formatLab(project.lab)}
+                          members={project.numberOfMembers}
+                          maxMembers={project.maxMembers}
+                          startDate={project.startDate}
+                          endDate={project.finalDate}
+                          progress={project.percentageDone}
+                          status={project.status}
+                          typeMember={project.userInProjectType}
+                        ></MyProjectCard>
+                      </div>
+                    ) : (
+                      index === 3 && (
+                        <div style={{ height: "45%" }}>
+                          <MyProjectCard
+                            name={project.name}
+                            lab={formatLab(project.lab)}
+                            members={project.numberOfMembers}
+                            maxMembers={project.maxMembers}
+                            startDate={project.startDate}
+                            endDate={project.finalDate}
+                            progress={project.percentageDone}
+                            status={project.status}
+                            typeMember={project.userInProjectType}
+                          ></MyProjectCard>
+                        </div>
+                      )
+                    );
+                  })}
                 </Col>
               </Row>
             </Col>
@@ -59,9 +209,11 @@ export default function MyProjectsPage() {
               style={{ justifyContent: "center" }}
             >
               {" "}
-              <button className="btn-arrow">
-                <i className="fas fa-chevron-right fa-3x ilm-arrow"></i>
-              </button>
+              {currentPage < totalPages && (
+                <button className="btn-arrow" onClick={handleNextClick}>
+                  <i className="fas fa-chevron-right fa-3x ilm-arrow"></i>
+                </button>
+              )}
             </Col>
           </Row>
         </Container>

@@ -127,6 +127,21 @@ async function getLabsWithSessionId() {
   }
 }
 
+async function getProjectsFilters() {
+  try {
+    return await fetch(`${baseURL}project/filters`, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+  } catch (error) {
+    console.error("Error during fetching projects filters:", error);
+  }
+}
+
 async function getAllStatus() {
   try {
     return await fetch(`${baseURL}project/allStatus`, {
@@ -350,6 +365,34 @@ async function getTableProjects(
   }
 }
 
+async function getMyProjectsTable(
+  page,
+  lab,
+  status,
+  slotsAvailable,
+  keyword,
+  type
+) {
+  try {
+    const response = await fetch(
+      `${baseURL}project/myprojects?page=${page}&lab=${lab}&status=${status}&slotsAvailable=${slotsAvailable}&keyword=${keyword}&memberType=${type}`,
+      {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      }
+    );
+
+    return response;
+  } catch (error) {
+    console.error("Error getting table projects:", error);
+    throw error;
+  }
+}
+
 async function logoutUser() {
   try {
     const response = await fetch(`${baseURL}user/logout`, {
@@ -499,7 +542,12 @@ async function updatePassword(currentPassword, newPassword) {
   }
 }
 
-async function getReceivedMessages(sessionId, page = 1, pageSize = 10, unread = false) {
+async function getReceivedMessages(
+  sessionId,
+  page = 1,
+  pageSize = 10,
+  unread = false
+) {
   try {
     const response = await fetch(
       `${baseURL}mail/received?page=${page}&pageSize=${pageSize}&unread=${unread}`,
@@ -624,7 +672,13 @@ async function getUnreadNumber(sessionId) {
   }
 }
 
-async function searchMails(sessionId, query, page = 1, pageSize = 10, unread = false) {
+async function searchMails(
+  sessionId,
+  query,
+  page = 1,
+  pageSize = 10,
+  unread = false
+) {
   try {
     const response = await fetch(
       `${baseURL}mail/search?query=${query}&page=${page}&pageSize=${pageSize}&unread=${unread}`,
@@ -637,12 +691,11 @@ async function searchMails(sessionId, query, page = 1, pageSize = 10, unread = f
         credentials: "include",
       }
     );
-    return response.json(); 
+    return response.json();
   } catch (error) {
     console.error("Error searching mails:", error);
   }
 }
-
 
 async function searchSentMails(sessionId, query, page, pageSize) {
   try {
@@ -694,7 +747,6 @@ async function getUserProjects(sessionId, inviteeUsername) {
   }
 }
 
-
 async function inviteUserToProject(sessionId, projectName, systemUsername) {
   try {
     const response = await fetch(
@@ -743,14 +795,56 @@ async function getAllResources(
   }
 }
 
-async function getAllResourcesTypes() {
+async function getResourcesFilters(withNames) {
   try {
-    const response = await fetch(`${baseURL}resource/types`, {
-      method: "GET",
+    const response = await fetch(
+      `${baseURL}resource/filters?withNames=${withNames}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      }
+    );
+
+    return response;
+  } catch (error) {
+    console.error("Error receiving all resources:", error);
+  }
+}
+
+async function createResource(
+  name,
+  description,
+  type,
+  brand,
+  serialNumber,
+  supplier,
+  supplierContact,
+  observations
+) {
+  let resourceCreationDto = {
+    name: name,
+    description: description,
+    type: type,
+    brand: brand,
+    serialNumber: serialNumber,
+    supplierName: supplier,
+    supplierContact: supplierContact,
+    observations: observations,
+  };
+
+  console.log(resourceCreationDto);
+
+  try {
+    const response = await fetch(`${baseURL}resource`, {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       credentials: "include",
+      body: JSON.stringify(resourceCreationDto),
     });
 
     return response;
@@ -759,35 +853,22 @@ async function getAllResourcesTypes() {
   }
 }
 
-async function getAllSuppliersNames() {
+async function findSupplierContact(supplierName) {
   try {
-    const response = await fetch(`${baseURL}supplier/names`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    });
-
+    const response = await fetch(
+      `${baseURL}supplier/contact?supplierName=${supplierName}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      }
+    );
+    console.log(response);
     return response;
   } catch (error) {
-    console.error("Error receiving all resources:", error);
-  }
-}
-
-async function getAllBrands() {
-  try {
-    const response = await fetch(`${baseURL}resource/brands`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    });
-
-    return response;
-  } catch (error) {
-    console.error("Error receiving all resources:", error);
+    console.error("Error verifying supplier:", error);
   }
 }
 
@@ -816,14 +897,17 @@ async function getUnreadNotificationsCount(sessionId) {
 
 async function fetchNotifications(sessionId, page) {
   try {
-    const response = await fetch(`${baseURL}notification/userNotifications?page=${page}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      cookies: `session-id=${sessionId}`,
-    });
+    const response = await fetch(
+      `${baseURL}notification/userNotifications?page=${page}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        cookies: `session-id=${sessionId}`,
+      }
+    );
     if (!response.ok) {
       throw new Error("Failed to fetch notifications");
     }
@@ -836,7 +920,9 @@ async function fetchNotifications(sessionId, page) {
 
 async function respondToInvite(sessionId, projectName, response) {
   try {
-    const endpoint = `${baseURL}project/respondToInvite?projectName=${encodeURIComponent(projectName)}&response=${response}`;
+    const endpoint = `${baseURL}project/respondToInvite?projectName=${encodeURIComponent(
+      projectName
+    )}&response=${response}`;
     const fetchResponse = await fetch(endpoint, {
       method: "POST",
       headers: {
@@ -857,9 +943,6 @@ async function respondToInvite(sessionId, projectName, response) {
     return { error: error.message };
   }
 }
-
-
-
 
 export {
   registerUser,
@@ -899,10 +982,12 @@ export {
   getUserProjects,
   inviteUserToProject,
   getAllResources,
-  getAllResourcesTypes,
-  getAllSuppliersNames,
-  getAllBrands,
   getUnreadNotificationsCount,
   fetchNotifications,
   respondToInvite,
+  getResourcesFilters,
+  createResource,
+  getMyProjectsTable,
+  getProjectsFilters,
+  findSupplierContact,
 };

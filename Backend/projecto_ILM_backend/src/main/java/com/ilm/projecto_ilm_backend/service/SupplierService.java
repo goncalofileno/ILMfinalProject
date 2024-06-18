@@ -3,10 +3,7 @@ package com.ilm.projecto_ilm_backend.service;
 import com.ilm.projecto_ilm_backend.bean.SupplierBean;
 import com.ilm.projecto_ilm_backend.validator.DatabaseValidator;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.CookieParam;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.apache.logging.log4j.LogManager;
@@ -42,4 +39,26 @@ public class SupplierService {
             return Response.status(Response.Status.UNAUTHORIZED).entity("Unauthorized access").build();
         }
     }
+
+    @GET
+    @Path("/contact")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response findSupplierContactByName(@CookieParam("session-id") String sessionId, @QueryParam("supplierName")String supplierName) throws UnknownHostException {
+        String clientIP = InetAddress.getLocalHost().getHostAddress();
+        logger.info("Received a request to verify if the name of a supplier exist from a user from IP address: " + clientIP);
+        if (databaseValidator.checkSessionId(sessionId)) {
+            try {
+                String supplierContact=supplierBean.findSupplierContactByName(supplierName);
+                if (supplierContact != null) return Response.ok(supplierContact).build();
+                else return Response.status(Response.Status.NOT_FOUND).entity("Supplier not found").build();
+            } catch (Exception e) {
+                logger.error("An error occurred while verifying if the name of a supplier exists: " + e.getMessage() + " from IP address: " + clientIP);
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("An error occurred while verifying if the name of a supplier exist").build();
+            }
+        } else {
+            return Response.status(Response.Status.UNAUTHORIZED).entity("Unauthorized access").build();
+        }
+    }
+
+
 }

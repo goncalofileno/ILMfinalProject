@@ -45,6 +45,7 @@ public class ResourceService {
         }
     }
 
+
     @GET
     @Path("/types")
     @Produces(MediaType.APPLICATION_JSON)
@@ -102,4 +103,24 @@ public class ResourceService {
             return Response.status(Response.Status.UNAUTHORIZED).entity("Unauthorized access").build();
         }
     }
+
+    @GET
+    @Path("/filters")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getResourcesFilters(@CookieParam("session-id") String sessionId, @QueryParam("withNames")boolean withNames) throws UnknownHostException {
+        String clientIP = InetAddress.getLocalHost().getHostAddress();
+        logger.info("Received a request to receive the resource filters from a user from IP address: " + clientIP);
+        if(databaseValidator.checkSessionId(sessionId)) {
+            try {
+                return Response.ok(resourceBean.getResourceFiltersDto(withNames)).build();
+            } catch (Exception e) {
+                logger.error("An error occurred while retrieving resources filters: " + e.getMessage() + " from IP address: " + clientIP);
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("An error occurred while retrieving all resources brands").build();
+            }
+        }else {
+            return Response.status(Response.Status.UNAUTHORIZED).entity("Unauthorized access").build();
+        }
+    }
+
+
 }

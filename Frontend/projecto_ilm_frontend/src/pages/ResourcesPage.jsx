@@ -101,6 +101,7 @@ export default function ResourcesPage() {
   return (
     <>
       <AppNavbar />
+
       <AddResourceModal
         isModalActive={isModalActive}
         setIsModalActive={setIsModalActive}

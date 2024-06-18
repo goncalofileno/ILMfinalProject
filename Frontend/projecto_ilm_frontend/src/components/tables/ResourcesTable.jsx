@@ -61,7 +61,7 @@ export default function ResourcesTable({
       <table className="centered-table">
         <thead>
           <tr>
-            <th onClick={sortByName}>
+            <th onClick={sortByName} style={{ width: "25%" }}>
               {" "}
               <span style={{ marginRight: "10px" }}>Name</span>
               {nameAsc ? (
@@ -70,7 +70,7 @@ export default function ResourcesTable({
                 nameAsc === false && <i class="fas fa-arrow-down fa-xs"></i>
               )}
             </th>
-            <th onClick={sortByType}>
+            <th onClick={sortByType} style={{ width: "25%" }}>
               {" "}
               <span style={{ marginRight: "10px" }}>Type</span>
               {typeAsc ? (
@@ -79,7 +79,7 @@ export default function ResourcesTable({
                 typeAsc === false && <i class="fas fa-arrow-down fa-xs"></i>
               )}
             </th>
-            <th onClick={sortByBrand}>
+            <th onClick={sortByBrand} style={{ width: "25%" }}>
               {" "}
               <span style={{ marginRight: "10px" }}>Brand</span>
               {brandAsc ? (
@@ -88,7 +88,7 @@ export default function ResourcesTable({
                 brandAsc === false && <i class="fas fa-arrow-down fa-xs"></i>
               )}
             </th>
-            <th onClick={sortBySupplier}>
+            <th onClick={sortBySupplier} style={{ width: "25%" }}>
               {" "}
               <span style={{ marginRight: "10px" }}>Supplier</span>
               {supplierAsc ? (

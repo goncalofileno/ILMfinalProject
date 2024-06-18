@@ -1,9 +1,9 @@
 #autocomplete-container {
-  position: absolute;
   z-index: 10000;
   display: flex;
   flex-direction: column;
   gap: 3px;
+  padding: 0;
 }
 
 #suggestions-list {
@@ -26,6 +26,7 @@
 .autocomplete-input {
   border-radius: 0px;
   border-bottom: 1px solid rgba(73, 73, 73, 0.536);
+  padding: 0;
 }
 .autocomplete-input:focus {
   background-color: transparent;

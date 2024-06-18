@@ -31,10 +31,15 @@ function formatResourceType(type) {
   return type.charAt(0) + type.slice(1).toLowerCase();
 }
 
+function formatTypeUserInProject(type) {
+  return type.charAt(0) + type.slice(1).toLowerCase();
+}
+
 export {
   formatLab,
   formatStatus,
   formatStatusDropDown,
   formatSkill,
   formatResourceType,
+  formatTypeUserInProject,
 };

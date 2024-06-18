@@ -43,6 +43,29 @@ import com.ilm.projecto_ilm_backend.ENUMS.ConvertersENUM.StateProjectEnumConvert
                 "ORDER BY CASE WHEN up.user.id IS NOT NULL THEN 0 ELSE 1 END, p.name ASC"
 )
 
+@NamedQuery(
+        name = "Project.getMyProjectsInfo",
+        query = "SELECT p.id, p.name, p.lab, p.status, FUNCTION('DATE', p.startDate), FUNCTION('DATE', p.endDate), p.maxMembers,p.photo, up.type " +
+                "FROM ProjectEntity p LEFT JOIN UserProjectEntity up ON p.id = up.project.id " +
+                "WHERE (:lab IS NULL OR p.lab = :lab) " +
+                "AND (:status IS NULL OR p.status = :status) " +
+                "AND (:keyword IS NULL OR LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%')))" +
+                "AND (up.user.id = :userId) " +
+                "AND (up.type=0 OR up.type=1 OR up.type=2 OR up.type=3 OR up.type=4) " +
+                "GROUP BY p.id, p.name, p.lab, p.status, p.startDate, p.endDate, p.maxMembers,up.type " +
+                "HAVING (:slotsAvailable = FALSE OR p.maxMembers > COUNT(up))")
+
+@NamedQuery(name = "Project.getNumberOfMyProjectsInfo",
+        query = "SELECT COUNT(p) " +
+                "FROM ProjectEntity p LEFT JOIN UserProjectEntity up ON p.id = up.project.id " +
+                "WHERE (:lab IS NULL OR p.lab = :lab) " +
+                "AND (:status IS NULL OR p.status = :status) " +
+                "AND (:keyword IS NULL OR (LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%'))))" +
+                "AND (up.user.id = :userId) " +
+                "AND (up.type = 0 OR up.type = 1 OR up.type = 2 OR up.type = 3 OR up.type = 4) " +
+                "AND (:slotsAvailable = FALSE OR p.maxMembers > " +
+                "(SELECT COUNT(up) FROM UserProjectEntity up WHERE up.project.id = p.id))")
+
 @NamedQuery(name = "Project.countProjects", query = "SELECT COUNT(p) FROM ProjectEntity p")
 
 public class ProjectEntity implements Serializable {

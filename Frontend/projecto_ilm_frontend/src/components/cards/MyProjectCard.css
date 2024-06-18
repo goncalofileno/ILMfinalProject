@@ -1,11 +1,11 @@
 .my-project-card {
-  width: 94%;
-  height: 90%;
+  width: 88%;
+  height: 85%;
   color: rgb(60, 60, 60);
   font-size: 21px;
   border-radius: 15px;
   transition: box-shadow 0.3s ease;
-  border: 1px solid black;
+  border: 1px solid rgba(128, 128, 128, 0.688);
   display: flex;
   flex-direction: column;
   cursor: pointer;
@@ -13,7 +13,7 @@
 
 .my-projects-banner {
   height: 30%;
-  border-bottom: 1px solid;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.688);
   padding: 2px 8px;
   background-image: url(https://cdn.pixabay.com/photo/2016/03/29/08/48/project-1287781_1280.jpg);
   border-top-left-radius: 15px;
@@ -34,9 +34,9 @@
 }
 
 .my-project-title {
-  height: 10%;
+  height: 12%;
   font-weight: 500;
-  font-size: 19px;
+  font-size: 22px;
   padding-left: 15px;
   color: rgb(30, 40, 82);
   cursor: pointer;

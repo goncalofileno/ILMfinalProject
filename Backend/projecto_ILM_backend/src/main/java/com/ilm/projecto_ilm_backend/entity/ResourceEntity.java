@@ -46,6 +46,10 @@ import java.util.List;
         query = "SELECT DISTINCT r.brand FROM ResourceEntity r ")
 
 @NamedQuery(
+        name = "Resource.getNames",
+        query = "SELECT DISTINCT r.name FROM ResourceEntity r ")
+
+@NamedQuery(
         name = "Resource.getNumberOfResourcesDetails",
         query = "SELECT COUNT(r) FROM ResourceEntity r " +
                 "JOIN r.supplier s "+
