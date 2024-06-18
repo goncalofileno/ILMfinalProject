@@ -23,9 +23,11 @@ public class ProjectProfilePageDto {
     private List<StateProjectENUM> statesToChange;
     private int progress;
     private int maxMembers;
-    public UserInProjectTypeENUM typeOfUserSeingProject;
+    private UserInProjectTypeENUM typeOfUserSeingProject;
+    private String reason;
 
-    public ProjectProfilePageDto(String title, StateProjectENUM state, String description, LocalDateTime startDate, LocalDateTime endDate, String photo, String lab, ProjectMemberDto creator, List<ProjectMemberDto> members, List<String> keywords, List<SkillDto> skills, List<StateProjectENUM> statesToChange, int progress, int maxMembers, UserInProjectTypeENUM typeOfUserSeingProject) {
+
+    public ProjectProfilePageDto(String title, StateProjectENUM state, String description, LocalDateTime startDate, LocalDateTime endDate, String photo, String lab, ProjectMemberDto creator, List<ProjectMemberDto> members, List<String> keywords, List<SkillDto> skills, List<StateProjectENUM> statesToChange, int progress, int maxMembers, UserInProjectTypeENUM typeOfUserSeingProject, String reason) {
         this.title = title;
         this.state = state;
         this.description = description;
@@ -41,6 +43,7 @@ public class ProjectProfilePageDto {
         this.progress = progress;
         this.maxMembers = maxMembers;
         this.typeOfUserSeingProject = typeOfUserSeingProject;
+        this.reason = reason;
     }
 
     public ProjectProfilePageDto() {
@@ -164,5 +167,13 @@ public class ProjectProfilePageDto {
 
     public void setTypeOfUserSeingProject(UserInProjectTypeENUM typeOfUserSeingProject) {
         this.typeOfUserSeingProject = typeOfUserSeingProject;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
     }
 }

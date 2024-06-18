@@ -6,11 +6,13 @@ public class ProjectMemberDto {
     private String name;
     private String systemUsername;
     private UserInProjectTypeENUM type;
+    private String profilePicture;
 
-    public ProjectMemberDto(String name, String systemUsername, UserInProjectTypeENUM type) {
+    public ProjectMemberDto(String name, String systemUsername, UserInProjectTypeENUM type, String profilePicture) {
         this.name = name;
         this.systemUsername = systemUsername;
         this.type = type;
+        this.profilePicture = profilePicture;
     }
 
     public ProjectMemberDto() {
@@ -38,5 +40,13 @@ public class ProjectMemberDto {
 
     public void setType(UserInProjectTypeENUM type) {
         this.type = type;
+    }
+
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
     }
 }

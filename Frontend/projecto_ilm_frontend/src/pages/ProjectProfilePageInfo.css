@@ -1,72 +1,87 @@
 .bckg-color-ilm-page {
     background-color: #f8f9fa;
-  }
-  
-  .ilm-pageb {
+}
+
+.ilm-pageb {
     padding-top: 20px;
-  }
-  
-  .table-hover tbody tr:hover {
+}
+
+.table-hover tbody tr:hover {
     background-color: #f1f1f1;
-  }
-  
-  .table thead th {
+}
+
+.table thead th {
     background-color: #343a40;
     color: white;
     text-align: center;
-  }
-  
-  .table tbody td {
+}
+
+.table tbody td {
     text-align: center;
     vertical-align: middle;
     padding: 8px;
-  }
-  
-  .table tbody tr {
+}
+
+.table tbody tr {
     cursor: pointer;
-  }
-  
-  .table th, .table td {
+}
+
+.table th, .table td {
     padding: 8px;
-  }
-  
-  .card-container {
+}
+
+.card-container {
     margin-top: 20px;
-  }
-  
-  .card-body {
+}
+
+.card-body {
     padding: 20px;
-  }
-  
-  .skill-interest-card {
+}
+
+.skill-interest-card {
     background-color: #e9ecef;
     border-radius: 5px;
     padding: 10px;
     text-align: center;
     font-size: 14px;
-  }
-  
-  .centered-message {
+}
+
+.centered-message {
     text-align: center;
     margin-top: 20px;
-  }
-  
-  .clickable {
+}
+
+.clickable {
     cursor: pointer;
-  }
-  
-  .pills-container {
+}
+
+.pills-container {
     margin-bottom: 20px;
-  }
-  
-  .button-group {
+}
+
+.button-group {
     display: flex;
     justify-content: space-between;
     align-items: center;
-  }
-  
-  .button-group-horizontal {
+}
+
+.button-group-horizontal {
     display: flex;
     gap: 10px;
-  }
-  
+}
+
+.label-applyButton {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.admin-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.admin-buttons .btn {
+    font-size: 0.875rem; /* Smaller font size */
+    padding: 5px 10px;  /* Smaller padding */
+}

@@ -451,6 +451,7 @@ public class ProjectBean {
         projectProfilePageDto.setStatesToChange(statesToChange);
         projectProfilePageDto.setProgress(progress);
         projectProfilePageDto.setTypeOfUserSeingProject(getUserTypeInProject(userId, project.getId()));
+        projectProfilePageDto.setReason(project.getReason());
 
         return projectProfilePageDto;
     }
@@ -468,6 +469,7 @@ public class ProjectBean {
         member.setName(user.getFirstName() + " " + user.getLastName());
         member.setSystemUsername(user.getSystemUsername());
         member.setType(type);
+        member.setProfilePicture(user.getPhoto());
         return member;
     }
 

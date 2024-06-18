@@ -1,25 +1,27 @@
 import React from "react";
-import { Table } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { Table, Image } from "react-bootstrap";
+import "./ProjectMembersTable.css";
 
 const ProjectMembersTable = ({ members }) => {
-  const navigate = useNavigate();
-
-  const handleMemberClick = (systemUsername) => {
-    navigate(`/profile/${systemUsername}`);
-  };
-
   return (
-    <Table striped bordered hover className="mt-4">
+    <Table striped bordered hover className="mt-2">
       <thead>
         <tr>
+          <th>Photo</th>
           <th>Name</th>
           <th>Type</th>
         </tr>
       </thead>
       <tbody>
-        {members.map((member) => (
-          <tr key={member.systemUsername} onClick={() => handleMemberClick(member.systemUsername)}>
+        {members.map((member, index) => (
+          <tr key={index}>
+            <td>
+              <Image
+                src={member.profilePicture}
+                roundedCircle
+                className="member-profile-picture"
+              />
+            </td>
             <td>{member.name}</td>
             <td>{member.type}</td>
           </tr>
