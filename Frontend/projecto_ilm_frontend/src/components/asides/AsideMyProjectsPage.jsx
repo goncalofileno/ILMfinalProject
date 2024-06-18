@@ -116,7 +116,7 @@ export default function AsideMyProjectsPage({
           onClick={() => {
             setSelectedLab("");
             setSelectedStatus("");
-
+            setSelectedTypeMember("");
             setCurrentPage(1);
             setKeyword("");
             setNavigateTableProjectsTrigger(!navigateTableProjectsTrigger);

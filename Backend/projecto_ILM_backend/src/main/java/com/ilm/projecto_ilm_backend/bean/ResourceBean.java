@@ -166,7 +166,8 @@ public class ResourceBean {
             SupplierEntity supplier = supplierDao.findByName(resourceCreationDto.getSupplierName());
             if(supplier==null){
                 supplier = new SupplierEntity();
-                supplier.setName(resourceCreationDto.getSupplierName());
+                String supplierValidateName=resourceCreationDto.getSupplierName().substring(0,1).toUpperCase() + resourceCreationDto.getSupplierName().substring(1);
+                supplier.setName(supplierValidateName);
                 supplier.setContact(resourceCreationDto.getSupplierContact());
                 supplierDao.persist(supplier);
             }

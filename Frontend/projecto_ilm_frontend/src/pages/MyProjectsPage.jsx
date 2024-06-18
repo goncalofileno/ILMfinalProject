@@ -2,7 +2,7 @@ import AppNavbar from "../components/headers/AppNavbar";
 import AsideMyProjectsPage from "../components/asides/AsideMyProjectsPage";
 import MyProjectCard from "../components/cards/MyProjectCard";
 import "./MyProjectsPage.css";
-import { Col, Row, Container } from "react-bootstrap";
+import { Col, Row, Container, Form, Button, InputGroup } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import { getMyProjectsTable } from "../utilities/services";
 import { useNavigate } from "react-router-dom";
@@ -76,10 +76,42 @@ export default function MyProjectsPage() {
 
       {console.log(projects)}
       <div className="ilm-pageb-with-aside">
-        <h1 className="page-title">
+        <h1 className="page-title" style={{ marginBottom: "0px" }}>
           <span className="app-slogan-1">My </span>
           <span className="app-slogan-2">Projects</span>
         </h1>
+        <InputGroup
+          className="mail-filters"
+          style={{ width: "50%", left: "50%", transform: "translateX(-50%)" }}
+        >
+          <Form.Control
+            type="text"
+            placeholder="Search for name"
+            style={{ borderRadius: "10px", cursor: "text", marginBottom: "1%" }}
+            className="custom-focus"
+            value={keyword}
+            onChange={(e) => setKeyword(e.target.value)}
+          />
+          <Button
+            variant="primary"
+            onClick={() => {
+              setNavigateTableProjectsTrigger(!navigateTableProjectsTrigger);
+            }}
+            id="primary-btn-boot"
+          >
+            Search
+          </Button>
+          <Button
+            variant="secondary"
+            onClick={() => {
+              setKeyword("");
+              setNavigateTableProjectsTrigger(!navigateTableProjectsTrigger);
+            }}
+            style={{ borderRadius: "10px" }}
+          >
+            Clear Search
+          </Button>
+        </InputGroup>
         <Container fluid className="my-projects-container">
           <Row style={{ height: "100%" }}>
             <Col
@@ -99,7 +131,7 @@ export default function MyProjectsPage() {
                 <Col style={{ height: "100%" }}>
                   {projects.slice(0, 4).map((project, index) => {
                     return index === 0 ? (
-                      <div style={{ height: "45%", marginBottom: "10%" }}>
+                      <div style={{ height: "45%", marginBottom: "5%" }}>
                         <MyProjectCard
                           name={project.name}
                           lab={formatLab(project.lab)}
@@ -134,7 +166,7 @@ export default function MyProjectsPage() {
                 <Col>
                   {projects.slice(1, 5).map((project, index) => {
                     return index === 0 ? (
-                      <div style={{ height: "45%", marginBottom: "10%" }}>
+                      <div style={{ height: "45%", marginBottom: "5%" }}>
                         <MyProjectCard
                           name={project.name}
                           lab={formatLab(project.lab)}
@@ -169,7 +201,7 @@ export default function MyProjectsPage() {
                 <Col>
                   {projects.slice(2, 6).map((project, index) => {
                     return index === 0 ? (
-                      <div style={{ height: "45%", marginBottom: "10%" }}>
+                      <div style={{ height: "45%", marginBottom: "5%" }}>
                         <MyProjectCard
                           name={project.name}
                           lab={formatLab(project.lab)}
