@@ -366,7 +366,7 @@ const ProjectProfilePageInfo = () => {
                       </Card.Text>
                       <ProgressBar
                         percentage={projectInfo.progress}
-                        status={formatStatus(projectInfo.state)}
+                        status={(projectInfo.state)}
                       />
                     </Card.Body>
                   </Col>
