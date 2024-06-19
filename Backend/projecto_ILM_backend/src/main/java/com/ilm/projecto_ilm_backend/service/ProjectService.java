@@ -265,6 +265,9 @@ public class ProjectService {
                 int userId = userBean.getUserBySessionId(sessionId).getId();
                 String result = projectBean.joinProject(userId, projectSystemName);
                 return Response.ok(Collections.singletonMap("message", result)).build();
+            } catch (IllegalStateException e) {
+                logger.warn("Attempt to join a canceled project: " + e.getMessage() + " from IP address: " + clientIP);
+                return Response.status(Response.Status.BAD_REQUEST).entity(Collections.singletonMap("message", e.getMessage())).build();
             } catch (Exception e) {
                 logger.error("An error occurred while joining project: " + e.getMessage() + " from IP address: " + clientIP);
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(Collections.singletonMap("message", "An error occurred while joining project")).build();
@@ -273,6 +276,7 @@ public class ProjectService {
             return Response.status(Response.Status.UNAUTHORIZED).entity(Collections.singletonMap("message", "Unauthorized access")).build();
         }
     }
+
 
     @POST
     @Path("/cancelProject")
