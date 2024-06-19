@@ -130,7 +130,7 @@ public class ProjectBean {
 
     @Transactional
     public void createDefaultTasksIfNotExistent() {
-        for(int i = 1; i < numberOfProjectsToCreate + 1; i++) {
+        for (int i = 1; i < numberOfProjectsToCreate + 1; i++) {
 
             TaskEntity task1 = new TaskEntity();
             task1.setTitle("Task 1");
@@ -578,7 +578,9 @@ public class ProjectBean {
 
     private List<StateProjectENUM> getPossibleStatesToChange(int userId, ProjectEntity project) {
         if (userProjectDao.isUserCreatorOrManager(userId, project.getId())) {
-            if (project.getStatus() == StateProjectENUM.PLANNING || project.getStatus() == StateProjectENUM.READY) {
+            if (project.getStatus() == StateProjectENUM.CANCELED) {
+                return List.of(StateProjectENUM.CANCELED);
+            } else if (project.getStatus() == StateProjectENUM.PLANNING || project.getStatus() == StateProjectENUM.READY) {
                 return List.of(StateProjectENUM.PLANNING, StateProjectENUM.READY);
             } else {
                 return List.of(StateProjectENUM.APPROVED, StateProjectENUM.IN_PROGRESS, StateProjectENUM.CANCELED, StateProjectENUM.FINISHED);
@@ -586,6 +588,7 @@ public class ProjectBean {
         }
         return new ArrayList<>();
     }
+
 
     public int getProgress(int projectId) {
         ProjectEntity project = projectDao.findById(projectId);
@@ -632,6 +635,10 @@ public class ProjectBean {
 
         if (project == null) {
             throw new IllegalArgumentException("Project not found");
+        }
+
+        if (project.getStatus() == StateProjectENUM.CANCELED) {
+            throw new IllegalStateException("Project cannot be approved or rejected as it is canceled");
         }
 
         if (project.getStatus() != StateProjectENUM.READY) {
@@ -705,6 +712,10 @@ public class ProjectBean {
             throw new IllegalArgumentException("Project not found");
         }
 
+        if (project.getStatus() == StateProjectENUM.CANCELED) {
+            throw new IllegalStateException("Cannot join a canceled project");
+        }
+
         UserProjectEntity existingUserProject = userProjectDao.findByUserIdAndProjectId(userId, project.getId());
 
         if (existingUserProject != null) {
@@ -721,7 +732,7 @@ public class ProjectBean {
 
         userProjectDao.persist(userProjectEntity);
 
-        for(UserEntity teamLeader : teamLeaders) {
+        for (UserEntity teamLeader : teamLeaders) {
             notificationBean.createApplianceNotification(project.getSystemName(), userDao.getFullNameBySystemUsername(user.getSystemUsername()), teamLeader, user.getSystemUsername());
         }
 
@@ -731,6 +742,7 @@ public class ProjectBean {
     @Transactional
     public String cancelProject(int userId, String projectSystemName, String reason, String sessionId) {
         ProjectEntity project = projectDao.findBySystemName(projectSystemName);
+        UserEntity sender = userDao.findById(userId);
 
         if (project == null) {
             throw new IllegalArgumentException("Project not found");
@@ -741,16 +753,15 @@ public class ProjectBean {
 
         projectDao.merge(project);
 
-        // Get the sender information
-        UserEntity sender = userDao.findById(userId);
-
         // Get the list of team members
         List<UserEntity> teamMembers = getProjectMembersByProjectId(project.getId());
 
         // Loop through each team member and send email
         for (UserEntity user : teamMembers) {
-            // Create a notification for each team member
-            notificationBean.createProjectNotification(project.getSystemName(), StateProjectENUM.CANCELED, sender.getFirstName() + " " + sender.getLastName(), user, sender.getSystemUsername());
+            // Create a notification for each team member, except the sender
+            if (user.getId() != sender.getId()) {
+                notificationBean.createProjectNotification(project.getSystemName(), StateProjectENUM.CANCELED, userDao.getFullNameBySystemUsername(sender.getSystemUsername()), user, sender.getSystemUsername());
+            }
 
             // Send cancellation email
             String subject = "Project " + project.getName() + " Canceled";
@@ -797,6 +808,7 @@ public class ProjectBean {
 
     public String changeProjectState(int userId, String projectSystemName, StateProjectENUM newState, String reason) throws Exception {
         ProjectEntity project = projectDao.findBySystemName(projectSystemName);
+        UserEntity sender = userDao.findById(userId);
         if (project == null) {
             throw new Exception("Project not found");
         }
@@ -816,8 +828,10 @@ public class ProjectBean {
         }
 
         List<UserEntity> teamMembers = getProjectMembersByProjectId(project.getId());
-        for(UserEntity user : teamMembers) {
-            notificationBean.createProjectNotification(project.getSystemName(), newState, userDao.getFullNameBySystemUsername(userDao.findById(userId).getSystemUsername()), user, userDao.findById(userId).getSystemUsername());
+        for (UserEntity user : teamMembers) {
+            if (user.getId() != sender.getId()) {
+                notificationBean.createProjectNotification(project.getSystemName(), newState, userDao.getFullNameBySystemUsername(userDao.findById(userId).getSystemUsername()), user, userDao.findById(userId).getSystemUsername());
+            }
         }
 
         projectDao.merge(project);

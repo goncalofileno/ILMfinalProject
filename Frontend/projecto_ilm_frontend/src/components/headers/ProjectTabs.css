@@ -12,7 +12,7 @@
   }
   
   .project-tabs .nav-link {
-    color: #007bff;
+    color: #f39c12;
     padding: 10px 15px;
     cursor: pointer;
     border: 1px solid transparent;
@@ -25,7 +25,7 @@
   }
   
   .project-tabs .nav-link.active {
-    color: #495057;
+    color: rgb(30, 40, 82);
     background-color: #fff;
     border-color: #ddd;
     border-bottom-color: transparent;

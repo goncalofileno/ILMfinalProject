@@ -24,6 +24,12 @@ import ProjectTabs from "../components/headers/ProjectTabs";
 import ProjectMembersTable from "../components/tables/ProjectMembersTable";
 import ProgressBar from "../components/bars/ProgressBar";
 import AppNavbar from "../components/headers/AppNavbar";
+import {
+  formatLab,
+  formatStatus,
+  formatStatusDropDown,
+  formatSkill,
+} from "../utilities/converters";
 import "./ProjectProfilePageInfo.css";
 import Cookies from "js-cookie";
 
@@ -353,13 +359,26 @@ const ProjectProfilePageInfo = () => {
                   }}
                 ></div>
                 <Row>
+                  <Col md="12">
+                    <Card.Body>
+                      <Card.Text>
+                        <strong>Progress:</strong>
+                      </Card.Text>
+                      <ProgressBar
+                        percentage={projectInfo.progress}
+                        status={formatStatus(projectInfo.state)}
+                      />
+                    </Card.Body>
+                  </Col>
+                </Row>
+                <Row>
                   <Col md="6">
                     <Card.Body>
                       <Row style={{ marginBottom: "40px" }}>
                         <Col md="6">
                           <Card.Title>{projectInfo.title}</Card.Title>
                           <Card.Subtitle className="mb-2 text-muted">
-                            {projectInfo.state}
+                            {formatStatus(projectInfo.state)}
                           </Card.Subtitle>
                         </Col>
                         <Col md="6" className="text-right">
@@ -378,7 +397,7 @@ const ProjectProfilePageInfo = () => {
                         {new Date(projectInfo.endDate).toLocaleDateString()}
                       </Card.Text>
                       <Card.Text>
-                        <strong>Lab:</strong> {projectInfo.lab}
+                        <strong>Lab:</strong> {formatLab(projectInfo.lab)}
                       </Card.Text>
                       <Card.Text>
                         <strong>Creator:</strong>{" "}
@@ -395,7 +414,7 @@ const ProjectProfilePageInfo = () => {
                       </Card.Text>
                       {isCreatorOrManager && (
                         <>
-                          <Card.Text>
+                        <div className="states-to-change"><Card.Text>
                             <strong>States to Change:</strong>
                           </Card.Text>
                           <Form.Select
@@ -404,10 +423,11 @@ const ProjectProfilePageInfo = () => {
                           >
                             {projectInfo.statesToChange.map((state, index) => (
                               <option key={index} value={state}>
-                                {state}
+                                {formatStatusDropDown(state)}
                               </option>
                             ))}
-                          </Form.Select>
+                          </Form.Select></div>
+                          
                         </>
                       )}
                       <Card.Text>
@@ -418,13 +438,13 @@ const ProjectProfilePageInfo = () => {
                               <Col md="auto" key={skill.id}>
                                 <div className="skill-interest-card mb-3">
                                   <p className="mb-1">
-                                    <strong>{skill.name}</strong>
+                                    <strong>{formatSkill(skill.name)}</strong>
                                   </p>
                                   <p
                                     className="text-muted mb-1"
                                     style={{ fontSize: "0.85em" }}
                                   >
-                                    {skill.type}
+                                    {formatSkill(skill.type)}
                                   </p>
                                 </div>
                               </Col>
@@ -481,7 +501,7 @@ const ProjectProfilePageInfo = () => {
                               "MEMBER_BY_INVITATION",
                               "CANCELED"
                             ].includes(projectInfo.typeOfUserSeingProject) && (
-                              <Button variant="primary" onClick={handleJoinProject}>
+                              <Button variant="primary" onClick={handleJoinProject} style={{backgroundColor:"#f39c12", borderColor:"#f39c12"}}>
                                 Join Project
                               </Button>
                             )}
@@ -491,19 +511,7 @@ const ProjectProfilePageInfo = () => {
                     </Row>
                   </Col>
                 </Row>
-                <Row>
-                  <Col md="12">
-                    <Card.Body>
-                      <Card.Text>
-                        <strong>Progress:</strong>
-                      </Card.Text>
-                      <ProgressBar
-                        percentage={projectInfo.progress}
-                        status={projectInfo.state}
-                      />
-                    </Card.Body>
-                  </Col>
-                </Row>
+                
                 <Row>
                   <Col md="12">
                     <Card.Body>
@@ -595,7 +603,7 @@ const ProjectProfilePageInfo = () => {
           {["MANAGER", "CREATOR"].includes(
             projectInfo.typeOfUserSeingProject
           ) && (
-            <Button variant="primary" onClick={handleMarkAsRead}>
+            <Button variant="primary" onClick={handleMarkAsRead} style={{backgroundColor:"#f39c12", borderColor:"#f39c12"}}>
               Mark as Read
             </Button>
           )}

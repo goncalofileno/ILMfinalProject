@@ -16,13 +16,13 @@
     text-align: center;
 }
 
-.table tbody td {
+#project-members-table.table tbody td {
     text-align: center;
     vertical-align: middle;
     padding: 8px;
 }
 
-.table tbody tr {
+#project-members-table.table tbody tr {
     cursor: pointer;
 }
 
@@ -84,4 +84,68 @@
 .admin-buttons .btn {
     font-size: 0.875rem; /* Smaller font size */
     padding: 5px 10px;  /* Smaller padding */
+}
+
+.project-cover-photo {
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.card-title,
+.card-subtitle {
+    color: rgb(30, 40, 82);
+}
+
+.card-text strong {
+    color: rgb(30, 40, 82);
+}
+
+#application-request-card {
+    background-color: rgba(30, 40, 82, 0.1);
+    border: 1px solid rgba(30, 40, 82, 0.2);
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+#application-request-card .button-group-horizontal .btn-danger {
+    background-color: #f39c12;
+    border-color: #f39c12;
+}
+
+#application-request-card .button-group-horizontal .btn-success {
+    background-color: rgb(30, 40, 82);
+    border-color: rgb(30, 40, 82);
+}
+
+#application-request-card .button-group-horizontal .btn:hover {
+    opacity: 0.9;
+}
+
+.modal-header,
+.modal-footer {
+    background-color: rgb(30, 40, 82);
+    color: white;
+}
+
+.modal-footer .btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+.modal-footer .btn-danger {
+    background-color: #f39c12;
+    border-color: #f39c12;
+}
+
+.modal-footer .btn-primary,
+.modal-footer .btn-warning {
+    background-color: rgb(30, 40, 82);
+    border-color: rgb(30, 40, 82);
+}
+
+.states-to-change{
+    margin-bottom: 20px;
 }
