@@ -61,4 +61,8 @@ public class SupplierBean {
     public List<String> getAllNames(){
         return supplierDao.getAllNames();
     }
+
+    public String findSupplierContactByName(String name){
+        return supplierDao.findSupplierContactByName(name);
+    }
 }

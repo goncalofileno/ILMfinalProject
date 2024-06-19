@@ -5,10 +5,10 @@ import com.ilm.projecto_ilm_backend.ENUMS.ResourceTypeENUM;
 public class ResourceCreationDto {
     private String name;
     private String description;
-    private String observation;
+    private String observations;
     private String brand;
     private String serialNumber;
-    private ResourceTypeENUM type;
+    private String type;
     private String supplierName;
     private String supplierContact;
 
@@ -31,12 +31,12 @@ public class ResourceCreationDto {
         this.description = description;
     }
 
-    public String getObservation() {
-        return observation;
+    public String getObservations() {
+        return observations;
     }
 
-    public void setObservation(String observation) {
-        this.observation = observation;
+    public void setObservations(String observation) {
+        this.observations = observation;
     }
 
     public String getBrand() {
@@ -55,11 +55,11 @@ public class ResourceCreationDto {
         this.serialNumber = serialNumber;
     }
 
-    public ResourceTypeENUM getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(ResourceTypeENUM type) {
+    public void setType(String type) {
         this.type = type;
     }
 

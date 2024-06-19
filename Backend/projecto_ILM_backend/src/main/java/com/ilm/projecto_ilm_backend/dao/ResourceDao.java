@@ -112,6 +112,10 @@ public class ResourceDao extends AbstractDao<ResourceEntity> {
         return em.createNamedQuery("Resource.getAllBrands", String.class).getResultList();
     }
 
+    public List<String> getAllNames() {
+        return em.createNamedQuery("Resource.getNames", String.class).getResultList();
+    }
+
     public ResourceEntity findResourceByDetails(String name, String brand, ResourceTypeENUM type, String supplierName) {
         try {
             return em.createNamedQuery("Resource.findResourceByDetails", ResourceEntity.class)

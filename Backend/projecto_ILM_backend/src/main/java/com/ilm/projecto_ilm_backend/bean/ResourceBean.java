@@ -1,8 +1,8 @@
 package com.ilm.projecto_ilm_backend.bean;
 
 import com.ilm.projecto_ilm_backend.ENUMS.ResourceTypeENUM;
-import com.ilm.projecto_ilm_backend.ENUMS.StateProjectENUM;
 import com.ilm.projecto_ilm_backend.dto.resource.ResourceCreationDto;
+import com.ilm.projecto_ilm_backend.dto.resource.ResourceFiltersDto;
 import com.ilm.projecto_ilm_backend.dto.resource.ResourceTableDto;
 import com.ilm.projecto_ilm_backend.dto.resource.ResourceTableInfoDto;
 import com.ilm.projecto_ilm_backend.entity.ResourceEntity;
@@ -11,7 +11,6 @@ import jakarta.ejb.EJB;
 import jakarta.enterprise.context.ApplicationScoped;
 import com.ilm.projecto_ilm_backend.dao.ResourceDao;
 import com.ilm.projecto_ilm_backend.dao.SupplierDao;
-import jakarta.inject.Inject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -163,11 +162,12 @@ public class ResourceBean {
 
     public boolean createResource(ResourceCreationDto resourceCreationDto) {
             ResourceEntity resourceEntity;
-            resourceEntity=resourceDao.findResourceByDetails(resourceCreationDto.getName(), resourceCreationDto.getBrand(), resourceCreationDto.getType(),resourceCreationDto.getSupplierName());
+            resourceEntity=resourceDao.findResourceByDetails(resourceCreationDto.getName(), resourceCreationDto.getBrand(), ResourceTypeENUM.valueOf(resourceCreationDto.getType()),resourceCreationDto.getSupplierName());
             SupplierEntity supplier = supplierDao.findByName(resourceCreationDto.getSupplierName());
             if(supplier==null){
                 supplier = new SupplierEntity();
-                supplier.setName(resourceCreationDto.getSupplierName());
+                String supplierValidateName=resourceCreationDto.getSupplierName().substring(0,1).toUpperCase() + resourceCreationDto.getSupplierName().substring(1);
+                supplier.setName(supplierValidateName);
                 supplier.setContact(resourceCreationDto.getSupplierContact());
                 supplierDao.persist(supplier);
             }
@@ -175,10 +175,10 @@ public class ResourceBean {
                 resourceEntity = new ResourceEntity();
                 resourceEntity.setName(resourceCreationDto.getName());
                 resourceEntity.setDescription(resourceCreationDto.getDescription());
-                resourceEntity.setObservation(resourceCreationDto.getObservation());
+                resourceEntity.setObservation(resourceCreationDto.getObservations());
                 resourceEntity.setBrand(resourceCreationDto.getBrand());
                 resourceEntity.setSerialNumber(resourceCreationDto.getSerialNumber());
-                resourceEntity.setType(resourceCreationDto.getType());
+                resourceEntity.setType(ResourceTypeENUM.valueOf(resourceCreationDto.getType()));
                 List<SupplierEntity> suppliers = new ArrayList<>();
                 suppliers.add(supplier);
                 resourceEntity.setSupplier(suppliers);
@@ -194,5 +194,14 @@ public class ResourceBean {
                     return true;
                 }
         }
+    }
+
+    public ResourceFiltersDto getResourceFiltersDto(boolean withNames){
+        ResourceFiltersDto resourceFiltersDto = new ResourceFiltersDto();
+        resourceFiltersDto.setTypes(getAllTypes());
+        resourceFiltersDto.setSuppliers(supplierDao.getAllNames());
+        resourceFiltersDto.setBrands(resourceDao.getAllBrands());
+        if(withNames) resourceFiltersDto.setNames(resourceDao.getAllNames());
+        return resourceFiltersDto;
     }
 }

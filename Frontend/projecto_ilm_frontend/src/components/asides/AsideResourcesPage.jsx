@@ -1,11 +1,7 @@
 import "./Asides.css";
 import "../../pages/CreateProfilePage.css";
 import { Form } from "react-bootstrap";
-import {
-  getAllResourcesTypes,
-  getAllSuppliersNames,
-  getAllBrands,
-} from "../../utilities/services";
+import { getResourcesFilters } from "../../utilities/services";
 import { useEffect, useState } from "react";
 import { formatResourceType } from "../../utilities/converters";
 
@@ -28,20 +24,13 @@ export default function AsideResourcesPage({
   const [suppliers, setSuppliers] = useState([]);
   const [brands, setBrands] = useState([]);
   useEffect(() => {
-    getAllResourcesTypes()
+    getResourcesFilters(false)
       .then((response) => response.json())
       .then((data) => {
-        setTypes(data);
-      });
-    getAllSuppliersNames()
-      .then((response) => response.json())
-      .then((data) => {
-        setSuppliers(data);
-      });
-    getAllBrands()
-      .then((response) => response.json())
-      .then((data) => {
-        setBrands(data);
+        console.log(data);
+        setTypes(data.types);
+        setSuppliers(data.suppliers);
+        setBrands(data.brands);
       });
   }, []);
 

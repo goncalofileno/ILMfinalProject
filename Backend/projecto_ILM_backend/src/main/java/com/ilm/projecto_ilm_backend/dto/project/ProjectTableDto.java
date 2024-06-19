@@ -2,6 +2,7 @@ package com.ilm.projecto_ilm_backend.dto.project;
 
 
 import com.ilm.projecto_ilm_backend.ENUMS.StateProjectENUM;
+import com.ilm.projecto_ilm_backend.ENUMS.UserInProjectTypeENUM;
 import com.ilm.projecto_ilm_backend.ENUMS.WorkLocalENUM;
 import jakarta.ejb.Local;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -23,6 +24,7 @@ public class ProjectTableDto {
     private int maxMembers;
     private boolean isMember;
     private int percentageDone;
+    private UserInProjectTypeENUM userInProjectType;
 
 
     public ProjectTableDto() {
@@ -119,5 +121,13 @@ public class ProjectTableDto {
 
     public void setPercentageDone(int percentageDone) {
         this.percentageDone = percentageDone;
+    }
+
+    public UserInProjectTypeENUM getUserInProjectType() {
+        return userInProjectType;
+    }
+
+    public void setUserInProjectType(UserInProjectTypeENUM userInProjectType) {
+        this.userInProjectType = userInProjectType;
     }
 }

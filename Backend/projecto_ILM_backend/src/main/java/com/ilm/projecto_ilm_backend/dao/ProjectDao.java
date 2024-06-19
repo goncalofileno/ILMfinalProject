@@ -1,6 +1,7 @@
 package com.ilm.projecto_ilm_backend.dao;
 
 import com.ilm.projecto_ilm_backend.ENUMS.StateProjectENUM;
+import com.ilm.projecto_ilm_backend.ENUMS.UserInProjectTypeENUM;
 import com.ilm.projecto_ilm_backend.dto.project.HomeProjectDto;
 import com.ilm.projecto_ilm_backend.entity.LabEntity;
 import com.ilm.projecto_ilm_backend.entity.ProjectEntity;
@@ -131,6 +132,45 @@ public class ProjectDao extends AbstractDao<ProjectEntity>{
 
     }
 
+
+
+
+    public List<Object[]> getMyProjectsDtoInfo(int page, int projectsPerPage, LabEntity lab, StateProjectENUM status,
+                                               String keyword, int userId, UserInProjectTypeENUM type) {
+
+        String baseQueryString = em
+                .createNamedQuery("Project.getMyProjectsInfo", Object[].class)
+                .unwrap(org.hibernate.query.Query.class)
+                .getQueryString();
+
+        // Append the ORDER BY clause dynamically
+        StringBuilder queryString = new StringBuilder(baseQueryString);
+
+        if (type != null && !type.equals("")) {
+            queryString.append(" AND (up.type = :type) ");
+        }
+
+
+        TypedQuery<Object[]> query = em.createQuery(queryString.toString(), Object[].class);
+        // Set parameters
+        query.setParameter("lab", lab);
+        query.setParameter("status", status);
+
+        query.setParameter("keyword", keyword);
+        query.setParameter("userId", userId);
+        if (type != null && !type.equals("")) {
+            query.setParameter("type", type);
+        }
+
+
+        // Set pagination
+        query.setFirstResult(projectsPerPage * (page - 1));
+        query.setMaxResults(projectsPerPage);
+
+        return query.getResultList();
+
+    }
+
     public List<Object[]> findAllProjectsOrderedByUser(int page, int projectsPerPage, int userId) {
         TypedQuery<Object[]> query = em.createNamedQuery("Project.findAllProjectsOrderedByUser", Object[].class);
         query.setParameter("userId", userId);
@@ -151,8 +191,42 @@ public class ProjectDao extends AbstractDao<ProjectEntity>{
 
     public int getNumberOfProjectsTableDtoInfo(LabEntity lab, StateProjectENUM status, boolean slotsAvailable, String keyword) {
         try {
+
+
             return  em.createNamedQuery("Project.getNumberOfProjectsTableDtoInfo", Long.class).setParameter("lab",lab).setParameter("status",status).setParameter("slotsAvailable",slotsAvailable)
                     .setParameter("keyword",keyword).getSingleResult().intValue();
+
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+    public int getNumberOfMyProjectsDtoInfo(LabEntity lab, StateProjectENUM status, String keyword, int userId,UserInProjectTypeENUM type) {
+        try {
+
+            String baseQueryString = em
+                    .createNamedQuery("Project.getNumberOfMyProjectsInfo", Long.class)
+                    .unwrap(org.hibernate.query.Query.class)
+                    .getQueryString();
+
+            // Append the ORDER BY clause dynamically
+            StringBuilder queryString = new StringBuilder(baseQueryString);
+
+            if (type != null && !type.equals("")) {
+                queryString.append(" AND (up.type = :type) ");
+            }
+
+            TypedQuery<Long> query = em.createQuery(queryString.toString(), Long.class);
+            // Set parameters
+            query.setParameter("lab", lab);
+            query.setParameter("status", status);
+
+            query.setParameter("keyword", keyword);
+            query.setParameter("userId", userId);
+            if (type != null && !type.equals("")) {
+                query.setParameter("type", type);
+            }
+            return  query.getSingleResult().intValue();
 
         } catch (Exception e) {
             return 0;

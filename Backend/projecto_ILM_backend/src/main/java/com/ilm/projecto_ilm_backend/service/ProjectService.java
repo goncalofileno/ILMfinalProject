@@ -69,13 +69,31 @@ public class ProjectService {
 
         if (databaseValidator.checkSessionId(sessionId)) {
             try {
-                ProjectTableInfoDto projectTableInfoDto = projectBean.getProjectTableInfo(sessionId, page, lab, status, slotsAvailable, nameAsc,
-                        statusAsc, labAsc, startDateAsc, endDateAsc, keyword);
                 return Response.ok(projectBean.getProjectTableInfo(sessionId, page, lab, status, slotsAvailable, nameAsc,
                         statusAsc, labAsc, startDateAsc, endDateAsc, keyword)).build();
             } catch (Exception e) {
                 logger.error("An error occurred while retrieving table projects: " + e.getMessage() + " from IP address: " + clientIP);
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("An error occurred while retrieving home projects").build();
+            }
+        } else {
+            return Response.status(Response.Status.UNAUTHORIZED).entity("Unauthorized access").build();
+        }
+    }
+
+    @GET
+    @Path("/myprojects")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getMyProjects(@CookieParam("session-id") String sessionId, @QueryParam("page") int page, @QueryParam("lab") String lab, @QueryParam("status") String status,
+                                      @QueryParam("keyword") String keyword, @QueryParam("memberType") String memberType) throws UnknownHostException {
+        String clientIP = InetAddress.getLocalHost().getHostAddress();
+        logger.info("Received a request to to receive my projects table info from a user from IP address: " + clientIP);
+
+        if (databaseValidator.checkSessionId(sessionId)) {
+            try {
+                return Response.ok(projectBean.getMyProjectsPageInfo(sessionId, page, lab, status, keyword,memberType)).build();
+            } catch (Exception e) {
+                logger.error("An error occurred while retrieving my projects table: " + e.getMessage() + " from IP address: " + clientIP);
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("An error occurred while retrieving my projects").build();
             }
         } else {
             return Response.status(Response.Status.UNAUTHORIZED).entity("Unauthorized access").build();
@@ -101,6 +119,27 @@ public class ProjectService {
             return Response.status(Response.Status.UNAUTHORIZED).entity("Unauthorized access").build();
         }
     }
+
+    @GET
+    @Path("/filters")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getProjectsFilters(@CookieParam("session-id") String sessionId) throws UnknownHostException {
+        String clientIP = InetAddress.getLocalHost().getHostAddress();
+        logger.info("Received a request to to receive projects filters a user from IP address: " + clientIP);
+
+        if (databaseValidator.checkSessionId(sessionId)) {
+            try {
+                return Response.ok(projectBean.getProjectsFilters()).build();
+            } catch (Exception e) {
+                logger.error("An error occurred while retrieving projects filters: " + e.getMessage() + " from IP address: " + clientIP);
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("An error occurred while retrieving projects filters").build();
+            }
+        } else {
+            return Response.status(Response.Status.UNAUTHORIZED).entity("Unauthorized access").build();
+        }
+    }
+
+
 
     @GET
     @Path("/userOwnerProjectsToInvite")

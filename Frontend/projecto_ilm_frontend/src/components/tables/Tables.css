@@ -51,7 +51,7 @@ tr:last-child {
   border: none;
 }
 
-tr:hover {
+tbody tr:hover {
   box-shadow: 0px 0px 4px 1px #f39c12;
   cursor: pointer;
   position: relative; /* Ensure hover effect is on top */

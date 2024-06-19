@@ -20,6 +20,7 @@ export default function InputForm({
   warningTxt,
   handleOnBlur,
   onBlurActive,
+  disabled,
 }) {
   const [visibility, setVisibility] = useState("hidden");
 
@@ -36,7 +37,9 @@ export default function InputForm({
 
   return (
     <div className="inputForm">
-      <label htmlFor={label}>{label}</label>
+      <label htmlFor={label} style={{ color: disabled && "grey" }}>
+        {label}
+      </label>
       <div className="input-div">
         <input
           onBlur={onBlurActive ? handleBlur : handleBlurInactive}
@@ -52,6 +55,7 @@ export default function InputForm({
           value={value}
           onChange={(e) => setValue(e.target.value)}
           onFocus={() => setVisibility("hidden")}
+          disabled={disabled !== null && disabled}
         />
         <div
           className={`warning-txt-inputForm ${
