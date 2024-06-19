@@ -8,6 +8,7 @@ import com.ilm.projecto_ilm_backend.dto.skill.SkillDto;
 import com.ilm.projecto_ilm_backend.entity.*;
 import com.ilm.projecto_ilm_backend.security.exceptions.NoProjectsForInviteeException;
 import com.ilm.projecto_ilm_backend.security.exceptions.NoProjectsToInviteException;
+import com.ilm.projecto_ilm_backend.security.exceptions.UnauthorizedAccessException;
 import jakarta.ejb.Singleton;
 import jakarta.ejb.Startup;
 import jakarta.inject.Inject;
@@ -370,8 +371,13 @@ public class ProjectBean {
     }
 
 
-    public boolean isUserCreatorOrManager(int userId, String projectName) {
+    public boolean isUserCreatorOrManagerByProjectName(int userId, String projectName) {
         ProjectEntity project = projectDao.findByName(projectName);
+        return userProjectDao.isUserCreatorOrManager(userId, project.getId());
+    }
+
+    public boolean isUserCreatorOrManager(int userId, String projectSystemName) {
+        ProjectEntity project = projectDao.findBySystemName(projectSystemName);
         return userProjectDao.isUserCreatorOrManager(userId, project.getId());
     }
 
@@ -395,11 +401,12 @@ public class ProjectBean {
         String subject = "Invite to Project " + project.getName();
         String text = "<p>User " + "<strong>" + sender.getFirstName() + " " + sender.getLastName() + "</strong>" + " has invited you to join the project <strong>" + project.getName() + "</strong>.</p>" +
                 "<p>Click the button below to accept the invitation:</p>" +
-                "<a href=\"http://localhost:3000/project/" + project.getId() + "\" style=\"display:inline-block; padding:10px 20px; font-size:16px; color:#fff; background-color:#f39c12; text-align:center; text-decoration:none; border-radius:5px;\">Accept Invitation</a>" +
+                "<a href=\"http://localhost:3000/project/" + project.getSystemName() + "\" style=\"display:inline-block; padding:10px 20px; font-size:16px; color:#fff; background-color:#f39c12; text-align:center; text-decoration:none; border-radius:5px;\">Accept Invitation</a>" +
                 "<p>If the button does not work, you can also copy and paste the following link into your browser:</p>" +
-                "<p>http://localhost:3000/project/" + project.getId() + "</p>" +
+                "<p>http://localhost:3000/project/" + project.getSystemName() + "</p>" +
                 "<p></p>" +
                 "<p>Best regards,<br>ILM Management Team</p>";
+
         MailDto mailDto = new MailDto(subject, text, (sender.getFirstName() + " " + sender.getLastName()), sender.getEmail(), userToInvite.getFirstName() + " " + userToInvite.getLastName(), userToInvite.getEmail());
 
         mailBean.sendMail(sessionId, mailDto);
@@ -414,13 +421,22 @@ public class ProjectBean {
         UserProjectEntity userProject = userProjectDao.findByUserIdAndProjectIdAndType(userId, project.getId(), UserInProjectTypeENUM.PENDING_BY_INVITATION);
         userProject.setType(UserInProjectTypeENUM.MEMBER_BY_INVITATION);
         userProjectDao.merge(userProject);
+        UserEntity invitator = userBean.getUserBySystemUsername(notificationBean.getSystemUsernameOfCreatorOfNotificationByReceptorAndType(userId, NotificationTypeENUM.INVITE));
+        System.out.println("INVITATOR: " + invitator.getSystemUsername());
+        UserEntity acceptor = userDao.findById(userId);
+        System.out.println("ACCEPTOR: " + acceptor.getSystemUsername());
+        notificationBean.createInviteAcceptedNotification(project.getSystemName(), userDao.getFullNameBySystemUsername(acceptor.getSystemUsername()), invitator, acceptor.getSystemUsername());
         return "Invite accepted successfully";
     }
 
     public String rejectInvite(int userId, String projectName) {
         ProjectEntity project = projectDao.findByName(projectName);
         UserProjectEntity userProject = userProjectDao.findByUserIdAndProjectIdAndType(userId, project.getId(), UserInProjectTypeENUM.PENDING_BY_INVITATION);
+        UserEntity invitator = userBean.getUserBySystemUsername(notificationBean.getSystemUsernameOfCreatorOfNotificationByReceptorAndType(userId, NotificationTypeENUM.INVITE));
+        UserEntity rejector = userDao.findById(userId);
         userProjectDao.remove(userProject);
+        notificationBean.createInviteRejectedNotification(project.getSystemName(), userDao.getFullNameBySystemUsername(rejector.getSystemUsername()), invitator, rejector.getSystemUsername());
+
         return "Invite rejected successfully";
     }
 
@@ -517,9 +533,6 @@ public class ProjectBean {
         }
     }
 
-    //metodo que devolve o tipo de membro que o utilizador é num projecto, se o mesmo não for membro do projecto, verifica
-    //se o utilizador é do type ADMIN, e assim devolve ADMIN, se não devolve GUEST
-
     public UserInProjectTypeENUM getUserTypeInProject(int userId, int projectId) {
         UserProjectEntity userProject = userProjectDao.findByUserIdAndProjectId(userId, projectId);
         if (userProject != null) {
@@ -533,5 +546,213 @@ public class ProjectBean {
             }
         }
     }
+
+    @Transactional
+    public String approveOrRejectProject(String projectSystemName, boolean approve, String reason, int userId, String sessionId) {
+        ProjectEntity project = projectDao.findBySystemName(projectSystemName);
+        UserEntity userResponsable = userDao.findById(userId);
+
+        if (project == null) {
+            throw new IllegalArgumentException("Project not found");
+        }
+
+        if (project.getStatus() != StateProjectENUM.READY) {
+            throw new IllegalStateException("Project must be in READY state to be approved or rejected");
+        }
+
+        if (approve) {
+            project.setStatus(StateProjectENUM.APPROVED);
+            project.setReason(null);
+        } else {
+            project.setStatus(StateProjectENUM.PLANNING);
+            project.setReason(reason);
+        }
+
+        List<UserEntity> teamMembers = getProjectMembersByProjectId(project.getId());
+        projectDao.merge(project);
+
+        for (UserEntity user : teamMembers) {
+            if (approve) {
+                notificationBean.createProjectNotification(project.getSystemName(), StateProjectENUM.APPROVED, userResponsable.getFirstName() + " " + userResponsable.getLastName(), user, userResponsable.getSystemUsername());
+
+                // Send approval email
+                String subject = "Project " + project.getName() + " Approved";
+                String text = "<p>Dear " + user.getFirstName() + " " + user.getLastName() + ",</p>" +
+                        "<p>We are pleased to inform you that the project <strong><a href=\"http://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong> has been approved. You can now start working on the project.</p>" +
+                        "<p>Best regards,<br>ILM Management Team</p>";
+
+                MailDto mailDto = new MailDto(
+                        subject,
+                        text,
+                        userResponsable.getFirstName() + " " + userResponsable.getLastName(),
+                        userResponsable.getEmail(),
+                        user.getFirstName() + " " + user.getLastName(),
+                        user.getEmail()
+                );
+
+                mailBean.sendMail(sessionId, mailDto);
+            } else {
+                notificationBean.createRejectProjectNotification(project.getSystemName(), StateProjectENUM.PLANNING, userResponsable.getFirstName() + " " + userResponsable.getLastName(), user, userResponsable.getSystemUsername());
+
+                // Send rejection email
+                String subject = "Project " + project.getName() + " Rejected";
+                String text = "<p>Dear " + user.getFirstName() + " " + user.getLastName() + ",</p>" +
+                        "<p>We regret to inform you that the project <strong><a href=\"http://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong> has been rejected.</p>" +
+                        "<p>Reason: " + reason + "</p>" +
+                        "<p>We apologize for any inconvenience this may cause.</p>" +
+                        "<p>Best regards,<br>ILM Management Team</p>";
+
+                MailDto mailDto = new MailDto(
+                        subject,
+                        text,
+                        userResponsable.getFirstName() + " " + userResponsable.getLastName(),
+                        userResponsable.getEmail(),
+                        user.getFirstName() + " " + user.getLastName(),
+                        user.getEmail()
+                );
+
+                mailBean.sendMail(sessionId, mailDto);
+            }
+        }
+
+        return approve ? "Project approved successfully" : "Project rejected successfully";
+    }
+
+
+    @Transactional
+    public String joinProject(int userId, String projectSystemName) {
+        ProjectEntity project = projectDao.findBySystemName(projectSystemName);
+
+        if (project == null) {
+            throw new IllegalArgumentException("Project not found");
+        }
+
+        UserProjectEntity existingUserProject = userProjectDao.findByUserIdAndProjectId(userId, project.getId());
+
+        if (existingUserProject != null) {
+            throw new IllegalArgumentException("User already has a record in this project");
+        }
+
+        UserEntity user = userDao.findById(userId);
+        UserProjectEntity userProjectEntity = new UserProjectEntity();
+        userProjectEntity.setUser(user);
+        userProjectEntity.setProject(project);
+        userProjectEntity.setType(UserInProjectTypeENUM.PENDING_BY_APPLIANCE);
+
+        List<UserEntity> teamLeaders = getProjectCreatorsAndManagersByProjectId(project.getId());
+
+        userProjectDao.persist(userProjectEntity);
+
+        for(UserEntity teamLeader : teamLeaders) {
+            notificationBean.createApplianceNotification(project.getSystemName(), userDao.getFullNameBySystemUsername(user.getSystemUsername()), teamLeader, user.getSystemUsername());
+        }
+
+        return "User applied to join project successfully";
+    }
+
+    @Transactional
+    public String cancelProject(int userId, String projectSystemName, String reason, String sessionId) {
+        ProjectEntity project = projectDao.findBySystemName(projectSystemName);
+
+        if (project == null) {
+            throw new IllegalArgumentException("Project not found");
+        }
+
+        project.setStatus(StateProjectENUM.CANCELED);
+        project.setReason(reason);
+
+        projectDao.merge(project);
+
+        // Get the sender information
+        UserEntity sender = userDao.findById(userId);
+
+        // Get the list of team members
+        List<UserEntity> teamMembers = getProjectMembersByProjectId(project.getId());
+
+        // Loop through each team member and send email
+        for (UserEntity user : teamMembers) {
+            // Create a notification for each team member
+            notificationBean.createProjectNotification(project.getSystemName(), StateProjectENUM.CANCELED, sender.getFirstName() + " " + sender.getLastName(), user, sender.getSystemUsername());
+
+            // Send cancellation email
+            String subject = "Project " + project.getName() + " Canceled";
+            String text = "<p>Dear " + user.getFirstName() + " " + user.getLastName() + ",</p>" +
+                    "<p>We regret to inform you that the project <strong><a href=\"http://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong> has been canceled.</p>" +
+                    "<p>Reason: " + reason + "</p>" +
+                    "<p>We apologize for any inconvenience this may cause.</p>" +
+                    "<p>Best regards,<br>ILM Management Team</p>";
+
+            MailDto mailDto = new MailDto(
+                    subject,
+                    text,
+                    sender.getFirstName() + " " + sender.getLastName(),
+                    sender.getEmail(),
+                    user.getFirstName() + " " + user.getLastName(),
+                    user.getEmail()
+            );
+
+            mailBean.sendMail(sessionId, mailDto);
+        }
+
+        return "Project canceled successfully";
+    }
+
+
+    @Transactional
+    public String markReasonAsRead(int userId, String projectSystemName) {
+        ProjectEntity project = projectDao.findBySystemName(projectSystemName);
+
+        if (project == null) {
+            throw new IllegalArgumentException("Project not found");
+        }
+
+        UserProjectEntity userProject = userProjectDao.findByUserIdAndProjectId(userId, project.getId());
+        if (userProject == null || !(userProject.getType().equals(UserInProjectTypeENUM.CREATOR) || userProject.getType().equals(UserInProjectTypeENUM.MANAGER))) {
+            throw new UnauthorizedAccessException("User does not have permission to mark reason as read for this project.");
+        }
+
+        project.setReason(null);
+        projectDao.merge(project);
+
+        return "Reason marked as read successfully";
+    }
+
+    public String changeProjectState(int userId, String projectSystemName, StateProjectENUM newState, String reason) throws Exception {
+        ProjectEntity project = projectDao.findBySystemName(projectSystemName);
+        if (project == null) {
+            throw new Exception("Project not found");
+        }
+
+        UserInProjectTypeENUM userType = userProjectDao.findByUserIdAndProjectId(userId, project.getId()).getType();
+        if (userType != UserInProjectTypeENUM.MANAGER && userType != UserInProjectTypeENUM.CREATOR) {
+            throw new UnauthorizedAccessException("User does not have permission to change project state.");
+        }
+
+        if (newState == StateProjectENUM.CANCELED && reason == null) {
+            throw new Exception("Cancellation reason is required.");
+        }
+
+        project.setStatus(newState);
+        if (newState == StateProjectENUM.CANCELED) {
+            project.setReason(reason);
+        }
+
+        List<UserEntity> teamMembers = getProjectMembersByProjectId(project.getId());
+        for(UserEntity user : teamMembers) {
+            notificationBean.createProjectNotification(project.getSystemName(), newState, userDao.getFullNameBySystemUsername(userDao.findById(userId).getSystemUsername()), user, userDao.findById(userId).getSystemUsername());
+        }
+
+        projectDao.merge(project);
+        return "Project state updated successfully";
+    }
+
+    public List<UserEntity> getProjectMembersByProjectId(int projectId) {
+        return userProjectDao.findMembersByProjectId(projectId).stream().map(UserProjectEntity::getUser).collect(Collectors.toList());
+    }
+
+    public List<UserEntity> getProjectCreatorsAndManagersByProjectId(int projectId) {
+        return userProjectDao.findCreatorsAndManagersByProjectId(projectId);
+    }
+
 
 }

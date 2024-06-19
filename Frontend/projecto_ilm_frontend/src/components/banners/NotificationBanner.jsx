@@ -28,6 +28,8 @@ const NotificationBanner = ({ notification, onClick, onEnd }) => {
         return `<strong>${userName}</strong> invited you to join the project <strong>${projectName}</strong>.`;
       case "PROJECT":
         return `The project <strong>${projectName}</strong> changed its status to <strong>${projectStatus}</strong>.`;
+      case "PROJECT_REJECTED":
+        return `The project <strong>${projectName}</strong> was rejected by <strong>${userName}</strong>.`;
       case "REMOVED":
         return `You were removed from the project <strong>${projectName}</strong> by <strong>${userName}</strong>. Contact them for more information.`;
       default:

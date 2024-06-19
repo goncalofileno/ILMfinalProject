@@ -96,7 +96,6 @@ public class MailWebSocket {
     }
 
     public static void sendInviteNotification(String sessionId, NotificationDto notificationDto) {
-        logger.info("Sending invite notification to session: " + sessionId);
         sendNotification(sessionId, notificationDto);
     }
 

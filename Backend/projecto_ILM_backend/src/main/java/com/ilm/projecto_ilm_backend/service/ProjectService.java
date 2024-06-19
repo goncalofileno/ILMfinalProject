@@ -1,6 +1,7 @@
 package com.ilm.projecto_ilm_backend.service;
 
 
+import com.ilm.projecto_ilm_backend.ENUMS.StateProjectENUM;
 import com.ilm.projecto_ilm_backend.ENUMS.UserInProjectTypeENUM;
 import com.ilm.projecto_ilm_backend.bean.ProjectBean;
 import com.ilm.projecto_ilm_backend.bean.UserBean;
@@ -11,6 +12,7 @@ import com.ilm.projecto_ilm_backend.dto.user.RegisterUserDto;
 import com.ilm.projecto_ilm_backend.entity.UserEntity;
 import com.ilm.projecto_ilm_backend.security.exceptions.NoProjectsForInviteeException;
 import com.ilm.projecto_ilm_backend.security.exceptions.NoProjectsToInviteException;
+import com.ilm.projecto_ilm_backend.security.exceptions.UnauthorizedAccessException;
 import com.ilm.projecto_ilm_backend.validator.DatabaseValidator;
 import com.ilm.projecto_ilm_backend.validator.RegexValidator;
 import jakarta.inject.Inject;
@@ -147,7 +149,7 @@ public class ProjectService {
         if (databaseValidator.checkSessionId(sessionId)) {
             try {
                 int userId = userBean.getUserBySessionId(sessionId).getId();
-                if (projectBean.isUserCreatorOrManager(userId, projectName)) {
+                if (projectBean.isUserCreatorOrManagerByProjectName(userId, projectName)) {
                     String result = projectBean.inviteUserToProject(sessionId, systemUsername, projectName);
                     if ("User invited successfully".equals(result)) {
                         return Response.ok(result).build();
@@ -223,6 +225,135 @@ public class ProjectService {
             return Response.status(Response.Status.UNAUTHORIZED).entity("Unauthorized access").build();
         }
     }
+
+    @POST
+    @Path("/approveOrRejectProject")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response approveOrRejectProject(@CookieParam("session-id") String sessionId, @QueryParam("projectSystemName") String projectSystemName, @QueryParam("approve") boolean approve, @QueryParam("reason") String reason) throws UnknownHostException {
+        String clientIP = InetAddress.getLocalHost().getHostAddress();
+        logger.info("Received a request to approve or reject project from IP address: " + clientIP);
+
+        if (databaseValidator.checkSessionId(sessionId)) {
+            try {
+                int userId = userBean.getUserBySessionId(sessionId).getId();
+                if (userBean.isUserAdmin(userId)) {
+                    String result = projectBean.approveOrRejectProject(projectSystemName, approve, reason, userId, sessionId);
+                    return Response.ok(Collections.singletonMap("message", result)).build();
+                } else {
+                    return Response.status(Response.Status.FORBIDDEN).entity(Collections.singletonMap("message", "User does not have permission to approve or reject projects.")).build();
+                }
+            } catch (Exception e) {
+                logger.error("An error occurred while approving or rejecting project: " + e.getMessage() + " from IP address: " + clientIP);
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(Collections.singletonMap("message", "An error occurred while approving or rejecting project")).build();
+            }
+        } else {
+            return Response.status(Response.Status.UNAUTHORIZED).entity(Collections.singletonMap("message", "Unauthorized access")).build();
+        }
+    }
+
+    @POST
+    @Path("/joinProject")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response joinProject(@CookieParam("session-id") String sessionId, @QueryParam("projectSystemName") String projectSystemName) throws UnknownHostException {
+        String clientIP = InetAddress.getLocalHost().getHostAddress();
+        logger.info("Received a request to join project from IP address: " + clientIP);
+
+        if (databaseValidator.checkSessionId(sessionId)) {
+            try {
+                int userId = userBean.getUserBySessionId(sessionId).getId();
+                String result = projectBean.joinProject(userId, projectSystemName);
+                return Response.ok(Collections.singletonMap("message", result)).build();
+            } catch (Exception e) {
+                logger.error("An error occurred while joining project: " + e.getMessage() + " from IP address: " + clientIP);
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(Collections.singletonMap("message", "An error occurred while joining project")).build();
+            }
+        } else {
+            return Response.status(Response.Status.UNAUTHORIZED).entity(Collections.singletonMap("message", "Unauthorized access")).build();
+        }
+    }
+
+    @POST
+    @Path("/cancelProject")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response cancelProject(@CookieParam("session-id") String sessionId, @QueryParam("projectSystemName") String projectSystemName, @QueryParam("reason") String reason) throws UnknownHostException {
+        String clientIP = InetAddress.getLocalHost().getHostAddress();
+        logger.info("Received a request to cancel project from IP address: " + clientIP);
+
+        if (databaseValidator.checkSessionId(sessionId)) {
+            try {
+                int userId = userBean.getUserBySessionId(sessionId).getId();
+                if (userBean.isUserAdmin(userId)) {
+                    String result = projectBean.cancelProject(userId, projectSystemName, reason, sessionId);
+                    return Response.ok(Collections.singletonMap("message", result)).build();
+                } else {
+                    if(userBean.isUserCreatorOrManager(userId, projectSystemName)){
+                        String result = projectBean.cancelProject(userId, projectSystemName, reason, sessionId);
+                        return Response.ok(Collections.singletonMap("message", result)).build();
+                    }else{
+                    return Response.status(Response.Status.FORBIDDEN).entity(Collections.singletonMap("message", "User does not have permission to cancel projects.")).build();}
+                }
+            } catch (Exception e) {
+                logger.error("An error occurred while canceling project: " + e.getMessage() + " from IP address: " + clientIP);
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(Collections.singletonMap("message", "An error occurred while canceling project")).build();
+            }
+        } else {
+            return Response.status(Response.Status.UNAUTHORIZED).entity(Collections.singletonMap("message", "Unauthorized access")).build();
+        }
+    }
+
+    @POST
+    @Path("/markReasonAsRead")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response markReasonAsRead(@CookieParam("session-id") String sessionId, @QueryParam("projectSystemName") String projectSystemName) throws UnknownHostException {
+        String clientIP = InetAddress.getLocalHost().getHostAddress();
+        logger.info("Received a request to mark reason as read from IP address: " + clientIP);
+
+        if (databaseValidator.checkSessionId(sessionId)) {
+            try {
+                int userId = userBean.getUserBySessionId(sessionId).getId();
+                if (projectBean.isUserCreatorOrManager(userId, projectSystemName)) {
+                    String result = projectBean.markReasonAsRead(userId, projectSystemName);
+                    return Response.ok(Collections.singletonMap("message", result)).build();
+                } else {
+                    return Response.status(Response.Status.FORBIDDEN).entity(Collections.singletonMap("message", "User does not have permission to mark reason as read for this project.")).build();
+                }
+            } catch (Exception e) {
+                logger.error("An error occurred while marking reason as read: " + e.getMessage() + " from IP address: " + clientIP);
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(Collections.singletonMap("message", "An error occurred while marking reason as read")).build();
+            }
+        } else {
+            return Response.status(Response.Status.UNAUTHORIZED).entity(Collections.singletonMap("message", "Unauthorized access")).build();
+        }
+    }
+
+    @POST
+    @Path("/changeProjectState")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response changeProjectState(@CookieParam("session-id") String sessionId, @QueryParam("projectSystemName") String projectSystemName, @QueryParam("newState") StateProjectENUM newState, @QueryParam("reason") String reason) throws UnknownHostException {
+        String clientIP = InetAddress.getLocalHost().getHostAddress();
+        logger.info("Received a request to change project state from IP address: " + clientIP);
+
+        if (databaseValidator.checkSessionId(sessionId)) {
+            try {
+                int userId = userBean.getUserBySessionId(sessionId).getId();
+                String result = projectBean.changeProjectState(userId, projectSystemName, newState, reason);
+                return Response.ok(Collections.singletonMap("message", result)).build();
+            } catch (UnauthorizedAccessException e) {
+                return Response.status(Response.Status.FORBIDDEN).entity(Collections.singletonMap("message", e.getMessage())).build();
+            } catch (Exception e) {
+                logger.error("An error occurred while changing project state: " + e.getMessage() + " from IP address: " + clientIP);
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(Collections.singletonMap("message", "An error occurred while changing project state")).build();
+            }
+        } else {
+            return Response.status(Response.Status.UNAUTHORIZED).entity(Collections.singletonMap("message", "Unauthorized access")).build();
+        }
+    }
+
 
 
 }

@@ -11,12 +11,21 @@ import {
   Image,
   Modal,
 } from "react-bootstrap";
-import { getProjectInfoPage } from "../utilities/services";
+import {
+  getProjectInfoPage,
+  approveOrRejectProject,
+  joinProject,
+  cancelProject,
+  markReasonAsRead,
+  respondToInvite,
+  changeProjectState,
+} from "../utilities/services";
 import ProjectTabs from "../components/headers/ProjectTabs";
 import ProjectMembersTable from "../components/tables/ProjectMembersTable";
 import ProgressBar from "../components/bars/ProgressBar";
 import AppNavbar from "../components/headers/AppNavbar";
 import "./ProjectProfilePageInfo.css";
+import Cookies from "js-cookie";
 
 const ProjectProfilePageInfo = () => {
   const { systemProjectName } = useParams();
@@ -27,6 +36,7 @@ const ProjectProfilePageInfo = () => {
   const [showRejectModal, setShowRejectModal] = useState(false);
   const [reason, setReason] = useState("");
   const [showReasonModal, setShowReasonModal] = useState(false);
+  const sessionId = Cookies.get("session-id");
 
   useEffect(() => {
     const fetchProjectInfo = async () => {
@@ -58,35 +68,139 @@ const ProjectProfilePageInfo = () => {
   }, [systemProjectName]);
 
   const handleStateChange = (event) => {
-    setSelectedState(event.target.value);
+    const newState = event.target.value;
+    if (newState === "CANCELED") {
+      setSelectedState(newState);
+      setShowCancelModal(true);
+    } else {
+      setSelectedState(newState);
+      updateProjectState(newState);
+    }
   };
 
-  const handleCancelProject = () => {
-    // Logic to handle project cancellation with reason
-    console.log("Project Cancelled with reason:", reason);
-    setShowCancelModal(false);
-    setReason("");
+  const updateProjectState = async (newState) => {
+    try {
+      const result = await changeProjectState(sessionId, systemProjectName, newState, reason);
+      if (result.error) {
+        setError(result.error);
+      } else {
+        const data = await getProjectInfoPage(systemProjectName);
+        setProjectInfo(data);
+      }
+    } catch (error) {
+      console.error("Error updating project state:", error);
+      setError("An error occurred while updating the project state.");
+    }
   };
 
-  const handleRejectProject = () => {
-    // Logic to handle project rejection with reason
-    console.log("Project Rejected with reason:", reason);
-    setShowRejectModal(false);
-    setReason("");
+  const handleCancelProject = async () => {
+    try {
+      const result = await cancelProject(sessionId, systemProjectName, reason);
+      if (result.error) {
+        setError(result.error);
+      } else {
+        setShowCancelModal(false);
+        setReason("");
+        const data = await getProjectInfoPage(systemProjectName);
+        setProjectInfo(data);
+      }
+    } catch (error) {
+      console.error("Error canceling project:", error);
+      setError("An error occurred while canceling the project.");
+    }
   };
 
-  const handleMarkAsRead = () => {
-    // Logic to mark the reason as read
-    console.log("Reason marked as read");
-    setShowReasonModal(false);
+  const handleRejectProject = async () => {
+    try {
+      const result = await approveOrRejectProject(sessionId, systemProjectName, false, reason);
+      if (result.error) {
+        setError(result.error);
+      } else {
+        setShowRejectModal(false);
+        setReason("");
+        const data = await getProjectInfoPage(systemProjectName);
+        setProjectInfo(data);
+      }
+    } catch (error) {
+      console.error("Error rejecting project:", error);
+      setError("An error occurred while rejecting the project.");
+    }
   };
 
-  const handleRejectInvite = (projectTitle) => {
-    // Logic to handle rejection of invitation
+  const handleApproveProject = async () => {
+    try {
+      const result = await approveOrRejectProject(sessionId, systemProjectName, true, "");
+      if (result.error) {
+        setError(result.error);
+      } else {
+        const data = await getProjectInfoPage(systemProjectName);
+        setProjectInfo(data);
+      }
+    } catch (error) {
+      console.error("Error approving project:", error);
+      setError("An error occurred while approving the project.");
+    }
   };
 
-  const handleRespondToInvite = (projectTitle, accept) => {
-    // Logic to handle response to invitation
+  const handleMarkAsRead = async () => {
+    try {
+      const result = await markReasonAsRead(sessionId, systemProjectName);
+      if (result.error) {
+        setError(result.error);
+      } else {
+        setShowReasonModal(false);
+        const data = await getProjectInfoPage(systemProjectName);
+        setProjectInfo(data);
+      }
+    } catch (error) {
+      console.error("Error marking reason as read:", error);
+      setError("An error occurred while marking the reason as read.");
+    }
+  };
+
+  const handleRejectInvite = async (projectTitle) => {
+    try {
+      const result = await respondToInvite(sessionId, projectTitle, false);
+      if (result.error) {
+        setError(result.error);
+      } else {
+        const data = await getProjectInfoPage(systemProjectName);
+        setProjectInfo(data);
+      }
+    } catch (error) {
+      console.error("Error rejecting invite:", error);
+      setError("An error occurred while rejecting the invite.");
+    }
+  };
+
+  const handleRespondToInvite = async (projectTitle, accept) => {
+    try {
+      const result = await respondToInvite(sessionId, projectTitle, accept);
+      if (result.error) {
+        setError(result.error);
+      } else {
+        const data = await getProjectInfoPage(systemProjectName);
+        setProjectInfo(data);
+      }
+    } catch (error) {
+      console.error("Error responding to invite:", error);
+      setError("An error occurred while responding to the invite.");
+    }
+  };
+
+  const handleJoinProject = async () => {
+    try {
+      const result = await joinProject(sessionId, systemProjectName);
+      if (result.error) {
+        setError(result.error);
+      } else {
+        const data = await getProjectInfoPage(systemProjectName);
+        setProjectInfo(data);
+      }
+    } catch (error) {
+      console.error("Error joining project:", error);
+      setError("An error occurred while joining the project.");
+    }
   };
 
   if (error) {
@@ -106,7 +220,7 @@ const ProjectProfilePageInfo = () => {
   const isAdmin = projectInfo.typeOfUserSeingProject === "ADMIN";
 
   const renderAdminButtons = () => {
-    if (isAdmin) {
+    if (isAdmin && projectInfo.state !== "CANCELED") {
       if (projectInfo.state === "READY") {
         return (
           <div>
@@ -116,7 +230,7 @@ const ProjectProfilePageInfo = () => {
               </span>
             </div>
             <div className="admin-buttons">
-              <Button variant="success" className="mr-2">
+              <Button variant="success" className="mr-2" onClick={handleApproveProject}>
                 Approve Project
               </Button>
               <Button
@@ -182,7 +296,7 @@ const ProjectProfilePageInfo = () => {
         >
           <div>
             <p className="mb-1">
-              <div style={{textAlign:"center"}}>
+              <div style={{ textAlign: "center" }}>
                 <strong>
                   You have applied to this project. You will be notified when
                   one of the managers responds to your application.
@@ -206,9 +320,9 @@ const ProjectProfilePageInfo = () => {
         >
           <div>
             <p className="mb-1">
-            <div>
-              <strong>You are a member of this project.</strong>
-            </div>
+              <div>
+                <strong>You are a member of this project.</strong>
+              </div>
             </p>
           </div>
         </div>
@@ -365,8 +479,11 @@ const ProjectProfilePageInfo = () => {
                               "MEMBER",
                               "MEMBER_BY_APPLIANCE",
                               "MEMBER_BY_INVITATION",
+                              "CANCELED"
                             ].includes(projectInfo.typeOfUserSeingProject) && (
-                              <Button variant="primary">Join Project</Button>
+                              <Button variant="primary" onClick={handleJoinProject}>
+                                Join Project
+                              </Button>
                             )}
                         </div>
                         <ProjectMembersTable members={projectInfo.members} />

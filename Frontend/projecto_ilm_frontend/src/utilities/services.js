@@ -877,6 +877,128 @@ async function getProjectInfoPage(systemProjectName) {
   }
 }
 
+async function approveOrRejectProject(sessionId, projectSystemName, approve, reason) {
+  try {
+    const endpoint = `${baseURL}project/approveOrRejectProject?projectSystemName=${encodeURIComponent(projectSystemName)}&approve=${approve}&reason=${encodeURIComponent(reason)}`;
+    const fetchResponse = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+
+    const responseJson = await fetchResponse.json();
+
+    if (!fetchResponse.ok) {
+      throw new Error(responseJson.message || "An error occurred");
+    }
+
+    return responseJson;
+  } catch (error) {
+    console.error("Error approving or rejecting project:", error);
+    return { error: error.message };
+  }
+}
+
+async function joinProject(sessionId, projectSystemName) {
+  try {
+    const endpoint = `${baseURL}project/joinProject?projectSystemName=${encodeURIComponent(projectSystemName)}`;
+    const fetchResponse = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+
+    const responseJson = await fetchResponse.json();
+
+    if (!fetchResponse.ok) {
+      throw new Error(responseJson.message || "An error occurred");
+    }
+
+    return responseJson;
+  } catch (error) {
+    console.error("Error joining project:", error);
+    return { error: error.message };
+  }
+}
+
+async function cancelProject(sessionId, projectSystemName, reason) {
+  try {
+    const endpoint = `${baseURL}project/cancelProject?projectSystemName=${encodeURIComponent(projectSystemName)}&reason=${encodeURIComponent(reason)}`;
+    const fetchResponse = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+
+    const responseJson = await fetchResponse.json();
+
+    if (!fetchResponse.ok) {
+      throw new Error(responseJson.message || "An error occurred");
+    }
+
+    return responseJson;
+  } catch (error) {
+    console.error("Error canceling project:", error);
+    return { error: error.message };
+  }
+}
+
+async function markReasonAsRead(sessionId, projectSystemName) {
+  try {
+    const endpoint = `${baseURL}project/markReasonAsRead?projectSystemName=${encodeURIComponent(projectSystemName)}`;
+    const fetchResponse = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+
+    const responseJson = await fetchResponse.json();
+
+    if (!fetchResponse.ok) {
+      throw new Error(responseJson.message || "An error occurred");
+    }
+
+    return responseJson;
+  } catch (error) {
+    console.error("Error marking reason as read:", error);
+    return { error: error.message };
+  }
+}
+
+async function changeProjectState(sessionId, projectSystemName, newState, reason) {
+  try {
+    const endpoint = `${baseURL}project/changeProjectState?projectSystemName=${encodeURIComponent(projectSystemName)}&newState=${encodeURIComponent(newState)}&reason=${encodeURIComponent(reason || '')}`;
+    const fetchResponse = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+
+    const responseJson = await fetchResponse.json();
+
+    if (!fetchResponse.ok) {
+      throw new Error(responseJson.message || "An error occurred");
+    }
+
+    return responseJson;
+  } catch (error) {
+    console.error("Error changing project state:", error);
+    return { error: error.message };
+  }
+}
+
+
+
 
 
 
@@ -925,4 +1047,9 @@ export {
   fetchNotifications,
   respondToInvite,
   getProjectInfoPage,
+  approveOrRejectProject,
+  joinProject,
+  cancelProject,
+  markReasonAsRead,
+  changeProjectState,
 };

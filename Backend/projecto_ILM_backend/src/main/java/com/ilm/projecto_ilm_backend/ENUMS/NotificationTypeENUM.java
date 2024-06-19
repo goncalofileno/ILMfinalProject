@@ -21,7 +21,9 @@ public enum NotificationTypeENUM {
 
     APPLIANCE_REJECTED(7),
 
-    REMOVED(8);
+    REMOVED(8),
+
+    PROJECT_REJECTED(9);
 
     private final int intValue;
 
