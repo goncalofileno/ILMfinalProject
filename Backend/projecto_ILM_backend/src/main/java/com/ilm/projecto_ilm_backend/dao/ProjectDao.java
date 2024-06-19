@@ -135,7 +135,7 @@ public class ProjectDao extends AbstractDao<ProjectEntity>{
 
 
 
-    public List<Object[]> getMyProjectsDtoInfo(int page, int projectsPerPage, LabEntity lab, StateProjectENUM status, boolean slotsAvailable,
+    public List<Object[]> getMyProjectsDtoInfo(int page, int projectsPerPage, LabEntity lab, StateProjectENUM status,
                                                String keyword, int userId, UserInProjectTypeENUM type) {
 
         String baseQueryString = em
@@ -155,7 +155,7 @@ public class ProjectDao extends AbstractDao<ProjectEntity>{
         // Set parameters
         query.setParameter("lab", lab);
         query.setParameter("status", status);
-        query.setParameter("slotsAvailable", slotsAvailable);
+
         query.setParameter("keyword", keyword);
         query.setParameter("userId", userId);
         if (type != null && !type.equals("")) {
@@ -201,7 +201,7 @@ public class ProjectDao extends AbstractDao<ProjectEntity>{
         }
     }
 
-    public int getNumberOfMyProjectsDtoInfo(LabEntity lab, StateProjectENUM status, boolean slotsAvailable, String keyword, int userId,UserInProjectTypeENUM type) {
+    public int getNumberOfMyProjectsDtoInfo(LabEntity lab, StateProjectENUM status, String keyword, int userId,UserInProjectTypeENUM type) {
         try {
 
             String baseQueryString = em
@@ -220,7 +220,7 @@ public class ProjectDao extends AbstractDao<ProjectEntity>{
             // Set parameters
             query.setParameter("lab", lab);
             query.setParameter("status", status);
-            query.setParameter("slotsAvailable", slotsAvailable);
+
             query.setParameter("keyword", keyword);
             query.setParameter("userId", userId);
             if (type != null && !type.equals("")) {

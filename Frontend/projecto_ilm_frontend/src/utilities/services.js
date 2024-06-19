@@ -365,17 +365,10 @@ async function getTableProjects(
   }
 }
 
-async function getMyProjectsTable(
-  page,
-  lab,
-  status,
-  slotsAvailable,
-  keyword,
-  type
-) {
+async function getMyProjectsTable(page, lab, status, keyword, type) {
   try {
     const response = await fetch(
-      `${baseURL}project/myprojects?page=${page}&lab=${lab}&status=${status}&slotsAvailable=${slotsAvailable}&keyword=${keyword}&memberType=${type}`,
+      `${baseURL}project/myprojects?page=${page}&lab=${lab}&status=${status}&keyword=${keyword}&memberType=${type}`,
       {
         method: "GET",
         headers: {

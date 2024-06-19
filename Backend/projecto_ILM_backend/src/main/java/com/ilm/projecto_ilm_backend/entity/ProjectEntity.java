@@ -53,7 +53,11 @@ import com.ilm.projecto_ilm_backend.ENUMS.ConvertersENUM.StateProjectEnumConvert
                 "AND (up.user.id = :userId) " +
                 "AND (up.type=0 OR up.type=1 OR up.type=2 OR up.type=3 OR up.type=4) " +
                 "GROUP BY p.id, p.name, p.lab, p.status, p.startDate, p.endDate, p.maxMembers,up.type " +
-                "HAVING (:slotsAvailable = FALSE OR p.maxMembers > COUNT(up))")
+                "ORDER BY CASE " +
+                "WHEN up.type = 0 THEN 0 " +  // CREATOR first
+                "WHEN up.type = 1 THEN 1 " +  // MANAGER second
+                "ELSE 2 END, " +
+                "p.startDate DESC")
 
 @NamedQuery(name = "Project.getNumberOfMyProjectsInfo",
         query = "SELECT COUNT(p) " +
@@ -62,9 +66,7 @@ import com.ilm.projecto_ilm_backend.ENUMS.ConvertersENUM.StateProjectEnumConvert
                 "AND (:status IS NULL OR p.status = :status) " +
                 "AND (:keyword IS NULL OR (LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%'))))" +
                 "AND (up.user.id = :userId) " +
-                "AND (up.type = 0 OR up.type = 1 OR up.type = 2 OR up.type = 3 OR up.type = 4) " +
-                "AND (:slotsAvailable = FALSE OR p.maxMembers > " +
-                "(SELECT COUNT(up) FROM UserProjectEntity up WHERE up.project.id = p.id))")
+                "AND (up.type = 0 OR up.type = 1 OR up.type = 2 OR up.type = 3 OR up.type = 4) ")
 
 @NamedQuery(name = "Project.countProjects", query = "SELECT COUNT(p) FROM ProjectEntity p")
 

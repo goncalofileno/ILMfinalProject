@@ -26,7 +26,6 @@ export default function MyProjectsPage() {
       currentPage,
       selectedLab,
       selectedStatus,
-      slotsAvailable,
       keyword,
       selectedTypeMember
     )

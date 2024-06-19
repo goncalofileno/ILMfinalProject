@@ -84,13 +84,13 @@ public class ProjectService {
     @Path("/myprojects")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getMyProjects(@CookieParam("session-id") String sessionId, @QueryParam("page") int page, @QueryParam("lab") String lab, @QueryParam("status") String status,
-                                     @QueryParam("slotsAvailable") boolean slotsAvailable, @QueryParam("keyword") String keyword, @QueryParam("memberType") String memberType) throws UnknownHostException {
+                                      @QueryParam("keyword") String keyword, @QueryParam("memberType") String memberType) throws UnknownHostException {
         String clientIP = InetAddress.getLocalHost().getHostAddress();
         logger.info("Received a request to to receive my projects table info from a user from IP address: " + clientIP);
 
         if (databaseValidator.checkSessionId(sessionId)) {
             try {
-                return Response.ok(projectBean.getMyProjectsPageInfo(sessionId, page, lab, status, slotsAvailable, keyword,memberType)).build();
+                return Response.ok(projectBean.getMyProjectsPageInfo(sessionId, page, lab, status, keyword,memberType)).build();
             } catch (Exception e) {
                 logger.error("An error occurred while retrieving my projects table: " + e.getMessage() + " from IP address: " + clientIP);
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("An error occurred while retrieving my projects").build();

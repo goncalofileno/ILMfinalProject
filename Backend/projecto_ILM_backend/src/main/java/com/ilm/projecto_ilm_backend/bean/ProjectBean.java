@@ -306,7 +306,7 @@ public class ProjectBean {
         return projectTableInfoDto;
     }
 
-    public ProjectTableInfoDto getMyProjectsPageInfo(String sessionId, int page, String labName, String status, boolean slotsAvailable, String keyword, String type){
+    public ProjectTableInfoDto getMyProjectsPageInfo(String sessionId, int page, String labName, String status, String keyword, String type){
         int userId = sessionDao.findUserIdBySessionId(sessionId);
 
         LabEntity lab;
@@ -321,7 +321,7 @@ public class ProjectBean {
         if(type == null || type.equals("")) typeEnum= null;
         else typeEnum = UserInProjectTypeENUM.valueOf(type);
 
-        List<Object[]> projectsInfo = projectDao.getMyProjectsDtoInfo(page, NUMBER_OF_MYPROJECTS_PER_PAGE, lab, state, slotsAvailable, keyword,userId, typeEnum) ;
+        List<Object[]> projectsInfo = projectDao.getMyProjectsDtoInfo(page, NUMBER_OF_MYPROJECTS_PER_PAGE, lab, state,  keyword,userId, typeEnum) ;
 
         ArrayList<ProjectTableDto> projectsTableDtos = new ArrayList<>();
 
@@ -350,7 +350,7 @@ public class ProjectBean {
         ProjectTableInfoDto projectTableInfoDto = new ProjectTableInfoDto();
 
         projectTableInfoDto.setTableProjects(projectsTableDtos);
-        projectTableInfoDto.setMaxPageNumber(calculateMaximumPageTableProjects(projectDao.getNumberOfMyProjectsDtoInfo(lab, state, slotsAvailable, keyword, userId,typeEnum),NUMBER_OF_MYPROJECTS_PER_PAGE));
+        projectTableInfoDto.setMaxPageNumber(calculateMaximumPageTableProjects(projectDao.getNumberOfMyProjectsDtoInfo(lab, state, keyword, userId,typeEnum),NUMBER_OF_MYPROJECTS_PER_PAGE));
 
         return projectTableInfoDto;
     }
