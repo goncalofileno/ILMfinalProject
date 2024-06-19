@@ -23,7 +23,8 @@ import java.io.Serializable;
         @NamedQuery(name = "UserProject.findByUserIdAndProjectId", query = "SELECT up FROM UserProjectEntity up WHERE up.user.id = :userId AND up.project.id = :projectId"),
         @NamedQuery(name = "UserProject.findByUserIdAndProjectIdAndType", query = "SELECT up FROM UserProjectEntity up WHERE up.user.id = :userId AND up.project.id = :projectId AND up.type = :type"),
         @NamedQuery(name = "UserProject.findMembersByProjectId", query = "SELECT up FROM UserProjectEntity up WHERE up.project.id = :projectId AND (up.type=0 OR up.type=1 OR up.type=2 OR up.type=3 OR up.type=4)"),
-        @NamedQuery(name = "UserProject.findCreatorByProjectId", query = "SELECT up.user FROM UserProjectEntity up WHERE up.project.id = :projectId AND up.type = 0")
+        @NamedQuery(name = "UserProject.findCreatorByProjectId", query = "SELECT up.user FROM UserProjectEntity up WHERE up.project.id = :projectId AND up.type = 0"),
+        @NamedQuery(name = "UserProject.findCreatorsAndManagersByProjectId", query = "SELECT up.user FROM UserProjectEntity up WHERE up.project.id = :projectId AND (up.type=0 OR up.type=1)")
 })
 public class UserProjectEntity implements Serializable {
 

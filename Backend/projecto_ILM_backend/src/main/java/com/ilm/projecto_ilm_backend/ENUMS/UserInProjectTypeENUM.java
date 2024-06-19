@@ -19,7 +19,11 @@ public enum UserInProjectTypeENUM {
 
     PENDING_BY_INVITATION(6),
 
-    EXMEMBER(7);
+    EXMEMBER(7),
+
+    ADMIN(8),
+
+    GUEST(9);
 
     private final int intValue;
 

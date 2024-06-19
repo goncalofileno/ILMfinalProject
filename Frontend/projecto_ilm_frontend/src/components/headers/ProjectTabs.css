@@ -1,0 +1,33 @@
+/* ProjectTabs.css */
+.project-tabs {
+    display: flex;
+    border-bottom: 1px solid #ddd;
+    padding: 0;
+    list-style-type: none;
+    margin-bottom: 10px;
+  }
+  
+  .project-tabs .nav-item {
+    margin: 0;
+  }
+  
+  .project-tabs .nav-link {
+    color: #007bff;
+    padding: 10px 15px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    border-bottom: none;
+  }
+  
+  .project-tabs .nav-link:hover {
+    text-decoration: none;
+    background-color: #f8f9fa;
+  }
+  
+  .project-tabs .nav-link.active {
+    color: #495057;
+    background-color: #fff;
+    border-color: #ddd;
+    border-bottom-color: transparent;
+  }
+  

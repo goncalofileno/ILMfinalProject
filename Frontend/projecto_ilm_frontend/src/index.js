@@ -23,6 +23,7 @@ import ResetPasswordPage from "./pages/ResetPasswordPage";
 import EditProfilePage from "./pages/EditProfilePage";
 import MailWebSocket from "./utilities/websockets/MailWebSocket";
 import ResourcesPage from "./pages/ResourcesPage";
+import ProjectProfilePageInfo from "./pages/ProjectProfilePageInfo";
 
 
 const AppWithWebSocket = () => {
@@ -39,6 +40,8 @@ const AppWithWebSocket = () => {
         <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
         <Route path="/profile/:systemUsername" element={<Navigate to="projects" />} />
         <Route path="/profile/:systemUsername/:section" element={<ProfilePage />} />
+        <Route path="/project/:systemProjectName" element={<Navigate to="info" />} />
+        <Route path="/project/:systemProjectName/info" element={<ProjectProfilePageInfo />} />
         <Route path="/editProfile" element={<EditProfilePage />} />
         <Route path="/mail/inbox" element={<InboxMailPage />} />
         <Route path="/mail/sent" element={<SentMailPage />} />

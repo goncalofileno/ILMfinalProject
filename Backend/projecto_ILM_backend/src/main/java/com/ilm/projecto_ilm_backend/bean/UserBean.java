@@ -1,6 +1,7 @@
 package com.ilm.projecto_ilm_backend.bean;
 
 import com.ilm.projecto_ilm_backend.ENUMS.SkillTypeENUM;
+import com.ilm.projecto_ilm_backend.ENUMS.UserInProjectTypeENUM;
 import com.ilm.projecto_ilm_backend.ENUMS.UserTypeENUM;
 import com.ilm.projecto_ilm_backend.ENUMS.WorkLocalENUM;
 import com.ilm.projecto_ilm_backend.dao.*;
@@ -78,6 +79,9 @@ public class UserBean {
      */
     @Inject
     SessionDao sessionDao;
+
+    @Inject
+    ProjectDao projectDao;
 
     /**
      * The logger used to log information, warning and error messages.
@@ -617,7 +621,8 @@ public class UserBean {
                                 ProjectProfileDto projectDto = new ProjectProfileDto();
                                 ProjectEntity project = up.getProject();
                                 projectDto.setName(project.getName());
-                                projectDto.setSystemName(project.getSystemName());;
+                                projectDto.setSystemName(project.getSystemName());
+                                ;
                                 projectDto.setTypeMember(up.getType().toString());
                                 projectDto.setStatus(project.getStatus().toString());
                                 return projectDto;
@@ -650,5 +655,20 @@ public class UserBean {
         }
     }
 
-}
+    public boolean isUserAdmin(int userId) {
+        UserEntity user = userDao.findById(userId);
+        return user != null && user.getType() == UserTypeENUM.ADMIN;
+    }
 
+    public boolean isUserCreatorOrManager(int userId, String projectSystemName) {
+        UserEntity user = userDao.findById(userId);
+        ProjectEntity project = projectDao.findBySystemName(projectSystemName);
+
+        if (user != null && project != null) {
+            return project.getUserProjects().stream()
+                    .anyMatch(up -> up.getUser().getId() == user.getId() && (up.getType() == UserInProjectTypeENUM.CREATOR || up.getType() == UserInProjectTypeENUM.MANAGER));
+        }
+        return false;
+    }
+
+}

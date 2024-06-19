@@ -28,6 +28,8 @@ import java.util.List;
                 query = "SELECT COUNT(n) FROM NotificationEntity n WHERE n.receptor.id = :userId AND n.readStatus = false"),
         @NamedQuery(name = "NotificationEntity.countAllByUserId",
                 query = "SELECT COUNT(n) FROM NotificationEntity n WHERE n.receptor.id = :userId"),
+        @NamedQuery(name = "NotificationEntity.findSystemUsernameOfCreatorByReceptorAndType",
+        query = "SELECT n.systemUserName FROM NotificationEntity n WHERE n.receptor.id = :receptorId AND n.type = :type"),
 })
 public class NotificationEntity implements Serializable {
 

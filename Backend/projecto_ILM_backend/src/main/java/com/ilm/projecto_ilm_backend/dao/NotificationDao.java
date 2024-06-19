@@ -1,5 +1,6 @@
 package com.ilm.projecto_ilm_backend.dao;
 
+import com.ilm.projecto_ilm_backend.ENUMS.NotificationTypeENUM;
 import com.ilm.projecto_ilm_backend.entity.NotificationEntity;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
@@ -81,5 +82,11 @@ public class NotificationDao extends AbstractDao<NotificationEntity> {
         return count.intValue();
     }
 
-
+    @Transactional
+    public String findSystemUsernameOfCreatorByReceptorAndType(int receptorId, NotificationTypeENUM type) {
+        return em.createNamedQuery("NotificationEntity.findSystemUsernameOfCreatorByReceptorAndType", String.class)
+                .setParameter("receptorId", receptorId)
+                .setParameter("type", type)
+                .getSingleResult();
+    }
 }
