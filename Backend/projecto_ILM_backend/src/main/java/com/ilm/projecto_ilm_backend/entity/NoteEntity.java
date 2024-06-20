@@ -11,6 +11,9 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Table(name="note")
+@NamedQueries({
+        @NamedQuery(name = "Note.findById", query = "SELECT n FROM NoteEntity n WHERE n.id = :id")
+})
 public class NoteEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -40,6 +43,12 @@ public class NoteEntity implements Serializable {
      */
     @Column(name="done", nullable = false, unique = false, updatable = true)
     private boolean done;
+
+    /**
+     * The task associated with the note. This is a many-to-one relationship with the TaskEntity class.
+     */
+    @ManyToOne
+    private TaskEntity task;
 
     /**
      * The user associated with the note. This is a many-to-one relationship with the UserEntity class.
@@ -123,6 +132,22 @@ public class NoteEntity implements Serializable {
      */
     public void setDone(boolean done) {
         this.done = done;
+    }
+
+    /**
+     * Returns the task associated with this note.
+     * @return the task associated with this note.
+     */
+    public TaskEntity getTask() {
+        return task;
+    }
+
+    /**
+     * Sets the task associated with this note.
+     * @param task the new task associated with this note.
+     */
+    public void setTask(TaskEntity task) {
+        this.task = task;
     }
 
     /**

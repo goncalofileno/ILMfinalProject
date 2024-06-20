@@ -45,6 +45,9 @@ public class StartupBean {
     @Inject
     LogBean logBean;
 
+    @Inject
+    NoteBean noteBean;
+
     @PostConstruct
     public void init() throws MessagingException, UnsupportedEncodingException {
         labBean.createDefaultLabsIfNotExistent();
@@ -60,5 +63,6 @@ public class StartupBean {
         mailBean.createDefaultMailsIfNotExistent();
         notificationBean.createDefaultNotificationsIfNotExistent();
         logBean.createDefaultLogsIfNotExistent();
+        noteBean.createDefaultNotesIfNotExistent();
     }
 }
