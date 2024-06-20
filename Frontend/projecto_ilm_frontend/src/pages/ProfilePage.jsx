@@ -219,10 +219,13 @@ const UserProfile = () => {
           <Row className="justify-content-md-center" style={{ height: "100%" }}>
             <Col md="12" style={{ height: "100%" }}>
               <Card className="shadow-sm ilm-form" style={{ height: "100%" }}>
-                <Card.Body>
-                  <Row>
-                    <Col md="3" className="text-center">
-                      <div className="profile-avatar mb-3 user-info-center">
+                <Card.Body style={{ height: "100%" }}>
+                  <Row style={{ height: "100%" }}>
+                    <Col md="3" className="text-center align-divs-center">
+                      <div
+                        className="profile-avatar mb-3 user-info-center"
+                        style={{ flexDirection: "unset" }}
+                      >
                         <img
                           src={
                             profile.profileImage ||
@@ -234,7 +237,10 @@ const UserProfile = () => {
                       </div>
                     </Col>
                     <Col md="3">
-                      <div className="user-info-center">
+                      <div
+                        className="user-info-center"
+                        style={{ justifyContent: "center" }}
+                      >
                         <Card.Title className="form-title">
                           {profile.firstName} {profile.lastName}
                         </Card.Title>
@@ -280,9 +286,9 @@ const UserProfile = () => {
                         )}
                       </div>
                     </Col>
-                    <Col md="6">
+                    <Col md="6" style={{ height: "100%" }}>
                       {isPrivate ? (
-                        <Alert variant="info" style={{textAlign:"center"}}>
+                        <Alert variant="info" style={{ textAlign: "center" }}>
                           This profile is private.
                         </Alert>
                       ) : (
@@ -316,7 +322,10 @@ const UserProfile = () => {
                             </Nav.Item>
                           </Nav>
                           <Tab.Content id="container-cards">
-                            <Tab.Pane eventKey="projects">
+                            <Tab.Pane
+                              eventKey="projects"
+                              style={{ height: "100%" }}
+                            >
                               <Card className="card-container">
                                 <Card.Body className="card-body">
                                   {nonPendingProjects.length > 0 ? (
@@ -361,7 +370,10 @@ const UserProfile = () => {
                               </Card>
                             </Tab.Pane>
                             {loggedInUsername === systemUsername && (
-                              <Tab.Pane eventKey="applications">
+                              <Tab.Pane
+                                eventKey="applications"
+                                style={{ height: "100%" }}
+                              >
                                 <Card className="card-container">
                                   <Card.Body className="card-body">
                                     {pendingProjects.length > 0 ? (
@@ -418,10 +430,13 @@ const UserProfile = () => {
                                 </Card>
                               </Tab.Pane>
                             )}
-                            <Tab.Pane eventKey="skills">
+                            <Tab.Pane
+                              eventKey="skills"
+                              style={{ height: "100%" }}
+                            >
                               <Card className="card-container">
                                 <Card.Body className="card-body">
-                                  <Row>
+                                  <Row style={{ height: "100%" }}>
                                     {profile.skills &&
                                     profile.skills.length > 0 ? (
                                       profile.skills.map((skill) => (
@@ -453,7 +468,10 @@ const UserProfile = () => {
                                 </Card.Body>
                               </Card>
                             </Tab.Pane>
-                            <Tab.Pane eventKey="interests">
+                            <Tab.Pane
+                              eventKey="interests"
+                              style={{ height: "100%" }}
+                            >
                               <Card className="card-container">
                                 <Card.Body className="card-body">
                                   <Row>

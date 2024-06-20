@@ -7,12 +7,19 @@ import {
   getResourcesFilters,
   createResource,
   findSupplierContact,
+  getResource,
+  editResource,
 } from "../../utilities/services";
 import { formatResourceType } from "../../utilities/converters";
-import { useNavigate } from "react-router-dom";
 
-export default function AddResourceModal({ isModalActive, setIsModalActive }) {
-  const navigate = useNavigate();
+export default function AddResourceModal({
+  isModalActive,
+  setIsModalActive,
+  resourceId,
+  resourceSupplier,
+  setResourceSupplier,
+  setResourceId,
+}) {
   const [name, setName] = useState("");
   const [type, setType] = useState("");
   const [brand, setBrand] = useState("");
@@ -42,6 +49,25 @@ export default function AddResourceModal({ isModalActive, setIsModalActive }) {
   }, []);
 
   useEffect(() => {
+    console.log(resourceSupplier);
+    console.log("id " + resourceId);
+    if (resourceId != null) {
+      getResource(resourceId, resourceSupplier)
+        .then((response) => response.json())
+        .then((data) => {
+          setName(data.name);
+          setType(data.type);
+          setBrand(data.brand);
+          setSupplier(data.supplierName);
+          setSupplierContact(data.supplierContact);
+          setSerialNumber(data.serialNumber);
+          setDescription(data.description);
+          setObservations(data.observation);
+        });
+    }
+  }, [isModalActive]);
+
+  useEffect(() => {
     if (modalErrorVisible) {
       setTimeout(() => {
         setModalErrorVisible(false);
@@ -60,10 +86,13 @@ export default function AddResourceModal({ isModalActive, setIsModalActive }) {
     setSupplier("");
     setSupplierContact("");
     setType("");
+    setResourceId(null);
+    setResourceSupplier(null);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     if (
       name !== "" &&
       type !== "" &&
@@ -74,32 +103,65 @@ export default function AddResourceModal({ isModalActive, setIsModalActive }) {
       observations !== "" &&
       supplierContact !== ""
     ) {
-      createResource(
-        name,
-        description,
-        type,
-        brand,
-        serialNumber,
-        supplier,
-        supplierContact,
-        observations
-      ).then((response) => {
-        if (response.ok) {
-          setModalType("success");
-          setModalErrorText("Resource created successfully.");
-          setModalErrorVisible(true);
-          setTimeout(() => {
-            window.location.reload();
+      if (resourceSupplier === null) {
+        console.log("nome " + name);
+        createResource(
+          name,
+          description,
+          type,
+          brand,
+          serialNumber,
+          supplier,
+          supplierContact,
+          observations
+        ).then((response) => {
+          if (response.ok) {
+            setModalType("success");
+            setModalErrorText("Resource created successfully.");
+            setModalErrorVisible(true);
             setTimeout(() => {
-              setIsModalActive(false);
-            }, 500);
-          }, 1000);
-        } else if (response.status === 400) {
-          setModalErrorText("This resource already exists.");
-          setModalErrorVisible(true);
-          setModalType("danger");
-        }
-      });
+              window.location.reload();
+              setTimeout(() => {
+                setIsModalActive(false);
+              }, 500);
+            }, 1000);
+          } else if (response.status === 400) {
+            setModalErrorText("This resource already exists.");
+            setModalErrorVisible(true);
+            setModalType("danger");
+          }
+        });
+      } else {
+        console.log("2");
+        editResource(
+          resourceId,
+          name,
+          description,
+          type,
+          brand,
+          serialNumber,
+          supplier,
+          supplierContact,
+          observations,
+          resourceSupplier
+        ).then((response) => {
+          if (response.ok) {
+            setModalType("success");
+            setModalErrorText("Resource edited successfully.");
+            setModalErrorVisible(true);
+            setTimeout(() => {
+              window.location.reload();
+              setTimeout(() => {
+                setIsModalActive(false);
+              }, 500);
+            }, 1000);
+          } else if (response.status === 400) {
+            setModalErrorText("This resource already exists.");
+            setModalErrorVisible(true);
+            setModalType("danger");
+          }
+        });
+      }
     } else {
       setModalErrorText("Please fill in all required fields.");
       setModalErrorVisible(true);

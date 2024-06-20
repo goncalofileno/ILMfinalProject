@@ -2,6 +2,7 @@ package com.ilm.projecto_ilm_backend.service;
 
 import com.ilm.projecto_ilm_backend.bean.ResourceBean;
 import com.ilm.projecto_ilm_backend.dto.resource.ResourceCreationDto;
+import com.ilm.projecto_ilm_backend.dto.resource.ResourceDto;
 import com.ilm.projecto_ilm_backend.validator.DatabaseValidator;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
@@ -45,6 +46,49 @@ public class ResourceService {
         }
     }
 
+    @GET
+    @Path("/{id}/{supplier}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getResource(@CookieParam("session-id") String sessionId,@PathParam("id") int id,@PathParam("supplier")String supplierName) throws UnknownHostException {
+        String clientIP = InetAddress.getLocalHost().getHostAddress();
+        logger.info("Received a request to receive the resource with id "+id+" from a user from IP address: " + clientIP);
+        if(databaseValidator.checkSessionId(sessionId)) {
+            try {
+                ResourceDto resourceDto=resourceBean.getResourceById(id);
+                if(!supplierName.equals("null")) {
+                    resourceBean.setResourceDtoSupplier(resourceDto, supplierName);
+                }
+                return Response.ok(resourceDto).build();
+            } catch (Exception e) {
+                logger.error("An error occurred while retrieving the resource with id "+id+" : " + e.getMessage() + " from IP address: " + clientIP);
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("An error occurred while retrieving the resource with id "+id).build();
+            }
+        }else {
+            return Response.status(Response.Status.UNAUTHORIZED).entity("Unauthorized access").build();
+        }
+    }
+
+    @PATCH
+    @Path("/")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response getResource(@CookieParam("session-id") String sessionId,ResourceDto resourceDto) throws UnknownHostException {
+        String clientIP = InetAddress.getLocalHost().getHostAddress();
+        logger.info("Received a request to edit the resource "+resourceDto.getName()+" from a user from IP address: " + clientIP);
+        if(databaseValidator.checkSessionId(sessionId)) {
+            try {
+                if(resourceBean.editResource(resourceDto)){
+                    return Response.ok().build();
+                }else {
+                    return Response.status(Response.Status.BAD_REQUEST).entity("This resource already exist").build();
+                }
+            } catch (Exception e) {
+                logger.error("An error occurred while editing the resource "+resourceDto.getName()+": " + e.getMessage() + " from IP address: " + clientIP);
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("An error occurred while editing the resource " +resourceDto.getName()).build();
+            }
+        }else {
+            return Response.status(Response.Status.UNAUTHORIZED).entity("Unauthorized access").build();
+        }
+    }
 
     @GET
     @Path("/types")
@@ -63,6 +107,7 @@ public class ResourceService {
             return Response.status(Response.Status.UNAUTHORIZED).entity("Unauthorized access").build();
         }
     }
+
     @GET
     @Path("/brands")
     @Produces(MediaType.APPLICATION_JSON)
@@ -121,6 +166,24 @@ public class ResourceService {
             return Response.status(Response.Status.UNAUTHORIZED).entity("Unauthorized access").build();
         }
     }
+
+//    @PATCH
+//    @Path("/")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public Response editResource(@CookieParam("session-id") String sessionId, ResourceDto resourceDto) throws UnknownHostException {
+//        String clientIP = InetAddress.getLocalHost().getHostAddress();
+//        logger.info("Received a request to receive the resource filters from a user from IP address: " + clientIP);
+//        if(databaseValidator.checkSessionId(sessionId)) {
+//            try {
+//                return Response.ok(resourceBean.getResourceFiltersDto(withNames)).build();
+//            } catch (Exception e) {
+//                logger.error("An error occurred while retrieving resources filters: " + e.getMessage() + " from IP address: " + clientIP);
+//                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("An error occurred while retrieving all resources brands").build();
+//            }
+//        }else {
+//            return Response.status(Response.Status.UNAUTHORIZED).entity("Unauthorized access").build();
+//        }
+//    }
 
 
 }

@@ -5,6 +5,7 @@ public class ResourceTableDto {
     private String brand;
     private String type;
     private String supplier;
+    private int id;
 
     public ResourceTableDto() {
     }
@@ -39,5 +40,13 @@ public class ResourceTableDto {
 
     public void setSupplier(String supplier) {
         this.supplier = supplier;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

@@ -147,8 +147,16 @@ public class ProjectDao extends AbstractDao<ProjectEntity>{
         StringBuilder queryString = new StringBuilder(baseQueryString);
 
         if (type != null && !type.equals("")) {
-            queryString.append(" AND (up.type = :type) ");
+            if(type==UserInProjectTypeENUM.MEMBER) queryString.append(" AND (up.type = 2 OR up.type = 3 OR up.type = 4) ");
+            else queryString.append(" AND (up.type = :type) ");
         }
+
+        queryString.append("GROUP BY p.id, p.name, p.lab, p.status, p.startDate, p.endDate, p.maxMembers,up.type " +
+                "ORDER BY CASE " +
+                "WHEN up.type = 0 THEN 0 " +  // CREATOR first
+                "WHEN up.type = 1 THEN 1 " +  // MANAGER second
+                "ELSE 2 END, " +
+                "p.startDate DESC");
 
 
         TypedQuery<Object[]> query = em.createQuery(queryString.toString(), Object[].class);
@@ -158,7 +166,7 @@ public class ProjectDao extends AbstractDao<ProjectEntity>{
 
         query.setParameter("keyword", keyword);
         query.setParameter("userId", userId);
-        if (type != null && !type.equals("")) {
+        if (type != null && !type.equals("") && type!=UserInProjectTypeENUM.MEMBER) {
             query.setParameter("type", type);
         }
 
@@ -213,7 +221,8 @@ public class ProjectDao extends AbstractDao<ProjectEntity>{
             StringBuilder queryString = new StringBuilder(baseQueryString);
 
             if (type != null && !type.equals("")) {
-                queryString.append(" AND (up.type = :type) ");
+                if(type==UserInProjectTypeENUM.MEMBER) queryString.append(" AND (up.type = 2 OR up.type = 3 OR up.type = 4) ");
+                else queryString.append(" AND (up.type = :type) ");
             }
 
             TypedQuery<Long> query = em.createQuery(queryString.toString(), Long.class);
@@ -223,7 +232,7 @@ public class ProjectDao extends AbstractDao<ProjectEntity>{
 
             query.setParameter("keyword", keyword);
             query.setParameter("userId", userId);
-            if (type != null && !type.equals("")) {
+            if (type != null && !type.equals("") && type!=UserInProjectTypeENUM.MEMBER) {
                 query.setParameter("type", type);
             }
             return  query.getSingleResult().intValue();

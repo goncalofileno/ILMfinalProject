@@ -2,6 +2,7 @@ package com.ilm.projecto_ilm_backend.entity;
 
 import jakarta.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * The SupplierEntity class represents the "supplier" table in the database.
@@ -41,6 +42,9 @@ public class SupplierEntity implements Serializable {
     @Column(name = "contact", nullable = false, unique = false, updatable = true)
     private String contact;
 
+
+    @OneToMany(mappedBy = "supplier")
+    private List<ResourceSupplierEntity> resource;
     /**
      * Default constructor.
      */
@@ -101,4 +105,11 @@ public class SupplierEntity implements Serializable {
         this.contact = contact;
     }
 
+    public List<ResourceSupplierEntity> getResource() {
+        return resource;
+    }
+
+    public void setResource(List<ResourceSupplierEntity> resource) {
+        this.resource = resource;
+    }
 }

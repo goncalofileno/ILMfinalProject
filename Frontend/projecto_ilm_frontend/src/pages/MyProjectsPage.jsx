@@ -5,19 +5,28 @@ import "./MyProjectsPage.css";
 import { Col, Row, Container, Form, Button, InputGroup } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import { getMyProjectsTable } from "../utilities/services";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { formatLab } from "../utilities/converters";
 
 export default function MyProjectsPage() {
+  const query = new URLSearchParams(useLocation().search);
+
   const navigate = useNavigate();
   const [projects, setProjects] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [selectedLab, setSelectedLab] = useState("");
-  const [selectedStatus, setSelectedStatus] = useState("");
-  const [selectedTypeMember, setSelectedTypeMember] = useState("");
-  const [slotsAvailable, setSlotsAvailable] = useState(false);
-  const [keyword, setKeyword] = useState("");
+  const [currentPage, setCurrentPage] = useState(
+    parseInt(query.get("currentPage")) || 1
+  );
+  const [selectedLab, setSelectedLab] = useState(
+    query.get("selectedLab") || ""
+  );
+  const [selectedStatus, setSelectedStatus] = useState(
+    query.get("selectedStatus") || ""
+  );
+  const [selectedTypeMember, setSelectedTypeMember] = useState(
+    query.get("selectedTypeMember") || ""
+  );
+  const [keyword, setKeyword] = useState(query.get("search_query") || "");
   const [navigateTableProjectsTrigger, setNavigateTableProjectsTrigger] =
     useState(false);
 
@@ -40,7 +49,8 @@ export default function MyProjectsPage() {
     if (currentPage) queryParamsObj.currentPage = currentPage;
     if (selectedLab !== "") queryParamsObj.selectedLab = selectedLab;
     if (selectedStatus !== "") queryParamsObj.selectedStatus = selectedStatus;
-    if (slotsAvailable) queryParamsObj.slotsAvailable = slotsAvailable;
+    if (selectedTypeMember !== "")
+      queryParamsObj.selectedTypeMember = selectedTypeMember;
     if (keyword) queryParamsObj.search_query = keyword;
 
     const queryParams = new URLSearchParams(queryParamsObj).toString();
@@ -85,7 +95,7 @@ export default function MyProjectsPage() {
         >
           <Form.Control
             type="text"
-            placeholder="Search for name"
+            placeholder="Search for project name"
             style={{ borderRadius: "10px", cursor: "text", marginBottom: "1%" }}
             className="custom-focus"
             value={keyword}
@@ -120,7 +130,7 @@ export default function MyProjectsPage() {
             >
               {currentPage > 1 && (
                 <button className="btn-arrow" onClick={handlePreviousClick}>
-                  <i className="fas fa-chevron-left fa-3x ilm-arrow"></i>
+                  <i className="fas fa-chevron-left fa-3x"></i>
                 </button>
               )}
             </Col>
@@ -141,6 +151,7 @@ export default function MyProjectsPage() {
                           progress={project.percentageDone}
                           status={project.status}
                           typeMember={project.userInProjectType}
+                          systemProjectName={project.systemProjectName}
                         ></MyProjectCard>
                       </div>
                     ) : (
@@ -156,6 +167,7 @@ export default function MyProjectsPage() {
                             progress={project.percentageDone}
                             status={project.status}
                             typeMember={project.userInProjectType}
+                            systemProjectName={project.systemProjectName}
                           ></MyProjectCard>
                         </div>
                       )
@@ -176,6 +188,7 @@ export default function MyProjectsPage() {
                           progress={project.percentageDone}
                           status={project.status}
                           typeMember={project.userInProjectType}
+                          systemProjectName={project.systemProjectName}
                         ></MyProjectCard>
                       </div>
                     ) : (
@@ -191,6 +204,7 @@ export default function MyProjectsPage() {
                             progress={project.percentageDone}
                             status={project.status}
                             typeMember={project.userInProjectType}
+                            systemProjectName={project.systemProjectName}
                           ></MyProjectCard>
                         </div>
                       )
@@ -211,6 +225,7 @@ export default function MyProjectsPage() {
                           progress={project.percentageDone}
                           status={project.status}
                           typeMember={project.userInProjectType}
+                          systemProjectName={project.systemProjectName}
                         ></MyProjectCard>
                       </div>
                     ) : (
@@ -226,6 +241,7 @@ export default function MyProjectsPage() {
                             progress={project.percentageDone}
                             status={project.status}
                             typeMember={project.userInProjectType}
+                            systemProjectName={project.systemProjectName}
                           ></MyProjectCard>
                         </div>
                       )
@@ -242,7 +258,7 @@ export default function MyProjectsPage() {
               {" "}
               {currentPage < totalPages && (
                 <button className="btn-arrow" onClick={handleNextClick}>
-                  <i className="fas fa-chevron-right fa-3x ilm-arrow"></i>
+                  <i className="fas fa-chevron-right fa-3x "></i>
                 </button>
               )}
             </Col>

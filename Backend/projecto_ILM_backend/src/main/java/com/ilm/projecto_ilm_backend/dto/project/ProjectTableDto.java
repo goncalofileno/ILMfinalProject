@@ -25,6 +25,7 @@ public class ProjectTableDto {
     private boolean isMember;
     private int percentageDone;
     private UserInProjectTypeENUM userInProjectType;
+    private String systemProjectName;
 
 
     public ProjectTableDto() {
@@ -129,5 +130,13 @@ public class ProjectTableDto {
 
     public void setUserInProjectType(UserInProjectTypeENUM userInProjectType) {
         this.userInProjectType = userInProjectType;
+    }
+
+    public String getSystemProjectName() {
+        return systemProjectName;
+    }
+
+    public void setSystemProjectName(String systemProjectName) {
+        this.systemProjectName = systemProjectName;
     }
 }

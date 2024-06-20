@@ -3,6 +3,7 @@ import { formatStatus, formatLab } from "../../utilities/converters";
 import TablePagination from "../paginations/TablePagination";
 import { InputGroup, Form, Button } from "react-bootstrap";
 import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
 
 export default function ProjectsTable({
   projects,
@@ -28,6 +29,7 @@ export default function ProjectsTable({
 }) {
   const NUMBER_OF_PROJECTS_PAGE = 8;
   const userType = Cookies.get("user-userType");
+  const navigate = useNavigate();
 
   function statusColor(status) {
     if (status === "PLANNING") {
@@ -60,7 +62,7 @@ export default function ProjectsTable({
         <InputGroup className="mail-filters" style={{ width: "50%" }}>
           <Form.Control
             type="text"
-            placeholder="Search for name"
+            placeholder="Search for project name"
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
             style={{ borderRadius: "10px", cursor: "text" }}
@@ -137,57 +139,74 @@ export default function ProjectsTable({
             <th style={{ width: "15%" }}>Members</th>
           </tr>
         </thead>
-        <tbody id="table-projects-body">
-          {projects.map((project, index) => (
-            <tr key={index} className={project.member && "is-member-project"}>
-              <td
-                style={{
-                  width: "40px",
-                  textAlign: "end",
-                  paddingRight: "15px",
-                }}
-              >
-                <img
-                  src={project.photo}
-                  alt="project_img"
-                  className="project-img-table"
-                />
-              </td>
-              <td
-                style={{
-                  fontWeight: "bold",
-                  paddingLeft: "0px",
-                  textAlign: "start",
-                }}
-              >
-                {project.name}
-              </td>
 
-              <td style={{ color: statusColor(project.status) }}>
-                {formatStatus(project.status)}
-              </td>
-              <td>{formatLab(project.lab)}</td>
-              <td>{project.startDate}</td>
-              <td>{project.finalDate}</td>
-              <td>
-                {project.numberOfMembers} / {project.maxMembers}{" "}
-              </td>
-            </tr>
-          ))}
-          {Array(NUMBER_OF_PROJECTS_PAGE - projects.length)
-            .fill()
-            .map((index) => (
-              <tr key={index + projects.length}>
-                <td></td>
-                <td className="row-no-content"></td>
-                <td className="row-no-content"></td>
-                <td className="row-no-content"></td>
-                <td className="row-no-content"></td>
-                <td className="row-no-content"></td>
-                <td className="row-no-content"></td>
+        {projects.length === 0 ? (
+          <tr>
+            <td colspan="7">
+              <div className="no-results no-results-align">
+                No projects found matching your criteria.
+              </div>
+            </td>
+          </tr>
+        ) : (
+          <tbody id="table-projects-body">
+            {projects.map((project, index) => (
+              <tr
+                onClick={() =>
+                  navigate(`/project/${project.systemProjectName}/info`)
+                }
+                key={index}
+                className={project.member && "is-member-project"}
+              >
+                <td
+                  style={{
+                    width: "40px",
+                    textAlign: "end",
+                    paddingRight: "15px",
+                  }}
+                >
+                  <img
+                    src={project.photo}
+                    alt="project_img"
+                    className="project-img-table"
+                  />
+                </td>
+                <td
+                  style={{
+                    fontWeight: "bold",
+                    paddingLeft: "0px",
+                    textAlign: "start",
+                  }}
+                >
+                  {project.name}
+                </td>
+
+                <td style={{ color: statusColor(project.status) }}>
+                  {formatStatus(project.status)}
+                </td>
+                <td>{formatLab(project.lab)}</td>
+                <td>{project.startDate}</td>
+                <td>{project.finalDate}</td>
+                <td>
+                  {project.numberOfMembers} / {project.maxMembers}{" "}
+                </td>
               </tr>
             ))}
-        </tbody>
+            {Array(NUMBER_OF_PROJECTS_PAGE - projects.length)
+              .fill()
+              .map((index) => (
+                <tr key={index + projects.length}>
+                  <td></td>
+                  <td className="row-no-content"></td>
+                  <td className="row-no-content"></td>
+                  <td className="row-no-content"></td>
+                  <td className="row-no-content"></td>
+                  <td className="row-no-content"></td>
+                  <td className="row-no-content"></td>
+                </tr>
+              ))}
+          </tbody>
+        )}
       </table>
       <div id="align-div-buttons">
         <div id="flex-row-table-projects">
@@ -200,12 +219,14 @@ export default function ProjectsTable({
             </button>
           </div>
           <div className="tablePagination-div">
-            <TablePagination
-              totalPages={totalPages}
-              currentPage={currentPage}
-              setCurrentPage={setCurrentPage}
-              setNavigateTableTrigger={setNavigateTableProjectsTrigger}
-            />
+            {projects.length > 0 && (
+              <TablePagination
+                totalPages={totalPages}
+                currentPage={currentPage}
+                setCurrentPage={setCurrentPage}
+                setNavigateTableTrigger={setNavigateTableProjectsTrigger}
+              />
+            )}
           </div>
           <div className="row-btns-table-projects-2">
             {userType === "ADMIN" && (

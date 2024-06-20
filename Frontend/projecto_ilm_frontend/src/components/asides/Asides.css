@@ -54,12 +54,7 @@
   width: 100%;
 }
 #your-projects-color {
-  background: linear-gradient(
-      56.26deg,
-      #f39d125e 60%,
-      rgba(192, 23, 34, 0.05) 100%
-    ),
-    rgb(226, 226, 226);
+  background-color: rgba(255, 232, 179, 0.927);
   height: 30px;
   width: 100%;
   display: flex;

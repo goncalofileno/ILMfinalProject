@@ -27,6 +27,8 @@ export default function ResourcesPage() {
   const [navigateTableResourcesTrigger, setNavigateTableResourcesTrigger] =
     useState(false);
   const [isModalActive, setIsModalActive] = useState(false);
+  const [resourceId, setResourceId] = useState(null);
+  const [resourceSupplier, setResourceSupplier] = useState(null);
 
   const sortByName = () => {
     if (typeAsc !== "") setTypeAsc("");
@@ -78,6 +80,7 @@ export default function ResourcesPage() {
     )
       .then((response) => response.json())
       .then((data) => {
+        console.log(data.maxPageNumber);
         setResources(data.tableResources);
         setTotalPages(data.maxPageNumber);
       });
@@ -105,6 +108,10 @@ export default function ResourcesPage() {
       <AddResourceModal
         isModalActive={isModalActive}
         setIsModalActive={setIsModalActive}
+        resourceId={resourceId}
+        resourceSupplier={resourceSupplier}
+        setResourceId={setResourceId}
+        setResourceSupplier={setResourceSupplier}
       />
       <AsideResourcesPage
         brand={brand}
@@ -144,6 +151,8 @@ export default function ResourcesPage() {
             brandAsc={brandAsc}
             supplierAsc={supplierAsc}
             setIsModalActive={setIsModalActive}
+            setResourceId={setResourceId}
+            setResourceSupplier={setResourceSupplier}
           />
         </div>
       </div>
