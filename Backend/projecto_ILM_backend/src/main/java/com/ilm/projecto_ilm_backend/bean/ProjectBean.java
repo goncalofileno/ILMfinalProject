@@ -128,83 +128,6 @@ public class ProjectBean {
         }
     }
 
-    @Transactional
-    public void createDefaultTasksIfNotExistent() {
-        for (int i = 1; i < numberOfProjectsToCreate + 1; i++) {
-
-            TaskEntity task1 = new TaskEntity();
-            task1.setTitle("Task 1");
-            task1.setDescription("This task aims to develop the front-end of the system.");
-            task1.setInitialDate(LocalDateTime.now().minus(4, ChronoUnit.YEARS));
-            task1.setFinalDate(LocalDateTime.now().plus(3, ChronoUnit.YEARS));
-            task1.setStatus(TaskStatusENUM.PLANNED);
-            task1.setProject(projectDao.findById(i));
-            taskDao.persist(task1);
-
-            UserTaskEntity userTask1 = new UserTaskEntity();
-            userTask1.setTask(task1);
-            userTask1.setUser(userDao.findById(1));
-            userTask1.setType(UserInTaskTypeENUM.CREATOR);
-            userTaskDao.persist(userTask1);
-
-            UserTaskEntity userTask2 = new UserTaskEntity();
-            userTask2.setTask(task1);
-            userTask2.setUser(userDao.findById(2));
-            userTask2.setType(UserInTaskTypeENUM.MEMBER);
-            userTaskDao.persist(userTask2);
-
-            TaskEntity task2 = new TaskEntity();
-            task2.setTitle("Task 2");
-            task2.setDescription("This task aims to develop the back-end of the system.");
-            task2.setInitialDate(LocalDateTime.now().minus(3, ChronoUnit.YEARS));
-            task2.setFinalDate(LocalDateTime.now().plus(2, ChronoUnit.YEARS));
-            task2.setStatus(TaskStatusENUM.IN_PROGRESS);
-            task2.setProject(projectDao.findById(i));
-            List<TaskEntity> tasks = new ArrayList<>();
-            tasks.add(task1);
-            task2.setDependentTasks(tasks);
-            taskDao.persist(task2);
-
-            UserTaskEntity userTask3 = new UserTaskEntity();
-            userTask3.setTask(task2);
-            userTask3.setUser(userDao.findById(1));
-            userTask3.setType(UserInTaskTypeENUM.CREATOR);
-            userTaskDao.persist(userTask3);
-
-            UserTaskEntity userTask4 = new UserTaskEntity();
-            userTask4.setTask(task2);
-            userTask4.setUser(userDao.findById(2));
-            userTask4.setType(UserInTaskTypeENUM.MEMBER);
-            userTaskDao.persist(userTask4);
-
-            TaskEntity task3 = new TaskEntity();
-            task3.setTitle("Task 3");
-            task3.setDescription("This task aims to develop the database of the system.");
-            task3.setInitialDate(LocalDateTime.now().minus(2, ChronoUnit.YEARS));
-            task3.setFinalDate(LocalDateTime.now().plus(1, ChronoUnit.YEARS));
-            task3.setStatus(TaskStatusENUM.DONE);
-            task3.setProject(projectDao.findById(i));
-            List<TaskEntity> tasks2 = new ArrayList<>();
-            tasks2.add(task1);
-            tasks2.add(task2);
-            task3.setDependentTasks(tasks2);
-            taskDao.persist(task3);
-
-            UserTaskEntity userTask5 = new UserTaskEntity();
-            userTask5.setTask(task3);
-            userTask5.setUser(userDao.findById(1));
-            userTask5.setType(UserInTaskTypeENUM.CREATOR);
-            userTaskDao.persist(userTask5);
-
-            UserTaskEntity userTask6 = new UserTaskEntity();
-            userTask6.setTask(task3);
-            userTask6.setUser(userDao.findById(2));
-            userTask6.setType(UserInTaskTypeENUM.MEMBER);
-            userTaskDao.persist(userTask6);
-        }
-    }
-
-
     private String projectSystemNameGenerator(String originalName) {
         // Convert to lower case
         String lowerCaseName = originalName.toLowerCase();
@@ -395,9 +318,6 @@ public class ProjectBean {
         return projectFiltersDto;
     }
 
-
-
-
     public int calculateMaximumPageTableProjects(int numberOfProjects, int numberOfProjectPerPage) {
         return (int) Math.ceil((double) numberOfProjects / numberOfProjectPerPage);
     }
@@ -547,6 +467,7 @@ public class ProjectBean {
         projectProfilePageDto.setStatesToChange(statesToChange);
         projectProfilePageDto.setProgress(progress);
         projectProfilePageDto.setTypeOfUserSeingProject(getUserTypeInProject(userId, project.getId()));
+        projectProfilePageDto.setTypeOfUser(userDao.findById(userId).getType());
         projectProfilePageDto.setReason(project.getReason());
 
         return projectProfilePageDto;
@@ -579,6 +500,15 @@ public class ProjectBean {
     }
 
     private List<StateProjectENUM> getPossibleStatesToChange(int userId, ProjectEntity project) {
+
+        UserTypeENUM userType = userDao.findById(userId).getType();
+
+        if (userType == UserTypeENUM.ADMIN) {
+            if (project.getStatus() == StateProjectENUM.CANCELED) {
+                return List.of(StateProjectENUM.PLANNING, StateProjectENUM.CANCELED);
+            }
+        }
+
         if (userProjectDao.isUserCreatorOrManager(userId, project.getId())) {
             if (project.getStatus() == StateProjectENUM.CANCELED) {
                 return List.of(StateProjectENUM.CANCELED);
@@ -590,6 +520,7 @@ public class ProjectBean {
         }
         return new ArrayList<>();
     }
+
 
 
     public int getProgress(int projectId) {
@@ -741,6 +672,7 @@ public class ProjectBean {
         return "User applied to join project successfully";
     }
 
+
     @Transactional
     public String cancelProject(int userId, String projectSystemName, String reason, String sessionId) {
         ProjectEntity project = projectDao.findBySystemName(projectSystemName);
@@ -815,13 +747,25 @@ public class ProjectBean {
             throw new Exception("Project not found");
         }
 
-        UserInProjectTypeENUM userType = userProjectDao.findByUserIdAndProjectId(userId, project.getId()).getType();
-        if (userType != UserInProjectTypeENUM.MANAGER && userType != UserInProjectTypeENUM.CREATOR) {
+        UserTypeENUM userType = userDao.findById(userId).getType();
+        boolean isAdmin = userType == UserTypeENUM.ADMIN;
+
+        UserInProjectTypeENUM userInProjectType = userProjectDao.findByUserIdAndProjectId(userId, project.getId()).getType();
+
+        if (project.getStatus() == StateProjectENUM.CANCELED && !isAdmin) {
+            throw new UnauthorizedAccessException("Only admins can change the state of a canceled project.");
+        }
+
+        if (userInProjectType != UserInProjectTypeENUM.MANAGER && userInProjectType != UserInProjectTypeENUM.CREATOR && !isAdmin) {
             throw new UnauthorizedAccessException("User does not have permission to change project state.");
         }
 
         if (newState == StateProjectENUM.CANCELED && reason == null) {
             throw new Exception("Cancellation reason is required.");
+        }
+
+        if(newState == StateProjectENUM.PLANNING && project.getStatus() == StateProjectENUM.CANCELED){
+            project.setReason(null);
         }
 
         project.setStatus(newState);
@@ -832,13 +776,14 @@ public class ProjectBean {
         List<UserEntity> teamMembers = getProjectMembersByProjectId(project.getId());
         for (UserEntity user : teamMembers) {
             if (user.getId() != sender.getId()) {
-                notificationBean.createProjectNotification(project.getSystemName(), newState, userDao.getFullNameBySystemUsername(userDao.findById(userId).getSystemUsername()), user, userDao.findById(userId).getSystemUsername());
+                notificationBean.createProjectNotification(project.getSystemName(), newState, userDao.getFullNameBySystemUsername(sender.getSystemUsername()), user, sender.getSystemUsername());
             }
         }
 
         projectDao.merge(project);
         return "Project state updated successfully";
     }
+
 
     public List<UserEntity> getProjectMembersByProjectId(int projectId) {
         return userProjectDao.findMembersByProjectId(projectId).stream().map(UserProjectEntity::getUser).collect(Collectors.toList());

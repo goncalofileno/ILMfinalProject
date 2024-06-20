@@ -2,6 +2,7 @@ package com.ilm.projecto_ilm_backend.dto.project;
 
 import com.ilm.projecto_ilm_backend.ENUMS.StateProjectENUM;
 import com.ilm.projecto_ilm_backend.ENUMS.UserInProjectTypeENUM;
+import com.ilm.projecto_ilm_backend.ENUMS.UserTypeENUM;
 import com.ilm.projecto_ilm_backend.dto.skill.SkillDto;
 
 import java.time.LocalDateTime;
@@ -24,10 +25,11 @@ public class ProjectProfilePageDto {
     private int progress;
     private int maxMembers;
     private UserInProjectTypeENUM typeOfUserSeingProject;
+    private UserTypeENUM typeOfUser;
     private String reason;
 
 
-    public ProjectProfilePageDto(String title, StateProjectENUM state, String description, LocalDateTime startDate, LocalDateTime endDate, String photo, String lab, ProjectMemberDto creator, List<ProjectMemberDto> members, List<String> keywords, List<SkillDto> skills, List<StateProjectENUM> statesToChange, int progress, int maxMembers, UserInProjectTypeENUM typeOfUserSeingProject, String reason) {
+    public ProjectProfilePageDto(String title, StateProjectENUM state, String description, LocalDateTime startDate, LocalDateTime endDate, String photo, String lab, ProjectMemberDto creator, List<ProjectMemberDto> members, List<String> keywords, List<SkillDto> skills, List<StateProjectENUM> statesToChange, int progress, int maxMembers,UserTypeENUM typeOfUser, UserInProjectTypeENUM typeOfUserSeingProject, String reason) {
         this.title = title;
         this.state = state;
         this.description = description;
@@ -43,6 +45,7 @@ public class ProjectProfilePageDto {
         this.progress = progress;
         this.maxMembers = maxMembers;
         this.typeOfUserSeingProject = typeOfUserSeingProject;
+        this.typeOfUser = typeOfUser;
         this.reason = reason;
     }
 
@@ -167,6 +170,14 @@ public class ProjectProfilePageDto {
 
     public void setTypeOfUserSeingProject(UserInProjectTypeENUM typeOfUserSeingProject) {
         this.typeOfUserSeingProject = typeOfUserSeingProject;
+    }
+
+    public UserTypeENUM getTypeOfUser() {
+        return typeOfUser;
+    }
+
+    public void setTypeOfUser(UserTypeENUM typeOfUser) {
+        this.typeOfUser = typeOfUser;
     }
 
     public String getReason() {

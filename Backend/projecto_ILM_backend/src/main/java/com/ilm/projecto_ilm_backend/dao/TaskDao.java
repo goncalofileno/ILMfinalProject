@@ -48,4 +48,13 @@ public class TaskDao extends AbstractDao<TaskEntity> {
             return null;
         }
     }
+
+    public TaskEntity findTaskBySystemTitle(String systemTitle) {
+        try {
+            return em.createNamedQuery("Task.findBySystemTitle", TaskEntity.class).setParameter("systemTitle", systemTitle)
+                    .getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }

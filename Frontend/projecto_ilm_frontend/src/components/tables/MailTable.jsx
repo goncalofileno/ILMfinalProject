@@ -6,13 +6,11 @@ import {
   getReceivedMessages,
 } from "../../utilities/services";
 import Cookies from "js-cookie";
-import useMailStore from "../../stores/useMailStore";
-import { Modal, Button, Form, InputGroup } from "react-bootstrap";
+import { Modal, Button, Form, InputGroup, Pagination } from "react-bootstrap";
 import { FaTrash } from "react-icons/fa";
 import ComposeMailModal from "../modals/ComposeMailModal";
 import "./MailTable.css";
 import DOMPurify from "dompurify";
-import TablePagination from "../paginations/TablePagination";
 import { useNavigate, useLocation } from "react-router-dom";
 
 const MailTable = () => {
@@ -24,14 +22,8 @@ const MailTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [unreadOnly, setUnreadOnly] = useState(false);
   const pageSize = 8;
-  const {
-    receivedMails,
-    fetchMailsInInbox,
-    decrementUnreadCount,
-    setReceivedMails,
-    totalMails,
-    setTotalMails,
-  } = useMailStore();
+  const [receivedMails, setReceivedMails] = useState([]);
+  const [totalMails, setTotalMails] = useState(0);
   const sessionId = Cookies.get("session-id");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [mailToDelete, setMailToDelete] = useState(null);
@@ -40,50 +32,6 @@ const MailTable = () => {
   const [preFilledContact, setPreFilledContact] = useState("");
   const [preFilledSubject, setPreFilledSubject] = useState("");
   const [isSearching, setIsSearching] = useState(false);
-  const [trigger, setTrigger] = useState(false);
-
-  const handleDeleteClick = (mail, event) => {
-    event.stopPropagation(); // Prevent event propagation
-    setMailToDelete(mail);
-    setShowDeleteModal(true);
-  };
-
-  const handleConfirmDelete = async () => {
-    if (mailToDelete) {
-      await markMailAsDeleted(sessionId, mailToDelete.id);
-      fetchMails();
-      setShowDeleteModal(false);
-      setMailToDelete(null);
-      if (!mailToDelete.seen) {
-        decrementUnreadCount();
-      }
-    }
-  };
-
-  const handleCancelDelete = () => {
-    setShowDeleteModal(false);
-    setMailToDelete(null);
-  };
-
-  const fetchMails = async (page, unread, search) => {
-    setLoading(true);
-    try {
-      const result = await getReceivedMessages(
-        sessionId,
-        page,
-        pageSize,
-        unread
-      );
-      const { mails, totalMails } = result;
-      mails.sort((a, b) => new Date(b.date) - new Date(a.date));
-      setReceivedMails(mails);
-      setTotalMails(totalMails);
-    } catch (error) {
-      console.error("Error fetching mails:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   useEffect(() => {
     const query = new URLSearchParams(location.search);
@@ -98,21 +46,30 @@ const MailTable = () => {
     if (search) {
       handleSearch(page, unread, search);
     } else {
-      fetchMails(page, unread, search);
+      fetchMails(page, unread);
     }
   }, [location.search]);
+
+  const fetchMails = async (page, unread) => {
+    setLoading(true);
+    try {
+      const result = await getReceivedMessages(sessionId, page, pageSize, unread);
+      const { mails, totalMails } = result;
+      mails.sort((a, b) => new Date(b.date) - new Date(a.date));
+      setReceivedMails(mails);
+      setTotalMails(totalMails);
+    } catch (error) {
+      console.error("Error fetching mails:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSearch = async (page, unread, search) => {
     setLoading(true);
     setIsSearching(true);
     try {
-      const result = await searchMails(
-        sessionId,
-        search,
-        page,
-        pageSize,
-        unread
-      );
+      const result = await searchMails(sessionId, search, page, pageSize, unread);
       const { mails, totalMails } = result;
       mails.sort((a, b) => new Date(b.date) - new Date(a.date));
       setReceivedMails(mails);
@@ -134,10 +91,29 @@ const MailTable = () => {
   const handleSingleClick = async (mail) => {
     if (!mail.seen) {
       await markMailAsSeen(sessionId, mail.id);
-      fetchMails(currentPage, unreadOnly, searchInput);
-      decrementUnreadCount();
+      fetchMails(currentPage, unreadOnly);
     }
     setSelectedMail(mail);
+  };
+
+  const handleDeleteClick = (mail, event) => {
+    event.stopPropagation(); // Prevent event propagation
+    setMailToDelete(mail);
+    setShowDeleteModal(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (mailToDelete) {
+      await markMailAsDeleted(sessionId, mailToDelete.id);
+      fetchMails(currentPage, unreadOnly);
+      setShowDeleteModal(false);
+      setMailToDelete(null);
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setShowDeleteModal(false);
+    setMailToDelete(null);
   };
 
   const handleCloseModal = () => {
@@ -145,9 +121,7 @@ const MailTable = () => {
   };
 
   const handleReplyClick = () => {
-    setPreFilledContact(
-      `${selectedMail.senderName} <${selectedMail.senderMail}>`
-    );
+    setPreFilledContact(`${selectedMail.senderName} <${selectedMail.senderMail}>`);
     setPreFilledSubject(`Re: ${selectedMail.subject}`);
     setShowComposeModal(true);
     setSelectedMail(null);
@@ -208,6 +182,63 @@ const MailTable = () => {
   };
 
   const totalPages = Math.ceil(totalMails / pageSize);
+
+  const renderPaginationItems = () => {
+    const items = [];
+    const maxPagesToShow = 5;
+
+    if (totalPages <= maxPagesToShow) {
+      for (let number = 1; number <= totalPages; number++) {
+        items.push(
+          <Pagination.Item
+            key={number}
+            active={number === currentPage}
+            onClick={() => handlePageChange(number)}
+          >
+            {number}
+          </Pagination.Item>
+        );
+      }
+    } else {
+      let startPage, endPage;
+      if (currentPage <= 3) {
+        startPage = 1;
+        endPage = maxPagesToShow - 1;
+      } else if (currentPage + 1 >= totalPages) {
+        startPage = totalPages - (maxPagesToShow - 2);
+        endPage = totalPages - 1;
+      } else {
+        startPage = currentPage - 2;
+        endPage = currentPage + 1;
+      }
+
+      for (let number = startPage; number <= endPage; number++) {
+        items.push(
+          <Pagination.Item
+            key={number}
+            active={number === currentPage}
+            onClick={() => handlePageChange(number)}
+          >
+            {number}
+          </Pagination.Item>
+        );
+      }
+
+      items.push(<Pagination.Ellipsis key="ellipsis" disabled />);
+
+      items.push(
+        <Pagination.Item
+          key={totalPages}
+          active={totalPages === currentPage}
+          onClick={() => handlePageChange(totalPages)}
+        >
+          {totalPages}
+        </Pagination.Item>
+      );
+    }
+
+    return items;
+  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -312,6 +343,28 @@ const MailTable = () => {
           />
         </>
       )}
+
+      <div className="pagination-container">
+        <Pagination className="pagination">
+          <Pagination.First
+            onClick={() => handlePageChange(1)}
+            disabled={currentPage === 1}
+          />
+          <Pagination.Prev
+            onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
+            disabled={currentPage === 1}
+          />
+          {renderPaginationItems()}
+          <Pagination.Next
+            onClick={() => handlePageChange(Math.min(currentPage + 1, totalPages))}
+            disabled={currentPage === totalPages}
+          />
+          <Pagination.Last
+            onClick={() => handlePageChange(totalPages)}
+            disabled={currentPage === totalPages}
+          />
+        </Pagination>
+      </div>
 
       {selectedMail && (
         <Modal show={true} onHide={handleCloseModal}>
