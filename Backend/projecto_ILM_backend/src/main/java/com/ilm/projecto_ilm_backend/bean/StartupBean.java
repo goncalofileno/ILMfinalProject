@@ -48,6 +48,9 @@ public class StartupBean {
     @Inject
     NoteBean noteBean;
 
+    @Inject
+    TaskBean taskBean;
+
     @PostConstruct
     public void init() throws MessagingException, UnsupportedEncodingException {
         labBean.createDefaultLabsIfNotExistent();
@@ -58,7 +61,7 @@ public class StartupBean {
         userBean.createDefaultUsersIfNotExistent();
         projectBean.createDefaultProjectsIfNotExistent();
         projectBean.createDefaultUsersInProjectIfNotExistent();
-        projectBean.createDefaultTasksIfNotExistent();
+        taskBean.createDefaultTasksIfNotExistent();
         systemBean.createDefaultSystemIfNotExistent();
         mailBean.createDefaultMailsIfNotExistent();
         notificationBean.createDefaultNotificationsIfNotExistent();

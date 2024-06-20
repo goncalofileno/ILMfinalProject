@@ -12,7 +12,8 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name="note")
 @NamedQueries({
-        @NamedQuery(name = "Note.findById", query = "SELECT n FROM NoteEntity n WHERE n.id = :id")
+        @NamedQuery(name = "Note.findById", query = "SELECT n FROM NoteEntity n WHERE n.id = :id"),
+        @NamedQuery(name = "Note.findAllByProject", query = "SELECT n FROM NoteEntity n WHERE n.project = :project")
 })
 public class NoteEntity implements Serializable {
 

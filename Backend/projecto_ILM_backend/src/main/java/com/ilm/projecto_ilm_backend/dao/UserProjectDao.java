@@ -202,4 +202,15 @@ public class UserProjectDao extends AbstractDao<UserProjectEntity>{
             return null;
         }
     }
+
+    public UserInProjectTypeENUM findUserTypeByUserIdAndProjectId(int userId, int projectId) {
+        try {
+            return em.createNamedQuery("UserProject.findUserTypeByUserIdAndProjectId", UserInProjectTypeENUM.class)
+                    .setParameter("userId", userId)
+                    .setParameter("projectId", projectId)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
 }

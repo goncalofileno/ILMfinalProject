@@ -2,6 +2,7 @@ package com.ilm.projecto_ilm_backend.service;
 
 import com.ilm.projecto_ilm_backend.bean.LogBean;
 import com.ilm.projecto_ilm_backend.dto.logs.LogDto;
+import com.ilm.projecto_ilm_backend.dto.logs.LogsAndNotesPageDto;
 import com.ilm.projecto_ilm_backend.security.exceptions.ProjectNotFoundException;
 import com.ilm.projecto_ilm_backend.security.exceptions.UserNotFoundException;
 import com.ilm.projecto_ilm_backend.security.exceptions.UserNotInProjectException;
@@ -55,6 +56,38 @@ public class LogService {
                 logger.error("Error while fetching logs for project: " + systemProjectName, e);
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                         .entity("An error occurred while fetching logs").build();
+            }
+        } else {
+            return Response.status(Response.Status.UNAUTHORIZED).entity("Unauthorized access").build();
+        }
+    }
+
+    @GET
+    @Path("/logsAndNotes")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getProjectLogsAndNotes(@CookieParam("session-id") String sessionId,
+                                   @QueryParam("systemProjectName") String systemProjectName) throws UnknownHostException {
+
+        String clientIP = InetAddress.getLocalHost().getHostAddress();
+        logger.info("Received request from IP: " + clientIP + " for logs and notes of project: " + systemProjectName);
+
+        if (databaseValidator.checkSessionId(sessionId)) {
+            try {
+                LogsAndNotesPageDto logsAndNotes = logBean.getLogsAndNotesByProjectName(sessionId, systemProjectName);
+                return Response.ok(logsAndNotes).build();
+            } catch (ProjectNotFoundException e) {
+                logger.error("Project not found: " + systemProjectName, e);
+                return Response.status(Response.Status.NOT_FOUND).entity("Project not found").build();
+            } catch (UserNotFoundException e) {
+                logger.error("User not found for session id: " + sessionId, e);
+                return Response.status(Response.Status.UNAUTHORIZED).entity("User not found").build();
+            } catch (UserNotInProjectException e) {
+                logger.error("User not part of project: " + systemProjectName, e);
+                return Response.status(Response.Status.FORBIDDEN).entity("User not part of project").build();
+            } catch (Exception e) {
+                logger.error("Error while fetching logs and notes for project: " + systemProjectName, e);
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                        .entity("An error occurred while fetching logs and notes").build();
             }
         } else {
             return Response.status(Response.Status.UNAUTHORIZED).entity("Unauthorized access").build();

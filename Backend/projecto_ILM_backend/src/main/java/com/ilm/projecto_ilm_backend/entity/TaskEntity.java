@@ -17,7 +17,8 @@ import java.util.List;
 @NamedQueries({
         @NamedQuery(name = "Task.findById", query = "SELECT t FROM TaskEntity t WHERE t.id = :id"),
         @NamedQuery(name = "Task.findAll", query = "SELECT t FROM TaskEntity t"),
-        @NamedQuery(name = "Task.findByProject", query = "SELECT t FROM TaskEntity t WHERE t.project.id = :id")
+        @NamedQuery(name = "Task.findByProject", query = "SELECT t FROM TaskEntity t WHERE t.project.id = :id"),
+        @NamedQuery(name = "Task.findBySystemTitle", query = "SELECT t FROM TaskEntity t WHERE t.systemTitle = :systemTitle")
 })
 public class TaskEntity implements Serializable {
 
@@ -36,6 +37,12 @@ public class TaskEntity implements Serializable {
      */
     @Column(name = "title", nullable = false, unique = false, updatable = true)
     private String title;
+
+    /**
+     * The system title of the task.
+     */
+    @Column(name = "systemTitle", nullable = false, unique = false, updatable = true)
+    private String systemTitle;
 
     /**
      * The description of the task.
@@ -126,6 +133,16 @@ public class TaskEntity implements Serializable {
      */
     public void setTitle(String title) {
         this.title = title;
+    }
+
+
+    public String getSystemTitle() {
+        return systemTitle;
+    }
+
+
+    public void setSystemTitle(String systemTitle) {
+        this.systemTitle = systemTitle;
     }
 
     /**

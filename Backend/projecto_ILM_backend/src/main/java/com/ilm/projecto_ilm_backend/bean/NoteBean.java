@@ -4,6 +4,7 @@ import com.ilm.projecto_ilm_backend.dao.NoteDao;
 import com.ilm.projecto_ilm_backend.dao.ProjectDao;
 import com.ilm.projecto_ilm_backend.dao.TaskDao;
 import com.ilm.projecto_ilm_backend.dao.UserDao;
+import com.ilm.projecto_ilm_backend.dto.notes.NoteDto;
 import com.ilm.projecto_ilm_backend.entity.NoteEntity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -59,5 +60,20 @@ public class NoteBean {
             note.setTask(taskDao.findById(1));
             noteDao.persist(note);
         }
+    }
+
+    public NoteDto convertToDto(NoteEntity note) {
+        NoteDto noteDto = new NoteDto();
+        noteDto.setId(note.getId());
+        noteDto.setText(note.getText());
+        noteDto.setDate(note.getDate());
+        noteDto.setDone(note.isDone());
+        noteDto.setAuthorName(note.getUser().getFirstName() + " " + note.getUser().getLastName());
+        noteDto.setAuthorPhoto(note.getUser().getPhoto());
+        if(note.getTask() != null) {
+            noteDto.setTaskSystemName(note.getTask().getSystemTitle());
+        }
+
+        return noteDto;
     }
 }

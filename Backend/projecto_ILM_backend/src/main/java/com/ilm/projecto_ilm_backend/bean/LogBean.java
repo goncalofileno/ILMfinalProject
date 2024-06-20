@@ -3,11 +3,12 @@ package com.ilm.projecto_ilm_backend.bean;
 import com.ilm.projecto_ilm_backend.ENUMS.LogTypeENUM;
 import com.ilm.projecto_ilm_backend.ENUMS.StateProjectENUM;
 import com.ilm.projecto_ilm_backend.ENUMS.TaskStatusENUM;
-import com.ilm.projecto_ilm_backend.dao.LogDao;
-import com.ilm.projecto_ilm_backend.dao.ProjectDao;
-import com.ilm.projecto_ilm_backend.dao.UserDao;
-import com.ilm.projecto_ilm_backend.dao.UserProjectDao;
+import com.ilm.projecto_ilm_backend.ENUMS.UserInProjectTypeENUM;
+import com.ilm.projecto_ilm_backend.dao.*;
 import com.ilm.projecto_ilm_backend.dto.logs.LogDto;
+import com.ilm.projecto_ilm_backend.dto.logs.LogsAndNotesPageDto;
+import com.ilm.projecto_ilm_backend.dto.notes.NoteDto;
+import com.ilm.projecto_ilm_backend.entity.NoteEntity;
 import com.ilm.projecto_ilm_backend.entity.ProjectEntity;
 import com.ilm.projecto_ilm_backend.entity.UserEntity;
 import com.ilm.projecto_ilm_backend.entity.LogEntity;
@@ -37,6 +38,9 @@ public class LogBean {
     LogDao logDao;
 
     @Inject
+    NoteDao noteDao;
+
+    @Inject
     UserBean userBean;
 
     @Inject
@@ -44,6 +48,9 @@ public class LogBean {
 
     @Inject
     UserProjectDao userProjectDao;
+
+    @Inject
+    NoteBean noteBean;
 
     @Transactional
     public void createDefaultLogsIfNotExistent() {
@@ -243,6 +250,45 @@ public class LogBean {
             logDto.setResourceStock(logEntity.getResourceStock());
         }
         return logDto;
+    }
+
+    public LogsAndNotesPageDto getLogsAndNotesByProjectName(String sessionId, String systemProjectName) throws Exception {
+        ProjectEntity project = projectDao.findBySystemName(systemProjectName);
+        UserEntity user = userBean.getUserBySessionId(sessionId);
+
+        if (project == null) {
+            throw new ProjectNotFoundException("Project not found");
+        }
+        if (user == null) {
+            throw new UserNotFoundException("User not found");
+        }
+        if (!userProjectDao.isUserInProject(project.getId(), user.getId())) {
+            throw new UserNotInProjectException("User not part of project");
+        }
+
+        List<LogEntity> logs = logDao.findByProject(project);
+        List<LogDto> logDtos = new ArrayList<>();
+
+        for (LogEntity log : logs) {
+            logDtos.add(convertToDto(log));
+        }
+
+        List<NoteEntity> notes = noteDao.findAllByProject(project);
+        List<NoteDto> noteDtos = new ArrayList<>();
+
+        for (NoteEntity note : notes) {
+            noteDtos.add(noteBean.convertToDto(note));
+        }
+
+        UserInProjectTypeENUM userSeingTheProject = userProjectDao.findUserTypeByUserIdAndProjectId(user.getId(), project.getId());
+
+        LogsAndNotesPageDto logsAndNotesPageDto = new LogsAndNotesPageDto();
+        logsAndNotesPageDto.setLogs(logDtos);
+        logsAndNotesPageDto.setNotes(noteDtos);
+        logsAndNotesPageDto.setTypeOfUserSeingPage(userSeingTheProject);
+        logsAndNotesPageDto.setProjectName(project.getName());
+
+        return logsAndNotesPageDto;
     }
 
 }

@@ -1076,10 +1076,29 @@ async function changeProjectState(sessionId, projectSystemName, newState, reason
   }
 }
 
+async function getProjectLogsAndNotes(sessionId, projectSystemName) {
+  try {
+    const endpoint = `${baseURL}log/logsAndNotes?systemProjectName=${encodeURIComponent(projectSystemName)}`;
+    const fetchResponse = await fetch(endpoint, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
 
+    const responseJson = await fetchResponse.json();
 
+    if (!fetchResponse.ok) {
+      throw new Error(responseJson.message || "An error occurred");
+    }
 
-
+    return responseJson;
+  } catch (error) {
+    console.error("Error fetching logs and notes:", error);
+    return { error: error.message };
+  }
+}
 
 export {
   registerUser,
@@ -1133,4 +1152,5 @@ export {
   getMyProjectsTable,
   getProjectsFilters,
   findSupplierContact,
+  getProjectLogsAndNotes,
 };
