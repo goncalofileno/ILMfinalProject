@@ -86,7 +86,12 @@ const ProjectProfilePageInfo = () => {
 
   const updateProjectState = async (newState) => {
     try {
-      const result = await changeProjectState(sessionId, systemProjectName, newState, reason);
+      const result = await changeProjectState(
+        sessionId,
+        systemProjectName,
+        newState,
+        reason
+      );
       if (result.error) {
         setError(result.error);
       } else {
@@ -118,7 +123,12 @@ const ProjectProfilePageInfo = () => {
 
   const handleRejectProject = async () => {
     try {
-      const result = await approveOrRejectProject(sessionId, systemProjectName, false, reason);
+      const result = await approveOrRejectProject(
+        sessionId,
+        systemProjectName,
+        false,
+        reason
+      );
       if (result.error) {
         setError(result.error);
       } else {
@@ -135,7 +145,12 @@ const ProjectProfilePageInfo = () => {
 
   const handleApproveProject = async () => {
     try {
-      const result = await approveOrRejectProject(sessionId, systemProjectName, true, "");
+      const result = await approveOrRejectProject(
+        sessionId,
+        systemProjectName,
+        true,
+        ""
+      );
       if (result.error) {
         setError(result.error);
       } else {
@@ -236,7 +251,11 @@ const ProjectProfilePageInfo = () => {
               </span>
             </div>
             <div className="admin-buttons">
-              <Button variant="success" className="mr-2" onClick={handleApproveProject}>
+              <Button
+                variant="success"
+                className="mr-2"
+                onClick={handleApproveProject}
+              >
                 Approve Project
               </Button>
               <Button
@@ -366,7 +385,7 @@ const ProjectProfilePageInfo = () => {
                       </Card.Text>
                       <ProgressBar
                         percentage={projectInfo.progress}
-                        status={formatStatus(projectInfo.state)}
+                        status={projectInfo.state}
                       />
                     </Card.Body>
                   </Col>
@@ -414,20 +433,23 @@ const ProjectProfilePageInfo = () => {
                       </Card.Text>
                       {isCreatorOrManager && (
                         <>
-                        <div className="states-to-change"><Card.Text>
-                            <strong>States to Change:</strong>
-                          </Card.Text>
-                          <Form.Select
-                            value={selectedState}
-                            onChange={handleStateChange}
-                          >
-                            {projectInfo.statesToChange.map((state, index) => (
-                              <option key={index} value={state}>
-                                {formatStatusDropDown(state)}
-                              </option>
-                            ))}
-                          </Form.Select></div>
-                          
+                          <div className="states-to-change">
+                            <Card.Text>
+                              <strong>States to Change:</strong>
+                            </Card.Text>
+                            <Form.Select
+                              value={selectedState}
+                              onChange={handleStateChange}
+                            >
+                              {projectInfo.statesToChange.map(
+                                (state, index) => (
+                                  <option key={index} value={state}>
+                                    {formatStatusDropDown(state)}
+                                  </option>
+                                )
+                              )}
+                            </Form.Select>
+                          </div>
                         </>
                       )}
                       <Card.Text>
@@ -499,9 +521,16 @@ const ProjectProfilePageInfo = () => {
                               "MEMBER",
                               "MEMBER_BY_APPLIANCE",
                               "MEMBER_BY_INVITATION",
-                              "CANCELED"
+                              "CANCELED",
                             ].includes(projectInfo.typeOfUserSeingProject) && (
-                              <Button variant="primary" onClick={handleJoinProject} style={{backgroundColor:"#f39c12", borderColor:"#f39c12"}}>
+                              <Button
+                                variant="primary"
+                                onClick={handleJoinProject}
+                                style={{
+                                  backgroundColor: "#f39c12",
+                                  borderColor: "#f39c12",
+                                }}
+                              >
                                 Join Project
                               </Button>
                             )}
@@ -511,7 +540,7 @@ const ProjectProfilePageInfo = () => {
                     </Row>
                   </Col>
                 </Row>
-                
+
                 <Row>
                   <Col md="12">
                     <Card.Body>
@@ -603,7 +632,11 @@ const ProjectProfilePageInfo = () => {
           {["MANAGER", "CREATOR"].includes(
             projectInfo.typeOfUserSeingProject
           ) && (
-            <Button variant="primary" onClick={handleMarkAsRead} style={{backgroundColor:"#f39c12", borderColor:"#f39c12"}}>
+            <Button
+              variant="primary"
+              onClick={handleMarkAsRead}
+              style={{ backgroundColor: "#f39c12", borderColor: "#f39c12" }}
+            >
               Mark as Read
             </Button>
           )}

@@ -255,61 +255,63 @@ const MailTable = () => {
           No emails found matching your criteria.
         </div>
       ) : (
-        <table id="mail-table">
-          <tbody>
-            {receivedMails.map((mail) => (
-              <tr
-                key={mail.id}
-                onClick={() => handleSingleClick(mail)}
-                className={`mail-row ${!mail.seen ? "unread" : ""}`}
-                onMouseEnter={() => setHoveredMailId(mail.id)}
-                onMouseLeave={() => setHoveredMailId(null)}
-              >
-                <td className="mail-cell centered-cell max-width-40">
-                  <div className="sender-info">
-                    <img
-                      src={mail.senderPhoto}
-                      alt={mail.senderName}
-                      className="sender-photo"
-                    />
-                    <div className="sender-details">
-                      <span className="sender-name">{mail.senderName}</span>
-                      <span className="sender-email">{mail.senderMail}</span>
+        <>
+          <table id="mail-table">
+            <tbody>
+              {receivedMails.map((mail) => (
+                <tr
+                  key={mail.id}
+                  onClick={() => handleSingleClick(mail)}
+                  className={`mail-row ${!mail.seen ? "unread" : ""}`}
+                  onMouseEnter={() => setHoveredMailId(mail.id)}
+                  onMouseLeave={() => setHoveredMailId(null)}
+                >
+                  <td className="mail-cell centered-cell max-width-40">
+                    <div className="sender-info">
+                      <img
+                        src={mail.senderPhoto}
+                        alt={mail.senderName}
+                        className="sender-photo"
+                      />
+                      <div className="sender-details">
+                        <span className="sender-name">{mail.senderName}</span>
+                        <span className="sender-email">{mail.senderMail}</span>
+                      </div>
                     </div>
-                  </div>
-                </td>
-                <td className="mail-cell left-aligned-cell max-width-70">
-                  <span className="mail-subject">{mail.subject}</span>
-                  <span className="mail-preview">
-                    {DOMPurify.sanitize(mail.text.slice(0, 70), {
-                      ALLOWED_TAGS: [],
-                    })}
-                    ...
-                  </span>
-                </td>
-                <td className="mail-cell centered-cell max-width-15">
-                  {hoveredMailId === mail.id ? (
-                    <FaTrash
-                      onClick={(event) => handleDeleteClick(mail, event)}
-                      className="trash-icon"
-                    />
-                  ) : (
-                    formatDate(mail.date)
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+                  </td>
+                  <td className="mail-cell left-aligned-cell max-width-70">
+                    <span className="mail-subject">{mail.subject}</span>
+                    <span className="mail-preview">
+                      {DOMPurify.sanitize(mail.text.slice(0, 70), {
+                        ALLOWED_TAGS: [],
+                      })}
+                      ...
+                    </span>
+                  </td>
+                  <td className="mail-cell centered-cell max-width-15">
+                    {hoveredMailId === mail.id ? (
+                      <FaTrash
+                        onClick={(event) => handleDeleteClick(mail, event)}
+                        className="trash-icon"
+                      />
+                    ) : (
+                      formatDate(mail.date)
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
 
-      <TablePagination
-        totalPages={totalPages}
-        currentPage={currentPage}
-        setCurrentPage={handlePageChange}
-        setNavigateTableTrigger={setTrigger}
-        className="pagination-container"
-      />
+          <TablePagination
+            totalPages={totalPages}
+            currentPage={currentPage}
+            setCurrentPage={handlePageChange}
+            setNavigateTableTrigger={setTrigger}
+            className="pagination-container"
+          />
+        </>
+      )}
 
       {selectedMail && (
         <Modal show={true} onHide={handleCloseModal}>

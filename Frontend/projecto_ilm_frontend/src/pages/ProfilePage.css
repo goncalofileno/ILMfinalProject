@@ -88,13 +88,13 @@
 .button-group-horizontal {
   display: flex;
   justify-content: center;
-  align-items:flex-end;
+  align-items: flex-end;
   gap: 10px;
 }
 
 .card-container {
   border-radius: 15px;
-  max-height: 350px; /* Define a altura máxima para o card */
+  height: 100%; /* Define a altura máxima para o card */
   overflow-y: auto; /* Adiciona rolagem vertical se o conteúdo exceder a altura máxima */
   width: 95%;
   background-color: transparent;
@@ -174,7 +174,7 @@
   color: rgb(30, 40, 82);
 }
 
-#column-div-project{
+#column-div-project {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -200,8 +200,8 @@
   background: #555; /* Cor da barra de rolagem ao passar o mouse */
 }
 
-#container-cards{
-  height: 100%;
+#container-cards {
+  height: calc(100% - 80px);
 }
 
 #profile-alert {
@@ -217,3 +217,9 @@
   margin: 0 auto;
 }
 
+.align-divs-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}

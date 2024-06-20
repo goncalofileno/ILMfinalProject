@@ -1,151 +1,153 @@
 .bckg-color-ilm-page {
-    background-color: #f8f9fa;
+  background-color: #f8f9fa;
 }
 
 .ilm-pageb {
-    padding-top: 20px;
+  padding-top: 20px;
 }
 
 .table-hover tbody tr:hover {
-    background-color: #f1f1f1;
+  background-color: #f1f1f1;
 }
 
 .table thead th {
-    background-color: #343a40;
-    color: white;
-    text-align: center;
+  background-color: #343a40;
+  color: white;
+  text-align: center;
 }
 
 #project-members-table.table tbody td {
-    text-align: center;
-    vertical-align: middle;
-    padding: 8px;
+  text-align: center;
+  vertical-align: middle;
+  padding: 8px;
 }
 
 #project-members-table.table tbody tr {
-    cursor: pointer;
+  cursor: pointer;
 }
 
-.table th, .table td {
-    padding: 8px;
+.table th,
+.table td {
+  padding: 8px;
 }
 
 .card-container {
-    margin-top: 20px;
+  margin-top: 20px;
 }
 
 .card-body {
-    padding: 20px;
+  padding: 20px;
+  height: 100%;
 }
 
 .skill-interest-card {
-    background-color: #e9ecef;
-    border-radius: 5px;
-    padding: 10px;
-    text-align: center;
-    font-size: 14px;
+  background-color: #e9ecef;
+  border-radius: 5px;
+  padding: 10px;
+  text-align: center;
+  font-size: 14px;
 }
 
 .centered-message {
-    text-align: center;
-    margin-top: 20px;
+  text-align: center;
+  margin-top: 20px;
 }
 
 .clickable {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .pills-container {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 .button-group {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .button-group-horizontal {
-    display: flex;
-    gap: 10px;
+  display: flex;
+  gap: 10px;
 }
 
 .label-applyButton {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .admin-buttons {
-    display: flex;
-    gap: 10px;
+  display: flex;
+  gap: 10px;
 }
 
 .admin-buttons .btn {
-    font-size: 0.875rem; /* Smaller font size */
-    padding: 5px 10px;  /* Smaller padding */
+  font-size: 0.875rem; /* Smaller font size */
+  padding: 5px 10px; /* Smaller padding */
 }
 
 .project-cover-photo {
-    border-radius: 5px;
-    margin-bottom: 20px;
+  border-radius: 5px;
+  margin-bottom: 20px;
 }
 
 .card-title,
 .card-subtitle {
-    color: rgb(30, 40, 82);
+  color: rgb(30, 40, 82);
 }
 
 .card-text strong {
-    color: rgb(30, 40, 82);
+  color: rgb(30, 40, 82);
 }
 
 #application-request-card {
-    background-color: rgba(30, 40, 82, 0.1);
-    border: 1px solid rgba(30, 40, 82, 0.2);
-    border-radius: 5px;
-    padding: 10px;
-    margin-bottom: 10px;
-    margin-right: 10px;
-    margin-left: 10px;
+  background-color: rgba(30, 40, 82, 0.1);
+  border: 1px solid rgba(30, 40, 82, 0.2);
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+  margin-right: 10px;
+  margin-left: 10px;
 }
 
 #application-request-card .button-group-horizontal .btn-danger {
-    background-color: #f39c12;
-    border-color: #f39c12;
+  background-color: #f39c12;
+  border-color: #f39c12;
 }
 
 #application-request-card .button-group-horizontal .btn-success {
-    background-color: rgb(30, 40, 82);
-    border-color: rgb(30, 40, 82);
+  background-color: rgb(30, 40, 82);
+  border-color: rgb(30, 40, 82);
 }
 
 #application-request-card .button-group-horizontal .btn:hover {
-    opacity: 0.9;
+  opacity: 0.9;
 }
 
 .modal-header,
 .modal-footer {
-    background-color: rgb(30, 40, 82);
-    color: white;
+  background-color: rgb(30, 40, 82);
+  color: white;
 }
 
 .modal-footer .btn-secondary {
-    background-color: #6c757d;
-    border-color: #6c757d;
+  background-color: #6c757d;
+  border-color: #6c757d;
 }
 
 .modal-footer .btn-danger {
-    background-color: #f39c12;
-    border-color: #f39c12;
+  background-color: #f39c12;
+  border-color: #f39c12;
 }
 
 .modal-footer .btn-primary,
 .modal-footer .btn-warning {
-    background-color: rgb(30, 40, 82);
-    border-color: rgb(30, 40, 82);
+  background-color: rgb(30, 40, 82);
+  border-color: rgb(30, 40, 82);
 }
 
-.states-to-change{
-    margin-bottom: 20px;
+.states-to-change {
+  margin-bottom: 20px;
 }

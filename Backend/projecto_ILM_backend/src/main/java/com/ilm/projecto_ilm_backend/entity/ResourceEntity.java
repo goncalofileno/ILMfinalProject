@@ -12,33 +12,68 @@ import java.util.List;
  * Each instance of this class corresponds to a single row in the table.
  */
 @Entity
-@Table(name = "resources")
+@Table(name = "resource")
 @NamedQuery(name = "Resource.findById", query = "SELECT r FROM ResourceEntity r WHERE r.id = :id")
+@NamedQuery(name = "Resource.findByName", query = "SELECT r FROM ResourceEntity r WHERE r.name = :name")
+@NamedQuery(name = "Resource.findIdByName", query = "SELECT r.id FROM ResourceEntity r WHERE r.name = :name")
 @NamedQuery(
         name = "Resource.hasSupplier",
         query = "SELECT COUNT(r) > 0 FROM ResourceEntity r " +
-                "JOIN r.supplier s " +
+                "LEFT JOIN ResourceSupplierEntity rs ON r.id = rs.resource.id " +
                 "WHERE r.id = :resourceId " +
-                "AND s.id = :supplierId"
+                "AND rs.supplier.id = :supplierId"
+)
+
+@NamedQuery(
+        name = "Resource.doesResourceExist",
+        query = "SELECT COUNT(r) > 0 FROM ResourceEntity r " +
+                "LEFT JOIN ResourceSupplierEntity rs ON r.id = rs.resource.id " +
+                "WHERE (r.name=:name)" +
+                "AND (r.brand = :brand) "+
+                "AND (r.type = :type) "+
+                "AND (rs.supplier.name=:supplierName) "
+)
+
+@NamedQuery(
+        name = "Resource.doesResourceExistWithId",
+        query = "SELECT COUNT(r) > 0 FROM ResourceEntity r " +
+                "LEFT JOIN ResourceSupplierEntity rs ON r.id = rs.resource.id " +
+                "WHERE (r.name=:name)" +
+                "AND (r.brand = :brand) "+
+                "AND (r.type = :type) "+
+                "AND (rs.supplier.name=:supplierName) "+
+                "AND (r.id = :id)"
 )
 @NamedQuery(
         name = "Resource.findResourceByDetails",
         query = "SELECT r FROM ResourceEntity r " +
-                "JOIN r.supplier s " +
+                "LEFT JOIN ResourceSupplierEntity rs ON r.id = rs.resource.id " +
                 "WHERE (r.name=:name)" +
                 "AND (r.brand = :brand) "+
                 "AND (r.type = :type) "+
-                "AND (s.name=:supplierName) "
+                "AND (rs.supplier.name=:supplierName) "
 )
 
 @NamedQuery(
         name = "Resource.getResourcesDetails",
-        query = "SELECT r.name, r.brand, r.type, s.id FROM ResourceEntity r " +
-                "JOIN r.supplier s " +
+        query = "SELECT r.name, r.brand, r.type, rs.supplier.id,r.id FROM ResourceEntity r " +
+                "LEFT JOIN ResourceSupplierEntity rs ON r.id = rs.resource.id " +
                 "WHERE (:brand IS NULL OR r.brand = :brand) "+
                 "AND (:type IS NULL OR r.type = :type) "+
-                "AND (:supplierId IS NULL OR s.id = :supplierId) "+
-                "AND (:name IS NULL OR LOWER(r.name) LIKE LOWER(CONCAT('%', :name, '%'))) "
+                "AND (:supplierId IS NULL OR rs.supplier.id = :supplierId) "+
+                "AND (:name IS NULL OR LOWER(r.name) LIKE LOWER(CONCAT('%', :name, '%'))) "+
+                "AND (rs.isDeleted = false) "
+)
+
+@NamedQuery(
+        name = "Resource.getNumberOfResourcesDetails",
+        query = "SELECT COUNT(r) FROM ResourceEntity r " +
+                "LEFT JOIN ResourceSupplierEntity rs ON r.id = rs.resource.id "+
+                "WHERE (:brand IS NULL OR r.brand = :brand) "+
+                "AND (:type IS NULL OR r.type = :type) "+
+                "AND (:supplierId IS NULL OR rs.supplier.id = :supplierId) "+
+                "AND (:name IS NULL OR LOWER(r.name) LIKE LOWER(CONCAT('%', :name, '%'))) "+
+                "AND (rs.isDeleted = false) "
 )
 
 @NamedQuery(
@@ -49,15 +84,9 @@ import java.util.List;
         name = "Resource.getNames",
         query = "SELECT DISTINCT r.name FROM ResourceEntity r ")
 
-@NamedQuery(
-        name = "Resource.getNumberOfResourcesDetails",
-        query = "SELECT COUNT(r) FROM ResourceEntity r " +
-                "JOIN r.supplier s "+
-                "WHERE (:brand IS NULL OR r.brand = :brand) "+
-                "AND (:type IS NULL OR r.type = :type) "+
-                "AND (:supplierId IS NULL OR s.id = :supplierId) "+
-                "AND (:name IS NULL OR LOWER(r.name) LIKE LOWER(CONCAT('%', :name, '%'))) "
-)
+
+
+
 
 public class ResourceEntity implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -108,12 +137,9 @@ public class ResourceEntity implements Serializable {
     @Column(name = "serialNumber", nullable = false, unique = false, updatable = true)
     private String serialNumber;
 
-    /**
-     * The suppliers of the resource. This is a many-to-many relationship with the SupplierEntity class.
-     */
-    @ManyToMany
-    private List<SupplierEntity> supplier;
 
+    @OneToMany(mappedBy = "resource")
+    private List<ResourceSupplierEntity> supplier;
     /**
      * The project resources associated with the resource. This is a one-to-many relationship with the ProjectResourceEntity class.
      */
@@ -271,26 +297,11 @@ public class ResourceEntity implements Serializable {
         this.serialNumber = serialNumber;
     }
 
-    /**
-     * Returns the suppliers of this resource.
-     *
-     * @return the suppliers of this resource.
-     */
-    public List<SupplierEntity> getSupplier() {
+    public List<ResourceSupplierEntity> getSupplier() {
         return supplier;
     }
 
-    /**
-     * Sets the suppliers of this resource.
-     *
-     * @param supplier the new suppliers of this resource.
-     */
-    public void setSupplier(List<SupplierEntity> supplier) {
+    public void setSupplier(List<ResourceSupplierEntity> supplier) {
         this.supplier = supplier;
     }
-
-    public void addSupplier(SupplierEntity supplier) {
-        this.supplier.add(supplier);
-    }
-
 }

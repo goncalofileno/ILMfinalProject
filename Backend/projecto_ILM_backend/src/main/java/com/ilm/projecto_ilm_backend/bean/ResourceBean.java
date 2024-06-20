@@ -1,16 +1,16 @@
 package com.ilm.projecto_ilm_backend.bean;
 
 import com.ilm.projecto_ilm_backend.ENUMS.ResourceTypeENUM;
-import com.ilm.projecto_ilm_backend.dto.resource.ResourceCreationDto;
-import com.ilm.projecto_ilm_backend.dto.resource.ResourceFiltersDto;
-import com.ilm.projecto_ilm_backend.dto.resource.ResourceTableDto;
-import com.ilm.projecto_ilm_backend.dto.resource.ResourceTableInfoDto;
+import com.ilm.projecto_ilm_backend.dao.ResourceSupplierDao;
+import com.ilm.projecto_ilm_backend.dto.resource.*;
 import com.ilm.projecto_ilm_backend.entity.ResourceEntity;
+import com.ilm.projecto_ilm_backend.entity.ResourceSupplierEntity;
 import com.ilm.projecto_ilm_backend.entity.SupplierEntity;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.ApplicationScoped;
 import com.ilm.projecto_ilm_backend.dao.ResourceDao;
 import com.ilm.projecto_ilm_backend.dao.SupplierDao;
+import jakarta.inject.Inject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +33,9 @@ public class ResourceBean {
     @EJB
     private SupplierDao supplierDao;
 
+    @Inject
+    private ResourceSupplierDao resourceSupplierDao;
+
     private static final int NUMBER_OF_RESOURCES_PER_PAGE=8;
 
 
@@ -47,10 +50,13 @@ public class ResourceBean {
             resource.setSerialNumber("32423-324234-432423");
             SupplierEntity supplier = new SupplierEntity();
             supplier = supplierDao.findById(1);
-            List<SupplierEntity> suppliers = new ArrayList<>();
-            suppliers.add(supplier);
-            resource.setSupplier(suppliers);
+            ResourceSupplierEntity resourceSupplierEntity = new ResourceSupplierEntity();
+            resourceSupplierEntity.setResource(resource);
+            resourceSupplierEntity.setSupplier(supplier);
+            resourceSupplierEntity.setDeleted(false);
             resourceDao.persist(resource);
+            resourceSupplierDao.persist(resourceSupplierEntity);
+
         }
 
         if (resourceDao.findById(2) == null) {
@@ -63,10 +69,12 @@ public class ResourceBean {
             resource.setSerialNumber("4978-978978-789789");
             SupplierEntity supplier = new SupplierEntity();
             supplier = supplierDao.findById(2);
-            List<SupplierEntity> suppliers = new ArrayList<>();
-            suppliers.add(supplier);
-            resource.setSupplier(suppliers);
+            ResourceSupplierEntity resourceSupplierEntity = new ResourceSupplierEntity();
+            resourceSupplierEntity.setResource(resource);
+            resourceSupplierEntity.setSupplier(supplier);
+            resourceSupplierEntity.setDeleted(false);
             resourceDao.persist(resource);
+            resourceSupplierDao.persist(resourceSupplierEntity);
         }
 
         if (resourceDao.findById(3) == null) {
@@ -79,10 +87,13 @@ public class ResourceBean {
             resource.setSerialNumber("1234-1234-1234");
             SupplierEntity supplier = new SupplierEntity();
             supplier = supplierDao.findById(3);
-            List<SupplierEntity> suppliers = new ArrayList<>();
-            suppliers.add(supplier);
-            resource.setSupplier(suppliers);
+            ResourceSupplierEntity resourceSupplierEntity = new ResourceSupplierEntity();
+            resourceSupplierEntity.setResource(resource);
+            resourceSupplierEntity.setSupplier(supplier);
+            resourceSupplierEntity.setDeleted(false);
             resourceDao.persist(resource);
+            resourceSupplierDao.persist(resourceSupplierEntity);
+
         }
 
         if (resourceDao.findById(4) == null) {
@@ -96,11 +107,18 @@ public class ResourceBean {
             SupplierEntity supplier = new SupplierEntity();
             supplier = supplierDao.findById(4);
             SupplierEntity supplier2 = supplierDao.findById(2);
-            List<SupplierEntity> suppliers = new ArrayList<>();
-            suppliers.add(supplier);
-            suppliers.add(supplier2);
-            resource.setSupplier(suppliers);
+            ResourceSupplierEntity resourceSupplierEntity = new ResourceSupplierEntity();
+            resourceSupplierEntity.setResource(resource);
+            resourceSupplierEntity.setSupplier(supplier);
+            resourceSupplierEntity.setDeleted(false);
+            ResourceSupplierEntity resourceSupplierEntity2 = new ResourceSupplierEntity();
+            resourceSupplierEntity2.setResource(resource);
+            resourceSupplierEntity2.setSupplier(supplier2);
+            resourceSupplierEntity2.setDeleted(false);
             resourceDao.persist(resource);
+            resourceSupplierDao.persist(resourceSupplierEntity);
+            resourceSupplierDao.persist(resourceSupplierEntity2);
+
         }
 
     }
@@ -134,12 +152,13 @@ public class ResourceBean {
             resourceTableDto.setBrand((String) resource[1]);
             resourceTableDto.setType(resource[2].toString());
             resourceTableDto.setSupplier(supplierDao.findNameById((int) resource[3]));
+            resourceTableDto.setId((int) resource[4]);
             resourceTableDtos.add(resourceTableDto);
         }
 
         int numberOfResources = resourceDao.getNumberOfResources(brand, typeEnum, supplierId, searchKeyword);
         resourceTableInfoDto.setTableResources(resourceTableDtos);
-        resourceTableInfoDto.setMaxPageNumber(calculateMaximumPageTableResources(resourceDao.getNumberOfResources(brand, typeEnum, supplierId, searchKeyword)));
+        resourceTableInfoDto.setMaxPageNumber(calculateMaximumPageTableResources(numberOfResources));
 
         return resourceTableInfoDto;
     }
@@ -179,17 +198,28 @@ public class ResourceBean {
                 resourceEntity.setBrand(resourceCreationDto.getBrand());
                 resourceEntity.setSerialNumber(resourceCreationDto.getSerialNumber());
                 resourceEntity.setType(ResourceTypeENUM.valueOf(resourceCreationDto.getType()));
-                List<SupplierEntity> suppliers = new ArrayList<>();
-                suppliers.add(supplier);
-                resourceEntity.setSupplier(suppliers);
+                ResourceSupplierEntity resourceSupplierEntity = new ResourceSupplierEntity();
+                resourceSupplierEntity.setResource(resourceEntity);
+                resourceSupplierEntity.setSupplier(supplier);
+                resourceSupplierEntity.setDeleted(false);
                 resourceDao.persist(resourceEntity);
+                resourceSupplierDao.persist(resourceSupplierEntity);
                 return true;
             }
             else{
                 if(resourceDao.resourceHasSupplier(resourceEntity.getId(), supplier.getId())){
-                    return false;
+                    if(resourceSupplierDao.getIsDeletedByIds(resourceEntity.getId(), supplier.getId())){
+                        resourceSupplierDao.updateIsDeleted(resourceEntity.getId(), supplier.getId(), false);
+                        return true;
+                    }
+                    else return false;
+
                 }else {
-                    resourceEntity.addSupplier(supplier);
+                    ResourceSupplierEntity resourceSupplierEntity = new ResourceSupplierEntity();
+                    resourceSupplierEntity.setResource(resourceEntity);
+                    resourceSupplierEntity.setSupplier(supplier);
+                    resourceSupplierEntity.setDeleted(false);
+                    resourceSupplierDao.persist(resourceSupplierEntity);
                     resourceDao.merge(resourceEntity);
                     return true;
                 }
@@ -204,4 +234,76 @@ public class ResourceBean {
         if(withNames) resourceFiltersDto.setNames(resourceDao.getAllNames());
         return resourceFiltersDto;
     }
+
+    public ResourceDto getResourceById(int id){
+        ResourceEntity resourceEntity=resourceDao.findById(id);
+        ResourceDto resourceDto=new ResourceDto();
+        resourceDto.setName(resourceEntity.getName());
+        resourceDto.setType(resourceEntity.getType());
+        resourceDto.setBrand(resourceEntity.getBrand());
+        resourceDto.setSerialNumber(resourceEntity.getBrand());
+        resourceDto.setDescription(resourceEntity.getDescription());
+        resourceDto.setObservation(resourceEntity.getObservation());
+
+        return resourceDto;
+    }
+    public void setResourceDtoSupplier(ResourceDto resourceDto, String supplierName){
+        SupplierEntity supplier =supplierDao.findByName(supplierName);
+        resourceDto.setSupplierName(supplier.getName());
+        resourceDto.setSupplierContact(supplier.getContact());
+    }
+
+    public boolean editResource(ResourceDto resourceDto){
+        SupplierEntity supplier = supplierDao.findByName(resourceDto.getSupplierName());
+        ResourceEntity resourceEntity = resourceDao.findById(resourceDto.getId());
+        if(resourceEntity!=null) {
+            if(resourceDao.doesResourceExistWithId(resourceDto.getName(), resourceDto.getBrand(), resourceDto.getType(), resourceDto.getSupplierName(), resourceDto.getId())){
+                resourceEntity.setSerialNumber(resourceDto.getSerialNumber());
+                resourceEntity.setDescription(resourceDto.getDescription());
+                resourceEntity.setObservation(resourceDto.getObservation());
+                resourceDao.merge(resourceEntity);
+                updateSupplier(resourceDto, supplier);
+                return true;
+            }
+            if(resourceDao.doesResourceExist(resourceDto.getName(), resourceDto.getBrand(), resourceDto.getType(), resourceDto.getSupplierName())){
+                return false;
+            }
+            else {
+                resourceEntity.setName(resourceDto.getName());
+                resourceEntity.setType(resourceDto.getType());
+                resourceEntity.setBrand(resourceDto.getBrand());
+                resourceEntity.setSerialNumber(resourceDto.getSerialNumber());
+                resourceEntity.setDescription(resourceDto.getDescription());
+                resourceEntity.setObservation(resourceDto.getObservation());
+                resourceDao.merge(resourceEntity);
+                updateSupplier(resourceDto, supplier);
+                return true;
+            }
+        }
+        else return false;
+    }
+
+    public void updateSupplier(ResourceDto resourceDto, SupplierEntity supplier ){
+        if(!resourceDto.getOldSupplierName().equals(resourceDto.getSupplierName())){
+            resourceSupplierDao.updateIsDeleted(resourceDto.getId(), supplierDao.findIdByName(resourceDto.getOldSupplierName()), true);
+
+            if(supplier==null){
+                supplier = new SupplierEntity();
+                supplier.setName(resourceDto.getSupplierName());
+                supplier.setContact(resourceDto.getSupplierContact());
+                supplierDao.persist(supplier);
+            }
+            if(resourceSupplierDao.doesRelationExist(resourceDto.getId(),supplier.getId())){
+                resourceSupplierDao.updateIsDeleted(resourceDto.getId(), supplier.getId(), false);
+            }else {
+                ResourceSupplierEntity resourceSupplierEntity = new ResourceSupplierEntity();
+                resourceSupplierEntity.setResource(resourceDao.findById(resourceDto.getId()));
+                resourceSupplierEntity.setSupplier(supplier);
+                resourceSupplierEntity.setDeleted(false);
+                resourceSupplierDao.persist(resourceSupplierEntity);
+            }
+        }
+    }
+
+
 }

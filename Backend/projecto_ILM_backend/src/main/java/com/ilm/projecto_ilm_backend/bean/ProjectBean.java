@@ -294,6 +294,7 @@ public class ProjectBean {
             projectTableDto.setPhoto((String) projectInfo[7]);
             projectTableDto.setNumberOfMembers(userProjectDao.getNumberOfUsersByProjectId((int) projectInfo[0]));
             projectTableDto.setMember(userProjectDao.isUserInProject((int) projectInfo[0], sessionDao.findUserIdBySessionId(sessionId)));
+            projectTableDto.setSystemProjectName((String) projectInfo[8]);
             projectsTableDtos.add(projectTableDto);
 
         }
@@ -338,8 +339,9 @@ public class ProjectBean {
             projectTableDto.setNumberOfMembers(userProjectDao.getNumberOfUsersByProjectId((int) projectInfo[0]));
             projectTableDto.setMember(userProjectDao.isUserInProject((int) projectInfo[0], userId));
             projectTableDto.setPercentageDone(getProgress((int) projectInfo[0]));
+            projectTableDto.setSystemProjectName((String) projectInfo[9]);
             UserInProjectTypeENUM userInProjectType = (UserInProjectTypeENUM) projectInfo[8];
-            if(userInProjectType==userInProjectType.MEMBER_BY_APPLIANCE || userInProjectType== userInProjectType.MEMBER_BY_APPLIANCE) {
+            if(userInProjectType==userInProjectType.MEMBER_BY_INVITATION || userInProjectType== userInProjectType.MEMBER_BY_APPLIANCE) {
                 projectTableDto.setUserInProjectType(UserInProjectTypeENUM.MEMBER);
             }else {
                 projectTableDto.setUserInProjectType(userInProjectType);
@@ -372,7 +374,7 @@ public class ProjectBean {
             status.add(state);
         }
         for (UserInProjectTypeENUM type : UserInProjectTypeENUM.values()) {
-            if(type!=UserInProjectTypeENUM.PENDING_BY_APPLIANCE && type!=UserInProjectTypeENUM.PENDING_BY_INVITATION && type!=UserInProjectTypeENUM.MEMBER_BY_APPLIANCE && type!=UserInProjectTypeENUM.MEMBER_BY_INVITATION && type!=UserInProjectTypeENUM.EXMEMBER) {
+            if(type!=UserInProjectTypeENUM.PENDING_BY_APPLIANCE && type!=UserInProjectTypeENUM.PENDING_BY_INVITATION && type!=UserInProjectTypeENUM.MEMBER_BY_APPLIANCE && type!=UserInProjectTypeENUM.MEMBER_BY_INVITATION && type!=UserInProjectTypeENUM.EXMEMBER && type!=UserInProjectTypeENUM.GUEST && type!=UserInProjectTypeENUM.ADMIN) {
 
                     userInProjectType.add(type);
 

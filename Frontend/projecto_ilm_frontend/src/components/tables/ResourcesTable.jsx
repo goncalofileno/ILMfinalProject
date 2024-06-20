@@ -21,6 +21,8 @@ export default function ResourcesTable({
   brandAsc,
   supplierAsc,
   setIsModalActive,
+  setResourceSupplier,
+  setResourceId,
 }) {
   const NUMBER_OF_RESOURCES_PAGE = 8;
 
@@ -33,6 +35,12 @@ export default function ResourcesTable({
     setKeyword("");
     setCurrentPage(1);
     setNavigateTableResourcesTrigger((prev) => !prev);
+  };
+
+  const handleRowClick = (id, supplier) => {
+    setResourceId(id);
+    setResourceSupplier(supplier);
+    setIsModalActive(true);
   };
   return (
     <>
@@ -99,47 +107,60 @@ export default function ResourcesTable({
             </th>
           </tr>
         </thead>
-        <tbody>
-          {" "}
-          {resources.map((resource, index) => (
-            <tr key={index}>
-              <td style={{ fontWeight: "bold" }}>{resource.name}</td>
-              <td>
-                {formatResourceType(resource.type)}
+        {resources.length === 0 ? (
+          <tr>
+            <td colspan="4">
+              <div className="no-results no-results-align">
+                No resources found matching your criteria.
+              </div>
+            </td>
+          </tr>
+        ) : (
+          <tbody>
+            {" "}
+            {resources.map((resource, index) => (
+              <tr
+                key={index}
+                onClick={() => handleRowClick(resource.id, resource.supplier)}
+              >
+                <td style={{ fontWeight: "bold" }}>{resource.name}</td>
+                <td>
+                  {formatResourceType(resource.type)}
 
-                {resource.type === "COMPONENT" ? (
-                  <i
-                    style={{ marginLeft: "12px" }}
-                    className="fas fa-cogs fa-lg"
-                  ></i>
-                ) : (
-                  resource.type === "RESOURCE" && (
-                    <img
-                      style={{
-                        marginLeft: "12px",
-                        height: "22px",
-                        width: "25px",
-                      }}
-                      src={componentIcon}
-                    ></img>
-                  )
-                )}
-              </td>
-              <td>{resource.brand}</td>
-              <td>{resource.supplier}</td>
-            </tr>
-          ))}
-          {Array(NUMBER_OF_RESOURCES_PAGE - resources.length)
-            .fill()
-            .map((index) => (
-              <tr key={index + resources.length}>
-                <td className="row-no-content"></td>
-                <td className="row-no-content"></td>
-                <td className="row-no-content"></td>
-                <td className="row-no-content"></td>
+                  {resource.type === "COMPONENT" ? (
+                    <i
+                      style={{ marginLeft: "12px" }}
+                      className="fas fa-cogs fa-lg"
+                    ></i>
+                  ) : (
+                    resource.type === "RESOURCE" && (
+                      <img
+                        style={{
+                          marginLeft: "12px",
+                          height: "22px",
+                          width: "25px",
+                        }}
+                        src={componentIcon}
+                      ></img>
+                    )
+                  )}
+                </td>
+                <td>{resource.brand}</td>
+                <td>{resource.supplier}</td>
               </tr>
             ))}
-        </tbody>
+            {Array(NUMBER_OF_RESOURCES_PAGE - resources.length)
+              .fill()
+              .map((index) => (
+                <tr key={index + resources.length}>
+                  <td className="row-no-content"></td>
+                  <td className="row-no-content"></td>
+                  <td className="row-no-content"></td>
+                  <td className="row-no-content"></td>
+                </tr>
+              ))}
+          </tbody>
+        )}
       </table>
       <div id="align-div-buttons">
         <div id="flex-row-table-projects">
@@ -153,12 +174,14 @@ export default function ResourcesTable({
             </button>
           </div>
           <div className="tablePagination-div">
-            <TablePagination
-              totalPages={totalPages}
-              currentPage={currentPage}
-              setCurrentPage={setCurrentPage}
-              setNavigateTableTrigger={setNavigateTableResourcesTrigger}
-            />
+            {resources.length > 0 && (
+              <TablePagination
+                totalPages={totalPages}
+                currentPage={currentPage}
+                setCurrentPage={setCurrentPage}
+                setNavigateTableTrigger={setNavigateTableResourcesTrigger}
+              />
+            )}
           </div>
           <div className="row-btns-table-projects-2"></div>
         </div>

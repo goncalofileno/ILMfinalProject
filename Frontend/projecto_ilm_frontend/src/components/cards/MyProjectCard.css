@@ -81,12 +81,7 @@
 
 .my-project-background-color {
   height: 70%;
-  background: linear-gradient(
-      56.26deg,
-      rgba(30, 40, 82, 0.351) 0%,
-      rgba(254, 255, 255, 0.81) 100%
-    ),
-    rgb(255, 255, 255);
+  background-color: rgba(167, 167, 167, 0.329);
   border-bottom-left-radius: 15px;
   border-bottom-right-radius: 15px;
   padding-bottom: 15px;

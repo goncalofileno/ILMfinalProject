@@ -807,6 +807,22 @@ async function getResourcesFilters(withNames) {
   }
 }
 
+async function getResource(id, supplierName) {
+  try {
+    const response = await fetch(`${baseURL}resource/${id}/${supplierName}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+
+    return response;
+  } catch (error) {
+    console.error("Error receiving all resources:", error);
+  }
+}
+
 async function createResource(
   name,
   description,
@@ -838,6 +854,47 @@ async function createResource(
       },
       credentials: "include",
       body: JSON.stringify(resourceCreationDto),
+    });
+
+    return response;
+  } catch (error) {
+    console.error("Error receiving all resources:", error);
+  }
+}
+
+async function editResource(
+  id,
+  name,
+  description,
+  type,
+  brand,
+  serialNumber,
+  supplier,
+  supplierContact,
+  observations,
+  oldSupplierName
+) {
+  let resourceDto = {
+    id: id,
+    name: name,
+    description: description,
+    type: type,
+    brand: brand,
+    serialNumber: serialNumber,
+    supplierName: supplier,
+    supplierContact: supplierContact,
+    observation: observations,
+    oldSupplierName: oldSupplierName,
+  };
+
+  try {
+    const response = await fetch(`${baseURL}resource`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(resourceDto),
     });
 
     return response;
@@ -939,13 +996,18 @@ async function respondToInvite(sessionId, projectName, response) {
 
 async function getProjectInfoPage(systemProjectName) {
   try {
-    const response = await fetch(`${baseURL}project/projectInfoPage?projectName=${encodeURIComponent(systemProjectName)}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include"
-    });
+    const response = await fetch(
+      `${baseURL}project/projectInfoPage?projectName=${encodeURIComponent(
+        systemProjectName
+      )}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      }
+    );
     if (!response.ok) {
       throw new Error("Failed to fetch project info");
     }
@@ -956,9 +1018,16 @@ async function getProjectInfoPage(systemProjectName) {
   }
 }
 
-async function approveOrRejectProject(sessionId, projectSystemName, approve, reason) {
+async function approveOrRejectProject(
+  sessionId,
+  projectSystemName,
+  approve,
+  reason
+) {
   try {
-    const endpoint = `${baseURL}project/approveOrRejectProject?projectSystemName=${encodeURIComponent(projectSystemName)}&approve=${approve}&reason=${encodeURIComponent(reason)}`;
+    const endpoint = `${baseURL}project/approveOrRejectProject?projectSystemName=${encodeURIComponent(
+      projectSystemName
+    )}&approve=${approve}&reason=${encodeURIComponent(reason)}`;
     const fetchResponse = await fetch(endpoint, {
       method: "POST",
       headers: {
@@ -982,7 +1051,9 @@ async function approveOrRejectProject(sessionId, projectSystemName, approve, rea
 
 async function joinProject(sessionId, projectSystemName) {
   try {
-    const endpoint = `${baseURL}project/joinProject?projectSystemName=${encodeURIComponent(projectSystemName)}`;
+    const endpoint = `${baseURL}project/joinProject?projectSystemName=${encodeURIComponent(
+      projectSystemName
+    )}`;
     const fetchResponse = await fetch(endpoint, {
       method: "POST",
       headers: {
@@ -1006,7 +1077,9 @@ async function joinProject(sessionId, projectSystemName) {
 
 async function cancelProject(sessionId, projectSystemName, reason) {
   try {
-    const endpoint = `${baseURL}project/cancelProject?projectSystemName=${encodeURIComponent(projectSystemName)}&reason=${encodeURIComponent(reason)}`;
+    const endpoint = `${baseURL}project/cancelProject?projectSystemName=${encodeURIComponent(
+      projectSystemName
+    )}&reason=${encodeURIComponent(reason)}`;
     const fetchResponse = await fetch(endpoint, {
       method: "POST",
       headers: {
@@ -1030,7 +1103,9 @@ async function cancelProject(sessionId, projectSystemName, reason) {
 
 async function markReasonAsRead(sessionId, projectSystemName) {
   try {
-    const endpoint = `${baseURL}project/markReasonAsRead?projectSystemName=${encodeURIComponent(projectSystemName)}`;
+    const endpoint = `${baseURL}project/markReasonAsRead?projectSystemName=${encodeURIComponent(
+      projectSystemName
+    )}`;
     const fetchResponse = await fetch(endpoint, {
       method: "POST",
       headers: {
@@ -1052,9 +1127,18 @@ async function markReasonAsRead(sessionId, projectSystemName) {
   }
 }
 
-async function changeProjectState(sessionId, projectSystemName, newState, reason) {
+async function changeProjectState(
+  sessionId,
+  projectSystemName,
+  newState,
+  reason
+) {
   try {
-    const endpoint = `${baseURL}project/changeProjectState?projectSystemName=${encodeURIComponent(projectSystemName)}&newState=${encodeURIComponent(newState)}&reason=${encodeURIComponent(reason || '')}`;
+    const endpoint = `${baseURL}project/changeProjectState?projectSystemName=${encodeURIComponent(
+      projectSystemName
+    )}&newState=${encodeURIComponent(newState)}&reason=${encodeURIComponent(
+      reason || ""
+    )}`;
     const fetchResponse = await fetch(endpoint, {
       method: "POST",
       headers: {
@@ -1075,11 +1159,6 @@ async function changeProjectState(sessionId, projectSystemName, newState, reason
     return { error: error.message };
   }
 }
-
-
-
-
-
 
 export {
   registerUser,
@@ -1133,4 +1212,6 @@ export {
   getMyProjectsTable,
   getProjectsFilters,
   findSupplierContact,
+  getResource,
+  editResource,
 };

@@ -68,6 +68,26 @@ public class ResourceDao extends AbstractDao<ResourceEntity> {
         }
     }
 
+    public int findIdByName(String name) {
+        try {
+            return em.createNamedQuery("Resource.findIdByName", Long.class).setParameter("name", name)
+                    .getSingleResult().intValue();
+
+        } catch (Exception e) {
+            return -1;
+        }
+    }
+
+    public ResourceEntity findByName(String name) {
+        try {
+            return em.createNamedQuery("Resource.findByName", ResourceEntity.class).setParameter("name", name)
+                    .getSingleResult();
+
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     public List<Object[]> getResourceDetails(int page, int resourcesPerPage, String brand, ResourceTypeENUM type, Integer supplierId, String name,
                                              String nameAsc, String typeAsc,String brandAsc, String supplierAsc){
 
@@ -133,6 +153,24 @@ public class ResourceDao extends AbstractDao<ResourceEntity> {
         return em.createNamedQuery("Resource.hasSupplier", Boolean.class)
                 .setParameter("resourceId", resourceId)
                 .setParameter("supplierId", supplierId)
+                .getSingleResult();
+    }
+
+    public boolean doesResourceExist(String name, String brand, ResourceTypeENUM type, String supplierName) {
+        return em.createNamedQuery("Resource.doesResourceExist", Boolean.class)
+                .setParameter("name", name)
+                .setParameter("brand", brand)
+                .setParameter("type", type)
+                .setParameter("supplierName", supplierName)
+                .getSingleResult();
+    }
+    public boolean doesResourceExistWithId(String name, String brand, ResourceTypeENUM type, String supplierName, int id) {
+        return em.createNamedQuery("Resource.doesResourceExistWithId", Boolean.class)
+                .setParameter("name", name)
+                .setParameter("brand", brand)
+                .setParameter("type", type)
+                .setParameter("supplierName", supplierName)
+                .setParameter("id", id)
                 .getSingleResult();
     }
 
