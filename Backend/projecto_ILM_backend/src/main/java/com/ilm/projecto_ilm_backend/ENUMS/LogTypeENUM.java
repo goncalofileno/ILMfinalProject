@@ -8,7 +8,9 @@ public enum LogTypeENUM {
      * Log for members.
      * Represented by the integer value 0.
      */
-    MEMBERS(0),
+    MEMBER_ADDED(0),
+
+    MEMBER_REMOVED(9),
 
     /**
      * Log for tasks created.

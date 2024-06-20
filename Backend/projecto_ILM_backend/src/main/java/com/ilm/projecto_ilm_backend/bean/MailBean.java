@@ -28,13 +28,17 @@ public class MailBean {
     @Inject
     SessionDao sessionDao;
 
+    @Inject
+    UserBean userBean;
+
     public void createDefaultMailsIfNotExistent() {
         for (int i = 0; i < 30; i++) {
-            if(maildao.findById(i) == null) {
+            if (maildao.findById(i) == null) {
                 MailEntity mail = new MailEntity();
                 mail.setSubject("Subject " + i);
                 mail.setText("Text " + i);
-                mail.setDeleted(false);
+                mail.setDeletedBySender(false);
+                mail.setDeletedByReceiver(false);
                 mail.setDate(LocalDateTime.now());
                 mail.setSeen(false);
                 mail.setSender(userDao.findById(1));
@@ -48,7 +52,8 @@ public class MailBean {
                 MailEntity mail = new MailEntity();
                 mail.setSubject("Subject " + i);
                 mail.setText("Text " + i);
-                mail.setDeleted(false);
+                mail.setDeletedBySender(false);
+                mail.setDeletedByReceiver(false);
                 mail.setDate(LocalDateTime.now());
                 mail.setSeen(false);
                 mail.setSender(userDao.findById(2));
@@ -75,7 +80,8 @@ public class MailBean {
             mailDto.setReceiverMail(mail.getReceiver().getEmail());
             mailDto.setReceiverPhoto(mail.getReceiver().getAvatarPhoto());
             mailDto.setSeen(mail.isSeen());
-            mailDto.setDeleted(mail.isDeleted());
+            mailDto.setDeletedBySender(mail.isDeletedBySender());
+            mailDto.setDeletedByReceiver(mail.isDeletedByReceiver());
             mailDtos.add(mailDto);
         }
         return mailDtos;
@@ -101,11 +107,16 @@ public class MailBean {
     }
 
     public boolean markMailAsDeleted(String sessionId, int mailId) {
-        UserEntity user = sessionDao.findBySessionId(sessionId).getUser();
+
+        UserEntity user = userBean.getUserBySessionId(sessionId);
         MailEntity mail = maildao.findById(mailId);
 
-        if (mail != null && mail.getReceiver().getId() == user.getId()) {
-            mail.setDeleted(true);
+        if (user.getId() == mail.getReceiver().getId()) {
+            mail.setDeletedByReceiver(true);
+            maildao.merge(mail);
+            return true;
+        } else if (user.getId() == mail.getSender().getId()) {
+            mail.setDeletedBySender(true);
             maildao.merge(mail);
             return true;
         } else {
@@ -125,11 +136,12 @@ public class MailBean {
             mail.setSender(sender);
             mail.setReceiver(receiver);
             mail.setSeen(false);
-            mail.setDeleted(false);
+            mail.setDeletedBySender(false);
+            mail.setDeletedByReceiver(false);
 
             maildao.persist(mail);
 
-            if(sessionDao.findByUserId(receiver.getId()) != null) {
+            if (sessionDao.findByUserId(receiver.getId()) != null) {
                 String receiverSessionId = sessionDao.findByUserId(receiver.getId()).getSessionId();
                 MailWebSocket.notifyNewMail(receiverSessionId, sender.getFirstName(), sender.getLastName());
             }
@@ -176,7 +188,8 @@ public class MailBean {
             mailDto.setReceiverMail(mail.getReceiver().getEmail());
             mailDto.setReceiverPhoto(mail.getReceiver().getAvatarPhoto());
             mailDto.setSeen(mail.isSeen());
-            mailDto.setDeleted(mail.isDeleted());
+            mailDto.setDeletedBySender(mail.isDeletedBySender());
+            mailDto.setDeletedByReceiver(mail.isDeletedByReceiver());
             return mailDto;
         }).collect(Collectors.toList());
     }
@@ -204,7 +217,8 @@ public class MailBean {
             mailDto.setReceiverMail(mail.getReceiver().getEmail());
             mailDto.setReceiverPhoto(mail.getReceiver().getAvatarPhoto());
             mailDto.setSeen(mail.isSeen());
-            mailDto.setDeleted(mail.isDeleted());
+            mailDto.setDeletedBySender(mail.isDeletedBySender());
+            mailDto.setDeletedByReceiver(mail.isDeletedByReceiver());
             mailDtos.add(mailDto);
         }
         return mailDtos;
@@ -232,7 +246,8 @@ public class MailBean {
             mailDto.setReceiverMail(mail.getReceiver().getEmail());
             mailDto.setReceiverPhoto(mail.getReceiver().getAvatarPhoto());
             mailDto.setSeen(mail.isSeen());
-            mailDto.setDeleted(mail.isDeleted());
+            mailDto.setDeletedBySender(mail.isDeletedBySender());
+            mailDto.setDeletedByReceiver(mail.isDeletedByReceiver());
             mailDtos.add(mailDto);
         }
         return mailDtos;

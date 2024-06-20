@@ -122,7 +122,8 @@ public class LogEntity implements Serializable {
     @PreUpdate
     private void validateLogEntry() {
         switch (this.type) {
-            case MEMBERS:
+            case MEMBER_REMOVED:
+            case MEMBER_ADDED:
                 if (receiver == null || taskTitle != null || taskOldStatus != null || taskNewStatus != null || resourceName != null || resourceStock != 0) {
                     throw new IllegalStateException("For MEMBERS log type: receiver must not be null and all task/resource fields must be null.");
                 }

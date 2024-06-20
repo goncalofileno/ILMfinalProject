@@ -24,6 +24,7 @@ import EditProfilePage from "./pages/EditProfilePage";
 import MailWebSocket from "./utilities/websockets/MailWebSocket";
 import ResourcesPage from "./pages/ResourcesPage";
 import ProjectProfilePageInfo from "./pages/ProjectProfilePageInfo";
+import ProjectLogsPage from "./pages/ProjectLogsPage";
 
 
 const AppWithWebSocket = () => {
@@ -42,6 +43,7 @@ const AppWithWebSocket = () => {
         <Route path="/profile/:systemUsername/:section" element={<ProfilePage />} />
         <Route path="/project/:systemProjectName" element={<Navigate to="info" />} />
         <Route path="/project/:systemProjectName/info" element={<ProjectProfilePageInfo />} />
+        <Route path="/project/:systemProjectName/logs" element={<ProjectLogsPage />} />
         <Route path="/editProfile" element={<EditProfilePage />} />
         <Route path="/mail/inbox" element={<InboxMailPage />} />
         <Route path="/mail/sent" element={<SentMailPage />} />

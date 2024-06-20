@@ -204,7 +204,6 @@ public class ProjectBean {
         }
     }
 
-
     private String projectSystemNameGenerator(String originalName) {
         // Convert to lower case
         String lowerCaseName = originalName.toLowerCase();
@@ -393,9 +392,6 @@ public class ProjectBean {
         return projectFiltersDto;
     }
 
-
-
-
     public int calculateMaximumPageTableProjects(int numberOfProjects, int numberOfProjectPerPage) {
         return (int) Math.ceil((double) numberOfProjects / numberOfProjectPerPage);
     }
@@ -545,6 +541,7 @@ public class ProjectBean {
         projectProfilePageDto.setStatesToChange(statesToChange);
         projectProfilePageDto.setProgress(progress);
         projectProfilePageDto.setTypeOfUserSeingProject(getUserTypeInProject(userId, project.getId()));
+        projectProfilePageDto.setTypeOfUser(userDao.findById(userId).getType());
         projectProfilePageDto.setReason(project.getReason());
 
         return projectProfilePageDto;
@@ -577,6 +574,15 @@ public class ProjectBean {
     }
 
     private List<StateProjectENUM> getPossibleStatesToChange(int userId, ProjectEntity project) {
+
+        UserTypeENUM userType = userDao.findById(userId).getType();
+
+        if (userType == UserTypeENUM.ADMIN) {
+            if (project.getStatus() == StateProjectENUM.CANCELED) {
+                return List.of(StateProjectENUM.PLANNING, StateProjectENUM.CANCELED);
+            }
+        }
+
         if (userProjectDao.isUserCreatorOrManager(userId, project.getId())) {
             if (project.getStatus() == StateProjectENUM.CANCELED) {
                 return List.of(StateProjectENUM.CANCELED);
@@ -588,6 +594,7 @@ public class ProjectBean {
         }
         return new ArrayList<>();
     }
+
 
 
     public int getProgress(int projectId) {
@@ -739,6 +746,7 @@ public class ProjectBean {
         return "User applied to join project successfully";
     }
 
+
     @Transactional
     public String cancelProject(int userId, String projectSystemName, String reason, String sessionId) {
         ProjectEntity project = projectDao.findBySystemName(projectSystemName);
@@ -813,13 +821,25 @@ public class ProjectBean {
             throw new Exception("Project not found");
         }
 
-        UserInProjectTypeENUM userType = userProjectDao.findByUserIdAndProjectId(userId, project.getId()).getType();
-        if (userType != UserInProjectTypeENUM.MANAGER && userType != UserInProjectTypeENUM.CREATOR) {
+        UserTypeENUM userType = userDao.findById(userId).getType();
+        boolean isAdmin = userType == UserTypeENUM.ADMIN;
+
+        UserInProjectTypeENUM userInProjectType = userProjectDao.findByUserIdAndProjectId(userId, project.getId()).getType();
+
+        if (project.getStatus() == StateProjectENUM.CANCELED && !isAdmin) {
+            throw new UnauthorizedAccessException("Only admins can change the state of a canceled project.");
+        }
+
+        if (userInProjectType != UserInProjectTypeENUM.MANAGER && userInProjectType != UserInProjectTypeENUM.CREATOR && !isAdmin) {
             throw new UnauthorizedAccessException("User does not have permission to change project state.");
         }
 
         if (newState == StateProjectENUM.CANCELED && reason == null) {
             throw new Exception("Cancellation reason is required.");
+        }
+
+        if(newState == StateProjectENUM.PLANNING && project.getStatus() == StateProjectENUM.CANCELED){
+            project.setReason(null);
         }
 
         project.setStatus(newState);
@@ -830,13 +850,14 @@ public class ProjectBean {
         List<UserEntity> teamMembers = getProjectMembersByProjectId(project.getId());
         for (UserEntity user : teamMembers) {
             if (user.getId() != sender.getId()) {
-                notificationBean.createProjectNotification(project.getSystemName(), newState, userDao.getFullNameBySystemUsername(userDao.findById(userId).getSystemUsername()), user, userDao.findById(userId).getSystemUsername());
+                notificationBean.createProjectNotification(project.getSystemName(), newState, userDao.getFullNameBySystemUsername(sender.getSystemUsername()), user, sender.getSystemUsername());
             }
         }
 
         projectDao.merge(project);
         return "Project state updated successfully";
     }
+
 
     public List<UserEntity> getProjectMembersByProjectId(int projectId) {
         return userProjectDao.findMembersByProjectId(projectId).stream().map(UserProjectEntity::getUser).collect(Collectors.toList());

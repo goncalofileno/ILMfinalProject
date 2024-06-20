@@ -86,7 +86,12 @@ const ProjectProfilePageInfo = () => {
 
   const updateProjectState = async (newState) => {
     try {
-      const result = await changeProjectState(sessionId, systemProjectName, newState, reason);
+      const result = await changeProjectState(
+        sessionId,
+        systemProjectName,
+        newState,
+        reason
+      );
       if (result.error) {
         setError(result.error);
       } else {
@@ -118,7 +123,12 @@ const ProjectProfilePageInfo = () => {
 
   const handleRejectProject = async () => {
     try {
-      const result = await approveOrRejectProject(sessionId, systemProjectName, false, reason);
+      const result = await approveOrRejectProject(
+        sessionId,
+        systemProjectName,
+        false,
+        reason
+      );
       if (result.error) {
         setError(result.error);
       } else {
@@ -135,7 +145,12 @@ const ProjectProfilePageInfo = () => {
 
   const handleApproveProject = async () => {
     try {
-      const result = await approveOrRejectProject(sessionId, systemProjectName, true, "");
+      const result = await approveOrRejectProject(
+        sessionId,
+        systemProjectName,
+        true,
+        ""
+      );
       if (result.error) {
         setError(result.error);
       } else {
@@ -226,44 +241,52 @@ const ProjectProfilePageInfo = () => {
   const isAdmin = projectInfo.typeOfUserSeingProject === "ADMIN";
 
   const renderAdminButtons = () => {
-    if (isAdmin && projectInfo.state !== "CANCELED") {
-      if (projectInfo.state === "READY") {
-        return (
-          <div>
+    const isCreatorOrManager =
+      projectInfo.typeOfUserSeingProject === "CREATOR" ||
+      projectInfo.typeOfUserSeingProject === "MANAGER";
+  
+    if (projectInfo.state !== "CANCELED") {
+      return (
+        <div>
+          {isAdmin && projectInfo.state === "READY" && (
             <div style={{ marginBottom: "10px" }}>
               <span>
                 <strong>This project is ready for approval:</strong>
               </span>
             </div>
-            <div className="admin-buttons">
-              <Button variant="success" className="mr-2" onClick={handleApproveProject}>
-                Approve Project
-              </Button>
-              <Button
-                variant="warning"
-                className="mr-2"
-                onClick={() => setShowRejectModal(true)}
-              >
-                Reject Project
-              </Button>
+          )}
+          <div className="admin-buttons">
+            {isAdmin && projectInfo.state === "READY" && (
+              <>
+                <Button
+                  variant="success"
+                  className="mr-2"
+                  onClick={handleApproveProject}
+                >
+                  Approve Project
+                </Button>
+                <Button
+                  variant="warning"
+                  className="mr-2"
+                  onClick={() => setShowRejectModal(true)}
+                >
+                  Reject Project
+                </Button>
+              </>
+            )}
+            {(isAdmin || isCreatorOrManager) && (
               <Button variant="danger" onClick={() => setShowCancelModal(true)}>
                 Cancel Project
               </Button>
-            </div>
+            )}
           </div>
-        );
-      } else {
-        return (
-          <div className="admin-buttons">
-            <Button variant="danger" onClick={() => setShowCancelModal(true)}>
-              Cancel Project
-            </Button>
-          </div>
-        );
-      }
+        </div>
+      );
     }
     return null;
   };
+  
+  
 
   const renderUserStatusCard = () => {
     const { typeOfUserSeingProject } = projectInfo;
@@ -366,7 +389,7 @@ const ProjectProfilePageInfo = () => {
                       </Card.Text>
                       <ProgressBar
                         percentage={projectInfo.progress}
-                        status={(projectInfo.state)}
+                        status={projectInfo.state}
                       />
                     </Card.Body>
                   </Col>
@@ -414,20 +437,23 @@ const ProjectProfilePageInfo = () => {
                       </Card.Text>
                       {isCreatorOrManager && (
                         <>
-                        <div className="states-to-change"><Card.Text>
-                            <strong>States to Change:</strong>
-                          </Card.Text>
-                          <Form.Select
-                            value={selectedState}
-                            onChange={handleStateChange}
-                          >
-                            {projectInfo.statesToChange.map((state, index) => (
-                              <option key={index} value={state}>
-                                {formatStatusDropDown(state)}
-                              </option>
-                            ))}
-                          </Form.Select></div>
-                          
+                          <div className="states-to-change">
+                            <Card.Text>
+                              <strong>States to Change:</strong>
+                            </Card.Text>
+                            <Form.Select
+                              value={selectedState}
+                              onChange={handleStateChange}
+                            >
+                              {projectInfo.statesToChange.map(
+                                (state, index) => (
+                                  <option key={index} value={state}>
+                                    {formatStatusDropDown(state)}
+                                  </option>
+                                )
+                              )}
+                            </Form.Select>
+                          </div>
                         </>
                       )}
                       <Card.Text>
@@ -493,15 +519,24 @@ const ProjectProfilePageInfo = () => {
                             {projectInfo.maxMembers}:
                           </div>
                           {hasVacancies &&
+                            projectInfo.state !== "CANCELED" &&
                             ![
                               "PENDING_BY_INVITATION",
                               "PENDING_BY_APPLIANCE",
                               "MEMBER",
                               "MEMBER_BY_APPLIANCE",
                               "MEMBER_BY_INVITATION",
-                              "CANCELED"
+                              "CREATOR",
+                              "MANAGER",
                             ].includes(projectInfo.typeOfUserSeingProject) && (
-                              <Button variant="primary" onClick={handleJoinProject} style={{backgroundColor:"#f39c12", borderColor:"#f39c12"}}>
+                              <Button
+                                variant="primary"
+                                onClick={handleJoinProject}
+                                style={{
+                                  backgroundColor: "#f39c12",
+                                  borderColor: "#f39c12",
+                                }}
+                              >
                                 Join Project
                               </Button>
                             )}
@@ -511,13 +546,16 @@ const ProjectProfilePageInfo = () => {
                     </Row>
                   </Col>
                 </Row>
-                
+
                 <Row>
                   <Col md="12">
                     <Card.Body>
                       <Card.Text>
                         <strong>Type of User Seeing Project:</strong>{" "}
                         {projectInfo.typeOfUserSeingProject}
+                      </Card.Text>
+                      <Card.Text>
+                        <strong>Type of user:</strong> {projectInfo.typeOfUser}
                       </Card.Text>
                     </Card.Body>
                   </Col>
@@ -603,7 +641,11 @@ const ProjectProfilePageInfo = () => {
           {["MANAGER", "CREATOR"].includes(
             projectInfo.typeOfUserSeingProject
           ) && (
-            <Button variant="primary" onClick={handleMarkAsRead} style={{backgroundColor:"#f39c12", borderColor:"#f39c12"}}>
+            <Button
+              variant="primary"
+              onClick={handleMarkAsRead}
+              style={{ backgroundColor: "#f39c12", borderColor: "#f39c12" }}
+            >
               Mark as Read
             </Button>
           )}

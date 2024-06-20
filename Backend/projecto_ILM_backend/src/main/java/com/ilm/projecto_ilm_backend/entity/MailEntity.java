@@ -12,10 +12,10 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Table(name = "mail")
-@NamedQuery(name = "Mail.getMailsReceivedByUserId", query = "SELECT m FROM MailEntity m WHERE m.receiver.id = :userId AND m.deleted = false ORDER BY m.date DESC")
-@NamedQuery(name = "Mail.getMailsSentByUserId", query = "SELECT m FROM MailEntity m WHERE m.sender.id = :userId AND m.deleted = false ORDER BY m.date DESC")
+@NamedQuery(name = "Mail.getMailsReceivedByUserId", query = "SELECT m FROM MailEntity m WHERE m.receiver.id = :userId AND m.deletedByReceiver = false ORDER BY m.date DESC")
+@NamedQuery(name = "Mail.getMailsSentByUserId", query = "SELECT m FROM MailEntity m WHERE m.sender.id = :userId AND m.deletedBySender = false ORDER BY m.date DESC")
 @NamedQuery(name = "Mail.findById", query = "SELECT m FROM MailEntity m WHERE m.id = :id")
-@NamedQuery(name = "Mail.getUnseenMailsCount", query = "SELECT COUNT(m) FROM MailEntity m WHERE m.receiver.id = :userId AND m.seen = false AND m.deleted = false")
+@NamedQuery(name = "Mail.getUnseenMailsCount", query = "SELECT COUNT(m) FROM MailEntity m WHERE m.receiver.id = :userId AND m.seen = false AND m.deletedByReceiver = false")
 public class MailEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -42,8 +42,14 @@ public class MailEntity implements Serializable {
     /**
      * The deleted status of the message.
      */
-    @Column(name = "deleted", nullable = false, unique = false, updatable = true)
-    private boolean deleted;
+    @Column(name = "deletedBySender", nullable = false, unique = false, updatable = true)
+    private boolean deletedBySender;
+
+    /**
+     * The deleted status of the message.
+     */
+    @Column(name = "deletedByReceiver", nullable = false, unique = false, updatable = true)
+    private boolean deletedByReceiver;
 
     /**
      * The date of the message.
@@ -112,22 +118,21 @@ public class MailEntity implements Serializable {
         this.subject = subject;
     }
 
-    /**
-     * Returns the deleted status of this message.
-     *
-     * @return true if the message has been deleted, false otherwise.
-     */
-    public boolean isDeleted() {
-        return deleted;
+
+    public boolean isDeletedByReceiver() {
+        return deletedByReceiver;
     }
 
-    /**
-     * Sets the deleted status of this message.
-     *
-     * @param deleted the new deleted status of this message.
-     */
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
+    public void setDeletedByReceiver(boolean deletedByReceiver) {
+        this.deletedByReceiver = deletedByReceiver;
+    }
+
+    public boolean isDeletedBySender() {
+        return deletedBySender;
+    }
+
+    public void setDeletedBySender(boolean deletedBySender) {
+        this.deletedBySender = deletedBySender;
     }
 
     /**

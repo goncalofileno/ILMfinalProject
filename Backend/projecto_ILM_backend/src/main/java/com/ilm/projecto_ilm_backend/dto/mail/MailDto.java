@@ -18,12 +18,13 @@ public class MailDto {
     private String receiverMail;
     private String receiverPhoto;
     private boolean seen;
-    private boolean deleted;
+   private boolean isDeletedBySender;
+    private boolean isDeletedByReceiver;
 
     public MailDto() {
     }
 
-    public MailDto(int id, String subject, String text, LocalDateTime date, String senderName, String senderMail, String senderPhoto, String receiverName, String receiverMail, String receiverPhoto, boolean seen, boolean deleted) {
+    public MailDto(int id, String subject, String text, LocalDateTime date, String senderName, String senderMail, String senderPhoto, String receiverName, String receiverMail, String receiverPhoto, boolean seen, boolean isDeletedBySender, boolean isDeletedByReceiver) {
         this.id = id;
         this.subject = subject;
         this.text = text;
@@ -35,7 +36,8 @@ public class MailDto {
         this.receiverMail = receiverMail;
         this.receiverPhoto = receiverPhoto;
         this.seen = seen;
-        this.deleted = deleted;
+        this.isDeletedBySender = isDeletedBySender;
+        this.isDeletedByReceiver = isDeletedByReceiver;
     }
 
     public MailDto(String subject, String text, String senderName, String senderMail, String receiverName, String receiverMail) {
@@ -45,9 +47,6 @@ public class MailDto {
         this.senderMail = senderMail;
         this.receiverName = receiverName;
         this.receiverMail = receiverMail;
-        this.date = LocalDateTime.now();
-        this.seen = false;
-        this.deleted = false;
     }
 
     public int getId() {
@@ -138,29 +137,19 @@ public class MailDto {
         this.seen = seen;
     }
 
-    public boolean isDeleted() {
-        return deleted;
+    public boolean isDeletedBySender() {
+        return isDeletedBySender;
     }
 
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
+    public void setDeletedBySender(boolean deletedBySender) {
+        isDeletedBySender = deletedBySender;
     }
 
-    @Override
-    public String toString() {
-        return "MailDto{" +
-                "id=" + id +
-                ", subject='" + subject + '\'' +
-                ", text='" + text + '\'' +
-                ", date=" + date +
-                ", senderName='" + senderName + '\'' +
-                ", senderMail='" + senderMail + '\'' +
-                ", senderPhoto='" + senderPhoto + '\'' +
-                ", receiverName='" + receiverName + '\'' +
-                ", receiverMail='" + receiverMail + '\'' +
-                ", receiverPhoto='" + receiverPhoto + '\'' +
-                ", seen=" + seen +
-                ", deleted=" + deleted +
-                '}';
+    public boolean isDeletedByReceiver() {
+        return isDeletedByReceiver;
+    }
+
+    public void setDeletedByReceiver(boolean deletedByReceiver) {
+        isDeletedByReceiver = deletedByReceiver;
     }
 }
