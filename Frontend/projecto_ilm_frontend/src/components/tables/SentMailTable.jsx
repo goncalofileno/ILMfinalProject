@@ -67,12 +67,7 @@ const SentMailTable = () => {
     setLoading(true);
     setIsSearching(true);
     try {
-      const result = await searchSentMails(
-        sessionId,
-        search,
-        page,
-        pageSize
-      );
+      const result = await searchSentMails(sessionId, search, page, pageSize);
       const { mails, totalMails } = result;
       mails.sort((a, b) => new Date(b.date) - new Date(a.date));
       setMails(mails);
@@ -256,71 +251,82 @@ const SentMailTable = () => {
       </InputGroup>
 
       {mails.length === 0 ? (
-        <div className="no-results">No emails found matching your criteria.</div>
+        <div className="no-results">
+          No emails found matching your criteria.
+        </div>
       ) : (
-        <table id="sent-mail-table">
-          <tbody>
-            {mails.map((mail) => (
-              <tr
-                key={mail.id}
-                onClick={() => handleSingleClick(mail)}
-                onMouseEnter={() => setHoveredMailId(mail.id)}
-                onMouseLeave={() => setHoveredMailId(null)}
-              >
-                <td className="mail-cell centered-cell max-width-40">
-                  <div className="sender-info">
-                    <img
-                      src={mail.receiverPhoto}
-                      alt={mail.receiverName}
-                      className="sender-photo"
-                    />
-                    <div className="sender-details">
-                      <span className="receiver-name">{mail.receiverName}</span>
-                      <span className="receiver-email">{mail.receiverMail}</span>
+        <>
+          <table id="sent-mail-table">
+            <tbody>
+              {mails.map((mail) => (
+                <tr
+                  key={mail.id}
+                  onClick={() => handleSingleClick(mail)}
+                  onMouseEnter={() => setHoveredMailId(mail.id)}
+                  onMouseLeave={() => setHoveredMailId(null)}
+                >
+                  <td className="mail-cell centered-cell max-width-40">
+                    <div className="sender-info">
+                      <img
+                        src={mail.receiverPhoto}
+                        alt={mail.receiverName}
+                        className="sender-photo"
+                      />
+                      <div className="sender-details">
+                        <span className="receiver-name">
+                          {mail.receiverName}
+                        </span>
+                        <span className="receiver-email">
+                          {mail.receiverMail}
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                </td>
-                <td className="mail-cell left-aligned-cell max-width-70">
-                  <span className="mail-subject">{mail.subject}</span>
-                  <span className="mail-preview">{mail.text.slice(0, 30)}...</span>
-                </td>
-                <td className="mail-cell centered-cell max-width-15">
-                  {hoveredMailId === mail.id ? (
-                    <FaTrash
-                      onClick={(event) => handleDeleteClick(mail, event)}
-                      className="trash-icon"
-                    />
-                  ) : (
-                    formatDate(mail.date)
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                  </td>
+                  <td className="mail-cell left-aligned-cell max-width-70">
+                    <span className="mail-subject">{mail.subject}</span>
+                    <span className="mail-preview">
+                      {mail.text.slice(0, 30)}...
+                    </span>
+                  </td>
+                  <td className="mail-cell centered-cell max-width-15">
+                    {hoveredMailId === mail.id ? (
+                      <FaTrash
+                        onClick={(event) => handleDeleteClick(mail, event)}
+                        className="trash-icon"
+                      />
+                    ) : (
+                      formatDate(mail.date)
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <div className="pagination-container">
+            <Pagination className="pagination">
+              <Pagination.First
+                onClick={() => handlePageChange(1)}
+                disabled={currentPage === 1}
+              />
+              <Pagination.Prev
+                onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
+                disabled={currentPage === 1}
+              />
+              {renderPaginationItems()}
+              <Pagination.Next
+                onClick={() =>
+                  handlePageChange(Math.min(currentPage + 1, totalPages))
+                }
+                disabled={currentPage === totalPages}
+              />
+              <Pagination.Last
+                onClick={() => handlePageChange(totalPages)}
+                disabled={currentPage === totalPages}
+              />
+            </Pagination>
+          </div>
+        </>
       )}
-
-      <div className="pagination-container">
-        <Pagination className="pagination">
-          <Pagination.First
-            onClick={() => handlePageChange(1)}
-            disabled={currentPage === 1}
-          />
-          <Pagination.Prev
-            onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
-            disabled={currentPage === 1}
-          />
-          {renderPaginationItems()}
-          <Pagination.Next
-            onClick={() => handlePageChange(Math.min(currentPage + 1, totalPages))}
-            disabled={currentPage === totalPages}
-          />
-          <Pagination.Last
-            onClick={() => handlePageChange(totalPages)}
-            disabled={currentPage === totalPages}
-          />
-        </Pagination>
-      </div>
 
       {selectedMail && (
         <Modal show={true} onHide={handleCloseModal}>

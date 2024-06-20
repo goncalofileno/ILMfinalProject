@@ -53,7 +53,12 @@ const MailTable = () => {
   const fetchMails = async (page, unread) => {
     setLoading(true);
     try {
-      const result = await getReceivedMessages(sessionId, page, pageSize, unread);
+      const result = await getReceivedMessages(
+        sessionId,
+        page,
+        pageSize,
+        unread
+      );
       const { mails, totalMails } = result;
       mails.sort((a, b) => new Date(b.date) - new Date(a.date));
       setReceivedMails(mails);
@@ -69,7 +74,13 @@ const MailTable = () => {
     setLoading(true);
     setIsSearching(true);
     try {
-      const result = await searchMails(sessionId, search, page, pageSize, unread);
+      const result = await searchMails(
+        sessionId,
+        search,
+        page,
+        pageSize,
+        unread
+      );
       const { mails, totalMails } = result;
       mails.sort((a, b) => new Date(b.date) - new Date(a.date));
       setReceivedMails(mails);
@@ -121,7 +132,9 @@ const MailTable = () => {
   };
 
   const handleReplyClick = () => {
-    setPreFilledContact(`${selectedMail.senderName} <${selectedMail.senderMail}>`);
+    setPreFilledContact(
+      `${selectedMail.senderName} <${selectedMail.senderMail}>`
+    );
     setPreFilledSubject(`Re: ${selectedMail.subject}`);
     setShowComposeModal(true);
     setSelectedMail(null);
@@ -333,38 +346,31 @@ const MailTable = () => {
               ))}
             </tbody>
           </table>
-
-          <TablePagination
-            totalPages={totalPages}
-            currentPage={currentPage}
-            setCurrentPage={handlePageChange}
-            setNavigateTableTrigger={setTrigger}
-            className="pagination-container"
-          />
+          <div className="pagination-container">
+            <Pagination className="pagination">
+              <Pagination.First
+                onClick={() => handlePageChange(1)}
+                disabled={currentPage === 1}
+              />
+              <Pagination.Prev
+                onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
+                disabled={currentPage === 1}
+              />
+              {renderPaginationItems()}
+              <Pagination.Next
+                onClick={() =>
+                  handlePageChange(Math.min(currentPage + 1, totalPages))
+                }
+                disabled={currentPage === totalPages}
+              />
+              <Pagination.Last
+                onClick={() => handlePageChange(totalPages)}
+                disabled={currentPage === totalPages}
+              />
+            </Pagination>
+          </div>
         </>
       )}
-
-      <div className="pagination-container">
-        <Pagination className="pagination">
-          <Pagination.First
-            onClick={() => handlePageChange(1)}
-            disabled={currentPage === 1}
-          />
-          <Pagination.Prev
-            onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
-            disabled={currentPage === 1}
-          />
-          {renderPaginationItems()}
-          <Pagination.Next
-            onClick={() => handlePageChange(Math.min(currentPage + 1, totalPages))}
-            disabled={currentPage === totalPages}
-          />
-          <Pagination.Last
-            onClick={() => handlePageChange(totalPages)}
-            disabled={currentPage === totalPages}
-          />
-        </Pagination>
-      </div>
 
       {selectedMail && (
         <Modal show={true} onHide={handleCloseModal}>

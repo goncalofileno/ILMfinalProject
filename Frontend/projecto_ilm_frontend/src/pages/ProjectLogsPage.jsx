@@ -60,7 +60,6 @@ const ProjectLogsPage = () => {
     }
   };
 
-
   return (
     <>
       <AppNavbar />
@@ -100,14 +99,14 @@ const ProjectLogsPage = () => {
               </Card>
             </Col>
             <Col md={6}>
-              <Card  style={{
-                    backgroundImage: `url(${NotesBackgroud})`,
-                    backgroundSize: "cover",
-                  }}>
+              <Card
+                style={{
+                  backgroundImage: `url(${NotesBackgroud})`,
+                  backgroundSize: "cover",
+                }}
+              >
                 <Card.Header>Notes</Card.Header>
-                <Card.Body
-                
-                >
+                <Card.Body>
                   <ListGroup variant="flush">
                     {logsAndNotes.notes.map((note) => (
                       <ListGroup.Item
