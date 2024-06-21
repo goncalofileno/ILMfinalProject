@@ -89,7 +89,7 @@ public class LogBean {
         }
     }
 
-    private void createMemberAddedLog(ProjectEntity project, UserEntity author, String receiver) {
+    public void createMemberAddedLog(ProjectEntity project, UserEntity author, String receiver) {
         LogEntity log = new LogEntity();
         log.setDate(LocalDateTime.now());
         log.setType(LogTypeENUM.MEMBER_ADDED);
@@ -99,7 +99,7 @@ public class LogBean {
         logDao.persist(log);
     }
 
-    private void createMemberRemovedLog(ProjectEntity project, UserEntity author, String receiver) {
+    public void createMemberRemovedLog(ProjectEntity project, UserEntity author, String receiver) {
         LogEntity log = new LogEntity();
         log.setDate(LocalDateTime.now());
         log.setType(LogTypeENUM.MEMBER_REMOVED);
@@ -109,7 +109,7 @@ public class LogBean {
         logDao.persist(log);
     }
 
-    private void createTasksCreatedLog(ProjectEntity project, UserEntity author, String taskTitle) {
+    public void createTasksCreatedLog(ProjectEntity project, UserEntity author, String taskTitle) {
         LogEntity log = new LogEntity();
         log.setDate(LocalDateTime.now());
         log.setType(LogTypeENUM.TASKS_CREATED);
@@ -119,7 +119,7 @@ public class LogBean {
         logDao.persist(log);
     }
 
-    private void createTasksCompletedLog(ProjectEntity project, UserEntity author, String taskTitle, TaskStatusENUM oldStatus, TaskStatusENUM newStatus) {
+    public void createTasksCompletedLog(ProjectEntity project, UserEntity author, String taskTitle, TaskStatusENUM oldStatus, TaskStatusENUM newStatus) {
         LogEntity log = new LogEntity();
         log.setDate(LocalDateTime.now());
         log.setType(LogTypeENUM.TASKS_COMPLETED);
@@ -131,7 +131,7 @@ public class LogBean {
         logDao.persist(log);
     }
 
-    private void createTasksInProgressLog(ProjectEntity project, UserEntity author, String taskTitle, TaskStatusENUM oldStatus, TaskStatusENUM newStatus) {
+    public void createTasksInProgressLog(ProjectEntity project, UserEntity author, String taskTitle, TaskStatusENUM oldStatus, TaskStatusENUM newStatus) {
         LogEntity log = new LogEntity();
         log.setDate(LocalDateTime.now());
         log.setType(LogTypeENUM.TASKS_IN_PROGRESS);
@@ -143,7 +143,7 @@ public class LogBean {
         logDao.persist(log);
     }
 
-    private void createTasksDeletedLog(ProjectEntity project, UserEntity author, String taskTitle) {
+    public void createTasksDeletedLog(ProjectEntity project, UserEntity author, String taskTitle) {
         LogEntity log = new LogEntity();
         log.setDate(LocalDateTime.now());
         log.setType(LogTypeENUM.TASKS_DELETED);
@@ -153,7 +153,7 @@ public class LogBean {
         logDao.persist(log);
     }
 
-    private void createTasksUpdatedLog(ProjectEntity project, UserEntity author, String taskTitle) {
+    public void createTasksUpdatedLog(ProjectEntity project, UserEntity author, String taskTitle) {
         LogEntity log = new LogEntity();
         log.setDate(LocalDateTime.now());
         log.setType(LogTypeENUM.TASKS_UPDATED);
@@ -163,7 +163,7 @@ public class LogBean {
         logDao.persist(log);
     }
 
-    private void createProjectInfoUpdatedLog(ProjectEntity project, UserEntity author) {
+    public void createProjectInfoUpdatedLog(ProjectEntity project, UserEntity author) {
         LogEntity log = new LogEntity();
         log.setDate(LocalDateTime.now());
         log.setType(LogTypeENUM.PROJECT_INFO_UPDATED);
@@ -172,7 +172,7 @@ public class LogBean {
         logDao.persist(log);
     }
 
-    private void createProjectStatusUpdatedLog(ProjectEntity project, UserEntity author, StateProjectENUM oldState, StateProjectENUM newState) {
+    public void createProjectStatusUpdatedLog(ProjectEntity project, UserEntity author, StateProjectENUM oldState, StateProjectENUM newState) {
         LogEntity log = new LogEntity();
         log.setDate(LocalDateTime.now());
         log.setType(LogTypeENUM.PROJECT_STATUS_UPDATED);
@@ -183,7 +183,7 @@ public class LogBean {
         logDao.persist(log);
     }
 
-    private void createResourcesAddedLog(ProjectEntity project, UserEntity author, String resourceName, int resourceStock) {
+    public void createResourcesAddedLog(ProjectEntity project, UserEntity author, String resourceName, int resourceStock) {
         LogEntity log = new LogEntity();
         log.setDate(LocalDateTime.now());
         log.setType(LogTypeENUM.RESOURCES_ADDED);
@@ -249,6 +249,10 @@ public class LogBean {
         if(logEntity.getResourceStock() != 0) {
             logDto.setResourceStock(logEntity.getResourceStock());
         }
+        if(logEntity.getAuthor() != null) {
+            logDto.setAuthorName(logEntity.getAuthor().getFirstName() + " " + logEntity.getAuthor().getLastName());
+            logDto.setAuthorPhoto(logEntity.getAuthor().getPhoto());
+        }
         return logDto;
     }
 
@@ -287,6 +291,7 @@ public class LogBean {
         logsAndNotesPageDto.setNotes(noteDtos);
         logsAndNotesPageDto.setTypeOfUserSeingPage(userSeingTheProject);
         logsAndNotesPageDto.setProjectName(project.getName());
+        logsAndNotesPageDto.setProjectState(project.getStatus());
 
         return logsAndNotesPageDto;
     }

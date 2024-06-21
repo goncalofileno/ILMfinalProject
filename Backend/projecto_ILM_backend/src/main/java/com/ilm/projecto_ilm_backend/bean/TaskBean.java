@@ -3,8 +3,14 @@ package com.ilm.projecto_ilm_backend.bean;
 import com.ilm.projecto_ilm_backend.ENUMS.TaskStatusENUM;
 import com.ilm.projecto_ilm_backend.ENUMS.UserInTaskTypeENUM;
 import com.ilm.projecto_ilm_backend.dao.*;
+import com.ilm.projecto_ilm_backend.dto.task.TaskSuggestionDto;
+import com.ilm.projecto_ilm_backend.entity.ProjectEntity;
 import com.ilm.projecto_ilm_backend.entity.TaskEntity;
+import com.ilm.projecto_ilm_backend.entity.UserEntity;
 import com.ilm.projecto_ilm_backend.entity.UserTaskEntity;
+import com.ilm.projecto_ilm_backend.security.exceptions.ProjectNotFoundException;
+import com.ilm.projecto_ilm_backend.security.exceptions.UserNotFoundException;
+import com.ilm.projecto_ilm_backend.security.exceptions.UserNotInProjectException;
 import jakarta.ejb.Singleton;
 import jakarta.ejb.Startup;
 import jakarta.inject.Inject;
@@ -36,6 +42,12 @@ public class TaskBean {
 
     @Inject
     private UserTaskDao userTaskDao;
+
+    @Inject
+    private UserBean userBean;
+
+    @Inject
+    private UserProjectDao userProjectDao;
 
     private int numberOfProjectsToCreate = 20;
 
@@ -131,5 +143,32 @@ public class TaskBean {
             }
             return systemTitle + i;
         }
+    }
+
+    public List<TaskSuggestionDto> getTasksSuggestions(String sessionId, String systemProjectName) throws Exception {
+        ProjectEntity project = projectDao.findBySystemName(systemProjectName);
+        UserEntity user = userBean.getUserBySessionId(sessionId);
+
+        if (project == null) {
+            throw new ProjectNotFoundException("Project not found: " + systemProjectName);
+        }
+
+        if (user == null) {
+            throw new UserNotFoundException("User not found for session id: " + sessionId);
+        }
+
+        if (!userProjectDao.isUserInProject(project.getId(), user.getId())) {
+            throw new UserNotInProjectException("User not part of project");
+        }
+
+        List<TaskEntity> tasks = taskDao.findByProject(project.getId());
+        List<TaskSuggestionDto> tasksSuggestions = new ArrayList<>();
+
+        for (TaskEntity task : tasks) {
+            tasksSuggestions.add(new TaskSuggestionDto(task.getTitle(), task.getSystemTitle()));
+        }
+
+        return tasksSuggestions;
+
     }
 }

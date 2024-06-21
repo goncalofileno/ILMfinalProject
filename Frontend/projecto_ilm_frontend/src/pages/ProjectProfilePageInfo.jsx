@@ -241,10 +241,6 @@ const ProjectProfilePageInfo = () => {
   const isAdmin = projectInfo.typeOfUserSeingProject === "ADMIN";
 
   const renderAdminButtons = () => {
-    const isCreatorOrManager =
-      projectInfo.typeOfUserSeingProject === "CREATOR" ||
-      projectInfo.typeOfUserSeingProject === "MANAGER";
-  
     if (projectInfo.state !== "CANCELED") {
       return (
         <div>
@@ -275,9 +271,36 @@ const ProjectProfilePageInfo = () => {
               </>
             )}
             {(isAdmin || isCreatorOrManager) && (
-              <Button variant="danger" onClick={() => setShowCancelModal(true)}>
-                Cancel Project
-              </Button>
+              <div>
+                <Row>
+                  <Button
+                    style={{
+                      backgroundColor: "rgb(30, 40, 82)",
+                      borderColor: "rgb(30, 40, 82)",
+                      marginRight: "10px",
+                      marginBottom: "10px",
+                    }}
+                    onClick={() => setShowReasonModal(true)}
+                    disabled={["CANCELED", "READY"].includes(projectInfo.state)}
+                  >
+                    Edit Project
+                  </Button>
+                  <Button
+                    variant="danger"
+                    onClick={() => setShowCancelModal(true)}
+                  >
+                    Cancel Project
+                  </Button>
+                </Row>
+                <Row>
+                  {["CANCELED", "READY"].includes(projectInfo.state) && (
+                    <Alert variant="danger" className="mt-3">
+                      The project is {projectInfo.state.toLowerCase()} and
+                      cannot be edited.
+                    </Alert>
+                  )}
+                </Row>
+              </div>
             )}
           </div>
         </div>
@@ -285,8 +308,6 @@ const ProjectProfilePageInfo = () => {
     }
     return null;
   };
-  
-  
 
   const renderUserStatusCard = () => {
     const { typeOfUserSeingProject } = projectInfo;
@@ -399,8 +420,13 @@ const ProjectProfilePageInfo = () => {
                     <Card.Body>
                       <Row style={{ marginBottom: "40px" }}>
                         <Col md="6">
-                          <Card.Title>{projectInfo.title}</Card.Title>
-                          <Card.Subtitle className="mb-2 text-muted">
+                          <Card.Title style={{ fontSize: "2em" }}>
+                            {projectInfo.title}
+                          </Card.Title>
+                          <Card.Subtitle
+                            className="mb-2 text-muted"
+                            style={{ fontSize: "1.5em" }}
+                          >
                             {formatStatus(projectInfo.state)}
                           </Card.Subtitle>
                         </Col>

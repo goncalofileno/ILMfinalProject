@@ -1,5 +1,6 @@
 package com.ilm.projecto_ilm_backend.dto.logs;
 
+import com.ilm.projecto_ilm_backend.ENUMS.StateProjectENUM;
 import com.ilm.projecto_ilm_backend.ENUMS.UserInProjectTypeENUM;
 import com.ilm.projecto_ilm_backend.dto.notes.NoteDto;
 
@@ -11,15 +12,17 @@ public class LogsAndNotesPageDto {
     List<NoteDto> notes;
     UserInProjectTypeENUM typeOfUserSeingPage;
     String projectName;
+    StateProjectENUM projectStatus;
 
     public LogsAndNotesPageDto() {
     }
 
-    public LogsAndNotesPageDto(List<LogDto> logs, List<NoteDto> notes, UserInProjectTypeENUM typeOfUserSeingPage, String projectName) {
+    public LogsAndNotesPageDto(List<LogDto> logs, List<NoteDto> notes, UserInProjectTypeENUM typeOfUserSeingPage, String projectName, StateProjectENUM projectStatus) {
         this.logs = logs;
         this.notes = notes;
         this.typeOfUserSeingPage = typeOfUserSeingPage;
         this.projectName = projectName;
+        this.projectStatus = projectStatus;
     }
 
     public List<LogDto> getLogs() {
@@ -52,5 +55,13 @@ public class LogsAndNotesPageDto {
 
     public void setProjectName(String projectName) {
         this.projectName = projectName;
+    }
+
+    public StateProjectENUM getProjectStatus() {
+        return projectStatus;
+    }
+
+    public void setProjectState(StateProjectENUM projectStatus) {
+        this.projectStatus = projectStatus;
     }
 }
