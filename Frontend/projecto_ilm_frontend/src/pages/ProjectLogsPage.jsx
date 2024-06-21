@@ -145,7 +145,8 @@ const ProjectLogsPage = () => {
       case "MEMBER_ADDED":
         return (
           <>
-            The member <strong>{log.receiver}</strong> was added to the project by <strong>{log.authorName}</strong>.
+            The member <strong>{log.receiver}</strong> was added to the project
+            by <strong>{log.authorName}</strong>.
           </>
         );
       case "MEMBER_REMOVED":
@@ -192,8 +193,8 @@ const ProjectLogsPage = () => {
       case "PROJECT_STATUS_UPDATED":
         return (
           <>
-            The user <strong>{log.authorName}</strong> project status changed from{" "}
-            <strong>{log.projectOldState}</strong> to{" "}
+            The user <strong>{log.authorName}</strong> project status changed
+            from <strong>{log.projectOldState}</strong> to{" "}
             <strong>{log.projectNewState}</strong>.
           </>
         );
@@ -263,9 +264,13 @@ const ProjectLogsPage = () => {
   }
 
   // Ordenar logs por data, mais recentes primeiro
-  const sortedLogs = logsAndNotes.logs.sort((a, b) => new Date(b.date) - new Date(a.date));
+  const sortedLogs = logsAndNotes.logs.sort(
+    (a, b) => new Date(b.date) - new Date(a.date)
+  );
   // Ordenar notas por data, mais recentes primeiro
-  const sortedNotes = logsAndNotes.notes.sort((a, b) => new Date(b.date) - new Date(a.date));
+  const sortedNotes = logsAndNotes.notes.sort(
+    (a, b) => new Date(b.date) - new Date(a.date)
+  );
 
   return (
     <>
@@ -281,7 +286,8 @@ const ProjectLogsPage = () => {
               <h5>Status: {logsAndNotes.projectStatus}</h5>
               {["CANCELED", "READY"].includes(logsAndNotes.projectStatus) && (
                 <Alert variant="danger">
-                  The project is {logsAndNotes.projectStatus.toLowerCase()} and no notes can be added or changes made.
+                  The project is {logsAndNotes.projectStatus.toLowerCase()} and
+                  no notes can be added or changes made.
                 </Alert>
               )}
             </Col>
@@ -321,7 +327,7 @@ const ProjectLogsPage = () => {
                 </Card.Body>
               </Card>
             </Col>
-            <Col md={6} style={{ height: "100%"}}>
+            <Col md={6} style={{ height: "100%" }}>
               <Row>
                 <div
                   style={{
@@ -334,7 +340,7 @@ const ProjectLogsPage = () => {
                     paddingBottom: "20px",
                   }}
                 >
-                  <div>Notes<div>
+                  <div>Notes</div>
                   <div>
                     <ListGroup variant="flush">
                       {sortedNotes.map((note) => (
@@ -351,7 +357,9 @@ const ProjectLogsPage = () => {
                                 onChange={() =>
                                   handleMarkAsDone(note.id, !note.done)
                                 }
-                                disabled={["CANCELED", "READY"].includes(logsAndNotes.projectStatus)}
+                                disabled={["CANCELED", "READY"].includes(
+                                  logsAndNotes.projectStatus
+                                )}
                               />
                               <div className="text-muted">
                                 {new Date(note.date).toLocaleString()}
@@ -372,7 +380,9 @@ const ProjectLogsPage = () => {
                     width: "20%",
                   }}
                   onClick={() => setShowCreateNoteModal(true)}
-                  disabled={["CANCELED", "READY"].includes(logsAndNotes.projectStatus)}
+                  disabled={["CANCELED", "READY"].includes(
+                    logsAndNotes.projectStatus
+                  )}
                 >
                   Add Note
                 </Button>
@@ -429,7 +439,9 @@ const ProjectLogsPage = () => {
               borderColor: "#f39c12",
             }}
             onClick={handleCreateNote}
-            disabled={["CANCELED", "READY"].includes(logsAndNotes.projectStatus)}
+            disabled={["CANCELED", "READY"].includes(
+              logsAndNotes.projectStatus
+            )}
           >
             Create Note
           </Button>
