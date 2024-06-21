@@ -25,7 +25,7 @@ import MailWebSocket from "./utilities/websockets/MailWebSocket";
 import ResourcesPage from "./pages/ResourcesPage";
 import ProjectProfilePageInfo from "./pages/ProjectProfilePageInfo";
 import ProjectLogsPage from "./pages/ProjectLogsPage";
-
+import ProjectCreationPage1 from "./pages/ProjectCreationPage1";
 
 const AppWithWebSocket = () => {
   const location = useLocation();
@@ -39,16 +39,32 @@ const AppWithWebSocket = () => {
         <Route path="/create-profile/:token" element={<CreateProfilePage />} />
         <Route path="/projects" element={<ProjectsPage />} />
         <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
-        <Route path="/profile/:systemUsername" element={<Navigate to="projects" />} />
-        <Route path="/profile/:systemUsername/:section" element={<ProfilePage />} />
-        <Route path="/project/:systemProjectName" element={<Navigate to="info" />} />
-        <Route path="/project/:systemProjectName/info" element={<ProjectProfilePageInfo />} />
-        <Route path="/project/:systemProjectName/logs" element={<ProjectLogsPage />} />
+        <Route
+          path="/profile/:systemUsername"
+          element={<Navigate to="projects" />}
+        />
+        <Route
+          path="/profile/:systemUsername/:section"
+          element={<ProfilePage />}
+        />
+        <Route
+          path="/project/:systemProjectName"
+          element={<Navigate to="info" />}
+        />
+        <Route
+          path="/project/:systemProjectName/info"
+          element={<ProjectProfilePageInfo />}
+        />
+        <Route
+          path="/project/:systemProjectName/logs"
+          element={<ProjectLogsPage />}
+        />
         <Route path="/editProfile" element={<EditProfilePage />} />
         <Route path="/mail/inbox" element={<InboxMailPage />} />
         <Route path="/mail/sent" element={<SentMailPage />} />
         <Route path="/resources" element={<ResourcesPage />} />
         <Route path="/myprojects" element={<MyProjectsPage />} />
+        <Route path="/create-project/info" element={<ProjectCreationPage1 />} />
       </Routes>
     </>
   );
