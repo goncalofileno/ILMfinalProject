@@ -12,11 +12,13 @@
   }
   
   .project-tabs .nav-link {
-    color: #f39c12;
+    color: rgb(30, 40, 82);
     padding: 10px 15px;
     cursor: pointer;
     border: 1px solid transparent;
     border-bottom: none;
+    font-size: 20px;
+    font-weight: 500;
   }
   
   .project-tabs .nav-link:hover {
@@ -25,7 +27,7 @@
   }
   
   .project-tabs .nav-link.active {
-    color: rgb(30, 40, 82);
+    color: #f39c12;
     background-color: #fff;
     border-color: #ddd;
     border-bottom-color: transparent;
