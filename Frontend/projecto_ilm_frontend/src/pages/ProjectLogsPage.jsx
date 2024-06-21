@@ -6,6 +6,7 @@ import ProjectTabs from "../components/headers/ProjectTabs";
 import NotesBackgroud from "../resources/backgrounds/note_paper.png";
 import { getProjectLogsAndNotes } from "../utilities/services";
 import Cookies from "js-cookie";
+import "./ProjectLogsPage.css";
 
 const ProjectLogsPage = () => {
   const { systemProjectName } = useParams();
@@ -67,15 +68,15 @@ const ProjectLogsPage = () => {
         <ProjectTabs
           typeOfUserSeingProject={logsAndNotes.typeOfUserSeingPage}
         />
-        <Container>
+        <Container style={{ height: "100%" }}>
           <Row>
             <Col>
               <h1>{logsAndNotes.projectName}</h1>
             </Col>
           </Row>
-          <Row>
-            <Col md={6}>
-              <Card>
+          <Row style={{ height: "80%" }}>
+            <Col md={6} style={{ height: "100%" }}>
+              <Card style={{ height: "100%", overflowY: "auto" }}>
                 <Card.Header>Logs</Card.Header>
                 <Card.Body>
                   <ListGroup variant="flush">
@@ -98,20 +99,25 @@ const ProjectLogsPage = () => {
                 </Card.Body>
               </Card>
             </Col>
-            <Col md={6}>
-              <Card
+            <Col md={6} style={{ height: "100%" }}>
+              <div
                 style={{
                   backgroundImage: `url(${NotesBackgroud})`,
                   backgroundSize: "cover",
+                  height: "100%",
+                  paddingTop: "100px",
+                  paddingLeft: "50px",
+                  paddingRight: "50px",
+                  paddingBottom: "20px",
                 }}
               >
-                <Card.Header>Notes</Card.Header>
-                <Card.Body>
+                <div>Notes</div>
+                <div>
                   <ListGroup variant="flush">
                     {logsAndNotes.notes.map((note) => (
                       <ListGroup.Item
                         key={note.id}
-                        style={{ background: "none" }}
+                        style={{ background: "none", border: "none" }}
                       >
                         <Row>
                           <Col md={10}>
@@ -124,8 +130,8 @@ const ProjectLogsPage = () => {
                       </ListGroup.Item>
                     ))}
                   </ListGroup>
-                </Card.Body>
-              </Card>
+                </div>
+              </div>
             </Col>
           </Row>
         </Container>
