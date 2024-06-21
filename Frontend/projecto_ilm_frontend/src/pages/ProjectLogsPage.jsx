@@ -68,7 +68,7 @@ const ProjectLogsPage = () => {
         <ProjectTabs
           typeOfUserSeingProject={logsAndNotes.typeOfUserSeingPage}
         />
-        <Container style={{ height: "100%" }}>
+        <Container style={{ height: "92%" }}>
           <Row>
             <Col>
               <h1>{logsAndNotes.projectName}</h1>
