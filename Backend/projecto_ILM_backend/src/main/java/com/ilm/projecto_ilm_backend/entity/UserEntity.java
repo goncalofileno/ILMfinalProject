@@ -655,4 +655,8 @@ public class UserEntity implements Serializable {
     public void setAuxiliarToken(String auxiliarToken) {
         this.auxiliarToken = auxiliarToken;
     }
+
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
 }

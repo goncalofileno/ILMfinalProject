@@ -1184,6 +1184,86 @@ async function getProjectLogsAndNotes(sessionId, projectSystemName) {
   }
 }
 
+async function markAsDone(sessionId, noteId, done) {
+  try {
+    const endpoint = `${baseURL}note/markAsDone?id=${noteId}&done=${done}`;
+    const fetchResponse = await fetch(endpoint, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+
+    if (!fetchResponse.ok) {
+      const responseJson = await fetchResponse.json();
+      throw new Error(responseJson.message || "An error occurred");
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error marking note as done:", error);
+    return { error: error.message };
+  }
+}
+
+async function createNote(sessionId, noteDto, systemProjectName) {
+  try {
+    const endpoint = `${baseURL}note/create?systemProjectName=${encodeURIComponent(systemProjectName)}`;
+    const fetchResponse = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(noteDto),
+    });
+
+    // Ensure response is valid JSON
+    const responseText = await fetchResponse.text();
+    let responseJson;
+    try {
+      responseJson = JSON.parse(responseText);
+    } catch (e) {
+      throw new Error('Invalid JSON response');
+    }
+
+    if (!fetchResponse.ok) {
+      throw new Error(responseJson.error || "An error occurred");
+    }
+
+    return responseJson;
+  } catch (error) {
+    console.error("Error creating note:", error);
+    return { error: error.message };
+  }
+}
+
+
+async function getTasksSuggestions(sessionId, systemProjectName) {
+  try {
+    const endpoint = `${baseURL}task/tasksSuggestions?systemProjectName=${encodeURIComponent(systemProjectName)}`;
+    const fetchResponse = await fetch(endpoint, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+
+    const responseJson = await fetchResponse.json();
+
+    if (!fetchResponse.ok) {
+      throw new Error(responseJson.message || "An error occurred");
+    }
+
+    return responseJson;
+  } catch (error) {
+    console.error("Error fetching task suggestions:", error);
+    return { error: error.message };
+  }
+}
+
 export {
   registerUser,
   getInterests,
@@ -1239,4 +1319,7 @@ export {
   getProjectLogsAndNotes,
   getResource,
   editResource,
+  markAsDone,
+  createNote,
+  getTasksSuggestions
 };

@@ -63,6 +63,9 @@ public class ProjectBean {
     @Inject
     UserBean userBean;
 
+    @Inject
+    LogBean logBean;
+
 
     private static final int NUMBER_OF_MYPROJECTS_PER_PAGE=6;
     private static final int NUMBER_OF_PROJECTS_PER_PAGE=8;
@@ -426,6 +429,7 @@ public class ProjectBean {
         UserEntity acceptor = userDao.findById(userId);
         System.out.println("ACCEPTOR: " + acceptor.getSystemUsername());
         notificationBean.createInviteAcceptedNotification(project.getSystemName(), userDao.getFullNameBySystemUsername(acceptor.getSystemUsername()), invitator, acceptor.getSystemUsername());
+        logBean.createMemberAddedLog(project, invitator, acceptor.getFullName());
         return "Invite accepted successfully";
     }
 
@@ -581,13 +585,17 @@ public class ProjectBean {
         if (approve) {
             project.setStatus(StateProjectENUM.APPROVED);
             project.setReason(null);
+            logBean.createProjectStatusUpdatedLog(project, userResponsable, project.getStatus(), StateProjectENUM.APPROVED);
+
         } else {
             project.setStatus(StateProjectENUM.PLANNING);
             project.setReason(reason);
+            logBean.createProjectStatusUpdatedLog(project, userResponsable, project.getStatus(), StateProjectENUM.PLANNING);
         }
 
         List<UserEntity> teamMembers = getProjectMembersByProjectId(project.getId());
         projectDao.merge(project);
+
 
         for (UserEntity user : teamMembers) {
             if (approve) {
@@ -684,6 +692,7 @@ public class ProjectBean {
 
         project.setStatus(StateProjectENUM.CANCELED);
         project.setReason(reason);
+        logBean.createProjectStatusUpdatedLog(project, sender, project.getStatus(), StateProjectENUM.CANCELED);
 
         projectDao.merge(project);
 
@@ -746,6 +755,7 @@ public class ProjectBean {
         if (project == null) {
             throw new Exception("Project not found");
         }
+        logBean.createProjectStatusUpdatedLog(project, sender, project.getStatus(), newState);
 
         UserTypeENUM userType = userDao.findById(userId).getType();
         boolean isAdmin = userType == UserTypeENUM.ADMIN;
