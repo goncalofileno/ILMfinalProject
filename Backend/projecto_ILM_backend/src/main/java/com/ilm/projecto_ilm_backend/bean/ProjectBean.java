@@ -2,6 +2,7 @@ package com.ilm.projecto_ilm_backend.bean;
 
 import com.ilm.projecto_ilm_backend.ENUMS.*;
 import com.ilm.projecto_ilm_backend.dao.*;
+import com.ilm.projecto_ilm_backend.dto.interest.InterestDto;
 import com.ilm.projecto_ilm_backend.dto.lab.LabDto;
 import com.ilm.projecto_ilm_backend.dto.mail.MailDto;
 import com.ilm.projecto_ilm_backend.dto.project.*;
@@ -11,18 +12,26 @@ import com.ilm.projecto_ilm_backend.mapper.LabMapper;
 import com.ilm.projecto_ilm_backend.security.exceptions.NoProjectsForInviteeException;
 import com.ilm.projecto_ilm_backend.security.exceptions.NoProjectsToInviteException;
 import com.ilm.projecto_ilm_backend.security.exceptions.UnauthorizedAccessException;
+import com.ilm.projecto_ilm_backend.utilities.imgsPath;
 import jakarta.ejb.Singleton;
 import jakarta.ejb.Startup;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import jakarta.ws.rs.core.Response;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
 import java.text.Normalizer;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.*;
 import java.util.List;
-import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -803,5 +812,147 @@ public class ProjectBean {
         return userProjectDao.findCreatorsAndManagersByProjectId(projectId);
     }
 
+
+    public boolean createProject(ProjectCreationInfoDto projectCreationInfoDto, String sessionId){
+        ProjectEntity project = new ProjectEntity();
+        project.setName(projectCreationInfoDto.getName());
+        project.setSystemName(projectSystemNameGenerator(project.getName()));
+        project.setDescription(projectCreationInfoDto.getDescription());
+        project.setStatus(StateProjectENUM.PLANNING);
+        project.setMotivation(projectCreationInfoDto.getMotivation());
+        project.setCreatedAt(LocalDateTime.now());
+
+        project.setLab(labDao.findbyLocal(WorkLocalENUM.valueOf(projectCreationInfoDto.getLab())));
+
+        LocalDateTime localStartDateTime=convertStringToLocalDateTime(projectCreationInfoDto.getStartDate());
+        LocalDateTime localEndDateTime=convertStringToLocalDateTime(projectCreationInfoDto.getEndDate());
+
+        project.setStartDate(localStartDateTime);
+        project.setEndDate(localEndDateTime);
+
+        String keywordsList=null;
+
+        for (InterestDto interestDto: projectCreationInfoDto.getKeywords() ) {
+            if(keywordsList==null){
+                keywordsList=interestDto.getName();
+            }
+            else keywordsList += ", "+ interestDto.getName();
+        }
+
+        project.setKeywords(keywordsList);
+
+        List<SkillEntity> skills = new ArrayList<>();
+        for (SkillDto skillName : projectCreationInfoDto.getSkills()) {
+            SkillEntity skill = skillDao.findSkillByName(skillName.getName());
+            if (skill == null) {
+                return false;
+            }
+            skills.add(skill);
+        }
+        project.setSkillInProject(skills);
+
+        projectDao.persist(project);
+
+        UserProjectEntity userProjectEntity = new UserProjectEntity();
+        userProjectEntity.setProject(project);
+        userProjectEntity.setUser(userDao.findById(sessionDao.findUserIdBySessionId(sessionId)));
+        userProjectEntity.setType(UserInProjectTypeENUM.CREATOR);
+        userProjectDao.persist(userProjectEntity);
+
+        return true;
+    }
+
+
+    public boolean uploadProjectPicture(Map<String,String> request, String projectName){
+        try {
+            String base64Image = request.get("file");
+            if (base64Image == null || base64Image.isEmpty()) {
+                return false;
+            }
+            // Remove "data:image/png;base64," or similar prefix from the string
+            if (base64Image.contains(",")) {
+                base64Image = base64Image.split(",")[1];
+            }
+
+            if(!saveProjectPicture(projectDao.findByName(projectName),base64Image)) return false;
+
+            return true;
+            // Delegate to UserBean to handle the file saving and updating the user's photo path
+
+        } catch (Exception e) {
+         return false;
+        }
+    }
+    public boolean saveProjectPicture(ProjectEntity projectEntity, String base64Image) {
+        try {
+            // Decode the Base64 string back to an image
+            byte[] imageBytes = Base64.getDecoder().decode(base64Image);
+
+            // Save the original image to the user's specific directory
+            String directoryPath = imgsPath.IMAGES_PROJECTS_PATH + "/" + projectEntity.getName();
+
+            File directory = new File(directoryPath);
+            if (!directory.exists()) {
+                directory.mkdirs();
+            }
+
+            // Determine the image format
+            ByteArrayInputStream bis = new ByteArrayInputStream(imageBytes);
+            BufferedImage originalImage = ImageIO.read(bis);
+            String format = getImageFormat(originalImage);
+
+            // Save the original image
+            BufferedImage profileImage= resizeImage(originalImage, 1300, 200);
+            String profileFilePath = directoryPath + "/profile_picture." + format;
+            ImageIO.write(profileImage, format, new File(profileFilePath));
+
+            // Save resized images
+            BufferedImage avatarImage = resizeImage(originalImage, 280, 80); // Example size for avatar
+            String avatarFilePath = directoryPath + "/card_picture." + format;
+            ImageIO.write(avatarImage, format, new File(avatarFilePath));
+
+
+            // Construct the URLs
+            long timestamp = System.currentTimeMillis();
+            String baseUrl = "http://localhost:8080/images/" + projectEntity.getSystemName();
+            String originalUrl = baseUrl + "/profile_picture." + format + "?t=" + timestamp;
+            String cardUrl = baseUrl + "/profile_picture_avatar." + format + "?t=" + timestamp;
+
+            projectEntity.setPhoto(originalUrl);// Set URL for original image
+            projectEntity.setCardPhoto(cardUrl); // Set URL for avatar
+
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private String getImageFormat(BufferedImage image) throws IOException {
+        if (ImageIO.getImageWritersBySuffix("png").hasNext()) {
+            return "png";
+        } else if (ImageIO.getImageWritersBySuffix("jpg").hasNext()) {
+            return "jpg";
+        } else {
+            throw new IOException("Unsupported image format");
+        }
+    }
+
+    private BufferedImage resizeImage(BufferedImage originalImage, int width, int height) {
+        BufferedImage resizedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = resizedImage.createGraphics();
+        g.drawImage(originalImage, 0, 0, width, height, null);
+        g.dispose();
+        return resizedImage;
+    }
+
+    private LocalDateTime convertStringToLocalDateTime(String date){
+
+        LocalDate localDate=  LocalDate.parse(date);
+
+        LocalDateTime localDateTime = localDate.atTime(0, 0);
+
+        return localDateTime;
+    }
 
 }

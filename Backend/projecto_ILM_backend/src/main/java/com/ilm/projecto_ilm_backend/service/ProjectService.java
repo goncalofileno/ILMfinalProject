@@ -5,6 +5,7 @@ import com.ilm.projecto_ilm_backend.ENUMS.StateProjectENUM;
 import com.ilm.projecto_ilm_backend.ENUMS.UserInProjectTypeENUM;
 import com.ilm.projecto_ilm_backend.bean.ProjectBean;
 import com.ilm.projecto_ilm_backend.bean.UserBean;
+import com.ilm.projecto_ilm_backend.dto.project.ProjectCreationInfoDto;
 import com.ilm.projecto_ilm_backend.dto.project.ProjectProfileDto;
 import com.ilm.projecto_ilm_backend.dto.project.ProjectProfilePageDto;
 import com.ilm.projecto_ilm_backend.dto.project.ProjectTableInfoDto;
@@ -40,6 +41,38 @@ public class ProjectService {
     UserBean userBean;
 
     private static final Logger logger = LogManager.getLogger(ProjectService.class);
+
+    @POST
+    @Path("/")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response createProject(@CookieParam("session-id") String sessionId, ProjectCreationInfoDto projectCreationInfoDto) throws UnknownHostException {
+        String clientIP = InetAddress.getLocalHost().getHostAddress();
+        logger.info("Received a request to create a project from a user with IP address: " + clientIP);
+
+        if (databaseValidator.checkSessionId(sessionId)) {
+            if(projectBean.createProject(projectCreationInfoDto, sessionId)){
+                return Response.status(Response.Status.OK).build();
+            }
+            else return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        else return Response.status(Response.Status.UNAUTHORIZED).build();
+    }
+
+    @PATCH
+    @Path("/photo/{projectName}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response createProject(@CookieParam("session-id") String sessionId,Map<String,String> request, @PathParam("projectName")String projectName) throws UnknownHostException {
+        String clientIP = InetAddress.getLocalHost().getHostAddress();
+        logger.info("Received a request to create a project from a user with IP address: " + clientIP);
+
+        if (databaseValidator.checkSessionId(sessionId)) {
+            if(projectBean.uploadProjectPicture(request,projectName)){
+                return Response.status(Response.Status.OK).build();
+            }
+            else return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        else return Response.status(Response.Status.UNAUTHORIZED).build();
+    }
 
     @GET
     @Path("/homeProjects")

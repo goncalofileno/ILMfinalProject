@@ -180,7 +180,6 @@ const EditProfilePage = () => {
         interests: selectedInterests,
       };
 
-
       const response = await updateUserProfile(userProfileDto);
       if (response.ok) {
         if (selectedFile) {
@@ -472,6 +471,7 @@ const EditProfilePage = () => {
               <Row className="mt-4">
                 <Col md={6}>
                   <InterestSelector
+                    label="Interests:"
                     selectedInterests={selectedInterests}
                     setSelectedInterests={setSelectedInterests}
                   />

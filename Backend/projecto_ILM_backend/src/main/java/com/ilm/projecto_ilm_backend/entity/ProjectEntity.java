@@ -143,6 +143,10 @@ public class ProjectEntity implements Serializable {
     @Column(name = "photo", nullable = true, unique = false, updatable = true)
     private String photo;
 
+    @Column(name = "cardPhoto", nullable = true, unique = false, updatable = true)
+    private String cardPhoto;
+
+
     /**
      * The reason of cancel the project.
      */
@@ -520,5 +524,13 @@ public class ProjectEntity implements Serializable {
 
     public void setFinishedDate(LocalDateTime finishedDate) {
         this.finishedDate = finishedDate;
+    }
+
+    public String getCardPhoto() {
+        return cardPhoto;
+    }
+
+    public void setCardPhoto(String cardPhoto) {
+        this.cardPhoto = cardPhoto;
     }
 }

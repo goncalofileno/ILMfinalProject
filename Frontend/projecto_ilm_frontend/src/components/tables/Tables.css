@@ -20,6 +20,7 @@ th {
 th {
   background-color: rgb(30, 40, 82);
   color: white;
+  cursor: pointer;
 }
 
 .centered-table tr {

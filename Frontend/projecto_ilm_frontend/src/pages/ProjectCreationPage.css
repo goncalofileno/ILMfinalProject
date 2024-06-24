@@ -1,5 +1,5 @@
 .project-creation-page {
-  height: 95%;
+  height: 85%;
   --bs-gutter-x: 0;
 }
 
@@ -90,4 +90,24 @@
   flex-direction: column;
   gap: 10px;
   width: 89%;
+}
+
+#submit-creation-project-btn {
+  width: 100%;
+}
+
+.date-input {
+  width: 100%;
+  border-radius: 5px;
+  border: var(--bs-border-width) solid var(--bs-border-color);
+  font-weight: 400;
+  font-size: 12px;
+  padding: 0.53rem 0.35rem;
+  background-color: var(--bs-body-bg);
+  cursor: pointer;
+}
+
+.date-input:focus {
+  outline: none;
+  box-shadow: 0 0 5px 2px rgba(243, 156, 18, 0.5);
 }

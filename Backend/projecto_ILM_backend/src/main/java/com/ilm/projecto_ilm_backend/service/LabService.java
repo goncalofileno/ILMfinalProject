@@ -41,18 +41,33 @@ public class LabService {
     @GET
     @Path("/all")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllLabs(@Context HttpHeaders headers, @CookieParam("session-id") String sessionId) throws UnknownHostException {
+    public Response getAllLabs( @CookieParam("session-id") String sessionId) throws UnknownHostException {
         String clientIP = InetAddress.getLocalHost().getHostAddress();
         logger.info("Received a request to retrieve all labs from IP address: " + clientIP);
-        String authHeader = headers.getHeaderString(HttpHeaders.AUTHORIZATION);
 
-        if(databaseValidator.checkAuxiliarToken(authHeader) || databaseValidator.checkSessionId(sessionId)) {
+        if(databaseValidator.checkSessionId(sessionId)) {
             List<LabDto> labs = labBean.getAllLabs();
             return Response.ok(labs).build();
         } else {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
+    }
 
+
+    @GET
+    @Path("/")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllLabsWithAuxToken(@Context HttpHeaders headers) throws UnknownHostException {
+        String clientIP = InetAddress.getLocalHost().getHostAddress();
+        logger.info("Received a request to retrieve all labs from IP address: " + clientIP);
+
+        String auxiliarToken = headers.getHeaderString(HttpHeaders.AUTHORIZATION);
+        if(databaseValidator.checkAuxiliarToken(auxiliarToken)) {
+            List<LabDto> labs = labBean.getAllLabs();
+            return Response.ok(labs).build();
+        } else {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
     }
 
 }
