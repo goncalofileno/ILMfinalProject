@@ -477,7 +477,7 @@ public class ProjectBean {
         return projectProfilePageDto;
     }
 
-    private List<ProjectMemberDto> getProjectMembers(int projectId) {
+    public List<ProjectMemberDto> getProjectMembers(int projectId) {
         List<UserProjectEntity> membersUserProjects = userProjectDao.findMembersByProjectId(projectId);
         return membersUserProjects.stream().map(userProject -> {
             UserEntity user = userProject.getUser();

@@ -123,6 +123,8 @@ const MailWebSocket = () => {
         case "REMOVED":
           navigate(`/profile/${systemUserName}`);
           break;
+          case "PROJECT_MESSAGE":
+          navigate(`/project/${projectSystemName}/chat`);
         default:
           break;
       }

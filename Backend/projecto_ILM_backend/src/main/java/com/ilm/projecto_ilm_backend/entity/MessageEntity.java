@@ -7,6 +7,12 @@ import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "message")
+@NamedQueries({
+        @NamedQuery(name = "Message.findById", query = "SELECT m FROM MessageEntity m WHERE m.id = :id"),
+        @NamedQuery(name = "Message.findByProjectId", query = "SELECT m FROM MessageEntity m WHERE m.receiverProject.id = :projectId")
+})
 public class MessageEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -21,7 +27,7 @@ public class MessageEntity implements Serializable {
 
     @Column(name = "date", nullable = false, unique = false, updatable = true)
     private LocalDateTime date;
-    
+
     @NotNull
     @ManyToOne
     private UserEntity sender;

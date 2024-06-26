@@ -1264,6 +1264,60 @@ async function getTasksSuggestions(sessionId, systemProjectName) {
   }
 }
 
+async function getChatPage(sessionId, projectSystemName) {
+  try {
+    const endpoint = `${baseURL}message/chatPage?projectSystemName=${encodeURIComponent(projectSystemName)}`;
+    const fetchResponse = await fetch(endpoint, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+
+    const responseJson = await fetchResponse.json();
+    console.log("API Response:", responseJson); // Adicione este log para verificar a resposta
+
+    if (!fetchResponse.ok) {
+      throw new Error(responseJson.message || "An error occurred");
+    }
+
+    return responseJson;
+  } catch (error) {
+    console.error("Error fetching chat messages:", error);
+    return { error: error.message, messages: [], projectMembers: [] };
+  }
+}
+
+async function sendChatMessage(sessionId, projectSystemName, messageContent) {
+  try {
+    const endpoint = `${baseURL}message/sendMessage?projectSystemName=${encodeURIComponent(projectSystemName)}`;
+    const messageDto = {
+      message: messageContent,
+    };
+
+    const fetchResponse = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(messageDto),
+    });
+
+    if (!fetchResponse.ok) {
+      const responseJson = await fetchResponse.json();
+      throw new Error(responseJson.message || "An error occurred");
+    }
+
+    return { message: messageContent, date: new Date().toISOString() };
+  } catch (error) {
+    console.error("Error sending chat message:", error);
+    return { error: error.message };
+  }
+}
+
+
 export {
   registerUser,
   getInterests,
@@ -1321,5 +1375,7 @@ export {
   editResource,
   markAsDone,
   createNote,
-  getTasksSuggestions
+  getTasksSuggestions,
+  sendChatMessage,
+  getChatPage
 };

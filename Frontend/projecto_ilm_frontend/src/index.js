@@ -18,32 +18,54 @@ import {
   useLocation,
 } from "react-router-dom";
 import "./index.css";
-import { Alert } from "react-bootstrap";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import EditProfilePage from "./pages/EditProfilePage";
 import MailWebSocket from "./utilities/websockets/MailWebSocket";
 import ResourcesPage from "./pages/ResourcesPage";
 import ProjectProfilePageInfo from "./pages/ProjectProfilePageInfo";
 import ProjectLogsPage from "./pages/ProjectLogsPage";
-
+import ProjectChatPage from "./pages/ProjectChatPage";
+import ProjectChatWebSocket from "./utilities/websockets/ProjectChatWebSocket";
 
 const AppWithWebSocket = () => {
   const location = useLocation();
   const isInbox = location.pathname === "/mail/inbox";
+  const isProjectChat = location.pathname.match(/\/project\/[^/]+\/chat/);
+
   return (
     <>
       <MailWebSocket isInbox={isInbox} />
+      {isProjectChat && <ProjectChatWebSocket projectId={isProjectChat[0].split("/")[2]} />}
       <Routes>
         <Route index element={<App />} />
         <Route path="/register" element={<Register />} />
         <Route path="/create-profile/:token" element={<CreateProfilePage />} />
         <Route path="/projects" element={<ProjectsPage />} />
         <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
-        <Route path="/profile/:systemUsername" element={<Navigate to="projects" />} />
-        <Route path="/profile/:systemUsername/:section" element={<ProfilePage />} />
-        <Route path="/project/:systemProjectName" element={<Navigate to="info" />} />
-        <Route path="/project/:systemProjectName/info" element={<ProjectProfilePageInfo />} />
-        <Route path="/project/:systemProjectName/logs" element={<ProjectLogsPage />} />
+        <Route
+          path="/profile/:systemUsername"
+          element={<Navigate to="projects" />}
+        />
+        <Route
+          path="/profile/:systemUsername/:section"
+          element={<ProfilePage />}
+        />
+        <Route
+          path="/project/:systemProjectName"
+          element={<Navigate to="info" />}
+        />
+        <Route
+          path="/project/:systemProjectName/info"
+          element={<ProjectProfilePageInfo />}
+        />
+        <Route
+          path="/project/:systemProjectName/logs"
+          element={<ProjectLogsPage />}
+        />
+        <Route
+          path="/project/:systemProjectName/chat"
+          element={<ProjectChatPage />}
+        />
         <Route path="/editProfile" element={<EditProfilePage />} />
         <Route path="/mail/inbox" element={<InboxMailPage />} />
         <Route path="/mail/sent" element={<SentMailPage />} />

@@ -32,6 +32,8 @@ const NotificationBanner = ({ notification, onClick, onEnd }) => {
         return `The project <strong>${projectName}</strong> was rejected by <strong>${userName}</strong>.`;
       case "REMOVED":
         return `You were removed from the project <strong>${projectName}</strong> by <strong>${userName}</strong>. Contact them for more information.`;
+      case "PROJECT_MESSAGE":
+        return `You have a new message in the project <strong>${projectName}</strong> chat from <strong>${userName}</strong>.`;
       default:
         return "You have a new notification.";
     }
@@ -53,7 +55,9 @@ const NotificationBanner = ({ notification, onClick, onEnd }) => {
       }}
       onClick={onClick}
     >
-      <span dangerouslySetInnerHTML={{ __html: getNotificationMessage() }}></span>
+      <span
+        dangerouslySetInnerHTML={{ __html: getNotificationMessage() }}
+      ></span>
     </Alert>
   );
 };
