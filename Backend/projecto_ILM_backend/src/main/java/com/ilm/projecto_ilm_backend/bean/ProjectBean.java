@@ -487,6 +487,7 @@ public class ProjectBean {
 
     private ProjectMemberDto createProjectMemberDto(UserEntity user, UserInProjectTypeENUM type) {
         ProjectMemberDto member = new ProjectMemberDto();
+        member.setId(user.getId());
         member.setName(user.getFirstName() + " " + user.getLastName());
         member.setSystemUsername(user.getSystemUsername());
         member.setType(type);

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Container, Row, Col, Card, Form, Button } from "react-bootstrap";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import AppNavbar from "../components/headers/AppNavbar";
 import ProjectTabs from "../components/headers/ProjectTabs";
 import useChatStore from "../stores/useChatStore";
@@ -12,6 +12,7 @@ import "./ProjectChatPage.css";
 
 const ProjectChatPage = () => {
   const { systemProjectName } = useParams();
+  const navigate = useNavigate();
   const { messages, setMessages, addMessage, onlineMembers } = useChatStore();
   const [messageContent, setMessageContent] = useState("");
   const [projectMembers, setProjectMembers] = useState([]);
@@ -58,6 +59,10 @@ const ProjectChatPage = () => {
     }
   };
 
+  const isOnline = (systemUsername) => {
+    return onlineMembers.some(member => member && member.systemUsername === systemUsername);
+  };
+
   return (
     <>
       <AppNavbar />
@@ -78,7 +83,12 @@ const ProjectChatPage = () => {
                 <Card.Body>
                   <ul className="list-group list-group-flush">
                     {projectMembers.map((member) => (
-                      <li className="list-group-item" key={member.systemUsername}>
+                      <li
+                        className="list-group-item"
+                        key={member.systemUsername}
+                        onClick={() => navigate(`/profile/${member.systemUsername}`)}
+                        style={{ cursor: "pointer" }}
+                      >
                         <Row>
                           <Col md="auto">
                             <img
@@ -94,6 +104,16 @@ const ProjectChatPage = () => {
                               <strong>{member.name}</strong>
                               <div className="text-muted">{member.type}</div>
                             </div>
+                          </Col>
+                          <Col md="auto" className="d-flex align-items-center">
+                            <div
+                              className={`status-indicator ${
+                                isOnline(member.systemUsername) ? "online" : "offline"
+                              }`}
+                            />
+                            <span className={`status-label ${isOnline(member.systemUsername) ? "online-label" : "offline-label"}`}>
+                              {isOnline(member.systemUsername) ? "Online" : "Offline"}
+                            </span>
                           </Col>
                         </Row>
                       </li>

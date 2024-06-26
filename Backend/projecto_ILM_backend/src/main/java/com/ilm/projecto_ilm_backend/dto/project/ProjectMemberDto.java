@@ -3,12 +3,14 @@ package com.ilm.projecto_ilm_backend.dto.project;
 import com.ilm.projecto_ilm_backend.ENUMS.UserInProjectTypeENUM;
 
 public class ProjectMemberDto {
+    private int id;
     private String name;
     private String systemUsername;
     private UserInProjectTypeENUM type;
     private String profilePicture;
 
-    public ProjectMemberDto(String name, String systemUsername, UserInProjectTypeENUM type, String profilePicture) {
+    public ProjectMemberDto(int id, String name, String systemUsername, UserInProjectTypeENUM type, String profilePicture) {
+        this.id = id;
         this.name = name;
         this.systemUsername = systemUsername;
         this.type = type;
@@ -16,6 +18,14 @@ public class ProjectMemberDto {
     }
 
     public ProjectMemberDto() {
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {

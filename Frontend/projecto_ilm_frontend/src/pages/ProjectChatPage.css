@@ -47,4 +47,34 @@
     height: 80px;
     resize: none;
   }
+
+  .status-indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-left: 10px;
+  }
+  
+  .online {
+    background-color: green;
+  }
+  
+  .offline {
+    background-color: gray;
+  }
+  
+  .status-label {
+    margin-left: 5px;
+  }
+  
+  .online-label {
+    color: green;
+  }
+  
+  .offline-label {
+    color: gray;
+  }
+  
+
+
   

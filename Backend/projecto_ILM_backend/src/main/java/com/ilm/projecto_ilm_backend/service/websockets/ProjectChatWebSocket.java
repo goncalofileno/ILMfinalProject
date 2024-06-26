@@ -4,15 +4,23 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.ilm.projecto_ilm_backend.bean.ProjectBean;
+import com.ilm.projecto_ilm_backend.bean.UserBean;
+import com.ilm.projecto_ilm_backend.dao.ProjectDao;
+import com.ilm.projecto_ilm_backend.dao.UserProjectDao;
 import com.ilm.projecto_ilm_backend.dto.messages.MessageDto;
+import com.ilm.projecto_ilm_backend.dto.project.ProjectMemberDto;
+import com.ilm.projecto_ilm_backend.ENUMS.UserInProjectTypeENUM;
+
+import com.ilm.projecto_ilm_backend.entity.ProjectEntity;
+import com.ilm.projecto_ilm_backend.entity.UserEntity;
+import jakarta.inject.Inject;
 import jakarta.websocket.OnClose;
 import jakarta.websocket.OnMessage;
 import jakarta.websocket.OnOpen;
 import jakarta.websocket.Session;
 import jakarta.websocket.server.PathParam;
 import jakarta.websocket.server.ServerEndpoint;
-import com.ilm.projecto_ilm_backend.dto.project.ProjectMemberDto;
-import com.ilm.projecto_ilm_backend.ENUMS.UserInProjectTypeENUM;
 
 import java.io.IOException;
 import java.util.Map;
@@ -26,6 +34,18 @@ import java.util.stream.Collectors;
 
 @ServerEndpoint("/ws/chat/{projectId}/{username}")
 public class ProjectChatWebSocket {
+
+    @Inject
+    UserBean userBean;
+
+    @Inject
+    UserProjectDao userProjectDao;
+
+    @Inject
+    ProjectBean projectBean;
+
+    @Inject
+    ProjectDao projectDao;
 
     private static final Logger logger = Logger.getLogger(ProjectChatWebSocket.class.getName());
     private static final ObjectMapper objectMapper;
@@ -45,7 +65,10 @@ public class ProjectChatWebSocket {
         closeExistingSessionForUser(username, projectId);
         sessionMap.computeIfAbsent(projectId, k -> ConcurrentHashMap.newKeySet()).add(session);
         userSessionMap.put(username, session.getId());
-        onlineMembers.put(session.getId(), new ProjectMemberDto(username, username, UserInProjectTypeENUM.MEMBER, "defaultProfilePic.png"));
+        UserEntity user = userBean.getUserBySessionId(username);
+        ProjectEntity project = projectDao.findBySystemName(projectId);
+        UserInProjectTypeENUM userInProjectType = userProjectDao.findUserTypeByUserIdAndProjectId(user.getId(), project.getId());
+        onlineMembers.put(session.getId(), new ProjectMemberDto(user.getId(), user.getFullName(), user.getSystemUsername(), userInProjectType, user.getPhoto()));
         sendOnlineMembers(projectId);
         logger.info("Connected to chat... Project ID: " + projectId + ", Username: " + username);
         startPeriodicUpdate(projectId);
@@ -146,15 +169,36 @@ public class ProjectChatWebSocket {
         Set<ProjectMemberDto> members = sessionMap.get(projectId).stream()
                 .map(session -> onlineMembers.get(session.getId()))
                 .collect(Collectors.toSet());
+        Set<Integer> onlineUserIds = sessionMap.get(projectId).stream()
+                .map(session -> {
+                    ProjectMemberDto member = onlineMembers.get(session.getId());
+                    if (member != null) {
+                        UserEntity user = userBean.getUserBySessionId(session.getId());
+                        return user != null ? user.getId() : null;
+                    }
+                    return null;
+                })
+                .filter(id -> id != null)
+                .collect(Collectors.toSet());
         try {
-            String message = objectMapper.writeValueAsString(new WebSocketMessage("online_members", members));
+            String message = objectMapper.writeValueAsString(new WebSocketMessage("online_members", new OnlineMembersMessage(members, onlineUserIds)));
             broadcastMessage(projectId, message);
         } catch (JsonProcessingException e) {
             logger.severe("Error serializing online member list: " + e.getMessage());
         }
     }
 
+    private static class OnlineMembersMessage {
+        public Set<ProjectMemberDto> members;
+        public Set<Integer> onlineUserIds;
+
+        public OnlineMembersMessage(Set<ProjectMemberDto> members, Set<Integer> onlineUserIds) {
+            this.members = members;
+            this.onlineUserIds = onlineUserIds;
+        }
+    }
+
     private void startPeriodicUpdate(String projectId) {
-        scheduler.scheduleAtFixedRate(() -> sendOnlineMembers(projectId), 10, 10, TimeUnit.MINUTES);
+        scheduler.scheduleAtFixedRate(() -> sendOnlineMembers(projectId), 1, 1, TimeUnit.MINUTES);
     }
 }

@@ -43,7 +43,7 @@ const ProjectChatWebSocket = ({ projectId }) => {
           if (parsedData.type === "new_message") {
             addMessage(parsedData.message);
           } else if (parsedData.type === "online_members") {
-            setOnlineMembers(parsedData.members);
+            setOnlineMembers(parsedData.message.members);
           } else {
             console.warn("Unknown message type received:", parsedData.type);
           }
