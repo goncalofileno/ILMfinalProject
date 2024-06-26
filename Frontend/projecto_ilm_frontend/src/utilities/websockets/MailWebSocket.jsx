@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import Cookies from "js-cookie";
+import useChatStore from "../../stores/useChatStore";
 import useMailStore from "../../stores/useMailStore";
 import useNotificationStore from "../../stores/useNotificationStore";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -8,6 +9,7 @@ import NotificationBanner from "../../components/banners/NotificationBanner";
 
 const MailWebSocket = () => {
   const { incrementUnreadCount, fetchMailsInInbox } = useMailStore();
+  const { setOnlineMembers } = useChatStore();
   const { incrementUnreadNotificationsCount } = useNotificationStore();
   const location = useLocation();
   const [showTimeoutModal, setShowTimeoutModal] = useState(false);
@@ -65,11 +67,15 @@ const MailWebSocket = () => {
           setShowTimeoutModal(true);
         } else {
           try {
-            const notification = JSON.parse(event.data);
-            setNotification(notification);
-            incrementUnreadNotificationsCount();
-            if (audioEnabled) {
-              audioRef.current.play();
+            const parsedData = JSON.parse(event.data);
+            if (parsedData.type === "online_members") {
+              setOnlineMembers(parsedData.message.members);
+            } else {
+              setNotification(parsedData); // Handle other notifications
+              incrementUnreadNotificationsCount();
+              if (audioEnabled) {
+                audioRef.current.play();
+              }
             }
           } catch (e) {
             console.error("Error parsing WebSocket message:", e);
@@ -91,7 +97,7 @@ const MailWebSocket = () => {
         socket.close();
       }
     };
-  }, [incrementUnreadCount, fetchMailsInInbox, location.pathname, audioEnabled, incrementUnreadNotificationsCount]);
+  }, [incrementUnreadCount, fetchMailsInInbox, location.pathname, audioEnabled, setOnlineMembers, incrementUnreadNotificationsCount]);
 
   const handleTimeoutModalClose = () => {
     setShowTimeoutModal(false);
@@ -123,8 +129,9 @@ const MailWebSocket = () => {
         case "REMOVED":
           navigate(`/profile/${systemUserName}`);
           break;
-          case "PROJECT_MESSAGE":
+        case "PROJECT_MESSAGE":
           navigate(`/project/${projectSystemName}/chat`);
+          break;
         default:
           break;
       }

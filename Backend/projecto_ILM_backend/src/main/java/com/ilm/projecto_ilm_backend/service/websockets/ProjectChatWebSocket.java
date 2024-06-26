@@ -69,9 +69,7 @@ public class ProjectChatWebSocket {
         ProjectEntity project = projectDao.findBySystemName(projectId);
         UserInProjectTypeENUM userInProjectType = userProjectDao.findUserTypeByUserIdAndProjectId(user.getId(), project.getId());
         onlineMembers.put(session.getId(), new ProjectMemberDto(user.getId(), user.getFullName(), user.getSystemUsername(), userInProjectType, user.getPhoto()));
-        sendOnlineMembers(projectId);
         logger.info("Connected to chat... Project ID: " + projectId + ", Username: " + username);
-        startPeriodicUpdate(projectId);
     }
 
     private void closeExistingSessionForUser(String username, String projectId) {
@@ -132,7 +130,6 @@ public class ProjectChatWebSocket {
             if (sessions.isEmpty()) {
                 sessionMap.remove(projectId);
             }
-            sendOnlineMembers(projectId);
         }
         userSessionMap.values().remove(session.getId());
         logger.info("Disconnected from chat... Project ID: " + projectId);
@@ -163,42 +160,5 @@ public class ProjectChatWebSocket {
                 }
             }
         }
-    }
-
-    private void sendOnlineMembers(String projectId) {
-        Set<ProjectMemberDto> members = sessionMap.get(projectId).stream()
-                .map(session -> onlineMembers.get(session.getId()))
-                .collect(Collectors.toSet());
-        Set<Integer> onlineUserIds = sessionMap.get(projectId).stream()
-                .map(session -> {
-                    ProjectMemberDto member = onlineMembers.get(session.getId());
-                    if (member != null) {
-                        UserEntity user = userBean.getUserBySessionId(session.getId());
-                        return user != null ? user.getId() : null;
-                    }
-                    return null;
-                })
-                .filter(id -> id != null)
-                .collect(Collectors.toSet());
-        try {
-            String message = objectMapper.writeValueAsString(new WebSocketMessage("online_members", new OnlineMembersMessage(members, onlineUserIds)));
-            broadcastMessage(projectId, message);
-        } catch (JsonProcessingException e) {
-            logger.severe("Error serializing online member list: " + e.getMessage());
-        }
-    }
-
-    private static class OnlineMembersMessage {
-        public Set<ProjectMemberDto> members;
-        public Set<Integer> onlineUserIds;
-
-        public OnlineMembersMessage(Set<ProjectMemberDto> members, Set<Integer> onlineUserIds) {
-            this.members = members;
-            this.onlineUserIds = onlineUserIds;
-        }
-    }
-
-    private void startPeriodicUpdate(String projectId) {
-        scheduler.scheduleAtFixedRate(() -> sendOnlineMembers(projectId), 1, 1, TimeUnit.MINUTES);
     }
 }
