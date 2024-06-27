@@ -18,7 +18,6 @@ import {
   useLocation,
 } from "react-router-dom";
 import "./index.css";
-import { Alert } from "react-bootstrap";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import EditProfilePage from "./pages/EditProfilePage";
 import MailWebSocket from "./utilities/websockets/MailWebSocket";
@@ -27,13 +26,18 @@ import ProjectProfilePageInfo from "./pages/ProjectProfilePageInfo";
 import ProjectLogsPage from "./pages/ProjectLogsPage";
 import ProjectCreationPage1 from "./pages/ProjectCreationPage1";
 import ProjectCreationPage2 from "./pages/ProjectCreationPage2";
+import ProjectChatPage from "./pages/ProjectChatPage";
+import ProjectChatWebSocket from "./utilities/websockets/ProjectChatWebSocket";
 
 const AppWithWebSocket = () => {
   const location = useLocation();
   const isInbox = location.pathname === "/mail/inbox";
+  const isProjectChat = location.pathname.match(/\/project\/[^/]+\/chat/);
+
   return (
     <>
       <MailWebSocket isInbox={isInbox} />
+      {isProjectChat && <ProjectChatWebSocket projectId={isProjectChat[0].split("/")[2]} />}
       <Routes>
         <Route index element={<App />} />
         <Route path="/register" element={<Register />} />
@@ -59,6 +63,10 @@ const AppWithWebSocket = () => {
         <Route
           path="/project/:systemProjectName/logs"
           element={<ProjectLogsPage />}
+        />
+        <Route
+          path="/project/:systemProjectName/chat"
+          element={<ProjectChatPage />}
         />
         <Route path="/editProfile" element={<EditProfilePage />} />
         <Route path="/mail/inbox" element={<InboxMailPage />} />

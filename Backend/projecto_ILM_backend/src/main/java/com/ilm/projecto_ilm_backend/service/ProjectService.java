@@ -427,6 +427,65 @@ public class ProjectService {
         }
     }
 
+    //Serviço que recebe um id de um user e um systemProjectName e remove esse user do projecto, só managers e creators podem remover users do projeto
+    @POST
+    @Path("/removeUserFromProject")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response removeUserFromProject(@CookieParam("session-id") String sessionId, @QueryParam("projectSystemName") String projectSystemName, @QueryParam("userId") int userId, String reason) throws UnknownHostException {
+        String clientIP = InetAddress.getLocalHost().getHostAddress();
+        logger.info("Received a request to remove user from project from IP address: " + clientIP);
+
+        if (databaseValidator.checkSessionId(sessionId)) {
+            try {
+                int currentUserId = userBean.getUserBySessionId(sessionId).getId();
+                if (projectBean.isUserCreatorOrManager(currentUserId, projectSystemName)) {
+                    String result = projectBean.removeUserFromProject(projectSystemName, userId, currentUserId, reason);
+                    return Response.ok(Collections.singletonMap("message", result)).build();
+                } else {
+                    return Response.status(Response.Status.FORBIDDEN).entity(Collections.singletonMap("message", "User does not have permission to remove users from this project.")).build();
+                }
+            } catch (Exception e) {
+                logger.error("An error occurred while removing user from project: " + e.getMessage() + " from IP address: " + clientIP);
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(Collections.singletonMap("message", "An error occurred while removing user from project")).build();
+            }
+        } else {
+            return Response.status(Response.Status.UNAUTHORIZED).entity(Collections.singletonMap("message", "Unauthorized access")).build();
+        }
+    }
+
+    //Serviço que recebe um id de um user, um systemprojectName e uma boleana que indica se o user aceita ou rejeita a candidatura ao projecto, e uma reason para dar ao user em caso de rejeição
+    @POST
+    @Path("/respondToApplication")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response respondToApplication(@CookieParam("session-id") String sessionId, @QueryParam("projectSystemName") String projectSystemName, @QueryParam("userId") int userId, @QueryParam("response") boolean response, String reason) throws UnknownHostException {
+        String clientIP = InetAddress.getLocalHost().getHostAddress();
+        logger.info("Received a request to respond to application from IP address: " + clientIP);
+
+        if (databaseValidator.checkSessionId(sessionId)) {
+            try {
+                int currentUserId = userBean.getUserBySessionId(sessionId).getId();
+                if (projectBean.isUserCreatorOrManager(currentUserId, projectSystemName)) {
+                    String result;
+                    if (response) {
+                        result = projectBean.acceptApplication(projectSystemName, userId, currentUserId);
+                    } else {
+                        result = projectBean.rejectApplication(projectSystemName, userId, currentUserId, reason);
+                    }
+                    return Response.ok(Collections.singletonMap("message", result)).build();
+                } else {
+                    return Response.status(Response.Status.FORBIDDEN).entity(Collections.singletonMap("message", "User does not have permission to respond to applications for this project.")).build();
+                }
+            } catch (Exception e) {
+                logger.error("An error occurred while responding to application: " + e.getMessage() + " from IP address: " + clientIP);
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(Collections.singletonMap("message", "An error occurred while responding to application")).build();
+            }
+        } else {
+            return Response.status(Response.Status.UNAUTHORIZED).entity(Collections.singletonMap("message", "Unauthorized access")).build();
+        }
+    }
+
 
 
 

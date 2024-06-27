@@ -483,7 +483,7 @@ public class ProjectBean {
         return projectProfilePageDto;
     }
 
-    private List<ProjectMemberDto> getProjectMembers(int projectId) {
+    public List<ProjectMemberDto> getProjectMembers(int projectId) {
         List<UserProjectEntity> membersUserProjects = userProjectDao.findMembersByProjectId(projectId);
         return membersUserProjects.stream().map(userProject -> {
             UserEntity user = userProject.getUser();
@@ -493,6 +493,7 @@ public class ProjectBean {
 
     private ProjectMemberDto createProjectMemberDto(UserEntity user, UserInProjectTypeENUM type) {
         ProjectMemberDto member = new ProjectMemberDto();
+        member.setId(user.getId());
         member.setName(user.getFirstName() + " " + user.getLastName());
         member.setSystemUsername(user.getSystemUsername());
         member.setType(type);
@@ -807,6 +808,114 @@ public class ProjectBean {
 
     public List<UserEntity> getProjectCreatorsAndManagersByProjectId(int projectId) {
         return userProjectDao.findCreatorsAndManagersByProjectId(projectId);
+    }
+
+    public String removeUserFromProject(String systemProjectName, int userToRemoveId, int currentUserId, String reason){
+        ProjectEntity project = projectDao.findBySystemName(systemProjectName);
+        UserEntity userToRemove = userDao.findById(userToRemoveId);
+        UserEntity currentUser = userDao.findById(currentUserId);
+        UserProjectEntity userProject = userProjectDao.findByUserIdAndProjectId(userToRemoveId, project.getId());
+        if (userProject == null) {
+            throw new IllegalArgumentException("User is not in the project");
+        }
+        if (userProject.getType() == UserInProjectTypeENUM.CREATOR) {
+            throw new IllegalArgumentException("Cannot remove the creator of the project");
+        }
+        if (userProject.getType() == UserInProjectTypeENUM.MANAGER && !userProjectDao.isUserCreatorOrManager(currentUserId, project.getId())) {
+            throw new UnauthorizedAccessException("Only the creator can remove a manager");
+        }
+        if (userProject.getType() == UserInProjectTypeENUM.MEMBER && !userProjectDao.isUserCreatorOrManager(currentUserId, project.getId())) {
+            throw new UnauthorizedAccessException("Only the creator or a manager can remove a member");
+        }
+        userProjectDao.remove(userProject);
+
+        notificationBean.createRemovedNotification(systemProjectName, userDao.getFullNameBySystemUsername(currentUser.getSystemUsername()), userToRemove);
+
+        String subject = "You have been removed from project " + project.getName();
+        String text = "<p>Dear " + userToRemove.getFirstName() + " " + userToRemove.getLastName() + ",</p>" +
+                "<p>We regret to inform you that you have been removed from the project <strong><a href=\"http://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong>.</p>" +
+                "<p>Reason: " + reason + "</p>" +
+                "<p>We apologize for any inconvenience this may cause.</p>" +
+                "<p>Best regards,<br>ILM Management Team</p>";
+
+        MailDto mailDto = new MailDto(
+                subject,
+                text,
+                userDao.getFullNameBySystemUsername(currentUser.getSystemUsername()),
+                currentUser.getEmail(),
+                userToRemove.getFirstName() + " " + userToRemove.getLastName(),
+                userToRemove.getEmail()
+        );
+
+        mailBean.sendMail(sessionDao.findSessionIdByUserId(userToRemoveId), mailDto);
+
+        return "User removed successfully";
+    }
+
+    public String acceptApplication(String systemProjectName, int userToAccept, int currentUserId){
+        ProjectEntity project = projectDao.findBySystemName(systemProjectName);
+        UserEntity user = userDao.findById(userToAccept);
+        UserEntity currentUser = userDao.findById(currentUserId);
+        UserProjectEntity userProject = userProjectDao.findByUserIdAndProjectId(userToAccept, project.getId());
+        if (userProject == null || userProject.getType() != UserInProjectTypeENUM.PENDING_BY_APPLIANCE) {
+            throw new IllegalArgumentException("User is not pending to join the project");
+        }
+        userProject.setType(UserInProjectTypeENUM.MEMBER_BY_APPLIANCE);
+        userProjectDao.merge(userProject);
+
+        notificationBean.createApplianceAcceptedNotification(systemProjectName, userDao.getFullNameBySystemUsername(currentUser.getSystemUsername()), user);
+
+        String subject = "Your application to project " + project.getName() + " has been accepted";
+        String text = "<p>Dear " + user.getFirstName() + " " + user.getLastName() + ",</p>" +
+                "<p>We are pleased to inform you that your application to join the project <strong><a href=\"http://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong> has been accepted.</p>" +
+                "<p>You can now start working on the project.</p>" +
+                "<p>Best regards,<br>ILM Management Team</p>";
+
+        MailDto mailDto = new MailDto(
+                subject,
+                text,
+                userDao.getFullNameBySystemUsername(currentUser.getSystemUsername()),
+                currentUser.getEmail(),
+                user.getFirstName() + " " + user.getLastName(),
+                user.getEmail()
+        );
+
+        mailBean.sendMail(sessionDao.findSessionIdByUserId(userToAccept), mailDto);
+
+        return "Application accepted successfully";
+    }
+
+    public String rejectApplication(String systemProjectName, int userToReject, int currentUserId, String reason){
+        ProjectEntity project = projectDao.findBySystemName(systemProjectName);
+        UserEntity user = userDao.findById(userToReject);
+        UserEntity currentUser = userDao.findById(currentUserId);
+        UserProjectEntity userProject = userProjectDao.findByUserIdAndProjectId(userToReject, project.getId());
+        if (userProject == null || userProject.getType() != UserInProjectTypeENUM.PENDING_BY_APPLIANCE) {
+            throw new IllegalArgumentException("User is not pending to join the project");
+        }
+        userProjectDao.remove(userProject);
+
+        notificationBean.createApplianceRejectedNotification(systemProjectName, userDao.getFullNameBySystemUsername(currentUser.getSystemUsername()), user);
+
+        String subject = "Your application to project " + project.getName() + " has been rejected";
+        String text = "<p>Dear " + user.getFirstName() + " " + user.getLastName() + ",</p>" +
+                "<p>We regret to inform you that your application to join the project <strong><a href=\"http://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong> has been rejected.</p>" +
+                "<p>Reason: " + reason + "</p>" +
+                "<p>We apologize for any inconvenience this may cause.</p>" +
+                "<p>Best regards,<br>ILM Management Team</p>";
+
+        MailDto mailDto = new MailDto(
+                subject,
+                text,
+                userDao.getFullNameBySystemUsername(currentUser.getSystemUsername()),
+                currentUser.getEmail(),
+                user.getFirstName() + " " + user.getLastName(),
+                user.getEmail()
+        );
+
+        mailBean.sendMail(sessionDao.findSessionIdByUserId(userToReject), mailDto);
+
+        return "Application rejected successfully";
     }
 
 

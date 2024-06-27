@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import {
   Alert,
   Card,
@@ -35,6 +35,7 @@ import Cookies from "js-cookie";
 
 const ProjectProfilePageInfo = () => {
   const { systemProjectName } = useParams();
+  const navigate = useNavigate();
   const [projectInfo, setProjectInfo] = useState(null);
   const [error, setError] = useState(null);
   const [selectedState, setSelectedState] = useState("");
@@ -43,6 +44,7 @@ const ProjectProfilePageInfo = () => {
   const [reason, setReason] = useState("");
   const [showReasonModal, setShowReasonModal] = useState(false);
   const sessionId = Cookies.get("session-id");
+  const userSystemUsername = Cookies.get("user-systemUsername");
 
   useEffect(() => {
     const fetchProjectInfo = async () => {
@@ -253,44 +255,54 @@ const ProjectProfilePageInfo = () => {
           )}
           <div className="admin-buttons">
             {isAdmin && projectInfo.state === "READY" && (
-              <>
-                <Button
-                  variant="success"
-                  className="mr-2"
-                  onClick={handleApproveProject}
-                >
-                  Approve Project
-                </Button>
-                <Button
-                  variant="warning"
-                  className="mr-2"
-                  onClick={() => setShowRejectModal(true)}
-                >
-                  Reject Project
-                </Button>
-              </>
+              <Row style={{marginBottom: "10px"}}>
+                <Col md="6">
+                  <Button
+                    variant="success"
+                    className="mr-2"
+                    onClick={handleApproveProject}
+                  >
+                    Approve Project
+                  </Button>
+                </Col>
+                <Col md="6">
+                  <Button
+                    variant="warning"
+                    className="mr-2"
+                    onClick={() => setShowRejectModal(true)}
+                  >
+                    Reject Project
+                  </Button>
+                </Col>
+              </Row>
             )}
             {(isAdmin || isCreatorOrManager) && (
-              <div>
+              <>
                 <Row>
-                  <Button
-                    style={{
-                      backgroundColor: "rgb(30, 40, 82)",
-                      borderColor: "rgb(30, 40, 82)",
-                      marginRight: "10px",
-                      marginBottom: "10px",
-                    }}
-                    onClick={() => setShowReasonModal(true)}
-                    disabled={["CANCELED", "READY"].includes(projectInfo.state)}
-                  >
-                    Edit Project
-                  </Button>
-                  <Button
-                    variant="danger"
-                    onClick={() => setShowCancelModal(true)}
-                  >
-                    Cancel Project
-                  </Button>
+                  <Col md="6">
+                    <Button
+                      style={{
+                        backgroundColor: "rgb(30, 40, 82)",
+                        borderColor: "rgb(30, 40, 82)",
+                        marginRight: "10px",
+                        marginBottom: "10px",
+                      }}
+                      onClick={() => setShowReasonModal(true)}
+                      disabled={["CANCELED", "READY"].includes(
+                        projectInfo.state
+                      )}
+                    >
+                      Edit Project
+                    </Button>
+                  </Col>
+                  <Col md="6">
+                    <Button
+                      variant="danger"
+                      onClick={() => setShowCancelModal(true)}
+                    >
+                      Cancel Project
+                    </Button>
+                  </Col>
                 </Row>
                 <Row>
                   {["CANCELED", "READY"].includes(projectInfo.state) && (
@@ -300,7 +312,7 @@ const ProjectProfilePageInfo = () => {
                     </Alert>
                   )}
                 </Row>
-              </div>
+              </>
             )}
           </div>
         </div>
@@ -458,7 +470,10 @@ const ProjectProfilePageInfo = () => {
                             roundedCircle
                             className="creator-profile-picture"
                           />
-                          {projectInfo.creator.name}
+                          {projectInfo.creator.systemUsername ===
+                          userSystemUsername
+                            ? "You"
+                            : projectInfo.creator.name}
                         </Link>
                       </Card.Text>
                       {isCreatorOrManager && (

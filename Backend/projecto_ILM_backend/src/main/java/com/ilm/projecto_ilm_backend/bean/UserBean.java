@@ -405,6 +405,7 @@ public class UserBean {
     }
 
 
+
     /**
      * Resizes an image to a specific width and height.
      *

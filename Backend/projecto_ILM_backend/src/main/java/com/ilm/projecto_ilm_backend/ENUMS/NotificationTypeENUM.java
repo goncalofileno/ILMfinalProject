@@ -23,7 +23,9 @@ public enum NotificationTypeENUM {
 
     REMOVED(8),
 
-    PROJECT_REJECTED(9);
+    PROJECT_REJECTED(9),
+
+    PROJECT_MESSAGE(10);
 
     private final int intValue;
 

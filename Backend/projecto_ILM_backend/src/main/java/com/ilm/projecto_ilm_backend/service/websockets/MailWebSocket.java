@@ -4,8 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.ilm.projecto_ilm_backend.dao.SessionDao;
+import com.ilm.projecto_ilm_backend.bean.UserBean;
 import com.ilm.projecto_ilm_backend.dto.notification.NotificationDto;
+import com.ilm.projecto_ilm_backend.dto.project.ProjectMemberDto;
+import com.ilm.projecto_ilm_backend.entity.UserEntity;
 import jakarta.inject.Inject;
 import jakarta.websocket.OnClose;
 import jakarta.websocket.OnMessage;
@@ -17,17 +19,23 @@ import jakarta.websocket.server.ServerEndpoint;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @ServerEndpoint("/ws/mail/{sessionId}/{inbox}")
 public class MailWebSocket {
 
     @Inject
-    SessionDao sessionDao;
+    UserBean userBean;
 
     private static final Map<String, Set<Session>> sessionMap = new ConcurrentHashMap<>();
+    private static final Map<String, ProjectMemberDto> onlineMembers = new ConcurrentHashMap<>();
     private static final Logger logger = Logger.getLogger(MailWebSocket.class.getName());
     private static final ObjectMapper objectMapper;
+    private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
     static {
         objectMapper = new ObjectMapper();
@@ -39,7 +47,11 @@ public class MailWebSocket {
     public void onOpen(Session session, @PathParam("sessionId") String sessionId, @PathParam("inbox") String inbox) {
         String key = sessionId;
         sessionMap.computeIfAbsent(key, k -> ConcurrentHashMap.newKeySet()).add(session);
+        UserEntity user = userBean.getUserBySessionId(sessionId);
+        onlineMembers.put(session.getId(), new ProjectMemberDto(user.getId(), user.getFullName(), user.getSystemUsername(), null, user.getPhoto()));
+        sendOnlineMembers();
         logger.info("Connected ... Session ID: " + sessionId + " Inbox: " + inbox);
+        startPeriodicUpdate();
     }
 
     @OnMessage
@@ -54,10 +66,12 @@ public class MailWebSocket {
         Set<Session> sessions = sessionMap.get(key);
         if (sessions != null) {
             sessions.remove(session);
+            onlineMembers.remove(session.getId());
             if (sessions.isEmpty()) {
                 sessionMap.remove(key);
             }
         }
+        sendOnlineMembers();
         logger.info("Disconnected ... Session ID: " + sessionId + " Inbox: " + inbox);
     }
 
@@ -127,6 +141,10 @@ public class MailWebSocket {
         sendNotification(sessionId, notificationDto);
     }
 
+    public static void sendProjectMessageNotification(String sessionId, NotificationDto notificationDto) {
+        sendNotification(sessionId, notificationDto);
+    }
+
     private static void sendNotification(String sessionId, NotificationDto notificationDto) {
         String keyDefault = sessionId;
         Set<Session> defaultSessions = sessionMap.get(keyDefault);
@@ -145,5 +163,47 @@ public class MailWebSocket {
         } else {
             logger.warning("No sessions found for key: " + keyDefault);
         }
+    }
+
+    private void sendOnlineMembers() {
+        Set<ProjectMemberDto> members = onlineMembers.values().stream().collect(Collectors.toSet());
+        try {
+            String message = objectMapper.writeValueAsString(new WebSocketMessage("online_members", new OnlineMembersMessage(members)));
+            broadcastMessage(message);
+        } catch (JsonProcessingException e) {
+            logger.severe("Error serializing online member list: " + e.getMessage());
+        }
+    }
+
+    private void broadcastMessage(String message) {
+        for (Set<Session> sessions : sessionMap.values()) {
+            for (Session session : sessions) {
+                if (session.isOpen()) {
+                    session.getAsyncRemote().sendText(message);
+                }
+            }
+        }
+    }
+
+    private static class WebSocketMessage {
+        public String type;
+        public Object message;
+
+        public WebSocketMessage(String type, Object message) {
+            this.type = type;
+            this.message = message;
+        }
+    }
+
+    private static class OnlineMembersMessage {
+        public Set<ProjectMemberDto> members;
+
+        public OnlineMembersMessage(Set<ProjectMemberDto> members) {
+            this.members = members;
+        }
+    }
+
+    private void startPeriodicUpdate() {
+        scheduler.scheduleAtFixedRate(this::sendOnlineMembers, 1, 1, TimeUnit.MINUTES);
     }
 }
