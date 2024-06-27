@@ -3,7 +3,8 @@
   background-color: #b8b8b8;
   border-radius: 10px;
   padding: 8px 15px;
-  max-height: 230px; /* Ajuste conforme necessário */
+  max-height: 230px;
+  height: 230px; /* Ajuste conforme necessário */
   overflow-y: auto;
   width: 100%; /* Ajuste conforme necessário */
   max-width: 500px; /* Ajuste conforme necessário */

@@ -30,6 +30,8 @@ export default function ProjectsTable({
   const NUMBER_OF_PROJECTS_PAGE = 8;
   const userType = Cookies.get("user-userType");
   const navigate = useNavigate();
+  const defaultPhoto =
+    "https://cdn.pixabay.com/photo/2016/03/29/08/48/project-1287781_1280.jpg";
 
   function statusColor(status) {
     if (status === "PLANNING") {
@@ -150,48 +152,55 @@ export default function ProjectsTable({
           </tr>
         ) : (
           <tbody id="table-projects-body">
-            {projects.map((project, index) => (
-              <tr
-                onClick={() =>
-                  navigate(`/project/${project.systemProjectName}/info`)
-                }
-                key={index}
-                className={project.member && "is-member-project"}
-              >
-                <td
-                  style={{
-                    width: "40px",
-                    textAlign: "end",
-                    paddingRight: "15px",
-                  }}
-                >
-                  <img
-                    src={project.photo}
-                    alt="project_img"
-                    className="project-img-table"
-                  />
-                </td>
-                <td
-                  style={{
-                    fontWeight: "bold",
-                    paddingLeft: "0px",
-                    textAlign: "start",
-                  }}
-                >
-                  {project.name}
-                </td>
+            {projects.map(
+              (project, index) => (
+                console.log(project),
+                (
+                  <tr
+                    onClick={() =>
+                      navigate(`/project/${project.systemProjectName}/info`)
+                    }
+                    key={index}
+                    className={project.member && "is-member-project"}
+                  >
+                    <td
+                      style={{
+                        width: "40px",
+                        textAlign: "end",
+                        paddingRight: "15px",
+                      }}
+                    >
+                      <img
+                        src={
+                          project.photo !== null ? project.photo : defaultPhoto
+                        }
+                        alt="project_img"
+                        className="project-img-table"
+                      />
+                    </td>
+                    <td
+                      style={{
+                        fontWeight: "bold",
+                        paddingLeft: "0px",
+                        textAlign: "start",
+                      }}
+                    >
+                      {project.name}
+                    </td>
 
-                <td style={{ color: statusColor(project.status) }}>
-                  {formatStatus(project.status)}
-                </td>
-                <td>{formatLab(project.lab)}</td>
-                <td>{project.startDate}</td>
-                <td>{project.finalDate}</td>
-                <td>
-                  {project.numberOfMembers} / {project.maxMembers}{" "}
-                </td>
-              </tr>
-            ))}
+                    <td style={{ color: statusColor(project.status) }}>
+                      {formatStatus(project.status)}
+                    </td>
+                    <td>{formatLab(project.lab)}</td>
+                    <td>{project.startDate}</td>
+                    <td>{project.finalDate}</td>
+                    <td>
+                      {project.numberOfMembers} / {project.maxMembers}{" "}
+                    </td>
+                  </tr>
+                )
+              )
+            )}
             {Array(NUMBER_OF_PROJECTS_PAGE - projects.length)
               .fill()
               .map((index) => (

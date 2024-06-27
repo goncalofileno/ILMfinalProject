@@ -1,0 +1,126 @@
+.user-card-banner {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding-left: 10px;
+}
+
+.user-card-img {
+  border: solid black 1px;
+  width: 80%;
+  aspect-ratio: 1/1;
+  border-radius: 50%;
+}
+
+.div-image-user-card {
+  height: 100%;
+  width: 30%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.div-user-card-name {
+  display: flex;
+  flex-direction: column;
+  width: 70%;
+  height: 100%;
+}
+
+.banner-user-name {
+  padding-left: 5px;
+  display: flex;
+  font-size: 18px;
+  font-weight: 500;
+  height: 70%;
+  align-items: flex-end;
+}
+
+.banner-user-lab {
+  display: flex;
+  justify-content: flex-end;
+  font-size: 16px;
+}
+
+.user-card-body {
+  padding: 7px;
+  height: 50%;
+  max-height: 50%;
+  overflow-y: auto;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.user-card-body::-webkit-scrollbar {
+  width: 7px;
+  height: 6px; /* Espessura da barra de rolagem */
+}
+
+.user-card-body::-webkit-scrollbar-track {
+  background: var(--tertiary-color); /* Cor do trilho da barra de rolagem */
+  border-radius: 8px;
+}
+
+.user-card-body::-webkit-scrollbar-thumb {
+  background: #888; /* Cor da barra de rolagem */
+  border-radius: 8px; /*Arredonda os cantos*/
+}
+
+.user-card-body::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Cor da barra de rolagem ao passar o mouse */
+}
+.user-card-footer {
+  height: 20%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.user-card-footer button {
+  border: none;
+  padding-top: 7px;
+  padding-bottom: 7px;
+  cursor: pointer;
+  border-radius: 10px;
+  width: 33%;
+}
+
+.skill-div-false {
+  padding: 2px 5px;
+  border-radius: 5px;
+  background-color: #f39d12ad;
+  color: white;
+  height: 30%;
+  margin: 3px;
+  display: flex;
+  flex-direction: row;
+}
+
+.skill-div-true {
+  padding: 2px 5px;
+  border-radius: 5px;
+  background-color: #f39c12;
+  color: white;
+  height: 30%;
+  margin: 3px;
+  display: flex;
+  flex-direction: row;
+}
+
+.skill-div-col1 {
+  height: 100%;
+  font-size: 12px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  white-space: nowrap;
+}
+.skill-div-col2 {
+  height: 100%;
+
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  font-size: 9px;
+}

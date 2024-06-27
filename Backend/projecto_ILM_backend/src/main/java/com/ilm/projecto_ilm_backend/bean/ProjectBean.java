@@ -3,12 +3,10 @@ package com.ilm.projecto_ilm_backend.bean;
 import com.ilm.projecto_ilm_backend.ENUMS.*;
 import com.ilm.projecto_ilm_backend.dao.*;
 import com.ilm.projecto_ilm_backend.dto.interest.InterestDto;
-import com.ilm.projecto_ilm_backend.dto.lab.LabDto;
 import com.ilm.projecto_ilm_backend.dto.mail.MailDto;
 import com.ilm.projecto_ilm_backend.dto.project.*;
 import com.ilm.projecto_ilm_backend.dto.skill.SkillDto;
 import com.ilm.projecto_ilm_backend.entity.*;
-import com.ilm.projecto_ilm_backend.mapper.LabMapper;
 import com.ilm.projecto_ilm_backend.security.exceptions.NoProjectsForInviteeException;
 import com.ilm.projecto_ilm_backend.security.exceptions.NoProjectsToInviteException;
 import com.ilm.projecto_ilm_backend.security.exceptions.UnauthorizedAccessException;
@@ -17,7 +15,6 @@ import jakarta.ejb.Singleton;
 import jakarta.ejb.Startup;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import jakarta.ws.rs.core.Response;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -28,7 +25,6 @@ import java.io.IOException;
 import java.text.Normalizer;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.List;
@@ -79,6 +75,7 @@ public class ProjectBean {
     private static final int NUMBER_OF_MYPROJECTS_PER_PAGE=6;
     private static final int NUMBER_OF_PROJECTS_PER_PAGE=8;
     private int numberOfProjectsToCreate = 20;
+    private static final int MAX_PROJECT_MEMBERS_DEFAULT = 4;
 
     @Transactional
     public void createDefaultProjectsIfNotExistent() {
@@ -140,7 +137,7 @@ public class ProjectBean {
         }
     }
 
-    private String projectSystemNameGenerator(String originalName) {
+    public String projectSystemNameGenerator(String originalName) {
         // Convert to lower case
         String lowerCaseName = originalName.toLowerCase();
 
@@ -813,22 +810,26 @@ public class ProjectBean {
     }
 
 
-    public boolean createProject(ProjectCreationInfoDto projectCreationInfoDto, String sessionId){
+    public boolean createProject(ProjectCreationDto projectCreationInfoDto, String sessionId){
+
+        LocalDateTime localStartDateTime=convertStringToLocalDateTime(projectCreationInfoDto.getStartDate());
+        LocalDateTime localEndDateTime=convertStringToLocalDateTime(projectCreationInfoDto.getEndDate());
+
+        if(localStartDateTime.isAfter(localEndDateTime)) return false;
+        if(localStartDateTime.isBefore(LocalDateTime.now())) return false;
+
         ProjectEntity project = new ProjectEntity();
+        project.setStartDate(localStartDateTime);
+        project.setEndDate(localEndDateTime);
         project.setName(projectCreationInfoDto.getName());
         project.setSystemName(projectSystemNameGenerator(project.getName()));
         project.setDescription(projectCreationInfoDto.getDescription());
         project.setStatus(StateProjectENUM.PLANNING);
         project.setMotivation(projectCreationInfoDto.getMotivation());
         project.setCreatedAt(LocalDateTime.now());
+        project.setMaxMembers(MAX_PROJECT_MEMBERS_DEFAULT);
 
         project.setLab(labDao.findbyLocal(WorkLocalENUM.valueOf(projectCreationInfoDto.getLab())));
-
-        LocalDateTime localStartDateTime=convertStringToLocalDateTime(projectCreationInfoDto.getStartDate());
-        LocalDateTime localEndDateTime=convertStringToLocalDateTime(projectCreationInfoDto.getEndDate());
-
-        project.setStartDate(localStartDateTime);
-        project.setEndDate(localEndDateTime);
 
         String keywordsList=null;
 
@@ -845,7 +846,10 @@ public class ProjectBean {
         for (SkillDto skillName : projectCreationInfoDto.getSkills()) {
             SkillEntity skill = skillDao.findSkillByName(skillName.getName());
             if (skill == null) {
-                return false;
+                skill = new SkillEntity();
+                skill.setName(skillName.getName());
+                skill.setType(SkillTypeENUM.valueOf(skillName.getType()));
+                skillDao.persist(skill);
             }
             skills.add(skill);
         }
@@ -889,7 +893,7 @@ public class ProjectBean {
             byte[] imageBytes = Base64.getDecoder().decode(base64Image);
 
             // Save the original image to the user's specific directory
-            String directoryPath = imgsPath.IMAGES_PROJECTS_PATH + "/" + projectEntity.getName();
+            String directoryPath = imgsPath.IMAGES_PROJECTS_PATH + "/" + projectEntity.getSystemName();
 
             File directory = new File(directoryPath);
             if (!directory.exists()) {
@@ -902,21 +906,20 @@ public class ProjectBean {
             String format = getImageFormat(originalImage);
 
             // Save the original image
-            BufferedImage profileImage= resizeImage(originalImage, 1300, 200);
-            String profileFilePath = directoryPath + "/profile_picture." + format;
-            ImageIO.write(profileImage, format, new File(profileFilePath));
+            String originalFilePath = directoryPath + "/project_profile_picture." + format;
+            ImageIO.write(originalImage, format, new File(originalFilePath));
 
             // Save resized images
             BufferedImage avatarImage = resizeImage(originalImage, 280, 80); // Example size for avatar
-            String avatarFilePath = directoryPath + "/card_picture." + format;
+            String avatarFilePath = directoryPath + "/project_card_picture." + format;
             ImageIO.write(avatarImage, format, new File(avatarFilePath));
 
 
             // Construct the URLs
             long timestamp = System.currentTimeMillis();
-            String baseUrl = "http://localhost:8080/images/" + projectEntity.getSystemName();
-            String originalUrl = baseUrl + "/profile_picture." + format + "?t=" + timestamp;
-            String cardUrl = baseUrl + "/profile_picture_avatar." + format + "?t=" + timestamp;
+            String baseUrl = "http://localhost:8080/photos/projects/" + projectEntity.getSystemName();
+            String originalUrl = baseUrl + "/project_profile_picture." + format + "?t=" + timestamp;
+            String cardUrl = baseUrl + "/project_card_picture." + format + "?t=" + timestamp;
 
             projectEntity.setPhoto(originalUrl);// Set URL for original image
             projectEntity.setCardPhoto(cardUrl); // Set URL for avatar

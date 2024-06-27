@@ -45,7 +45,7 @@ import com.ilm.projecto_ilm_backend.ENUMS.ConvertersENUM.StateProjectEnumConvert
 
 @NamedQuery(
         name = "Project.getMyProjectsInfo",
-        query = "SELECT p.id, p.name, p.lab, p.status, FUNCTION('DATE', p.startDate), FUNCTION('DATE', p.endDate), p.maxMembers,p.photo, up.type, p.systemName " +
+        query = "SELECT p.id, p.name, p.lab, p.status, FUNCTION('DATE', p.startDate), FUNCTION('DATE', p.endDate), p.maxMembers,p.cardPhoto, up.type, p.systemName " +
                 "FROM ProjectEntity p LEFT JOIN UserProjectEntity up ON p.id = up.project.id " +
                 "WHERE (:lab IS NULL OR p.lab = :lab) " +
                 "AND (:status IS NULL OR p.status = :status) " +
@@ -63,6 +63,15 @@ import com.ilm.projecto_ilm_backend.ENUMS.ConvertersENUM.StateProjectEnumConvert
                 "AND (up.type = 0 OR up.type = 1 OR up.type = 2 OR up.type = 3 OR up.type = 4) ")
 
 @NamedQuery(name = "Project.countProjects", query = "SELECT COUNT(p) FROM ProjectEntity p")
+@NamedQuery(
+        name = "Project.getSkillsBySystemName",
+        query = "SELECT s.name FROM ProjectEntity p JOIN p.skillInProject s WHERE p.systemName = :projectSystemName"
+)
+
+@NamedQuery(
+        name = "Project.isSkillInProject",
+        query = "SELECT COUNT(s) > 0 FROM ProjectEntity p JOIN p.skillInProject s WHERE p.systemName = :projectSystemName AND s.name = :skillName"
+)
 
 public class ProjectEntity implements Serializable {
 

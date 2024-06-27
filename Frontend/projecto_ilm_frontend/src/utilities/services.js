@@ -1312,6 +1312,38 @@ async function getTasksSuggestions(sessionId, systemProjectName) {
   }
 }
 
+async function getUserProjectCreation(
+  systemProjectName,
+  rejectedUsers,
+  currentPage,
+  lab,
+  keyword
+) {
+  let RejectedUsersDto = {
+    rejectedUsersId: rejectedUsers,
+  };
+
+  try {
+    const response = await fetch(
+      `${baseURL}user/userProjectCreation/${systemProjectName}?page=${currentPage}&lab=${lab}&keyword=${keyword}`,
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(RejectedUsersDto),
+      }
+    );
+
+    return response;
+  } catch (error) {
+    console.error("Error during creating profile:", error);
+    throw error;
+  }
+}
+
 export {
   registerUser,
   getInterests,
@@ -1372,4 +1404,5 @@ export {
   getTasksSuggestions,
   createProject,
   uploadProjectPhoto,
+  getUserProjectCreation,
 };

@@ -279,7 +279,7 @@ const ProjectLogsPage = () => {
         <ProjectTabs
           typeOfUserSeingProject={logsAndNotes.typeOfUserSeingPage}
         />
-        <Container style={{ height: "92%" }}>
+        <Container style={{ height: "91%" }}>
           <Row>
             <Col>
               <h1>{logsAndNotes.projectName}</h1>
@@ -295,7 +295,9 @@ const ProjectLogsPage = () => {
           <Row style={{ height: "80%" }}>
             <Col md={6} style={{ height: "100%" }}>
               <Card style={{ height: "100%" }}>
-                <Card.Header>Logs</Card.Header>
+                <Card.Header>
+                  <h4>Logs</h4>
+                </Card.Header>
                 <Card.Body className="logs-list">
                   <ListGroup variant="flush">
                     {sortedLogs.map((log) => (
@@ -342,7 +344,7 @@ const ProjectLogsPage = () => {
                 >
                   <Row style={{ height: "100%" }}>
                     <Col sm={9} style={{ height: "100%" }}>
-                      <div>Notes</div>
+                      <h4>Notes</h4>
                       <div
                         style={{
                           height: "95%",

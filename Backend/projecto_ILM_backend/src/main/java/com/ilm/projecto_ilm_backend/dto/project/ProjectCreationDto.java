@@ -3,9 +3,8 @@ package com.ilm.projecto_ilm_backend.dto.project;
 import com.ilm.projecto_ilm_backend.dto.interest.InterestDto;
 import com.ilm.projecto_ilm_backend.dto.skill.SkillDto;
 import java.util.List;
-import java.util.Map;
 
-public class ProjectCreationInfoDto {
+public class ProjectCreationDto {
 
     private String name;
     private String description;
@@ -16,7 +15,7 @@ public class ProjectCreationInfoDto {
     private String startDate;
     private String endDate;
 
-    public ProjectCreationInfoDto() {
+    public ProjectCreationDto() {
     }
 
     public String getName() {

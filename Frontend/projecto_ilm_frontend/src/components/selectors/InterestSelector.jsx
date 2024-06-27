@@ -120,7 +120,7 @@ const InterestSelector = ({
   return (
     <Container>
       <Form.Group controlId="formInterests">
-        <Form.Label>{label}</Form.Label>
+        <Form.Label style={{ fontWeight: "500" }}>{label}</Form.Label>
         <InputGroup className="mb-3">
           <Form.Control
             type="text"

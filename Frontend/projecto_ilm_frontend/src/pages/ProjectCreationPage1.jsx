@@ -13,6 +13,7 @@ import {
 import { formatLab } from "../utilities/converters";
 import defaultPhoto from "../resources/avatares/defaultProjectAvatar.jpg";
 import StandardModal from "../components/modals/StandardModal";
+import { useNavigate } from "react-router-dom";
 
 export default function ProjectCreationPage1() {
   const [selectedInterests, setSelectedInterests] = useState([]);
@@ -26,6 +27,11 @@ export default function ProjectCreationPage1() {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [preview, setPreview] = useState(null);
+  const [modalActive, setModalActive] = useState(false);
+  const [modalType, setModalType] = useState("success");
+  const [modalMessage, setModalMessage] = useState("");
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     getLabsWithSessionId().then((response) => {
@@ -50,35 +56,61 @@ export default function ProjectCreationPage1() {
       endDate !== "" &&
       selectedInterests.length > 0
     ) {
-      if (selectedFile == null) {
-        setSelectedFile(defaultPhoto);
-      }
-      const project = {
-        name: projectName,
-        lab: selectedLab,
-        description: description,
-        motivation: motivation,
-        keywords: selectedInterests,
-        skills: selectedSkills,
-        startDate: startDate,
-        endDate: endDate,
-      };
+      if (startDate < endDate) {
+        if (startDate > new Date().toISOString().split("T")[0]) {
+          const project = {
+            name: projectName,
+            lab: selectedLab,
+            description: description,
+            motivation: motivation,
+            keywords: selectedInterests,
+            skills: selectedSkills,
+            startDate: startDate,
+            endDate: endDate,
+          };
 
-      createProject(project).then((response) => {
-        if (response.status === 200) {
-          uploadProjectPhoto(selectedFile, projectName).then((response) => {
+          createProject(project).then((response) => {
             if (response.status === 200) {
-              console.log("Project created successfully");
+              response.json().then((data) => {
+                if (selectedFile !== null) {
+                  uploadProjectPhoto(selectedFile, projectName).then(() => {
+                    setModalMessage("Project created successfully");
+                    setModalType("success");
+                    setModalActive(true);
+
+                    setTimeout(() => {
+                      navigate(`/create-project/${data.systemName}/members`);
+                    }, 1200);
+                  });
+                } else {
+                  setModalMessage("Project created successfully");
+                  setModalType("success");
+                  setModalActive(true);
+                  setTimeout(() => {
+                    navigate(`/create-project/${data.systemName}/members`);
+                  }, 1200);
+                }
+              });
             } else {
-              console.log("Error while uploading project photo");
+              setModalMessage("Error while creating project");
+              setModalType("danger");
+              setModalActive(true);
             }
           });
         } else {
-          console.log("Error while creating project");
+          setModalMessage("Start date must be after today's date");
+          setModalType("danger");
+          setModalActive(true);
         }
-      });
+      } else {
+        setModalMessage("End date must be after start date");
+        setModalType("danger");
+        setModalActive(true);
+      }
     } else {
-      console.log("missing fields");
+      setModalMessage("Please fill all the fields");
+      setModalType("danger");
+      setModalActive(true);
     }
   };
 
@@ -94,6 +126,12 @@ export default function ProjectCreationPage1() {
   return (
     <>
       <AppNavbar />
+      <StandardModal
+        modalType={modalType}
+        message={modalMessage}
+        modalActive={modalActive}
+        setModalActive={setModalActive}
+      ></StandardModal>
       <div className="ilm-pageb">
         <h1 className="page-title">
           <span className="app-slogan-1">Project </span>
@@ -237,22 +275,34 @@ export default function ProjectCreationPage1() {
           </Col>
         </Row>
         <Row style={{ marginRight: "0px" }}>
-          <Col sm={7}></Col>
-          <Col sm={4}>
-            {projectName !== "" &&
-              description !== "" &&
-              motivation !== "" &&
-              startDate !== "" &&
-              endDate !== "" &&
-              selectedInterests.length > 0 && (
-                <button
-                  className="submit-button"
-                  id="submit-creation-project-btn"
-                  onClick={handleClick}
-                >
-                  Create Project
-                </button>
-              )}
+          <Col sm={5}></Col>
+          <Col sm={6}>
+            <div style={{ display: "flex", flexDirection: "row", gap: "7%" }}>
+              <button
+                className="secondary-button"
+                style={{ width: "20%" }}
+                onClick={() => navigate("/projects")}
+              >
+                Cancel
+              </button>
+              <button
+                className="submit-button"
+                id="submit-creation-project-btn"
+                onClick={handleClick}
+                disabled={
+                  projectName !== "" &&
+                  description !== "" &&
+                  motivation !== "" &&
+                  startDate !== "" &&
+                  endDate !== "" &&
+                  selectedInterests.length > 0
+                    ? false
+                    : true
+                }
+              >
+                Create Project
+              </button>
+            </div>
           </Col>
           <Col sm={1}></Col>
         </Row>

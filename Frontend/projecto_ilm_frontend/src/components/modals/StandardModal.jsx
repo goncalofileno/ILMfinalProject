@@ -18,8 +18,12 @@ export default function StandardModal({
   }, [modalActive]);
 
   return (
-    <Alert variant={modalType} className="standard-modal">
-      {message}
-    </Alert>
+    <>
+      {modalActive && (
+        <Alert variant={modalType} className="standard-modal">
+          {message}
+        </Alert>
+      )}
+    </>
   );
 }
