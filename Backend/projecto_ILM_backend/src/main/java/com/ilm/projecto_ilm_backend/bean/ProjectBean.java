@@ -485,6 +485,14 @@ public class ProjectBean {
         }).collect(Collectors.toList());
     }
 
+    public List<ProjectMemberDto> getAllProjectMembers(int projectId) {
+        List<UserProjectEntity> membersUserProjects = userProjectDao.findAllTypeOfMembersByProjectId(projectId);
+        return membersUserProjects.stream().map(userProject -> {
+            UserEntity user = userProject.getUser();
+            return createProjectMemberDto(user, userProject.getType());
+        }).collect(Collectors.toList());
+    }
+
     private ProjectMemberDto createProjectMemberDto(UserEntity user, UserInProjectTypeENUM type) {
         ProjectMemberDto member = new ProjectMemberDto();
         member.setId(user.getId());
@@ -911,6 +919,37 @@ public class ProjectBean {
 
         return "Application rejected successfully";
     }
+
+    public ProjectMembersPageDto getProjectMembersPage(int currentUserId, String systemProjectName){
+        ProjectEntity project = projectDao.findBySystemName(systemProjectName);
+        UserEntity currentUser = userDao.findById(currentUserId);
+        if (project == null) {
+            throw new IllegalArgumentException("Project not found");
+        }
+        if (!userProjectDao.isUserCreatorOrManager(currentUserId, project.getId())) {
+            throw new UnauthorizedAccessException("Only the creator or a manager can view project members");
+        }
+        List<ProjectMemberDto> members = getAllProjectMembers(project.getId());
+
+        StateProjectENUM projectState = project.getStatus();
+
+        String projectName = project.getName();
+
+        List<SkillDto> skills = getProjectSkills(project);
+
+        UserInProjectTypeENUM userSeinfProject = getUserTypeInProject(currentUserId, project.getId());
+
+        ProjectMembersPageDto projectMembersPageDto = new ProjectMembersPageDto();
+        projectMembersPageDto.setProjectMembers(members);
+        projectMembersPageDto.setProjectState(projectState);
+        projectMembersPageDto.setProjectName(projectName);
+        projectMembersPageDto.setProjectSkills(skills);
+        projectMembersPageDto.setUserSeingProject(userSeinfProject);
+
+        return projectMembersPageDto;
+    }
+
+
 
 
 }

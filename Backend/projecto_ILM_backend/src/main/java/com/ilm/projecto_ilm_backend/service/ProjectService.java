@@ -5,6 +5,7 @@ import com.ilm.projecto_ilm_backend.ENUMS.StateProjectENUM;
 import com.ilm.projecto_ilm_backend.ENUMS.UserInProjectTypeENUM;
 import com.ilm.projecto_ilm_backend.bean.ProjectBean;
 import com.ilm.projecto_ilm_backend.bean.UserBean;
+import com.ilm.projecto_ilm_backend.dto.project.ProjectMembersPageDto;
 import com.ilm.projecto_ilm_backend.dto.project.ProjectProfileDto;
 import com.ilm.projecto_ilm_backend.dto.project.ProjectProfilePageDto;
 import com.ilm.projecto_ilm_backend.dto.project.ProjectTableInfoDto;
@@ -425,7 +426,6 @@ public class ProjectService {
         }
     }
 
-    //Serviço que recebe um id de um user, um systemprojectName e uma boleana que indica se o user aceita ou rejeita a candidatura ao projecto, e uma reason para dar ao user em caso de rejeição
     @POST
     @Path("/respondToApplication")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -456,6 +456,32 @@ public class ProjectService {
             return Response.status(Response.Status.UNAUTHORIZED).entity(Collections.singletonMap("message", "Unauthorized access")).build();
         }
     }
+
+    @GET
+    @Path("/getProjectMembersPage")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getProjectMembersPage(@CookieParam("session-id") String sessionId, @QueryParam("projectSystemName") String projectSystemName) throws UnknownHostException {
+        String clientIP = InetAddress.getLocalHost().getHostAddress();
+        logger.info("Received a request to get project members page from IP address: " + clientIP);
+
+        if (databaseValidator.checkSessionId(sessionId)) {
+            try {
+                int userId = userBean.getUserBySessionId(sessionId).getId();
+                if (projectBean.isUserCreatorOrManager(userId, projectSystemName)) {
+                    return Response.ok(projectBean.getProjectMembersPage(userId, projectSystemName)).build();
+                } else {
+                    return Response.status(Response.Status.FORBIDDEN).entity(Collections.singletonMap("message", "User does not have permission to view project members.")).build();
+                }
+            } catch (Exception e) {
+                logger.error("An error occurred while getting project members page: " + e.getMessage() + " from IP address: " + clientIP);
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(Collections.singletonMap("message", "An error occurred while getting project members page")).build();
+            }
+        } else {
+            return Response.status(Response.Status.UNAUTHORIZED).entity(Collections.singletonMap("message", "Unauthorized access")).build();
+        }
+    }
+
+
 
 
 
