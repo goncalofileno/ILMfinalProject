@@ -3,6 +3,8 @@ import "./NotificationModal.css";
 import useNotificationStore from "../../stores/useNotificationStore";
 import { useNavigate } from "react-router-dom";
 import NotificationIcon from "../../resources/icons/other/notification.jpg";
+import Cookies from "js-cookie";
+import { markNotificationAsClicked } from "../../utilities/services";
 
 export default function NotificationModal({ onClose, modalRef }) {
   const { notifications, loadMoreNotifications, hasMoreNotifications } =
@@ -68,8 +70,8 @@ export default function NotificationModal({ onClose, modalRef }) {
     }
   };
 
-  const handleNotificationClick = (notification) => {
-    const { type, projectSystemName, systemUserName } = notification;
+  const handleNotificationClick = async (notification) => {
+    const { type, projectSystemName, systemUserName, id, notificationIds } = notification;
     switch (type) {
       case "APPLIANCE_REJECTED":
       case "APPLIANCE_ACCEPTED":
@@ -95,6 +97,16 @@ export default function NotificationModal({ onClose, modalRef }) {
       default:
         break;
     }
+
+    // Marcar notificação como clicada
+    const sessionId = Cookies.get("session-id");
+
+    // Verifique se a notificação possui um array de IDs agrupados
+    if (notificationIds) {
+      await markNotificationAsClicked(sessionId, notificationIds);
+    } else {
+      await markNotificationAsClicked(sessionId, [id]);
+    }
   };
 
   const groupedNotifications = notifications.reduce((acc, notification) => {
@@ -106,8 +118,13 @@ export default function NotificationModal({ onClose, modalRef }) {
       );
       if (existing) {
         existing.messageCount = (existing.messageCount || 1) + 1;
+        existing.notificationIds.push(notification.id);
       } else {
-        acc.push({ ...notification, messageCount: 1 });
+        acc.push({
+          ...notification,
+          messageCount: 1,
+          notificationIds: [notification.id],
+        });
       }
     } else {
       acc.push(notification);

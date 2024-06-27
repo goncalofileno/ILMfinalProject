@@ -17,6 +17,7 @@ const ProjectChatPage = () => {
   const [messageContent, setMessageContent] = useState("");
   const [projectMembers, setProjectMembers] = useState([]);
   const chatBodyRef = useRef(null);
+  const userSystemUsername = Cookies.get("user-systemUsername");
 
   useEffect(() => {
     const fetchChatPage = async () => {
@@ -101,7 +102,7 @@ const ProjectChatPage = () => {
                           </Col>
                           <Col>
                             <div>
-                              <strong>{member.name}</strong>
+                              <strong>{member.systemUsername === userSystemUsername ? "You" : member.name}</strong>
                               <div className="text-muted">{member.type}</div>
                             </div>
                           </Col>
@@ -131,8 +132,7 @@ const ProjectChatPage = () => {
                       <li className="list-group-item" key={index}>
                         <div
                           className={`message-container ${
-                            message.systemUsername ===
-                            Cookies.get("user-systemUsername")
+                            message.systemUsername === userSystemUsername
                               ? "right"
                               : "left"
                           }`}
@@ -141,21 +141,19 @@ const ProjectChatPage = () => {
                             src={message.photo}
                             alt={message.name}
                             className={`message-avatar ${
-                              message.systemUsername ===
-                              Cookies.get("user-systemUsername")
+                              message.systemUsername === userSystemUsername
                                 ? "right-avatar"
                                 : "left-avatar"
                             }`}
                           />
                           <div
                             className={`message-content ${
-                              message.systemUsername ===
-                              Cookies.get("user-systemUsername")
+                              message.systemUsername === userSystemUsername
                                 ? "right"
                                 : "left"
                             }`}
                           >
-                            <strong>{message.name}</strong>: {message.message}
+                            <strong>{message.systemUsername === userSystemUsername ? "You" : message.name}</strong>: {message.message}
                             <div className="text-muted message-date">
                               {formatDate(message.date)}
                             </div>

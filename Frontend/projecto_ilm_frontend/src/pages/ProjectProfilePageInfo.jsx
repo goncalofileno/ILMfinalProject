@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import {
   Alert,
   Card,
@@ -35,6 +35,7 @@ import Cookies from "js-cookie";
 
 const ProjectProfilePageInfo = () => {
   const { systemProjectName } = useParams();
+  const navigate = useNavigate();
   const [projectInfo, setProjectInfo] = useState(null);
   const [error, setError] = useState(null);
   const [selectedState, setSelectedState] = useState("");
@@ -43,6 +44,7 @@ const ProjectProfilePageInfo = () => {
   const [reason, setReason] = useState("");
   const [showReasonModal, setShowReasonModal] = useState(false);
   const sessionId = Cookies.get("session-id");
+  const userSystemUsername = Cookies.get("user-systemUsername");
 
   useEffect(() => {
     const fetchProjectInfo = async () => {
@@ -458,7 +460,7 @@ const ProjectProfilePageInfo = () => {
                             roundedCircle
                             className="creator-profile-picture"
                           />
-                          {projectInfo.creator.name}
+                          {projectInfo.creator.systemUsername === userSystemUsername ? "You" : projectInfo.creator.name}
                         </Link>
                       </Card.Text>
                       {isCreatorOrManager && (

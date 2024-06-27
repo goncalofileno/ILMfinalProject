@@ -68,10 +68,15 @@ public class NotificationDao extends AbstractDao<NotificationEntity> {
 
     @Transactional
     public int countUnreadByUserId(int userId) {
-        Long count = em.createNamedQuery("NotificationEntity.countUnreadByUserId", Long.class)
+        Long countNonProjectMessages = em.createNamedQuery("NotificationEntity.countNonProjectMessageUnreadByUserId", Long.class)
                 .setParameter("userId", userId)
                 .getSingleResult();
-        return count.intValue();
+
+        Long countDistinctProjectMessages = em.createNamedQuery("NotificationEntity.countDistinctProjectMessageUnreadByUserId", Long.class)
+                .setParameter("userId", userId)
+                .getSingleResult();
+
+        return countNonProjectMessages.intValue() + countDistinctProjectMessages.intValue();
     }
 
     @Transactional
@@ -88,5 +93,16 @@ public class NotificationDao extends AbstractDao<NotificationEntity> {
                 .setParameter("receptorId", receptorId)
                 .setParameter("type", type)
                 .getSingleResult();
+    }
+
+    @Transactional
+    public void markMessageNotificationClicked(int userId, List<Integer> notificationIds) {
+        for (Integer notificationId : notificationIds) {
+            NotificationEntity notification = findById(notificationId);
+            if (notification.getReceptor().getId() == userId) {
+                notification.setMessageNotificationClicked(true);
+                em.merge(notification);
+            }
+        }
     }
 }

@@ -77,4 +77,29 @@ public class NotificationService {
             return Response.status(Response.Status.UNAUTHORIZED).entity("Unauthorized access").build();
         }
     }
+
+    //Serviço que recebe um sessionId e uma lista de ids de notificações e marca essas notificações como messageNotificationClicked a true
+    @PUT
+    @Path("/markMessageNotificationClicked")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response markMessageNotificationClicked(@CookieParam("session-id") String sessionId, List<Integer> notificationIds) throws UnknownHostException {
+        String clientIP = InetAddress.getLocalHost().getHostAddress();
+        logger.info("Received a request to mark message notification clicked from IP address: " + clientIP);
+
+        if (databaseValidator.checkSessionId(sessionId)) {
+            try {
+                int userId = sessionDao.findUserIdBySessionId(sessionId);
+                logger.info("Marking message notification clicked from IP address: " + clientIP + " with userId: " + userId + " and notificationIds: " + notificationIds);
+                notificationBean.markMessageNotificationClicked(userId, notificationIds);
+                logger.info("Message notification clicked marked successfully from IP address: " + clientIP);
+                return Response.ok().build();
+            } catch (Exception e) {
+                logger.error("An error occurred while marking message notification clicked: " + e.getMessage() + " from IP address: " + clientIP);
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("An error occurred while marking message notification clicked").build();
+            }
+        } else {
+            logger.error("Unauthorized access from IP address: " + clientIP);
+            return Response.status(Response.Status.UNAUTHORIZED).entity("Unauthorized access").build();
+        }
+    }
 }

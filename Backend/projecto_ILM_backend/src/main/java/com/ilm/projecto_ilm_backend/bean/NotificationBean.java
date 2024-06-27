@@ -53,6 +53,7 @@ public class NotificationBean {
         notification.setSendDate(LocalDateTime.now());
         notification.setProjectSystemName(projectDao.findById(projectId).getSystemName());
         notification.setReceptor(userDao.findById(receptorId));
+        notification.setMessageNotificationClicked(false);
 
         if (projectStatus != null) {
             notification.setProjectStatus(projectStatus);
@@ -67,6 +68,7 @@ public class NotificationBean {
     }
 
     public List<NotificationDto> getUserNotifications(int userId, int page) {
+
         List<NotificationEntity> unreadNotifications = notificationDao.findUnreadByUserId(userId);
         List<NotificationEntity> readNotifications = notificationDao.findReadByUserId(userId, page);
 
@@ -90,7 +92,6 @@ public class NotificationBean {
     public int getTotalUserNotifications(int userId) {
         return notificationDao.countAllByUserId(userId);
     }
-
 
     public int getUnreadNotificationCount(int userId) {
         return notificationDao.countUnreadByUserId(userId);
@@ -130,6 +131,7 @@ public class NotificationBean {
         notification.setUserName(userName);
         notification.setSystemUserName(systemUserName);
         notification.setReceptor(receptor);
+        notification.setMessageNotificationClicked(false);
         notificationDao.persist(notification);
         if(sessionDao.findSessionIdByUserId(receptor.getId()) != null) {
             MailWebSocket.sendProjectNotification(sessionDao.findSessionIdByUserId(receptor.getId()), toDto(notification));
@@ -146,6 +148,7 @@ public class NotificationBean {
         notification.setUserName(userName);
         notification.setSystemUserName(systemUserName);
         notification.setReceptor(receptor);
+        notification.setMessageNotificationClicked(false);
         notificationDao.persist(notification);
         if(sessionDao.findSessionIdByUserId(receptor.getId()) != null) {
             MailWebSocket.sendProjectNotification(sessionDao.findSessionIdByUserId(receptor.getId()), toDto(notification));
@@ -161,6 +164,7 @@ public class NotificationBean {
         notification.setUserName(userName);
         notification.setSystemUserName(systemUserName);
         notification.setReceptor(receptor);
+        notification.setMessageNotificationClicked(false);
         notificationDao.persist(notification);
         if(sessionDao.findSessionIdByUserId(receptor.getId()) != null) {
             MailWebSocket.sendInviteNotification(sessionDao.findSessionIdByUserId(receptor.getId()), toDto(notification));
@@ -178,6 +182,7 @@ public class NotificationBean {
         notification.setUserName(userName);
         notification.setSystemUserName(systemUserName);
         notification.setReceptor(receptor);
+        notification.setMessageNotificationClicked(false);
         notificationDao.persist(notification);
         if(sessionDao.findSessionIdByUserId(receptor.getId()) != null) {
             MailWebSocket.sendInviteAcceptedNotification(sessionDao.findSessionIdByUserId(receptor.getId()), toDto(notification));
@@ -193,6 +198,7 @@ public class NotificationBean {
         notification.setUserName(userName);
         notification.setSystemUserName(systemUserName);
         notification.setReceptor(receptor);
+        notification.setMessageNotificationClicked(false);
         notificationDao.persist(notification);
         if(sessionDao.findSessionIdByUserId(receptor.getId()) != null) {
             MailWebSocket.sendInviteRejectedNotification(sessionDao.findSessionIdByUserId(receptor.getId()), toDto(notification));
@@ -208,6 +214,7 @@ public class NotificationBean {
         notification.setProjectSystemName(projectSystemName);
         notification.setUserName(userName);
         notification.setReceptor(receptor);
+        notification.setMessageNotificationClicked(false);
         notificationDao.persist(notification);
         if(sessionDao.findSessionIdByUserId(receptor.getId()) != null) {
             MailWebSocket.sendTaskNotification(sessionDao.findSessionIdByUserId(receptor.getId()), toDto(notification));
@@ -223,6 +230,7 @@ public class NotificationBean {
         notification.setUserName(userName);
         notification.setSystemUserName(systemUserName);
         notification.setReceptor(receptor);
+        notification.setMessageNotificationClicked(false);
         notificationDao.persist(notification);
         if(sessionDao.findSessionIdByUserId(receptor.getId()) != null) {
             MailWebSocket.sendApplianceNotification(sessionDao.findSessionIdByUserId(receptor.getId()), toDto(notification));
@@ -237,6 +245,7 @@ public class NotificationBean {
         notification.setProjectSystemName(projectSystemName);
         notification.setUserName(userName);
         notification.setReceptor(receptor);
+        notification.setMessageNotificationClicked(false);
         notificationDao.persist(notification);
         if(sessionDao.findSessionIdByUserId(receptor.getId()) != null) {
             MailWebSocket.sendApplianceAcceptedNotification(sessionDao.findSessionIdByUserId(receptor.getId()), toDto(notification));
@@ -251,6 +260,7 @@ public class NotificationBean {
         notification.setProjectSystemName(projectSystemName);
         notification.setUserName(userName);
         notification.setReceptor(receptor);
+        notification.setMessageNotificationClicked(false);
         notificationDao.persist(notification);
         if(sessionDao.findSessionIdByUserId(receptor.getId()) != null) {
             MailWebSocket.sendApplianceRejectedNotification(sessionDao.findSessionIdByUserId(receptor.getId()), toDto(notification));
@@ -265,6 +275,7 @@ public class NotificationBean {
         notification.setProjectSystemName(projectSystemName);
         notification.setUserName(userName);
         notification.setReceptor(receptor);
+        notification.setMessageNotificationClicked(false);
         notificationDao.persist(notification);
         if(sessionDao.findSessionIdByUserId(receptor.getId()) != null) {
             MailWebSocket.sendRemovedNotification(sessionDao.findSessionIdByUserId(receptor.getId()), toDto(notification));
@@ -280,6 +291,7 @@ public class NotificationBean {
         notification.setUserName(userDao.findBySystemUsername(systemUserName).getFullName());
         notification.setSystemUserName(systemUserName);
         notification.setReceptor(receptor);
+        notification.setMessageNotificationClicked(false);
         notificationDao.persist(notification);
         if(sessionDao.findSessionIdByUserId(receptor.getId()) != null) {
             MailWebSocket.sendProjectMessageNotification(sessionDao.findSessionIdByUserId(receptor.getId()), toDto(notification));
@@ -288,5 +300,9 @@ public class NotificationBean {
 
     public String getSystemUsernameOfCreatorOfNotificationByReceptorAndType(int receptorId, NotificationTypeENUM type) {
         return notificationDao.findSystemUsernameOfCreatorByReceptorAndType(receptorId, type);
+    }
+
+    public void markMessageNotificationClicked(int userId, List<Integer> notificationIds) {
+        notificationDao.markMessageNotificationClicked(userId, notificationIds);
     }
 }

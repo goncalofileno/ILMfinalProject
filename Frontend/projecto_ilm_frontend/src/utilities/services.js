@@ -1317,6 +1317,31 @@ async function sendChatMessage(sessionId, projectSystemName, messageContent) {
   }
 }
 
+async function markNotificationAsClicked(sessionId, notificationIds) {
+  try {
+    const endpoint = `${baseURL}notification/markMessageNotificationClicked`;
+
+    const fetchResponse = await fetch(endpoint, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(notificationIds),
+    });
+
+    if (!fetchResponse.ok) {
+      const responseJson = await fetchResponse.json();
+      throw new Error(responseJson.message || "An error occurred");
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error marking notifications as clicked:", error);
+    return { error: error.message };
+  }
+}
+
 
 export {
   registerUser,
@@ -1377,5 +1402,6 @@ export {
   createNote,
   getTasksSuggestions,
   sendChatMessage,
-  getChatPage
+  getChatPage,
+  markNotificationAsClicked,
 };
