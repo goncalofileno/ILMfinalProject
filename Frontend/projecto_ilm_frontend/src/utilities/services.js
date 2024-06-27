@@ -1344,9 +1344,33 @@ async function getUserProjectCreation(
   }
 }
 
+async function addMembers(systemProjectName, projectCreationMembersDto) {
+  try {
+    const response = await fetch(
+      `${baseURL}project/members/${systemProjectName}`,
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(projectCreationMembersDto),
+      }
+    );
+
+    return response;
+  } catch (error) {
+    console.error("Error during creating profile:", error);
+    throw error;
+  }
+}
+
 async function getChatPage(sessionId, projectSystemName) {
   try {
-    const endpoint = `${baseURL}message/chatPage?projectSystemName=${encodeURIComponent(projectSystemName)}`;
+    const endpoint = `${baseURL}message/chatPage?projectSystemName=${encodeURIComponent(
+      projectSystemName
+    )}`;
     const fetchResponse = await fetch(endpoint, {
       method: "GET",
       headers: {
@@ -1371,7 +1395,9 @@ async function getChatPage(sessionId, projectSystemName) {
 
 async function sendChatMessage(sessionId, projectSystemName, messageContent) {
   try {
-    const endpoint = `${baseURL}message/sendMessage?projectSystemName=${encodeURIComponent(projectSystemName)}`;
+    const endpoint = `${baseURL}message/sendMessage?projectSystemName=${encodeURIComponent(
+      projectSystemName
+    )}`;
     const messageDto = {
       message: messageContent,
     };
@@ -1421,7 +1447,6 @@ async function markNotificationAsClicked(sessionId, notificationIds) {
     return { error: error.message };
   }
 }
-
 
 export {
   registerUser,
@@ -1480,7 +1505,6 @@ export {
   editResource,
   markAsDone,
   createNote,
-  getTasksSuggestions,
   createProject,
   uploadProjectPhoto,
   getUserProjectCreation,
@@ -1488,4 +1512,5 @@ export {
   sendChatMessage,
   getChatPage,
   markNotificationAsClicked,
+  addMembers,
 };

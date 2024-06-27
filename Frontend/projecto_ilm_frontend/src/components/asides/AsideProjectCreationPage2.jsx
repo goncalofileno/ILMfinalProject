@@ -14,6 +14,8 @@ export default function AsideProjectCreationPage2({
   rejectedUsers,
   setRejectedUsers,
   setGetUsersTrigger,
+  maxMembers,
+  setMaxMembers,
 }) {
   const [labs, setLabs] = useState([]);
 
@@ -54,6 +56,21 @@ export default function AsideProjectCreationPage2({
               </option>
             ))}
           </Form.Control>
+        </div>
+        <div className="div-control-form">
+          <Form.Label className="custom-label" style={{ color: "white" }}>
+            Max Members
+          </Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="4"
+            style={{ borderRadius: "10px", cursor: "text" }}
+            className="custom-focus"
+            value={maxMembers}
+            onChange={(e) => {
+              setMaxMembers(e.target.value);
+            }}
+          />
         </div>
         <div className="container-users-project">
           <div className="users-in-project-label">Users in Project:</div>

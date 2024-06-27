@@ -70,6 +70,7 @@ public class ProjectDao extends AbstractDao<ProjectEntity>{
         }
     }
 
+
     public ArrayList<HomeProjectDto> findAllNamesAndDescriptionsHome() {
         TypedQuery<Object[]> query = em.createNamedQuery("Project.findNameAndDescriptionHome", Object[].class);
         List<Object[]> results = query.getResultList();

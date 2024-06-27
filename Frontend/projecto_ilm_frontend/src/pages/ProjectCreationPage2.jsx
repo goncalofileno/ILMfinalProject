@@ -2,9 +2,10 @@ import AppNavbar from "../components/headers/AppNavbar";
 import AsideProjectCreationPage2 from "../components/asides/AsideProjectCreationPage2";
 import UserCard from "../components/cards/UserCard";
 import { Row, Col, InputGroup, Form, Button } from "react-bootstrap";
-import { getUserProjectCreation } from "../utilities/services";
+import { getUserProjectCreation, addMembers } from "../utilities/services";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import StandardModal from "../components/modals/StandardModal";
 
 export default function ProjectCreationPage2() {
   const [users, setUsers] = useState([]);
@@ -16,6 +17,7 @@ export default function ProjectCreationPage2() {
   const [getUsersTrigger, setGetUsersTrigger] = useState(false);
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
+  const [maxMembers, setMaxMembers] = useState(4);
 
   useEffect(() => {
     console.log("rejected users changed", rejectedUsers);
@@ -48,9 +50,28 @@ export default function ProjectCreationPage2() {
     setGetUsersTrigger((prev) => !prev);
   };
 
+  const handleSubmit = () => {
+    let projectCreationMembersDto = {
+      maxMembers: maxMembers,
+      usersInProject: usersInProject.map((user) => user.id),
+    };
+    addMembers(systemProjectName, projectCreationMembersDto).then(
+      (response) => {
+        if (response.status === 200) {
+          console.log("Members added successfully");
+        }
+      }
+    );
+  };
+
   return (
     <>
       <AppNavbar />
+      <StandardModal
+        modalType="success"
+        message="alerta"
+        modalActive={true}
+      ></StandardModal>
       <AsideProjectCreationPage2
         selectedLab={selectedLab}
         setSelectedLab={setSelectedLab}
@@ -59,6 +80,8 @@ export default function ProjectCreationPage2() {
         rejectedUsers={rejectedUsers}
         setRejectedUsers={setRejectedUsers}
         setGetUsersTrigger={setGetUsersTrigger}
+        maxMembers={maxMembers}
+        setMaxMembers={setMaxMembers}
       />
       <div className="ilm-pageb-with-aside">
         <h1 className="page-title">
@@ -125,6 +148,8 @@ export default function ProjectCreationPage2() {
                         rejectedUsers={rejectedUsers}
                         setRejectedUsers={setRejectedUsers}
                         setGetUsersTrigger={setGetUsersTrigger}
+                        maxMembers={maxMembers}
+                        numberOfMembersInProject={usersInProject.length}
                       ></UserCard>
                     </Col>
                   );
@@ -148,6 +173,8 @@ export default function ProjectCreationPage2() {
                         rejectedUsers={rejectedUsers}
                         setRejectedUsers={setRejectedUsers}
                         setGetUsersTrigger={setGetUsersTrigger}
+                        maxMembers={maxMembers}
+                        numberOfMembersInProject={usersInProject.length}
                       ></UserCard>
                     </Col>
                   );
@@ -156,7 +183,11 @@ export default function ProjectCreationPage2() {
 
             <Row className="last-row-submit">
               {" "}
-              <button className="submit-button" style={{ width: "54%" }}>
+              <button
+                className="submit-button"
+                style={{ width: "54%" }}
+                onClick={handleSubmit}
+              >
                 Next page
               </button>
             </Row>

@@ -14,6 +14,8 @@ export default function UserCard({
   rejectedUsers,
   setRejectedUsers,
   setGetUsersTrigger,
+  maxMembers,
+  numberOfMembersInProject,
 }) {
   const openNewWindow = () => {
     const url = `http://localhost:3000/profile/${systemUsername}`; // The URL you want to navigate to
@@ -45,7 +47,7 @@ export default function UserCard({
 
   return (
     <div style={{ height: "100%" }}>
-      <div className="my-project-card">
+      <div className="my-project-card" style={{ height: "100%" }}>
         <div
           className="my-projects-banner user-card-banner"
           onClick={openNewWindow}
@@ -71,7 +73,11 @@ export default function UserCard({
           ))}
         </div>
         <div className="user-card-footer">
-          <button className="submit-button" onClick={handleAddUser}>
+          <button
+            className="submit-button user-card-button"
+            onClick={handleAddUser}
+            disabled={numberOfMembersInProject >= maxMembers ? true : false}
+          >
             Add
           </button>
           <button className="secondary-button" onClick={handleRejectUser}>

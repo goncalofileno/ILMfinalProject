@@ -167,7 +167,7 @@ public class UserBean {
             user.setPublicProfile(false);
         }
 
-        for (int i=4;i<20;i++){
+        for (int i=3;i<19;i++){
             if (userDao.findById(i) == null) {
                 UserEntity user = new UserEntity();
                 user.setUsername("user"+i);

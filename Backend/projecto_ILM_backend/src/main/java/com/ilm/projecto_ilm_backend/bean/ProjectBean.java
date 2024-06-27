@@ -76,6 +76,7 @@ public class ProjectBean {
     private static final int NUMBER_OF_PROJECTS_PER_PAGE=8;
     private int numberOfProjectsToCreate = 20;
     private static final int MAX_PROJECT_MEMBERS_DEFAULT = 4;
+    private static final int MAX_PROJECT_MEMBERS_MAX=30;
 
     @Transactional
     public void createDefaultProjectsIfNotExistent() {
@@ -1065,6 +1066,48 @@ public class ProjectBean {
         LocalDateTime localDateTime = localDate.atTime(0, 0);
 
         return localDateTime;
+    }
+ public boolean addInitialMembers(ProjectCreationMembersDto projectCreationMembersDto, String projectSystemName, String sessionId){
+    ArrayList<Integer> usersInProject=projectCreationMembersDto.getUsersInProject();
+    if(projectCreationMembersDto.getMaxMembers()>MAX_PROJECT_MEMBERS_MAX || usersInProject.size()>projectCreationMembersDto.getMaxMembers()){
+        return false;
+    }
+
+    UserEntity sender=userBean.getUserBySessionId(sessionId);
+     System.out.println("SENDER: "+sender.getSystemUsername());
+     ProjectEntity project = projectDao.findBySystemName(projectSystemName);
+
+     int numberOfMembersInProject = userProjectDao.getNumberOfUsersByProjectId(project.getId());
+     if(numberOfMembersInProject!=0){
+         return false;
+     }
+     for (Integer userInProject : usersInProject) {
+         UserEntity userReceiver=userDao.findById(userInProject.intValue());
+         UserProjectEntity userProjectEntity = new UserProjectEntity();
+         userProjectEntity.setProject(project);
+         userProjectEntity.setUser(userReceiver);
+         userProjectEntity.setType(UserInProjectTypeENUM.MEMBER);
+         userProjectDao.persist(userProjectEntity);
+         notificationBean.createProjectInsertedNotification(projectSystemName,userDao.getFullNameBySystemUsername(sender.getSystemUsername()),userReceiver,sender.getSystemUsername());
+         String subject = "You have been added to project " + project.getName();
+            String text = "<p>Dear " + userReceiver.getFirstName() + " " + userReceiver.getLastName() + ",</p>" +
+                    "<p>You have been added to the project <strong><a href=\"http://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong>.</p>" +
+                    "<p>Best regards,<br>ILM Management Team</p>";
+
+            MailDto mailDto = new MailDto(
+                    subject,
+                    text,
+                    userDao.getFullNameBySystemUsername(sender.getSystemUsername()),
+                    sender.getEmail(),
+                    userReceiver.getFirstName() + " " + userReceiver.getLastName(),
+                    userReceiver.getEmail()
+            );
+            mailBean.sendMail(sessionDao.findSessionIdByUserId(sender.getId()), mailDto);
+     }
+
+     project.setMaxMembers(projectCreationMembersDto.getMaxMembers());
+     projectDao.merge(project);
+    return true;
     }
 
 }
