@@ -1,10 +1,15 @@
 package com.ilm.projecto_ilm_backend.dao;
 
+import com.ilm.projecto_ilm_backend.ENUMS.WorkLocalENUM;
+import com.ilm.projecto_ilm_backend.entity.LabEntity;
+import com.ilm.projecto_ilm_backend.entity.SkillEntity;
 import com.ilm.projecto_ilm_backend.entity.UserEntity;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
+
+import java.util.List;
 
 /**
  * The UserDao class provides database operations for UserEntity instances.
@@ -166,4 +171,33 @@ public class UserDao extends AbstractDao<UserEntity> {
             return null;
         }
     }
+
+    //recebe o systemUsername e retorna o nome completo do utilizador, firstName + " " + lastName
+    public List<Object[]> getUserProjectCreationDto(int userId, List<Long> rejectedUsersId, int usersPerPage, int page, LabEntity lab, String keyword){
+        try {
+                return em.createNamedQuery("User.getUserProjectCreationDto", Object[].class).setParameter("id",userId).setParameter("excludedIds",rejectedUsersId).setParameter("lab",lab).setParameter("keyword",keyword).setFirstResult(usersPerPage * (page - 1)).setMaxResults(usersPerPage).getResultList();
+
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public int getNumberUserProjectCreationDto(int userId, List<Long> rejectedUsersId,LabEntity lab,String keyword) {
+        try {
+            return  em.createNamedQuery("User.countUserProjectCreationDto", Long.class).setParameter("id",userId).setParameter("excludedIds",rejectedUsersId).setParameter("lab",lab).setParameter("keyword",keyword).getSingleResult().intValue();
+
+        } catch (Exception e) {
+            return -1;
+        }
+    }
+
+    public List<SkillEntity> getUserSkills(int userId, List<String> skillNames) {
+        try {
+            return em.createNamedQuery("User.getUserSkills", SkillEntity.class).setParameter("id",userId).setParameter("skillNames",skillNames).getResultList();
+
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    
 }

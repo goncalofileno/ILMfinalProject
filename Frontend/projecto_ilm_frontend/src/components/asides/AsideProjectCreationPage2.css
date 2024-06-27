@@ -1,0 +1,95 @@
+.container-users-project {
+  width: 100%;
+  height: 60%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.users-in-project-div {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  height: 100%;
+
+  align-items: center;
+  padding: 10px 8px;
+}
+
+.users-in-project-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-height: 100%;
+  overflow-y: auto;
+  background-color: white;
+  border-radius: 10px;
+}
+
+.user-in-project {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 5px;
+  border-radius: 10px;
+  background-color: orange;
+  padding-right: 7px;
+}
+
+.user-in-project img {
+  height: 40px;
+  aspect-ratio: 1/1;
+  border: 1px solid black;
+  border-radius: 50%;
+}
+
+.cross-user-in-project {
+  flex-grow: 1;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.cross-user-in-project button {
+  height: 25px;
+  aspect-ratio: 1/1;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background-color: transparent;
+}
+
+.cross-user-in-project button:hover {
+  background-color: #727272;
+  color: white;
+}
+
+.users-in-project-container::-webkit-scrollbar {
+  width: 7px;
+  height: 6px; /* Espessura da barra de rolagem */
+}
+
+.users-in-project-container::-webkit-scrollbar-track {
+  background: var(--tertiary-color); /* Cor do trilho da barra de rolagem */
+  border-radius: 8px;
+}
+
+.users-in-project-container::-webkit-scrollbar-thumb {
+  background: #888; /* Cor da barra de rolagem */
+  border-radius: 8px; /*Arredonda os cantos*/
+}
+
+.users-in-project-container::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Cor da barra de rolagem ao passar o mouse */
+}
+
+.users-in-project-label {
+  font-weight: 500;
+  font-size: 18px;
+  color: white;
+}

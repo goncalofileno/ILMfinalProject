@@ -1,5 +1,5 @@
 .project-creation-page {
-  height: 95%;
+  height: 85%;
   --bs-gutter-x: 0;
 }
 
@@ -89,5 +89,54 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  width: 89%;
+  width: 95%;
+}
+
+#submit-creation-project-btn {
+  width: 73%;
+}
+
+.date-input {
+  width: 100%;
+  border-radius: 5px;
+  border: var(--bs-border-width) solid var(--bs-border-color);
+  font-weight: 400;
+  font-size: 12px;
+  padding: 0.53rem 0.35rem;
+  background-color: var(--bs-body-bg);
+  cursor: pointer;
+}
+
+.date-input:focus {
+  outline: none;
+  box-shadow: 0 0 5px 2px rgba(243, 156, 18, 0.5);
+}
+
+.height-100 {
+  height: 100%;
+}
+
+.height-50 {
+  height: 50%;
+}
+
+.height-45 {
+  height: 41%;
+}
+
+.row-container {
+  margin-top: 2%;
+  height: 86%;
+}
+
+.arrow-cols {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.last-row-submit {
+  margin-top: 27px;
+  display: flex;
+  justify-content: flex-end;
 }

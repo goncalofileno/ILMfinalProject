@@ -99,7 +99,7 @@ async function getSkills(auxiliarToken) {
 
 async function getLabs(auxiliarToken) {
   try {
-    return await fetch(`${baseURL}lab/all`, {
+    return await fetch(`${baseURL}lab/`, {
       method: "GET",
       headers: {
         Accept: "application/json",
@@ -174,6 +174,31 @@ async function createProfile(userProfileDto, auxiliarToken) {
     console.error("Error during creating profile:", error);
     throw error;
   }
+}
+
+async function uploadProjectPhoto(file, projectName) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = async function () {
+      const base64data = reader.result;
+      try {
+        const response = await fetch(`${baseURL}project/photo/${projectName}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({ file: base64data }),
+        });
+
+        resolve(response);
+      } catch (error) {
+        console.error("Error verifying supplier:", error);
+        reject(error);
+      }
+    };
+  });
 }
 
 async function uploadProfilePicture(file, token) {
@@ -922,6 +947,24 @@ async function findSupplierContact(supplierName) {
   }
 }
 
+async function createProject(projectCreationDto) {
+  console.log(projectCreationDto);
+  try {
+    const response = await fetch(`${baseURL}project`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(projectCreationDto),
+    });
+
+    return response;
+  } catch (error) {
+    console.error("Error verifying supplier:", error);
+  }
+}
+
 async function getUnreadNotificationsCount(sessionId) {
   try {
     const response = await fetch(`${baseURL}notification/unreadCount`, {
@@ -1162,7 +1205,9 @@ async function changeProjectState(
 
 async function getProjectLogsAndNotes(sessionId, projectSystemName) {
   try {
-    const endpoint = `${baseURL}log/logsAndNotes?systemProjectName=${encodeURIComponent(projectSystemName)}`;
+    const endpoint = `${baseURL}log/logsAndNotes?systemProjectName=${encodeURIComponent(
+      projectSystemName
+    )}`;
     const fetchResponse = await fetch(endpoint, {
       method: "GET",
       headers: {
@@ -1209,7 +1254,9 @@ async function markAsDone(sessionId, noteId, done) {
 
 async function createNote(sessionId, noteDto, systemProjectName) {
   try {
-    const endpoint = `${baseURL}note/create?systemProjectName=${encodeURIComponent(systemProjectName)}`;
+    const endpoint = `${baseURL}note/create?systemProjectName=${encodeURIComponent(
+      systemProjectName
+    )}`;
     const fetchResponse = await fetch(endpoint, {
       method: "POST",
       headers: {
@@ -1225,7 +1272,7 @@ async function createNote(sessionId, noteDto, systemProjectName) {
     try {
       responseJson = JSON.parse(responseText);
     } catch (e) {
-      throw new Error('Invalid JSON response');
+      throw new Error("Invalid JSON response");
     }
 
     if (!fetchResponse.ok) {
@@ -1239,10 +1286,11 @@ async function createNote(sessionId, noteDto, systemProjectName) {
   }
 }
 
-
 async function getTasksSuggestions(sessionId, systemProjectName) {
   try {
-    const endpoint = `${baseURL}task/tasksSuggestions?systemProjectName=${encodeURIComponent(systemProjectName)}`;
+    const endpoint = `${baseURL}task/tasksSuggestions?systemProjectName=${encodeURIComponent(
+      systemProjectName
+    )}`;
     const fetchResponse = await fetch(endpoint, {
       method: "GET",
       headers: {
@@ -1261,6 +1309,38 @@ async function getTasksSuggestions(sessionId, systemProjectName) {
   } catch (error) {
     console.error("Error fetching task suggestions:", error);
     return { error: error.message };
+  }
+}
+
+async function getUserProjectCreation(
+  systemProjectName,
+  rejectedUsers,
+  currentPage,
+  lab,
+  keyword
+) {
+  let RejectedUsersDto = {
+    rejectedUsersId: rejectedUsers,
+  };
+
+  try {
+    const response = await fetch(
+      `${baseURL}user/userProjectCreation/${systemProjectName}?page=${currentPage}&lab=${lab}&keyword=${keyword}`,
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(RejectedUsersDto),
+      }
+    );
+
+    return response;
+  } catch (error) {
+    console.error("Error during creating profile:", error);
+    throw error;
   }
 }
 
@@ -1321,5 +1401,8 @@ export {
   editResource,
   markAsDone,
   createNote,
-  getTasksSuggestions
+  getTasksSuggestions,
+  createProject,
+  uploadProjectPhoto,
+  getUserProjectCreation,
 };

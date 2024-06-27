@@ -23,6 +23,8 @@ public class SkillDto {
      */
     private String type;
 
+    private boolean isInProject;
+
     /**
      * Default constructor.
      */
@@ -97,5 +99,13 @@ public class SkillDto {
      */
     public void setType(String type) {
         this.type = type;
+    }
+
+    public boolean isInProject() {
+        return isInProject;
+    }
+
+    public void setInProject(boolean inProject) {
+        isInProject = inProject;
     }
 }

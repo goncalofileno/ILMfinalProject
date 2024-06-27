@@ -13,6 +13,7 @@ export default function MyProjectCard({
   status,
   typeMember,
   systemProjectName,
+  photo,
 }) {
   const navigate = useNavigate();
   return (
@@ -23,7 +24,16 @@ export default function MyProjectCard({
       >
         <div className="my-project-title">{name}</div>
         <div className="my-project-card">
-          <div className="my-projects-banner"></div>
+          {console.log(name + " " + photo)}
+          <div
+            className="my-projects-banner"
+            style={{
+              backgroundImage:
+                photo === undefined || photo === null
+                  ? "url(https://cdn.pixabay.com/photo/2016/03/29/08/48/project-1287781_1280.jpg)"
+                  : `url(${photo})`,
+            }}
+          ></div>
           <div className="my-project-background-color">
             <div className="my-projects-body">
               <div className="my-projects-info">

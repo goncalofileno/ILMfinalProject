@@ -279,7 +279,7 @@ const ProjectLogsPage = () => {
         <ProjectTabs
           typeOfUserSeingProject={logsAndNotes.typeOfUserSeingPage}
         />
-        <Container style={{ height: "92%" }}>
+        <Container style={{ height: "91%" }}>
           <Row>
             <Col>
               <h1>{logsAndNotes.projectName}</h1>
@@ -294,9 +294,11 @@ const ProjectLogsPage = () => {
           </Row>
           <Row style={{ height: "80%" }}>
             <Col md={6} style={{ height: "100%" }}>
-              <Card style={{ height: "100%", overflowY: "auto" }}>
-                <Card.Header>Logs</Card.Header>
-                <Card.Body>
+              <Card style={{ height: "100%" }}>
+                <Card.Header>
+                  <h4>Logs</h4>
+                </Card.Header>
+                <Card.Body className="logs-list">
                   <ListGroup variant="flush">
                     {sortedLogs.map((log) => (
                       <ListGroup.Item
@@ -328,7 +330,7 @@ const ProjectLogsPage = () => {
               </Card>
             </Col>
             <Col md={6} style={{ height: "100%" }}>
-              <Row>
+              <Row style={{ height: "100%" }}>
                 <div
                   style={{
                     backgroundImage: `url(${NotesBackgroud})`,
@@ -340,52 +342,72 @@ const ProjectLogsPage = () => {
                     paddingBottom: "20px",
                   }}
                 >
-                  <div>Notes</div>
-                  <div>
-                    <ListGroup variant="flush">
-                      {sortedNotes.map((note) => (
-                        <ListGroup.Item
-                          key={note.id}
-                          style={{ background: "none", border: "none" }}
-                        >
-                          <Row>
-                            <Col md={10}>
-                              <Form.Check
-                                type="checkbox"
-                                label={renderNoteText(note)}
-                                checked={note.done}
-                                onChange={() =>
-                                  handleMarkAsDone(note.id, !note.done)
-                                }
-                                disabled={["CANCELED", "READY"].includes(
-                                  logsAndNotes.projectStatus
-                                )}
-                              />
-                              <div className="text-muted">
-                                {new Date(note.date).toLocaleString()}
-                              </div>
-                            </Col>
-                          </Row>
-                        </ListGroup.Item>
-                      ))}
-                    </ListGroup>
-                  </div>
+                  <Row style={{ height: "100%" }}>
+                    <Col sm={9} style={{ height: "100%" }}>
+                      <h4>Notes</h4>
+                      <div
+                        style={{
+                          height: "95%",
+                        }}
+                      >
+                        <Row className="note-list">
+                          <Col
+                            md={10}
+                            style={{ height: "100%", width: "100%" }}
+                          >
+                            <ListGroup variant="flush">
+                              {sortedNotes.map((note) => (
+                                <ListGroup.Item
+                                  key={note.id}
+                                  style={{ background: "none", border: "none" }}
+                                >
+                                  <Form.Check
+                                    type="checkbox"
+                                    label={renderNoteText(note)}
+                                    checked={note.done}
+                                    onChange={() =>
+                                      handleMarkAsDone(note.id, !note.done)
+                                    }
+                                    disabled={["CANCELED", "READY"].includes(
+                                      logsAndNotes.projectStatus
+                                    )}
+                                  />
+                                  <div className="text-muted">
+                                    {new Date(note.date).toLocaleString()}
+                                  </div>
+                                </ListGroup.Item>
+                              ))}
+                            </ListGroup>
+                          </Col>
+                        </Row>
+                      </div>
+                    </Col>
+                    <Col
+                      sm={3}
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "end",
+                        height: "100%",
+                      }}
+                    >
+                      {" "}
+                      <Button
+                        style={{
+                          backgroundColor: "#f39c12",
+                          borderColor: "#f39c12",
+                          width: "100%",
+                        }}
+                        onClick={() => setShowCreateNoteModal(true)}
+                        disabled={["CANCELED", "READY"].includes(
+                          logsAndNotes.projectStatus
+                        )}
+                      >
+                        Add Note
+                      </Button>
+                    </Col>
+                  </Row>
                 </div>
-              </Row>
-              <Row className="mt-2">
-                <Button
-                  style={{
-                    backgroundColor: "#f39c12",
-                    borderColor: "#f39c12",
-                    width: "20%",
-                  }}
-                  onClick={() => setShowCreateNoteModal(true)}
-                  disabled={["CANCELED", "READY"].includes(
-                    logsAndNotes.projectStatus
-                  )}
-                >
-                  Add Note
-                </Button>
               </Row>
             </Col>
           </Row>

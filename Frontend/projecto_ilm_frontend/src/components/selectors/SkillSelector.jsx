@@ -124,7 +124,7 @@ const SkillSelector = ({ selectedSkills, setSelectedSkills }) => {
   return (
     <Container>
       <Form.Group controlId="formSkills">
-        <Form.Label>Skills:</Form.Label>
+        <Form.Label style={{ fontWeight: "500" }}>Skills:</Form.Label>
         <InputGroup className="mb-3">
           <Form.Control
             type="text"
@@ -146,7 +146,11 @@ const SkillSelector = ({ selectedSkills, setSelectedSkills }) => {
           </Button>
         </InputGroup>
         {suggestions.length > 0 && (
-          <ListGroup className={`suggestions-list ${suggestions.length > 0 ? 'show' : ''}`}>
+          <ListGroup
+            className={`suggestions-list ${
+              suggestions.length > 0 ? "show" : ""
+            }`}
+          >
             {suggestions.map((suggestion, index) => (
               <ListGroup.Item
                 key={suggestion.id}

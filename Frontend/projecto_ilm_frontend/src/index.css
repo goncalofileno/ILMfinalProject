@@ -71,6 +71,17 @@ code {
   background-color: rgb(9, 19, 63);
 }
 
+.submit-button:disabled {
+  background-color: rgba(30, 40, 82, 0.285);
+  color: rgba(255, 255, 255, 0.53);
+  border: 0;
+  border-radius: 15px;
+  font-size: 16px;
+  padding: 14px 0px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.215, 0.61, 0.355, 1) 0s;
+}
+
 .secondary-button {
   background-color: #727272;
   color: white;

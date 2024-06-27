@@ -5,6 +5,7 @@ import com.ilm.projecto_ilm_backend.ENUMS.UserInProjectTypeENUM;
 import com.ilm.projecto_ilm_backend.dto.project.HomeProjectDto;
 import com.ilm.projecto_ilm_backend.entity.LabEntity;
 import com.ilm.projecto_ilm_backend.entity.ProjectEntity;
+import com.ilm.projecto_ilm_backend.entity.SkillEntity;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
@@ -156,7 +157,7 @@ public class ProjectDao extends AbstractDao<ProjectEntity>{
                 "WHEN up.type = 0 THEN 0 " +  // CREATOR first
                 "WHEN up.type = 1 THEN 1 " +  // MANAGER second
                 "ELSE 2 END, " +
-                "p.startDate DESC");
+                "p.createdAt DESC");
 
 
         TypedQuery<Object[]> query = em.createQuery(queryString.toString(), Object[].class);
@@ -264,5 +265,18 @@ public class ProjectDao extends AbstractDao<ProjectEntity>{
         } catch (NoResultException e) {
             return null;
         }
+    }
+
+    public List<String> getSkillsBySystemName(String projectSystemName) {
+        TypedQuery<String> query = em.createNamedQuery("Project.getSkillsBySystemName", String.class);
+        query.setParameter("projectSystemName", projectSystemName);
+        return query.getResultList();
+    }
+
+    public boolean isSkillInProject(String projectSystemName, String skillName) {
+        TypedQuery<Boolean> query = em.createNamedQuery("Project.isSkillInProject", Boolean.class);
+        query.setParameter("projectSystemName", projectSystemName);
+        query.setParameter("skillName", skillName);
+        return query.getSingleResult();
     }
 }

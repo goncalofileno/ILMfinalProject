@@ -105,7 +105,7 @@ public class ResourceDao extends AbstractDao<ResourceEntity> {
         } else if (brandAsc != null && !brandAsc.equals("")) {
             queryString.append(" ORDER BY r.brand ").append(brandAsc.equals("true") ? "ASC" : "DESC");
         } else if (supplierAsc != null && !supplierAsc.equals("")) {
-            queryString.append(" ORDER BY s.name ").append(supplierAsc.equals("true") ? "ASC" : "DESC");
+            queryString.append(" ORDER BY rs.supplier.name ").append(supplierAsc.equals("true") ? "ASC" : "DESC");
         }
 
         TypedQuery<Object[]> query = em.createQuery(queryString.toString(), Object[].class);

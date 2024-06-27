@@ -23,7 +23,23 @@ import java.util.List;
         @NamedQuery(name = "User.checkSystemUsername", query = "SELECT u FROM UserEntity u WHERE u.systemUsername = :systemUsername"),
         @NamedQuery(name = "User.findBySystemUsername", query = "SELECT u FROM UserEntity u WHERE u.systemUsername = :systemUsername"),
         @NamedQuery(name = "User.getFullNameBySystemUsername)", query = "SELECT u.firstName, u.lastName FROM UserEntity u WHERE u.systemUsername = :systemUsername"),
+        @NamedQuery(name = "User.getUserProjectCreationDto", query = "SELECT u.lab.local, u.firstName, u.lastName,u.thumbnailPhoto, u.id, u.systemUsername " +
+                "FROM UserEntity u " +
+                "WHERE u.id <> :id AND u.id NOT IN :excludedIds AND (:lab IS NULL OR u.lab = :lab) " +
+                "AND (:keyword IS NULL OR (LOWER(u.firstName) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+                "OR  LOWER(u.lastName) LIKE LOWER(CONCAT('%', :keyword, '%'))))"),
+
+        @NamedQuery(name = "User.countUserProjectCreationDto", query = "SELECT COUNT(u)" +
+                " FROM UserEntity u " +
+                "WHERE u.id <> :id AND u.id NOT IN :excludedIds" +
+                " AND (:lab IS NULL OR u.lab = :lab) " +
+                "AND (:keyword IS NULL OR (LOWER(u.firstName) LIKE LOWER(CONCAT('%', :keyword, '%'))" +
+                " OR  LOWER(u.lastName) LIKE LOWER(CONCAT('%', :keyword, '%'))))"),
+        @NamedQuery(name = "User.getUserSkills", query = "SELECT s FROM UserEntity u JOIN u.skills s WHERE u.id = :id ORDER BY CASE WHEN s.name IN :skillNames THEN 0 ELSE 1 END"),
+
 })
+
+
 public class UserEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;

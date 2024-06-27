@@ -1,0 +1,54 @@
+.col-2-logs-btn {
+  display: flex;
+  align-items: end;
+}
+
+.note-list {
+  height: 100%;
+  overflow-y: auto;
+  max-height: 98%;
+  word-break: break-all;
+}
+
+.note-list::-webkit-scrollbar {
+  width: 7px;
+  height: 6px; /* Espessura da barra de rolagem */
+}
+
+.note-list::-webkit-scrollbar-track {
+  background: var(--tertiary-color); /* Cor do trilho da barra de rolagem */
+  border-radius: 8px;
+}
+
+.note-list::-webkit-scrollbar-thumb {
+  background: #ba9b0084; /* Cor da barra de rolagem */
+  border-radius: 8px; /*Arredonda os cantos*/
+}
+
+.note-list::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Cor da barra de rolagem ao passar o mouse */
+}
+
+.logs-list {
+  height: 100%;
+  overflow-y: auto;
+}
+
+.logs-list::-webkit-scrollbar {
+  width: 7px;
+  height: 6px; /* Espessura da barra de rolagem */
+}
+
+.logs-list::-webkit-scrollbar-track {
+  background: var(--tertiary-color); /* Cor do trilho da barra de rolagem */
+  border-radius: 8px;
+}
+
+.logs-list::-webkit-scrollbar-thumb {
+  background: #888; /* Cor da barra de rolagem */
+  border-radius: 8px; /*Arredonda os cantos*/
+}
+
+.logs-list::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Cor da barra de rolagem ao passar o mouse */
+}

@@ -12,7 +12,7 @@
 .suggestions-list {
   position: absolute;
   z-index: 1000; /* Ensure it appears above other content */
-  width: 420px;
+  width: 53%;
   max-height: 100px; /* Adjust as needed */
   overflow-y: auto;
   border: 1px solid #ccc;

@@ -158,7 +158,6 @@ const CreateProfilePage = () => {
         interests: selectedInterests,
       };
 
-
       const response = await createProfile(userProfileDto, token);
       if (response.ok) {
         if (selectedFile) {
@@ -346,6 +345,7 @@ const CreateProfilePage = () => {
               <Row className="mt-4">
                 <Col md={6}>
                   <InterestSelector
+                    label="Interests:"
                     selectedInterests={selectedInterests}
                     setSelectedInterests={setSelectedInterests}
                   />

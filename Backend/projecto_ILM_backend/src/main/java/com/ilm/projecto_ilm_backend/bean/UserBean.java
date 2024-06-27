@@ -8,9 +8,7 @@ import com.ilm.projecto_ilm_backend.dao.*;
 import com.ilm.projecto_ilm_backend.dto.interest.InterestDto;
 import com.ilm.projecto_ilm_backend.dto.project.ProjectProfileDto;
 import com.ilm.projecto_ilm_backend.dto.skill.SkillDto;
-import com.ilm.projecto_ilm_backend.dto.user.RegisterUserDto;
-import com.ilm.projecto_ilm_backend.dto.user.ShowProfileDto;
-import com.ilm.projecto_ilm_backend.dto.user.UserProfileDto;
+import com.ilm.projecto_ilm_backend.dto.user.*;
 import com.ilm.projecto_ilm_backend.entity.*;
 import com.ilm.projecto_ilm_backend.security.exceptions.UnauthorizedException;
 import com.ilm.projecto_ilm_backend.utilities.EmailService;
@@ -32,6 +30,7 @@ import java.io.*;
 import java.security.SecureRandom;
 import java.text.Normalizer;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
@@ -83,6 +82,7 @@ public class UserBean {
     @Inject
     ProjectDao projectDao;
 
+    private static final int NUMBER_OF_USERS_PER_PAGE=6;
     /**
      * The logger used to log information, warning and error messages.
      */
@@ -165,6 +165,37 @@ public class UserBean {
             user.setDeleted(false);
             user.setTutorial(false);
             user.setPublicProfile(false);
+        }
+
+        for (int i=4;i<20;i++){
+            if (userDao.findById(i) == null) {
+                UserEntity user = new UserEntity();
+                user.setUsername("user"+i);
+                user.setSystemUsername("user"+i);
+                user.setPassword(HashUtil.toSHA256("user"));
+                user.setEmail("user"+i+"@user.com");
+                user.setFirstName("User"+i);
+                user.setLastName("User"+i);
+                user.setType(UserTypeENUM.STANDARD_USER);
+                user.setRegistrationDate(LocalDateTime.now());
+                user.setMailConfirmed(true);
+                user.setProfileCreated(true);
+                user.setPhoto("https://e7.pngegg.com/pngimages/799/987/png-clipart-computer-icons-avatar-icon-design-avatar-heroes-computer-wallpaper-thumbnail.png");
+                user.setAvatarPhoto("https://e7.pngegg.com/pngimages/799/987/png-clipart-computer-icons-avatar-icon-design-avatar-heroes-computer-wallpaper-thumbnail.png");
+                user.setThumbnailPhoto("https://e7.pngegg.com/pngimages/799/987/png-clipart-computer-icons-avatar-icon-design-avatar-heroes-computer-wallpaper-thumbnail.png");
+                LabEntity lab;
+                lab = labDao.findbyLocal(WorkLocalENUM.TOMAR);
+                List<InterestEntity> interests = interestDao.findAll();
+                user.setInterests(interests);
+                List<SkillEntity> skills = skillDao.findAll();
+                user.setSkills(skills);
+                user.setLab(lab);
+                user.setPublicProfile(false);
+                user.setDeleted(false);
+                user.setTutorial(false);
+
+                userDao.persist(user);
+            }
         }
     }
 
@@ -351,7 +382,7 @@ public class UserBean {
 
             // Construct the URLs
             long timestamp = System.currentTimeMillis();
-            String baseUrl = "http://localhost:8080/images/" + user.getId();
+            String baseUrl = "http://localhost:8080/photos/users/" + user.getId();
             String originalUrl = baseUrl + "/profile_picture." + format + "?t=" + timestamp;
             logger.info("Original URL: " + originalUrl);
             String avatarUrl = baseUrl + "/profile_picture_avatar." + format + "?t=" + timestamp;
@@ -671,4 +702,51 @@ public class UserBean {
         return false;
     }
 
+    public UserProjectCreationInfoDto getUserProjectCreationInfoDto(String sessionId, String systemProjectName, RejectedUsersDto rejectedUsersDto, int page, String labName, String keyword){
+        int userId = sessionDao.findBySessionId(sessionId).getUser().getId();
+        LabEntity lab;
+        if (labName == null || labName.equals("")) lab = null;
+        else lab = labDao.findbyLocal(WorkLocalENUM.valueOf(labName));
+        if (keyword.equals("")) keyword = null;
+
+        List<Object[]> userInfo= userDao.getUserProjectCreationDto(userId, rejectedUsersDto.getRejectedUsersId(),NUMBER_OF_USERS_PER_PAGE,page, lab, keyword);
+
+        ArrayList<UserProjectCreationDto> userProjectCreationDtos= new ArrayList<>();
+        UserProjectCreationInfoDto userProjectCreationInfoDto=new UserProjectCreationInfoDto();
+
+        for(Object[] user: userInfo){
+            UserProjectCreationDto userProjectCreationDto= new UserProjectCreationDto();
+
+            userProjectCreationDto.setLab((WorkLocalENUM) user[0]);
+            userProjectCreationDto.setName((String) user[1]+" "+(String) user[2]);
+            userProjectCreationDto.setPhoto((String) user[3]);
+            userProjectCreationDto.setId((int) user[4]);
+            List<String> skillsInProject=projectDao.getSkillsBySystemName(systemProjectName);
+            List<SkillEntity> skillsEntities= userDao.getUserSkills((int) user[4], skillsInProject);
+            List<SkillDto> skills= new ArrayList<>();
+            for(SkillEntity skill: skillsEntities){
+                if(!skill.isDeleted()) {
+                    SkillDto skillDto = new SkillDto();
+                    skillDto.setId(skill.getId());
+                    skillDto.setName(skill.getName());
+                    skillDto.setType(skill.getType().toString());
+                    skillDto.setInProject(projectDao.isSkillInProject(systemProjectName,skill.getName()));
+                    skills.add(skillDto);
+                }
+            }
+            userProjectCreationDto.setSkills(skills);
+            userProjectCreationDto.setSystemUsername((String) user[5]);
+            userProjectCreationDtos.add(userProjectCreationDto);
+            int numberOfUsers =userDao.getNumberUserProjectCreationDto(userId, rejectedUsersDto.getRejectedUsersId(),lab, keyword);
+            int maxPageNumber=calculateMaximumPageUsers(numberOfUsers,NUMBER_OF_USERS_PER_PAGE);
+            userProjectCreationInfoDto.setUserProjectCreationDtos(userProjectCreationDtos);
+            userProjectCreationInfoDto.setMaxPageNumber(maxPageNumber);
+        }
+
+        return userProjectCreationInfoDto;
+    }
+
+    public int calculateMaximumPageUsers(int numberOfProjects, int numberOfProjectPerPage) {
+        return (int) Math.ceil((double) numberOfProjects / numberOfProjectPerPage);
+    }
 }

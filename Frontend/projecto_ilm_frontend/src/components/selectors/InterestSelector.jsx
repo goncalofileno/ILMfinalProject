@@ -14,7 +14,11 @@ import { useParams } from "react-router-dom";
 import InterestCard from "./InterestCard"; // Import the new InterestCard component
 import "./InterestSelector.css"; // Ensure the path is correct
 
-const InterestSelector = ({ selectedInterests, setSelectedInterests }) => {
+const InterestSelector = ({
+  label,
+  selectedInterests,
+  setSelectedInterests,
+}) => {
   const [allInterests, setAllInterests] = useState([]);
   const [suggestions, setSuggestions] = useState([]);
   const [input, setInput] = useState("");
@@ -116,11 +120,13 @@ const InterestSelector = ({ selectedInterests, setSelectedInterests }) => {
   return (
     <Container>
       <Form.Group controlId="formInterests">
-        <Form.Label>Interests:</Form.Label>
+        <Form.Label style={{ fontWeight: "500" }}>{label}</Form.Label>
         <InputGroup className="mb-3">
           <Form.Control
             type="text"
-            placeholder="Add an interest"
+            placeholder={
+              label === "Interests:" ? "Add an interest" : "Add a keyword"
+            }
             value={input}
             onChange={handleInputChange}
             onKeyDown={handleKeyDown}
@@ -138,7 +144,11 @@ const InterestSelector = ({ selectedInterests, setSelectedInterests }) => {
           </Button>
         </InputGroup>
         {suggestions.length > 0 && (
-          <ListGroup className={`suggestions-list ${suggestions.length > 0 ? 'show' : ''}`}>
+          <ListGroup
+            className={`suggestions-list ${
+              suggestions.length > 0 ? "show" : ""
+            }`}
+          >
             {suggestions.map((suggestion, index) => (
               <ListGroup.Item
                 key={suggestion.id}
@@ -155,7 +165,11 @@ const InterestSelector = ({ selectedInterests, setSelectedInterests }) => {
       <div className="fixed-container">
         <Row>
           {selectedInterests.length === 0 ? (
-            <Col>No interests added yet.</Col>
+            <Col>
+              {label === "Interests:"
+                ? "No interests added yet."
+                : "No keyword added yet."}
+            </Col>
           ) : (
             selectedInterests.map((interest) => (
               <Col key={interest.id} md="auto">
