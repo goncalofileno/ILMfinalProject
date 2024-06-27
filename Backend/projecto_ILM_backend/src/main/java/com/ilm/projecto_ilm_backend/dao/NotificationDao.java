@@ -2,6 +2,7 @@ package com.ilm.projecto_ilm_backend.dao;
 
 import com.ilm.projecto_ilm_backend.ENUMS.NotificationTypeENUM;
 import com.ilm.projecto_ilm_backend.entity.NotificationEntity;
+import com.ilm.projecto_ilm_backend.entity.ProjectEntity;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -68,10 +69,15 @@ public class NotificationDao extends AbstractDao<NotificationEntity> {
 
     @Transactional
     public int countUnreadByUserId(int userId) {
-        Long count = em.createNamedQuery("NotificationEntity.countUnreadByUserId", Long.class)
+        Long countNonProjectMessages = em.createNamedQuery("NotificationEntity.countNonProjectMessageUnreadByUserId", Long.class)
                 .setParameter("userId", userId)
                 .getSingleResult();
-        return count.intValue();
+
+        Long countDistinctProjectMessages = em.createNamedQuery("NotificationEntity.countDistinctProjectMessageUnreadByUserId", Long.class)
+                .setParameter("userId", userId)
+                .getSingleResult();
+
+        return countNonProjectMessages.intValue() + countDistinctProjectMessages.intValue();
     }
 
     @Transactional
@@ -88,5 +94,29 @@ public class NotificationDao extends AbstractDao<NotificationEntity> {
                 .setParameter("receptorId", receptorId)
                 .setParameter("type", type)
                 .getSingleResult();
+    }
+
+    @Transactional
+    public void markMessageNotificationClicked(int userId, List<Integer> notificationIds) {
+        for (Integer notificationId : notificationIds) {
+            NotificationEntity notification = findById(notificationId);
+            if (notification.getReceptor().getId() == userId) {
+                notification.setMessageNotificationClicked(true);
+                em.merge(notification);
+            }
+        }
+    }
+
+    @Transactional
+    public void markAllNotificationsClicked(int userId, String projectSystemName) {
+        List<NotificationEntity> notifications = em.createNamedQuery("NotificationEntity.findUnreadByUserIdAndProjectId", NotificationEntity.class)
+                .setParameter("userId", userId)
+                .setParameter("projectSystemName", projectSystemName)
+                .getResultList();
+
+        for (NotificationEntity notification : notifications) {
+            notification.setMessageNotificationClicked(true);
+            em.merge(notification);
+        }
     }
 }

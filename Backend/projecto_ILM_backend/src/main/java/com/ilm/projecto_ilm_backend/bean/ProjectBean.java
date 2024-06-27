@@ -477,7 +477,7 @@ public class ProjectBean {
         return projectProfilePageDto;
     }
 
-    private List<ProjectMemberDto> getProjectMembers(int projectId) {
+    public List<ProjectMemberDto> getProjectMembers(int projectId) {
         List<UserProjectEntity> membersUserProjects = userProjectDao.findMembersByProjectId(projectId);
         return membersUserProjects.stream().map(userProject -> {
             UserEntity user = userProject.getUser();
@@ -487,6 +487,7 @@ public class ProjectBean {
 
     private ProjectMemberDto createProjectMemberDto(UserEntity user, UserInProjectTypeENUM type) {
         ProjectMemberDto member = new ProjectMemberDto();
+        member.setId(user.getId());
         member.setName(user.getFirstName() + " " + user.getLastName());
         member.setSystemUsername(user.getSystemUsername());
         member.setType(type);

@@ -247,8 +247,10 @@ public class UserService {
         String authHeader = headers.getHeaderString(HttpHeaders.AUTHORIZATION);
 
         if (authHeader != null && databaseValidator.checkAuxiliarToken(authHeader)) {
+            logger.info("Authorized request to upload profile picture.");
             return handleUploadProfilePicture(request, authHeader);
         } else if (sessionId != null) {
+            logger.info("Authorized request to upload profile picture with session id.");
             return handleUploadProfilePicture(request, sessionId);
         } else {
             logger.error("Unauthorized request to upload profile picture.");

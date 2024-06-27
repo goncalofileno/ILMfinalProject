@@ -50,10 +50,13 @@ const UserProfile = () => {
       if (profileData.status === 200) {
         setProfile(profileData.data);
         if (
+          loggedInUsername !== systemUsername &&
           !profileData.data.publicProfile &&
           (!profileData.data.projects || profileData.data.projects.length === 0)
         ) {
           setIsPrivate(true);
+        } else {
+          setIsPrivate(false);
         }
       } else if (profileData.status === 401) {
         setError("Unauthorized: Invalid session.");
