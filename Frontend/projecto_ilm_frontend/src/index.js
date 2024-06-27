@@ -24,6 +24,7 @@ import MailWebSocket from "./utilities/websockets/MailWebSocket";
 import ResourcesPage from "./pages/ResourcesPage";
 import ProjectProfilePageInfo from "./pages/ProjectProfilePageInfo";
 import ProjectLogsPage from "./pages/ProjectLogsPage";
+import ProjectCreationPage1 from "./pages/ProjectCreationPage1";
 import ProjectChatPage from "./pages/ProjectChatPage";
 import ProjectChatWebSocket from "./utilities/websockets/ProjectChatWebSocket";
 
@@ -71,6 +72,7 @@ const AppWithWebSocket = () => {
         <Route path="/mail/sent" element={<SentMailPage />} />
         <Route path="/resources" element={<ResourcesPage />} />
         <Route path="/myprojects" element={<MyProjectsPage />} />
+        <Route path="/create-project/info" element={<ProjectCreationPage1 />} />
       </Routes>
     </>
   );

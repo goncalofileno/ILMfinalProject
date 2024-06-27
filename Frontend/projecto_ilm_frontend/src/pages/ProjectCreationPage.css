@@ -1,0 +1,93 @@
+.project-creation-page {
+  height: 95%;
+  --bs-gutter-x: 0;
+}
+
+.project-creation-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+}
+
+.div-half-col {
+  width: 80%;
+  height: 50%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.div-img-project {
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  height: 75%;
+}
+
+.col-project-creation {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.text-area-project-creation {
+  resize: none;
+  height: 75%;
+  border-radius: 10px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+  border: none;
+  padding: 10px 15px;
+}
+
+.text-area-project-creation:focus {
+  outline: none;
+  box-shadow: 0 0 5px 2px rgba(243, 156, 18, 0.5);
+}
+
+.project-name-input {
+  width: 50%;
+  margin-top: 10px;
+  border-radius: 5px;
+  border: none;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+}
+
+.project-name-input:focus {
+  outline: none;
+}
+
+.row-display {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  width: 100%;
+}
+
+.lab-drop-down-div {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 80%;
+}
+
+.custom-select-ilm {
+  border: 1px solid rgba(73, 73, 73, 0.536);
+  border-radius: 5px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+.custom-select-ilm:focus {
+  outline: none;
+  box-shadow: 0 0 5px 2px rgba(243, 156, 18, 0.5);
+}
+
+.display-column {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 89%;
+}

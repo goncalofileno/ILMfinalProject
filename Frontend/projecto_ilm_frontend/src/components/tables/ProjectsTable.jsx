@@ -214,6 +214,7 @@ export default function ProjectsTable({
             <button
               className="submit-button"
               id="btn-add-project-table-projects"
+              onClick={() => navigate("/create-project/info")}
             >
               Add Project
             </button>
