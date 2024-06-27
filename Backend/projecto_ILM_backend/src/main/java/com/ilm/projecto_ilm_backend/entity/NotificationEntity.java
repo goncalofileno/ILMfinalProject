@@ -32,6 +32,8 @@ import java.util.List;
                 query = "SELECT COUNT(n) FROM NotificationEntity n WHERE n.receptor.id = :userId"),
         @NamedQuery(name = "NotificationEntity.findSystemUsernameOfCreatorByReceptorAndType",
         query = "SELECT n.systemUserName FROM NotificationEntity n WHERE n.receptor.id = :receptorId AND n.type = :type"),
+        @NamedQuery(name = "NotificationEntity.findUnreadByUserIdAndProjectId",
+                query = "SELECT n FROM NotificationEntity n WHERE n.receptor.id = :userId AND n.projectSystemName = :projectSystemName AND n.readStatus = false AND n.messageNotificationClicked = false AND n.type = com.ilm.projecto_ilm_backend.ENUMS.NotificationTypeENUM.PROJECT_MESSAGE ORDER BY n.sendDate DESC"),
 })
 public class NotificationEntity implements Serializable {
 

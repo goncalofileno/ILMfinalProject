@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Container, Row, Col, Card, Form, Button } from "react-bootstrap";
+import { Container, Row, Col, Card, Form, Button, Alert } from "react-bootstrap";
 import { useParams, useNavigate } from "react-router-dom";
 import AppNavbar from "../components/headers/AppNavbar";
 import ProjectTabs from "../components/headers/ProjectTabs";
@@ -16,6 +16,8 @@ const ProjectChatPage = () => {
   const { messages, setMessages, addMessage, onlineMembers } = useChatStore();
   const [messageContent, setMessageContent] = useState("");
   const [projectMembers, setProjectMembers] = useState([]);
+  const [projectState, setProjectState] = useState(null);
+  const [projectName, setProjectName] = useState("");
   const chatBodyRef = useRef(null);
   const userSystemUsername = Cookies.get("user-systemUsername");
 
@@ -27,6 +29,8 @@ const ProjectChatPage = () => {
       if (response && !response.error) {
         setMessages(response.messages || []);
         setProjectMembers(response.projectMembers || []);
+        setProjectState(response.stateProject || null);
+        setProjectName(response.projectName || "");
       } else {
         console.error("Error fetching chat page:", response.error);
       }
@@ -71,10 +75,18 @@ const ProjectChatPage = () => {
       <div className="bckg-color-ilm-page ilm-pageb">
         <ProjectTabs />
         <Container>
+          {projectState === "CANCELED" && (
+            <Row>
+              <Col>
+                <Alert variant="danger">
+                  The project is canceled, and the chat is disabled.
+                </Alert>
+              </Col>
+            </Row>
+          )}
           <Row>
             <Col>
-              <h1>Project Chat</h1>
-              <h5>{systemProjectName}</h5>
+              <h1>{projectName}</h1>
             </Col>
           </Row>
           <Row>
@@ -167,7 +179,9 @@ const ProjectChatPage = () => {
                   <Form
                     onSubmit={(e) => {
                       e.preventDefault();
-                      handleSendMessage();
+                      if (projectState !== "CANCELED") {
+                        handleSendMessage();
+                      }
                     }}
                   >
                     <Form.Group>
@@ -178,6 +192,7 @@ const ProjectChatPage = () => {
                         onChange={(e) => setMessageContent(e.target.value)}
                         placeholder="Type a message..."
                         className="message-input"
+                        disabled={projectState === "CANCELED"}
                       />
                     </Form.Group>
                     <Button
@@ -189,6 +204,7 @@ const ProjectChatPage = () => {
                         float: "right",
                       }}
                       type="submit"
+                      disabled={projectState === "CANCELED"}
                     >
                       Send
                     </Button>

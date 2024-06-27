@@ -78,7 +78,7 @@ public class NotificationService {
         }
     }
 
-    //Serviço que recebe um sessionId e uma lista de ids de notificações e marca essas notificações como messageNotificationClicked a true
+
     @PUT
     @Path("/markMessageNotificationClicked")
     @Consumes(MediaType.APPLICATION_JSON)

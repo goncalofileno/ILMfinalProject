@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.ilm.projecto_ilm_backend.bean.NotificationBean;
 import com.ilm.projecto_ilm_backend.bean.ProjectBean;
 import com.ilm.projecto_ilm_backend.bean.UserBean;
 import com.ilm.projecto_ilm_backend.dao.ProjectDao;
@@ -47,6 +48,9 @@ public class ProjectChatWebSocket {
     @Inject
     ProjectDao projectDao;
 
+    @Inject
+    NotificationBean notificationBean;
+
     private static final Logger logger = Logger.getLogger(ProjectChatWebSocket.class.getName());
     private static final ObjectMapper objectMapper;
     private static final Map<String, Set<Session>> sessionMap = new ConcurrentHashMap<>();
@@ -62,10 +66,12 @@ public class ProjectChatWebSocket {
 
     @OnOpen
     public void onOpen(Session session, @PathParam("projectId") String projectId, @PathParam("username") String username) {
+
         closeExistingSessionForUser(username, projectId);
         sessionMap.computeIfAbsent(projectId, k -> ConcurrentHashMap.newKeySet()).add(session);
         userSessionMap.put(username, session.getId());
         UserEntity user = userBean.getUserBySessionId(username);
+        notificationBean.markAllNotificationsClicked(user.getId(), projectId);
         ProjectEntity project = projectDao.findBySystemName(projectId);
         UserInProjectTypeENUM userInProjectType = userProjectDao.findUserTypeByUserIdAndProjectId(user.getId(), project.getId());
         onlineMembers.put(session.getId(), new ProjectMemberDto(user.getId(), user.getFullName(), user.getSystemUsername(), userInProjectType, user.getPhoto()));
@@ -160,5 +166,10 @@ public class ProjectChatWebSocket {
                 }
             }
         }
+    }
+
+    public boolean isUserOnline(UserEntity user) {
+        return onlineMembers.values().stream()
+                .anyMatch(member -> member.getSystemUsername().equals(user.getSystemUsername()));
     }
 }

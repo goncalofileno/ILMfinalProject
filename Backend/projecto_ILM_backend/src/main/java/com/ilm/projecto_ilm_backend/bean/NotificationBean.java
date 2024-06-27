@@ -8,6 +8,7 @@ import com.ilm.projecto_ilm_backend.dao.SessionDao;
 import com.ilm.projecto_ilm_backend.dao.UserDao;
 import com.ilm.projecto_ilm_backend.dto.notification.NotificationDto;
 import com.ilm.projecto_ilm_backend.entity.NotificationEntity;
+import com.ilm.projecto_ilm_backend.entity.ProjectEntity;
 import com.ilm.projecto_ilm_backend.entity.UserEntity;
 import com.ilm.projecto_ilm_backend.service.websockets.MailWebSocket;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -304,5 +305,9 @@ public class NotificationBean {
 
     public void markMessageNotificationClicked(int userId, List<Integer> notificationIds) {
         notificationDao.markMessageNotificationClicked(userId, notificationIds);
+    }
+
+    public void markAllNotificationsClicked(int userId, String projectSystemName) {
+        notificationDao.markAllNotificationsClicked(userId, projectSystemName);
     }
 }

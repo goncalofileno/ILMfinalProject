@@ -129,8 +129,10 @@ public class MessageBean {
         }
 
         for (UserEntity member : projectMembers) {
-            if (member.getId() != user.getId()) {
-                notificationBean.createProjectMessageNotification(project.getSystemName(), user.getSystemUsername(), member);
+            if(!projectChatWebSocket.isUserOnline(member)) {
+                if (member.getId() != user.getId()) {
+                    notificationBean.createProjectMessageNotification(project.getSystemName(), user.getSystemUsername(), member);
+                }
             }
         }
 

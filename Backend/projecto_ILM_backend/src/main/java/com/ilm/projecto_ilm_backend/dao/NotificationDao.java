@@ -2,6 +2,7 @@ package com.ilm.projecto_ilm_backend.dao;
 
 import com.ilm.projecto_ilm_backend.ENUMS.NotificationTypeENUM;
 import com.ilm.projecto_ilm_backend.entity.NotificationEntity;
+import com.ilm.projecto_ilm_backend.entity.ProjectEntity;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -103,6 +104,19 @@ public class NotificationDao extends AbstractDao<NotificationEntity> {
                 notification.setMessageNotificationClicked(true);
                 em.merge(notification);
             }
+        }
+    }
+
+    @Transactional
+    public void markAllNotificationsClicked(int userId, String projectSystemName) {
+        List<NotificationEntity> notifications = em.createNamedQuery("NotificationEntity.findUnreadByUserIdAndProjectId", NotificationEntity.class)
+                .setParameter("userId", userId)
+                .setParameter("projectSystemName", projectSystemName)
+                .getResultList();
+
+        for (NotificationEntity notification : notifications) {
+            notification.setMessageNotificationClicked(true);
+            em.merge(notification);
         }
     }
 }
