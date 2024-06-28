@@ -412,7 +412,7 @@ public class ProjectService {
             try {
                 int currentUserId = userBean.getUserBySessionId(sessionId).getId();
                 if (projectBean.isUserCreatorOrManager(currentUserId, projectSystemName)) {
-                    String result = projectBean.removeUserFromProject(projectSystemName, userId, currentUserId, reason);
+                    String result = projectBean.removeUserFromProject(projectSystemName, userId, currentUserId, reason, sessionId);
                     return Response.ok(Collections.singletonMap("message", result)).build();
                 } else {
                     return Response.status(Response.Status.FORBIDDEN).entity(Collections.singletonMap("message", "User does not have permission to remove users from this project.")).build();
@@ -475,6 +475,32 @@ public class ProjectService {
             } catch (Exception e) {
                 logger.error("An error occurred while getting project members page: " + e.getMessage() + " from IP address: " + clientIP);
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(Collections.singletonMap("message", "An error occurred while getting project members page")).build();
+            }
+        } else {
+            return Response.status(Response.Status.UNAUTHORIZED).entity(Collections.singletonMap("message", "Unauthorized access")).build();
+        }
+    }
+
+    @POST
+    @Path("/changeUserInProjectType")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response changeUserInProjectType(@CookieParam("session-id") String sessionId, @QueryParam("projectSystemName") String projectSystemName, @QueryParam("userId") int userId, @QueryParam("newType") UserInProjectTypeENUM newType) throws UnknownHostException {
+        String clientIP = InetAddress.getLocalHost().getHostAddress();
+        logger.info("Received a request to change user in project type from IP address: " + clientIP);
+
+        if (databaseValidator.checkSessionId(sessionId)) {
+            try {
+                int currentUserId = userBean.getUserBySessionId(sessionId).getId();
+                if (projectBean.isUserCreatorOrManager(currentUserId, projectSystemName)) {
+                    String result = projectBean.changeUserInProjectType(projectSystemName, userId, newType, currentUserId);
+                    return Response.ok(Collections.singletonMap("message", result)).build();
+                } else {
+                    return Response.status(Response.Status.FORBIDDEN).entity(Collections.singletonMap("message", "User does not have permission to change user in project type.")).build();
+                }
+            } catch (Exception e) {
+                logger.error("An error occurred while changing user in project type: " + e.getMessage() + " from IP address: " + clientIP);
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(Collections.singletonMap("message", "An error occurred while changing user in project type")).build();
             }
         } else {
             return Response.status(Response.Status.UNAUTHORIZED).entity(Collections.singletonMap("message", "Unauthorized access")).build();

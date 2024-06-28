@@ -3,6 +3,7 @@ package com.ilm.projecto_ilm_backend.entity;
 import com.ilm.projecto_ilm_backend.ENUMS.ConvertersENUM.NotificationTypeEnumConverter;
 import com.ilm.projecto_ilm_backend.ENUMS.NotificationTypeENUM;
 import com.ilm.projecto_ilm_backend.ENUMS.StateProjectENUM;
+import com.ilm.projecto_ilm_backend.ENUMS.UserInProjectTypeENUM;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -71,6 +72,9 @@ public class NotificationEntity implements Serializable {
 
     @Column(name = "messageNotificationClicked", nullable = true, unique = false, updatable = true)
     private Boolean messageNotificationClicked;
+
+    @Column(name = "newUserType", nullable = true, unique = false, updatable = false)
+    private UserInProjectTypeENUM newUserType;
 
     @NotNull
     @ManyToOne
@@ -164,5 +168,13 @@ public class NotificationEntity implements Serializable {
 
     public void setMessageNotificationClicked(Boolean messageNotificationClicked) {
         this.messageNotificationClicked = messageNotificationClicked;
+    }
+
+    public UserInProjectTypeENUM getNewUserType() {
+        return newUserType;
+    }
+
+    public void setNewUserType(UserInProjectTypeENUM newUserType) {
+        this.newUserType = newUserType;
     }
 }

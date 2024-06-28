@@ -812,7 +812,7 @@ public class ProjectBean {
         return userProjectDao.findCreatorsAndManagersByProjectId(projectId);
     }
 
-    public String removeUserFromProject(String systemProjectName, int userToRemoveId, int currentUserId, String reason){
+    public String removeUserFromProject(String systemProjectName, int userToRemoveId, int currentUserId, String reason, String sessionId){
         ProjectEntity project = projectDao.findBySystemName(systemProjectName);
         UserEntity userToRemove = userDao.findById(userToRemoveId);
         UserEntity currentUser = userDao.findById(currentUserId);
@@ -831,7 +831,7 @@ public class ProjectBean {
         }
         userProjectDao.remove(userProject);
 
-        notificationBean.createRemovedNotification(systemProjectName, userDao.getFullNameBySystemUsername(currentUser.getSystemUsername()), userToRemove);
+        notificationBean.createRemovedNotification(systemProjectName, currentUser.getSystemUsername(), userToRemove);
 
         String subject = "You have been removed from project " + project.getName();
         String text = "<p>Dear " + userToRemove.getFirstName() + " " + userToRemove.getLastName() + ",</p>" +
@@ -849,7 +849,9 @@ public class ProjectBean {
                 userToRemove.getEmail()
         );
 
-        mailBean.sendMail(sessionDao.findSessionIdByUserId(userToRemoveId), mailDto);
+        logBean.createMemberRemovedLog(project, currentUser, userToRemove.getFullName());
+
+        mailBean.sendMail(sessionId, mailDto);
 
         return "User removed successfully";
     }
@@ -865,7 +867,7 @@ public class ProjectBean {
         userProject.setType(UserInProjectTypeENUM.MEMBER_BY_APPLIANCE);
         userProjectDao.merge(userProject);
 
-        notificationBean.createApplianceAcceptedNotification(systemProjectName, userDao.getFullNameBySystemUsername(currentUser.getSystemUsername()), user);
+        notificationBean.createApplianceAcceptedNotification(systemProjectName, currentUser.getSystemUsername(), user);
 
         String subject = "Your application to project " + project.getName() + " has been accepted";
         String text = "<p>Dear " + user.getFirstName() + " " + user.getLastName() + ",</p>" +
@@ -882,6 +884,9 @@ public class ProjectBean {
                 user.getEmail()
         );
 
+        logBean.createMemberAddedLog(project, currentUser, user.getFullName());
+
+
         mailBean.sendMail(sessionDao.findSessionIdByUserId(userToAccept), mailDto);
 
         return "Application accepted successfully";
@@ -897,7 +902,7 @@ public class ProjectBean {
         }
         userProjectDao.remove(userProject);
 
-        notificationBean.createApplianceRejectedNotification(systemProjectName, userDao.getFullNameBySystemUsername(currentUser.getSystemUsername()), user);
+        notificationBean.createApplianceRejectedNotification(systemProjectName, currentUser.getSystemUsername(), user);
 
         String subject = "Your application to project " + project.getName() + " has been rejected";
         String text = "<p>Dear " + user.getFirstName() + " " + user.getLastName() + ",</p>" +
@@ -947,6 +952,49 @@ public class ProjectBean {
         projectMembersPageDto.setUserSeingProject(userSeinfProject);
 
         return projectMembersPageDto;
+    }
+
+    public boolean isUserCreator(int userId, String projectSystemName) {
+        ProjectEntity project = projectDao.findBySystemName(projectSystemName);
+        return userProjectDao.isUserCreator(userId, project.getId());
+    }
+
+    public String changeUserInProjectType(String projectSystemName, int userId, UserInProjectTypeENUM newType, int currentUserId){
+
+        ProjectEntity project = projectDao.findBySystemName(projectSystemName);
+        UserEntity currentUser = userDao.findById(currentUserId);
+        UserEntity user = userDao.findById(userId);
+
+        if (project == null) {
+            throw new IllegalArgumentException("Project not found");
+        }
+        if (!userProjectDao.isUserCreatorOrManager(currentUserId, project.getId())) {
+            throw new UnauthorizedAccessException("Only the creator or a manager can change user type");
+        }
+        if (newType != UserInProjectTypeENUM.MEMBER && newType != UserInProjectTypeENUM.MANAGER) {
+            throw new IllegalArgumentException("New type must be MEMBER or MANAGER");
+        }
+
+        UserProjectEntity userProject = userProjectDao.findByUserIdAndProjectId(userId, project.getId());
+
+        if (userProject == null) {
+            throw new IllegalArgumentException("User is not in the project");
+        }
+
+        if (userProject.getType() == UserInProjectTypeENUM.CREATOR) {
+            throw new IllegalArgumentException("Cannot change the type of the creator of the project");
+        }
+
+        logBean.createMemberTypeChangedLog(project, currentUser, userDao.getFullNameBySystemUsername(user.getSystemUsername()), userProject.getType(), newType);
+
+        userProject.setType(newType);
+
+        userProjectDao.merge(userProject);
+
+        notificationBean.createTypeChangedNotification(projectSystemName, currentUser.getSystemUsername(), user, newType);
+
+        return "User type changed successfully";
+
     }
 
 

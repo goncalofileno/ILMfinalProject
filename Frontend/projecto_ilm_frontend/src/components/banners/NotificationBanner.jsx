@@ -10,7 +10,7 @@ const NotificationBanner = ({ notification, onClick, onEnd }) => {
   }, [notification, onEnd]);
 
   const getNotificationMessage = () => {
-    const { type, projectName, userName, projectStatus } = notification;
+    const { type, projectName, userName, projectStatus, newUserType } = notification;
     switch (type) {
       case "APPLIANCE_REJECTED":
         return `Your application to <strong>${projectName}</strong> was rejected by <strong>${userName}</strong>.`;
@@ -34,6 +34,8 @@ const NotificationBanner = ({ notification, onClick, onEnd }) => {
         return `You were removed from the project <strong>${projectName}</strong> by <strong>${userName}</strong>. Contact them for more information.`;
       case "PROJECT_MESSAGE":
         return `You have a new message in the project <strong>${projectName}</strong> chat from <strong>${userName}</strong>.`;
+      case "USER_TYPE_CHANGED":
+        return `Your user type was changed to <strong>${newUserType}</strong> by <strong>${userName}</strong> in the project <strong>${projectName}</strong>.`;
       default:
         return "You have a new notification.";
     }

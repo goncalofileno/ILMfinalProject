@@ -101,7 +101,7 @@ public class MessageBean {
 
         List<ProjectMemberDto> projectMembers = projectBean.getProjectMembers(project.getId());
 
-        return new MessagesPageDto(messageDtos, project.getName(), project.getStatus(), projectMembers);
+        return new MessagesPageDto(messageDtos, project.getName(), project.getStatus(), projectMembers, projectBean.getUserTypeInProject(user.getId(), project.getId()));
 
     }
 

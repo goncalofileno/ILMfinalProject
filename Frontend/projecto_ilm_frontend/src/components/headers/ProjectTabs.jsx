@@ -14,8 +14,12 @@ const ProjectTabs = ({ typeOfUserSeingProject }) => {
     { name: 'Logs', path: 'logs' },
     { name: 'Resources', path: 'resources' },
     { name: 'Chat', path: 'chat' },
-    { name: 'Members', path: 'members' }
   ];
+
+  // Add the 'Members' tab only if the user is 'CREATOR' or 'MANAGER'
+  if (['CREATOR', 'MANAGER'].includes(typeOfUserSeingProject)) {
+    tabs.push({ name: 'Members', path: 'members' });
+  }
 
   const restrictedUserTypes = ['PENDING_BY_APPLIANCE', 'PENDING_BY_INVITATION', 'EXMEMBER', 'GUEST'];
 

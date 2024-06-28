@@ -6,6 +6,7 @@ import com.ilm.projecto_ilm_backend.ENUMS.LogTypeENUM;
 import com.ilm.projecto_ilm_backend.ENUMS.ConvertersENUM.LogTypeEnumConverter;
 import com.ilm.projecto_ilm_backend.ENUMS.TaskStatusENUM;
 import com.ilm.projecto_ilm_backend.ENUMS.StateProjectENUM;
+import com.ilm.projecto_ilm_backend.ENUMS.UserInProjectTypeENUM;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
@@ -95,6 +96,12 @@ public class LogEntity implements Serializable {
     @Column(name = "resourceStock", nullable = true, unique = false, updatable = false)
     private int resourceStock;
 
+    @Column(name = "oldUserType", nullable = true, unique = false, updatable = false)
+    private UserInProjectTypeENUM oldUserType;
+
+    @Column(name = "newUserType", nullable = true, unique = false, updatable = false)
+    private UserInProjectTypeENUM newUserType;
+
     /**
      * The author of the log entry. This is a many-to-one relationship with the UserEntity class.
      */
@@ -158,6 +165,11 @@ public class LogEntity implements Serializable {
             case RESOURCES_ADDED:
                 if (resourceName == null || resourceStock == 0 || receiver != null || taskTitle != null || taskOldStatus != null || taskNewStatus != null || projectOldState != null || projectNewState != null) {
                     throw new IllegalStateException("For RESOURCES_ADDED log type: resourceName and resourceStock must not be null and all other fields must be null.");
+                }
+                break;
+            case MEMBER_TYPE_CHANGED:
+                if (oldUserType == null || newUserType == null || receiver == null || taskTitle != null || taskOldStatus != null || taskNewStatus != null || resourceName != null || resourceStock != 0 || projectOldState != null || projectNewState != null) {
+                    throw new IllegalStateException("For MEMBER_TYPE_CHANGED log type: oldUserType and newUserType must not be null and all other fields must be null.");
                 }
                 break;
             default:
@@ -397,5 +409,21 @@ public class LogEntity implements Serializable {
      */
     public void setProject(ProjectEntity project) {
         this.project = project;
+    }
+
+    public UserInProjectTypeENUM getOldUserType() {
+        return oldUserType;
+    }
+
+    public void setOldUserType(UserInProjectTypeENUM oldUserType) {
+        this.oldUserType = oldUserType;
+    }
+
+    public UserInProjectTypeENUM getNewUserType() {
+        return newUserType;
+    }
+
+    public void setNewUserType(UserInProjectTypeENUM newUserType) {
+        this.newUserType = newUserType;
     }
 }

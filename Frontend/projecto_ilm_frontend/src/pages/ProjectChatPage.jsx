@@ -18,6 +18,7 @@ const ProjectChatPage = () => {
   const [projectMembers, setProjectMembers] = useState([]);
   const [projectState, setProjectState] = useState(null);
   const [projectName, setProjectName] = useState("");
+  const [typeOfUserSeingTheProject, setTypeOfUserSeingTheProject] = useState("");
   const chatBodyRef = useRef(null);
   const userSystemUsername = Cookies.get("user-systemUsername");
 
@@ -31,6 +32,7 @@ const ProjectChatPage = () => {
         setProjectMembers(response.projectMembers || []);
         setProjectState(response.stateProject || null);
         setProjectName(response.projectName || "");
+        setTypeOfUserSeingTheProject(response.typeOfUserSeingTheProject || "");
       } else {
         console.error("Error fetching chat page:", response.error);
       }
@@ -73,7 +75,7 @@ const ProjectChatPage = () => {
       <AppNavbar />
       <ProjectChatWebSocket projectId={systemProjectName} />
       <div className="bckg-color-ilm-page ilm-pageb">
-        <ProjectTabs />
+        <ProjectTabs typeOfUserSeingProject={typeOfUserSeingTheProject} />
         <Container>
           {projectState === "CANCELED" && (
             <Row>
