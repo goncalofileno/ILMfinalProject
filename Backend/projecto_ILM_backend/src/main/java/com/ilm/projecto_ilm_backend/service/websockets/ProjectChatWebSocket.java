@@ -27,9 +27,6 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -55,7 +52,6 @@ public class ProjectChatWebSocket {
     private static final ObjectMapper objectMapper;
     private static final Map<String, Set<Session>> sessionMap = new ConcurrentHashMap<>();
     private static final Map<String, String> userSessionMap = new ConcurrentHashMap<>();
-    private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private static final Map<String, ProjectMemberDto> onlineMembers = new ConcurrentHashMap<>();
 
     static {
@@ -168,8 +164,19 @@ public class ProjectChatWebSocket {
         }
     }
 
-    public boolean isUserOnline(UserEntity user) {
-        return onlineMembers.values().stream()
-                .anyMatch(member -> member.getSystemUsername().equals(user.getSystemUsername()));
+    public boolean isUserOnlineInProject(String projectSystemName, String username) {
+        logger.info("Checking if user is online in project: " + projectSystemName);
+        Set<Session> sessions = sessionMap.get(projectSystemName);
+        String sessionId = userSessionMap.get(username);
+        if (sessions != null && sessionId != null) {
+            for (Session session : sessions) {
+                if (session.getId().equals(sessionId)) {
+                    logger.info("User " + username + " is online in project: " + projectSystemName);
+                    return true;
+                }
+            }
+        }
+        logger.info("User " + username + " is not online in project: " + projectSystemName);
+        return false;
     }
 }

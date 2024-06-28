@@ -22,12 +22,17 @@ const ProjectChatWebSocket = ({ projectId }) => {
   }, []);
 
   useEffect(() => {
-    const sessionId = Cookies.get("session-id");
+    const systemUsername = Cookies.get("user-systemUsername");
 
-    if (sessionId) {
+    if (systemUsername) {
+
+      console.log("WebSocket connection opened for project chat");
+      console.log(`ws://localhost:8080/projeto_ilm_final/ws/chat/${projectId}/${systemUsername}`);
       const socket = new WebSocket(
-        `ws://localhost:8080/projeto_ilm_final/ws/chat/${projectId}/${sessionId}`
+        `ws://localhost:8080/projeto_ilm_final/ws/chat/${projectId}/${systemUsername}`
       );
+
+
 
       socketRef.current = socket;
 

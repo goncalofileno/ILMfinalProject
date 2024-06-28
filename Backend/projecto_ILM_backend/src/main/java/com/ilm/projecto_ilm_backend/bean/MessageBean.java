@@ -1,9 +1,6 @@
 package com.ilm.projecto_ilm_backend.bean;
 
-import com.ilm.projecto_ilm_backend.dao.MessageDao;
-import com.ilm.projecto_ilm_backend.dao.ProjectDao;
-import com.ilm.projecto_ilm_backend.dao.UserDao;
-import com.ilm.projecto_ilm_backend.dao.UserProjectDao;
+import com.ilm.projecto_ilm_backend.dao.*;
 import com.ilm.projecto_ilm_backend.dto.messages.MessageDto;
 import com.ilm.projecto_ilm_backend.dto.messages.MessagesPageDto;
 import com.ilm.projecto_ilm_backend.dto.project.ProjectMemberDto;
@@ -35,7 +32,7 @@ public class MessageBean {
 
     @Inject
     ProjectDao projectDao;
-    
+
     @Inject
     UserProjectDao userProjectDao;
 
@@ -47,6 +44,9 @@ public class MessageBean {
 
     @Inject
     ProjectChatWebSocket projectChatWebSocket;
+
+    @Inject
+    SessionDao sessionDao;
 
     @Transactional
     public void createDefaultMessagesIfNotExistent() {
@@ -63,26 +63,26 @@ public class MessageBean {
             messageDao.persist(new MessageEntity("Hey", LocalDateTime.now(), user2, project));
         }
     }
-    
+
     public List<MessageDto> getMessages(UserEntity user, String projectSystemName) throws Exception {
-        
+
         ProjectEntity project = projectDao.findBySystemName(projectSystemName);
-        
+
         if (project == null) {
             throw new ProjectNotFoundException("Project not found: " + projectSystemName);
         }
         if (!userProjectDao.isUserInProject(project.getId(), user.getId())) {
             throw new UserNotInProjectException("User not in project: " + projectSystemName);
         }
-        
+
         List<MessageEntity> messages = messageDao.findByProjectId(project.getId());
-        
-        List <MessageDto> messageDtos = new ArrayList<>();
-        
+
+        List<MessageDto> messageDtos = new ArrayList<>();
+
         for (MessageEntity message : messages) {
             messageDtos.add(new MessageDto(message.getSender().getFullName(), message.getText(), message.getDate(), message.getSender().getSystemUsername(), message.getSender().getPhoto()));
         }
-        
+
         return messageDtos;
     }
 
@@ -97,9 +97,9 @@ public class MessageBean {
             throw new UserNotInProjectException("User not in project: " + projectSystemName);
         }
 
-        List <MessageDto> messageDtos = getMessages(user, projectSystemName);
+        List<MessageDto> messageDtos = getMessages(user, projectSystemName);
 
-        List <ProjectMemberDto> projectMembers = projectBean.getProjectMembers(project.getId());
+        List<ProjectMemberDto> projectMembers = projectBean.getProjectMembers(project.getId());
 
         return new MessagesPageDto(messageDtos, project.getName(), project.getStatus(), projectMembers);
 
@@ -129,10 +129,8 @@ public class MessageBean {
         }
 
         for (UserEntity member : projectMembers) {
-            if(!projectChatWebSocket.isUserOnline(member)) {
-                if (member.getId() != user.getId()) {
-                    notificationBean.createProjectMessageNotification(project.getSystemName(), user.getSystemUsername(), member);
-                }
+            if (!projectChatWebSocket.isUserOnlineInProject(projectSystemName, member.getSystemUsername())) {
+                notificationBean.createProjectMessageNotification(project.getSystemName(), user.getSystemUsername(), member);
             }
         }
 
