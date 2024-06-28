@@ -194,6 +194,19 @@ public class LogBean {
         logDao.persist(log);
     }
 
+    public void createMemberTypeChangedLog(ProjectEntity project, UserEntity author, String receiver, UserInProjectTypeENUM oldType, UserInProjectTypeENUM newType) {
+        LogEntity log = new LogEntity();
+        log.setDate(LocalDateTime.now());
+        log.setType(LogTypeENUM.MEMBER_TYPE_CHANGED);
+        log.setAuthor(author);
+        log.setProject(project);
+        log.setReceiver(receiver);
+        log.setOldUserType(oldType);
+        log.setNewUserType(newType);
+        logDao.persist(log);
+    }
+
+
     public List<LogDto> getLogsByProjectName(String sessionId, String systemProjectName) throws Exception {
         ProjectEntity project = projectDao.findBySystemName(systemProjectName);
         UserEntity user = userBean.getUserBySessionId(sessionId);
@@ -253,6 +266,11 @@ public class LogBean {
             logDto.setAuthorName(logEntity.getAuthor().getFirstName() + " " + logEntity.getAuthor().getLastName());
             logDto.setAuthorPhoto(logEntity.getAuthor().getPhoto());
         }
+        if(logEntity.getOldUserType() != null) {
+            logDto.setMemberOldType(logEntity.getOldUserType().name());
+            logDto.setMemberNewType(logEntity.getNewUserType().name());
+        }
+
         return logDto;
     }
 

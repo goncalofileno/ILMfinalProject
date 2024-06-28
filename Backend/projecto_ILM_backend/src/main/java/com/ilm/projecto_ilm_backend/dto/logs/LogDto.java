@@ -20,11 +20,13 @@ public class LogDto {
     private int resourceStock;
     private String authorName;
     private String authorPhoto;
+    private String memberOldType;
+    private String memberNewType;
 
     public LogDto() {
     }
 
-    public LogDto(int id, LocalDateTime date, String receiver, LogTypeENUM type, String taskTitle, TaskStatusENUM taskOldStatus, TaskStatusENUM taskNewStatus, StateProjectENUM projectOldState, StateProjectENUM projectNewState, String resourceName, int resourceStock, String authorName, String authorPhoto) {
+    public LogDto(int id, LocalDateTime date, String receiver, LogTypeENUM type, String taskTitle, TaskStatusENUM taskOldStatus, TaskStatusENUM taskNewStatus, StateProjectENUM projectOldState, StateProjectENUM projectNewState, String resourceName, int resourceStock, String authorName, String authorPhoto, String memberOldType, String memberNewType) {
         this.id = id;
         this.date = date;
         this.receiver = receiver;
@@ -38,6 +40,8 @@ public class LogDto {
         this.resourceStock = resourceStock;
         this.authorName = authorName;
         this.authorPhoto = authorPhoto;
+        this.memberOldType = memberOldType;
+        this.memberNewType = memberNewType;
     }
 
     public int getId() {
@@ -142,5 +146,21 @@ public class LogDto {
 
     public void setAuthorPhoto(String authorPhoto) {
         this.authorPhoto = authorPhoto;
+    }
+
+    public String getMemberOldType() {
+        return memberOldType;
+    }
+
+    public void setMemberOldType(String memberOldType) {
+        this.memberOldType = memberOldType;
+    }
+
+    public String getMemberNewType() {
+        return memberNewType;
+    }
+
+    public void setMemberNewType(String memberNewType) {
+        this.memberNewType = memberNewType;
     }
 }

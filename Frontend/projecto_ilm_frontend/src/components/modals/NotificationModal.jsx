@@ -38,6 +38,7 @@ export default function NotificationModal({ onClose, modalRef }) {
       userName,
       projectStatus,
       messageCount,
+      newUserType,
     } = notification;
     switch (type) {
       case "APPLIANCE_REJECTED":
@@ -65,6 +66,8 @@ export default function NotificationModal({ onClose, modalRef }) {
           return `You have ${messageCount} new messages in the project <strong>${projectName}</strong> chat.`;
         }
         return `You have a new message in the project <strong>${projectName}</strong> chat from <strong>${userName}</strong>.`;
+      case "USER_TYPE_CHANGED":
+        return `Your user type was changed to <strong>${newUserType}</strong> by <strong>${userName}</strong> in the project <strong>${projectName}</strong>.`;
       default:
         return "You have a new notification.";
     }
@@ -78,6 +81,7 @@ export default function NotificationModal({ onClose, modalRef }) {
       case "INVITE":
       case "PROJECT":
       case "PROJECT_REJECTED":
+      case "USER_TYPE_CHANGED":
         navigate(`/project/${projectSystemName}`);
         break;
       case "APPLIANCE":
@@ -93,19 +97,17 @@ export default function NotificationModal({ onClose, modalRef }) {
         break;
       case "PROJECT_MESSAGE":
         navigate(`/project/${projectSystemName}/chat`);
+        // Marcar notificação como clicada
+        const sessionId = Cookies.get("session-id");
+        // Verifique se a notificação possui um array de IDs agrupados
+        if (notificationIds) {
+          await markNotificationAsClicked(sessionId, notificationIds);
+        } else {
+          await markNotificationAsClicked(sessionId, [id]);
+        }
         break;
       default:
         break;
-    }
-
-    // Marcar notificação como clicada
-    const sessionId = Cookies.get("session-id");
-
-    // Verifique se a notificação possui um array de IDs agrupados
-    if (notificationIds) {
-      await markNotificationAsClicked(sessionId, notificationIds);
-    } else {
-      await markNotificationAsClicked(sessionId, [id]);
     }
   };
 

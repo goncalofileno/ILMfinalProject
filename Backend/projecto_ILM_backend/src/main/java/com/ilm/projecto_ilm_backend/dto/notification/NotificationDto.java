@@ -13,6 +13,7 @@ public class NotificationDto {
     private String userName;
     private String systemUserName;
     private String userPhoto;
+    private String newUserType;
 
     // Getters and Setters
 
@@ -94,6 +95,14 @@ public class NotificationDto {
 
     public void setUserPhoto(String userPhoto) {
         this.userPhoto = userPhoto;
+    }
+
+    public String getNewUserType() {
+        return newUserType;
+    }
+
+    public void setNewUserType(String newUserType) {
+        this.newUserType = newUserType;
     }
 }
 

@@ -1,6 +1,7 @@
 package com.ilm.projecto_ilm_backend.dto.messages;
 
 import com.ilm.projecto_ilm_backend.ENUMS.StateProjectENUM;
+import com.ilm.projecto_ilm_backend.ENUMS.UserInProjectTypeENUM;
 import com.ilm.projecto_ilm_backend.dto.project.ProjectMemberDto;
 
 import java.util.List;
@@ -11,12 +12,14 @@ public class MessagesPageDto {
     private String projectName;
     private StateProjectENUM stateProject;
     private List<ProjectMemberDto> projectMembers;
+    private UserInProjectTypeENUM typeOfUserSeingTheProject;
 
-    public MessagesPageDto(List<MessageDto> messages, String projectName, StateProjectENUM stateProject, List<ProjectMemberDto> projectMembers) {
+    public MessagesPageDto(List<MessageDto> messages, String projectName, StateProjectENUM stateProject, List<ProjectMemberDto> projectMembers, UserInProjectTypeENUM typeOfUserSeingTheProject) {
         this.messages = messages;
         this.projectName = projectName;
         this.stateProject = stateProject;
         this.projectMembers = projectMembers;
+        this.typeOfUserSeingTheProject = typeOfUserSeingTheProject;
     }
 
     public List<MessageDto> getMessages() {
@@ -49,5 +52,13 @@ public class MessagesPageDto {
 
     public void setProjectMembers(List<ProjectMemberDto> projectMembers) {
         this.projectMembers = projectMembers;
+    }
+
+    public UserInProjectTypeENUM getTypeOfUserSeingTheProject() {
+        return typeOfUserSeingTheProject;
+    }
+
+    public void setTypeOfUserSeingTheProject(UserInProjectTypeENUM typeOfUserSeingTheProject) {
+        this.typeOfUserSeingTheProject = typeOfUserSeingTheProject;
     }
 }

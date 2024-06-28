@@ -58,7 +58,9 @@ public enum LogTypeENUM {
      * Log for resources added.
      * Represented by the integer value 8.
      */
-    RESOURCES_ADDED(8);
+    RESOURCES_ADDED(8),
+
+    MEMBER_TYPE_CHANGED(10);
 
     private final int intValue;
 

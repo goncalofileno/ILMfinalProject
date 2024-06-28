@@ -205,6 +205,15 @@ const ProjectLogsPage = () => {
             project.
           </>
         );
+      case "MEMBER_TYPE_CHANGED":
+        return (
+          <>
+            The user <strong>{log.receiver}</strong> user type was changed from{" "}
+            <strong>{log.memberOldType}</strong> to{" "}
+            <strong>{log.memberNewType}</strong> by{" "}
+            <strong>{log.authorName}</strong>.
+          </>
+        );
       default:
         return "Unknown log type.";
     }
@@ -214,6 +223,7 @@ const ProjectLogsPage = () => {
     switch (logType) {
       case "MEMBER_ADDED":
       case "MEMBER_REMOVED":
+      case "MEMBER_TYPE_CHANGED":
         return MemberLogIcon;
       case "TASKS_CREATED":
       case "TASKS_COMPLETED":

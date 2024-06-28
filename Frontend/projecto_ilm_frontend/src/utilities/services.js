@@ -1422,6 +1422,104 @@ async function markNotificationAsClicked(sessionId, notificationIds) {
   }
 }
 
+async function getProjectMembersPage(sessionId, projectSystemName) {
+  try {
+    const endpoint = `${baseURL}project/getProjectMembersPage?projectSystemName=${encodeURIComponent(projectSystemName)}`;
+
+    const fetchResponse = await fetch(endpoint, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+
+    if (!fetchResponse.ok) {
+      const responseJson = await fetchResponse.json();
+      throw new Error(responseJson.message || "An error occurred");
+    }
+
+    return await fetchResponse.json();
+  } catch (error) {
+    console.error("Error fetching project members page:", error);
+    return { error: error.message };
+  }
+}
+
+async function removeUserFromProject(sessionId, projectSystemName, userId, reason) {
+  try {
+    const endpoint = `${baseURL}project/removeUserFromProject?projectSystemName=${encodeURIComponent(projectSystemName)}&userId=${userId}`;
+
+    const fetchResponse = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(reason),
+    });
+
+    if (!fetchResponse.ok) {
+      const responseJson = await fetchResponse.json();
+      throw new Error(responseJson.message || "An error occurred");
+    }
+
+    return await fetchResponse.json();
+  } catch (error) {
+    console.error("Error removing user from project:", error);
+    return { error: error.message };
+  }
+}
+
+async function changeUserInProjectType(sessionId, projectSystemName, userId, newType) {
+  try {
+    const endpoint = `${baseURL}project/changeUserInProjectType?projectSystemName=${encodeURIComponent(projectSystemName)}&userId=${userId}&newType=${newType}`;
+
+    const fetchResponse = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+
+    if (!fetchResponse.ok) {
+      const responseJson = await fetchResponse.json();
+      throw new Error(responseJson.message || "An error occurred");
+    }
+
+    return await fetchResponse.json();
+  } catch (error) {
+    console.error("Error changing user type in project:", error);
+    return { error: error.message };
+  }
+}
+
+async function respondToApplication(sessionId, projectSystemName, userId, response, reason = "") {
+  try {
+    const endpoint = `${baseURL}project/respondToApplication?projectSystemName=${encodeURIComponent(projectSystemName)}&userId=${userId}&response=${response}`;
+    const fetchResponse = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(reason),
+    });
+
+    if (!fetchResponse.ok) {
+      const responseJson = await fetchResponse.json();
+      throw new Error(responseJson.message || "An error occurred");
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error responding to application:", error);
+    return { error: error.message };
+  }
+}
+
+
 
 export {
   registerUser,
@@ -1488,4 +1586,8 @@ export {
   sendChatMessage,
   getChatPage,
   markNotificationAsClicked,
+  getProjectMembersPage,
+  removeUserFromProject,
+  changeUserInProjectType,
+  respondToApplication,
 };

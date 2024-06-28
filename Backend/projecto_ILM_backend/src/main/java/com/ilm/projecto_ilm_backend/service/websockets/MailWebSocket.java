@@ -145,6 +145,10 @@ public class MailWebSocket {
         sendNotification(sessionId, notificationDto);
     }
 
+    public static void sendTypeChangedNotification(String sessionId, NotificationDto notificationDto) {
+        sendNotification(sessionId, notificationDto);
+    }
+
     private static void sendNotification(String sessionId, NotificationDto notificationDto) {
         String keyDefault = sessionId;
         Set<Session> defaultSessions = sessionMap.get(keyDefault);

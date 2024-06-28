@@ -97,7 +97,14 @@ const MailWebSocket = () => {
         socket.close();
       }
     };
-  }, [incrementUnreadCount, fetchMailsInInbox, location.pathname, audioEnabled, setOnlineMembers, incrementUnreadNotificationsCount]);
+  }, [
+    incrementUnreadCount,
+    fetchMailsInInbox,
+    location.pathname,
+    audioEnabled,
+    setOnlineMembers,
+    incrementUnreadNotificationsCount,
+  ]);
 
   const handleTimeoutModalClose = () => {
     setShowTimeoutModal(false);
@@ -116,6 +123,7 @@ const MailWebSocket = () => {
         case "INVITE":
         case "PROJECT":
         case "PROJECT_REJECTED":
+        case "USER_TYPE_CHANGED":
           navigate(`/project/${projectSystemName}`);
           break;
         case "APPLIANCE":
@@ -145,7 +153,10 @@ const MailWebSocket = () => {
 
   return (
     <>
-      <TimeoutModal show={showTimeoutModal} handleClose={handleTimeoutModalClose} />
+      <TimeoutModal
+        show={showTimeoutModal}
+        handleClose={handleTimeoutModalClose}
+      />
       {notification && (
         <NotificationBanner
           notification={notification}

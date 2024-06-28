@@ -28,6 +28,7 @@ import ProjectCreationPage1 from "./pages/ProjectCreationPage1";
 import ProjectCreationPage2 from "./pages/ProjectCreationPage2";
 import ProjectChatPage from "./pages/ProjectChatPage";
 import ProjectChatWebSocket from "./utilities/websockets/ProjectChatWebSocket";
+import ProjectMembersPage from "./pages/ProjectMembersPage";
 
 const AppWithWebSocket = () => {
   const location = useLocation();
@@ -68,6 +69,7 @@ const AppWithWebSocket = () => {
           path="/project/:systemProjectName/chat"
           element={<ProjectChatPage />}
         />
+        <Route path="/project/:systemProjectName/members" element={<ProjectMembersPage />} />
         <Route path="/editProfile" element={<EditProfilePage />} />
         <Route path="/mail/inbox" element={<InboxMailPage />} />
         <Route path="/mail/sent" element={<SentMailPage />} />

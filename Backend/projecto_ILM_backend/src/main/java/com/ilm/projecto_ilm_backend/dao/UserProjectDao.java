@@ -126,7 +126,7 @@ public class UserProjectDao extends AbstractDao<UserProjectEntity>{
     }
 
     public boolean isUserCreatorOrManager(int userId, int projectId) {
-        return em.createNamedQuery("UserProject.isUserInProject", Long.class)
+        return em.createNamedQuery("UserProject.isUserCreatorOrManager", Long.class)
                 .setParameter("userId", userId)
                 .setParameter("projectId", projectId)
                 .getSingleResult() > 0;
@@ -165,6 +165,16 @@ public class UserProjectDao extends AbstractDao<UserProjectEntity>{
     public List<UserProjectEntity> findMembersByProjectId(int projectId) {
         try {
             return em.createNamedQuery("UserProject.findMembersByProjectId", UserProjectEntity.class)
+                    .setParameter("projectId", projectId)
+                    .getResultList();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
+    public List<UserProjectEntity> findAllTypeOfMembersByProjectId(int projectId) {
+        try {
+            return em.createNamedQuery("UserProject.findAllTypeOfMembersByProjectId", UserProjectEntity.class)
                     .setParameter("projectId", projectId)
                     .getResultList();
         } catch (NoResultException e) {
@@ -222,5 +232,12 @@ public class UserProjectDao extends AbstractDao<UserProjectEntity>{
         } catch (NoResultException e) {
             return null;
         }
+    }
+
+    public boolean isUserCreator(int userId, int projectId) {
+        return em.createNamedQuery("UserProject.isUserCreator", Long.class)
+                .setParameter("userId", userId)
+                .setParameter("projectId", projectId)
+                .getSingleResult() > 0;
     }
 }
