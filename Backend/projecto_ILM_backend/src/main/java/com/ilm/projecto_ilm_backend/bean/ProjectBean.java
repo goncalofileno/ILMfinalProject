@@ -1115,7 +1115,7 @@ public class ProjectBean {
 
             // Construct the URLs
             long timestamp = System.currentTimeMillis();
-            String baseUrl = "http://localhost:8080/photos/projects/" + projectEntity.getSystemName();
+            String baseUrl = "http://localhost:8080/images/projects/" + projectEntity.getSystemName();
             String originalUrl = baseUrl + "/project_profile_picture." + format + "?t=" + timestamp;
             String cardUrl = baseUrl + "/project_card_picture." + format + "?t=" + timestamp;
 

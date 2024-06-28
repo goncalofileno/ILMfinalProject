@@ -382,7 +382,7 @@ public class UserBean {
 
             // Construct the URLs
             long timestamp = System.currentTimeMillis();
-            String baseUrl = "http://localhost:8080/photos/users/" + user.getId();
+            String baseUrl = "http://localhost:8080/images/users/" + user.getId();
             String originalUrl = baseUrl + "/profile_picture." + format + "?t=" + timestamp;
             logger.info("Original URL: " + originalUrl);
             String avatarUrl = baseUrl + "/profile_picture_avatar." + format + "?t=" + timestamp;
