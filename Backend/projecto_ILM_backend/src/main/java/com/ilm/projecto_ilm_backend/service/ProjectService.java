@@ -2,6 +2,7 @@ package com.ilm.projecto_ilm_backend.service;
 
 
 import com.ilm.projecto_ilm_backend.ENUMS.StateProjectENUM;
+import com.ilm.projecto_ilm_backend.ENUMS.UserInProjectTypeENUM;
 import com.ilm.projecto_ilm_backend.bean.ProjectBean;
 import com.ilm.projecto_ilm_backend.bean.UserBean;
 import com.ilm.projecto_ilm_backend.dto.project.*;
@@ -47,29 +48,25 @@ public class ProjectService {
         logger.info("Received a request to create a project from a user with IP address: " + clientIP);
 
         if (databaseValidator.checkSessionId(sessionId)) {
-            if(projectBean.createProject(projectCreationInfoDto, sessionId)){
+            if (projectBean.createProject(projectCreationInfoDto, sessionId)) {
                 String projectSystemName = projectBean.projectSystemNameGenerator(projectCreationInfoDto.getName());
-                return Response.status(Response.Status.OK).entity("{\"systemName\":\""+projectSystemName+"\"}").build();
-            }
-            else return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-        else return Response.status(Response.Status.UNAUTHORIZED).build();
+                return Response.status(Response.Status.OK).entity("{\"systemName\":\"" + projectSystemName + "\"}").build();
+            } else return Response.status(Response.Status.BAD_REQUEST).build();
+        } else return Response.status(Response.Status.UNAUTHORIZED).build();
     }
 
     @PATCH
     @Path("/photo/{projectName}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateProjectPhoto(@CookieParam("session-id") String sessionId,Map<String,String> request, @PathParam("projectName")String projectName) throws UnknownHostException {
+    public Response updateProjectPhoto(@CookieParam("session-id") String sessionId, Map<String, String> request, @PathParam("projectName") String projectName) throws UnknownHostException {
         String clientIP = InetAddress.getLocalHost().getHostAddress();
         logger.info("Received a request to create a project from a user with IP address: " + clientIP);
 
         if (databaseValidator.checkSessionId(sessionId)) {
-            if(projectBean.uploadProjectPicture(request,projectName)){
+            if (projectBean.uploadProjectPicture(request, projectName)) {
                 return Response.status(Response.Status.OK).build();
-            }
-            else return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-        else return Response.status(Response.Status.UNAUTHORIZED).build();
+            } else return Response.status(Response.Status.BAD_REQUEST).build();
+        } else return Response.status(Response.Status.UNAUTHORIZED).build();
     }
 
     @GET
@@ -116,13 +113,13 @@ public class ProjectService {
     @Path("/myprojects")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getMyProjects(@CookieParam("session-id") String sessionId, @QueryParam("page") int page, @QueryParam("lab") String lab, @QueryParam("status") String status,
-                                      @QueryParam("keyword") String keyword, @QueryParam("memberType") String memberType) throws UnknownHostException {
+                                  @QueryParam("keyword") String keyword, @QueryParam("memberType") String memberType) throws UnknownHostException {
         String clientIP = InetAddress.getLocalHost().getHostAddress();
         logger.info("Received a request to to receive my projects table info from a user from IP address: " + clientIP);
 
         if (databaseValidator.checkSessionId(sessionId)) {
             try {
-                return Response.ok(projectBean.getMyProjectsPageInfo(sessionId, page, lab, status, keyword,memberType)).build();
+                return Response.ok(projectBean.getMyProjectsPageInfo(sessionId, page, lab, status, keyword, memberType)).build();
             } catch (Exception e) {
                 logger.error("An error occurred while retrieving my projects table: " + e.getMessage() + " from IP address: " + clientIP);
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("An error occurred while retrieving my projects").build();
@@ -170,7 +167,6 @@ public class ProjectService {
             return Response.status(Response.Status.UNAUTHORIZED).entity("Unauthorized access").build();
         }
     }
-
 
 
     @GET
@@ -347,7 +343,6 @@ public class ProjectService {
     }
 
 
-
     @POST
     @Path("/cancelProject")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -363,11 +358,12 @@ public class ProjectService {
                     String result = projectBean.cancelProject(userId, projectSystemName, reason, sessionId);
                     return Response.ok(Collections.singletonMap("message", result)).build();
                 } else {
-                    if(userBean.isUserCreatorOrManager(userId, projectSystemName)){
+                    if (userBean.isUserCreatorOrManager(userId, projectSystemName)) {
                         String result = projectBean.cancelProject(userId, projectSystemName, reason, sessionId);
                         return Response.ok(Collections.singletonMap("message", result)).build();
-                    }else{
-                    return Response.status(Response.Status.FORBIDDEN).entity(Collections.singletonMap("message", "User does not have permission to cancel projects.")).build();}
+                    } else {
+                        return Response.status(Response.Status.FORBIDDEN).entity(Collections.singletonMap("message", "User does not have permission to cancel projects.")).build();
+                    }
                 }
             } catch (Exception e) {
                 logger.error("An error occurred while canceling project: " + e.getMessage() + " from IP address: " + clientIP);
@@ -489,21 +485,24 @@ public class ProjectService {
     @POST
     @Path("/members/{projectSystemName}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response addMembers(@CookieParam("session-id") String sessionId, ProjectCreationMembersDto projectCreationMembersDto,@PathParam("projectSystemName")String projectSystemName) throws UnknownHostException {
+    public Response addMembers(@CookieParam("session-id") String sessionId, ProjectCreationMembersDto projectCreationMembersDto, @PathParam("projectSystemName") String projectSystemName) throws UnknownHostException {
         String clientIP = InetAddress.getLocalHost().getHostAddress();
         logger.info("Received a request to create a project from a user with IP address: " + clientIP);
+
+        if (databaseValidator.checkSessionId(sessionId)) {
+            if (projectBean.addInitialMembers(projectCreationMembersDto, projectSystemName, sessionId)) {
+                return Response.status(Response.Status.OK).build();
+            } else return Response.status(Response.Status.BAD_REQUEST).build();
+
+        } else return Response.status(Response.Status.UNAUTHORIZED).build();
+    }
+
     @GET
     @Path("/getProjectMembersPage")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getProjectMembersPage(@CookieParam("session-id") String sessionId, @QueryParam("projectSystemName") String projectSystemName) throws UnknownHostException {
         String clientIP = InetAddress.getLocalHost().getHostAddress();
         logger.info("Received a request to get project members page from IP address: " + clientIP);
-
-        if (databaseValidator.checkSessionId(sessionId)) {
-            if(projectBean.addInitialMembers(projectCreationMembersDto, projectSystemName,sessionId)){
-                return Response.status(Response.Status.OK).build();
-            }
-            else return Response.status(Response.Status.BAD_REQUEST).build();
         if (databaseValidator.checkSessionId(sessionId)) {
             try {
                 int userId = userBean.getUserBySessionId(sessionId).getId();
@@ -521,34 +520,22 @@ public class ProjectService {
         }
     }
 
-        }
-        else return Response.status(Response.Status.UNAUTHORIZED).build();
-    }
-    @POST
-    @Path("/changeUserInProjectType")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response changeUserInProjectType(@CookieParam("session-id") String sessionId, @QueryParam("projectSystemName") String projectSystemName, @QueryParam("userId") int userId, @QueryParam("newType") UserInProjectTypeENUM newType) throws UnknownHostException {
-        String clientIP = InetAddress.getLocalHost().getHostAddress();
-        logger.info("Received a request to change user in project type from IP address: " + clientIP);
-
 
     @GET
     @Path("/checkName/{projectName}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response checkProjectName(@CookieParam("session-id") String sessionId,@PathParam("projectName") String projectName ) throws UnknownHostException {
+    public Response checkProjectName(@CookieParam("session-id") String sessionId, @PathParam("projectName") String projectName) throws UnknownHostException {
         String clientIP = InetAddress.getLocalHost().getHostAddress();
         logger.info("Received a request to check if the name of the project is valid from a user from IP address: " + clientIP);
 
         if (databaseValidator.checkSessionId(sessionId)) {
             try {
-                if (projectName == null || projectName.isEmpty() || projectName.length() < 3 || projectName.length() > 35 ) {
+                if (projectName == null || projectName.isEmpty() || projectName.length() < 3 || projectName.length() > 35) {
                     return Response.status(Response.Status.BAD_REQUEST).build();
                 }
-                if(!databaseValidator.checkProjectName(projectName)){
+                if (!databaseValidator.checkProjectName(projectName)) {
                     return Response.ok().build();
-                }
-                else return Response.status(Response.Status.CONFLICT).build();
+                } else return Response.status(Response.Status.CONFLICT).build();
 
             } catch (Exception e) {
                 logger.error("An error occurred while checking if the name of the project is valid : " + e.getMessage() + " from IP address: " + clientIP);
@@ -559,6 +546,13 @@ public class ProjectService {
         }
     }
 
+    @POST
+    @Path("/changeUserInProjectType")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response changeUserInProjectType(@CookieParam("session-id") String sessionId, @QueryParam("projectSystemName") String projectSystemName, @QueryParam("userId") int userId, @QueryParam("newType") UserInProjectTypeENUM newType) throws UnknownHostException {
+        String clientIP = InetAddress.getLocalHost().getHostAddress();
+        logger.info("Received a request to change user in project type from IP address: " + clientIP);
         if (databaseValidator.checkSessionId(sessionId)) {
             try {
                 int currentUserId = userBean.getUserBySessionId(sessionId).getId();
@@ -576,10 +570,5 @@ public class ProjectService {
             return Response.status(Response.Status.UNAUTHORIZED).entity(Collections.singletonMap("message", "Unauthorized access")).build();
         }
     }
-
-
-
-
-
 
 }
