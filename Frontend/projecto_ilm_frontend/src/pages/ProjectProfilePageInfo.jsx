@@ -255,7 +255,7 @@ const ProjectProfilePageInfo = () => {
           )}
           <div className="admin-buttons">
             {isAdmin && projectInfo.state === "READY" && (
-              <Row style={{marginBottom: "10px"}}>
+              <Row style={{ marginBottom: "10px" }}>
                 <Col md="6">
                   <Button
                     variant="success"
@@ -397,13 +397,13 @@ const ProjectProfilePageInfo = () => {
     <>
       <AppNavbar />
       <div className="bckg-color-ilm-page ilm-pageb">
-        <Container className="mt-4">
+        <Container className="mt-4" style={{ height: "100%" }}>
           <ProjectTabs
             typeOfUserSeingProject={projectInfo.typeOfUserSeingProject}
           />
-          <Row className="justify-content-md-center">
-            <Col md="12">
-              <Card className="shadow-sm">
+          <Row className="justify-content-md-center" style={{ height: "100%" }}>
+            <Col md="12" style={{ height: "100%" }}>
+              <Card className="shadow-sm" style={{ height: "100%" }}>
                 <div
                   className="project-cover-photo"
                   style={{
@@ -427,7 +427,7 @@ const ProjectProfilePageInfo = () => {
                     </Card.Body>
                   </Col>
                 </Row>
-                <Row>
+                <Row style={{ height: "100%" }}>
                   <Col md="6">
                     <Card.Body>
                       <Row style={{ marginBottom: "40px" }}>
@@ -547,12 +547,15 @@ const ProjectProfilePageInfo = () => {
                       </Card.Text>
                     </Card.Body>
                   </Col>
-                  <Col md="6">
+                  <Col md="6" style={{ height: "100%" }}>
                     <Row>
                       <Col md="12">{renderUserStatusCard()}</Col>
                     </Row>
-                    <Row>
-                      <Card.Body>
+                    <Row style={{ height: "100%" }}>
+                      <Card.Body
+                        style={{ height: "100%" }}
+                        className="card-body-text"
+                      >
                         <div className="label-applyButton">
                           <div>
                             <strong>Members</strong>{" "}

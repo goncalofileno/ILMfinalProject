@@ -89,7 +89,7 @@
 .skill-div-false {
   padding: 2px 5px;
   border-radius: 5px;
-  background-color: #f39d12ad;
+  background-color: rgba(30, 40, 82, 0.734);
   color: white;
   height: 30%;
   margin: 3px;
@@ -123,4 +123,10 @@
   align-items: flex-end;
   justify-content: flex-end;
   font-size: 9px;
+}
+
+.user-card-button:disabled {
+  padding-top: 7px;
+  padding-bottom: 7px;
+  border-radius: 10px;
 }

@@ -72,6 +72,8 @@ import com.ilm.projecto_ilm_backend.ENUMS.ConvertersENUM.StateProjectEnumConvert
         name = "Project.isSkillInProject",
         query = "SELECT COUNT(s) > 0 FROM ProjectEntity p JOIN p.skillInProject s WHERE p.systemName = :projectSystemName AND s.name = :skillName"
 )
+@NamedQuery(name = "Project.doesProjectExist", query = "SELECT COUNT(p)>0 FROM ProjectEntity p WHERE p.name = :name")
+
 
 public class ProjectEntity implements Serializable {
 

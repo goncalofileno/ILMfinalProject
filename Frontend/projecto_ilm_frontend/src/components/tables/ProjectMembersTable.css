@@ -1,11 +1,31 @@
 .creator-profile-picture {
-    width: 40px;
-    height: 40px;
-    margin-right: 10px;
-  }
-  
-  .member-profile-picture {
-    width: 30px;
-    height: 30px;
-  }
-  
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+}
+
+.member-profile-picture {
+  width: 30px;
+  height: 30px;
+}
+
+#table-users-project th {
+  background-color: rgb(30, 40, 82);
+}
+
+#body-table-users-project tr {
+  height: 10%;
+}
+
+#body-table-users-project {
+  height: 100%;
+  overflow-y: auto;
+  max-height: 100%;
+}
+
+.card-body-text {
+  height: 70%;
+  max-height: 70%;
+  overflow-y: auto;
+  overflow-x: hidden;
+}

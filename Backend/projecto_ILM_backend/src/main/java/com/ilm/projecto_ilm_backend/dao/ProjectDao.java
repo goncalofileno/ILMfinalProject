@@ -70,6 +70,7 @@ public class ProjectDao extends AbstractDao<ProjectEntity>{
         }
     }
 
+
     public ArrayList<HomeProjectDto> findAllNamesAndDescriptionsHome() {
         TypedQuery<Object[]> query = em.createNamedQuery("Project.findNameAndDescriptionHome", Object[].class);
         List<Object[]> results = query.getResultList();
@@ -278,5 +279,15 @@ public class ProjectDao extends AbstractDao<ProjectEntity>{
         query.setParameter("projectSystemName", projectSystemName);
         query.setParameter("skillName", skillName);
         return query.getSingleResult();
+    }
+
+    public boolean doesProjectExists(String name) {
+        try {
+            return em.createNamedQuery("Project.doesProjectExist", Boolean.class).setParameter("name", name)
+                    .getSingleResult();
+
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

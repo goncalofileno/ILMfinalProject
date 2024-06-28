@@ -4,6 +4,7 @@ package com.ilm.projecto_ilm_backend.service;
 import com.ilm.projecto_ilm_backend.ENUMS.StateProjectENUM;
 import com.ilm.projecto_ilm_backend.bean.ProjectBean;
 import com.ilm.projecto_ilm_backend.bean.UserBean;
+import com.ilm.projecto_ilm_backend.dto.project.*;
 import com.ilm.projecto_ilm_backend.dto.project.ProjectMembersPageDto;
 import com.ilm.projecto_ilm_backend.dto.project.ProjectCreationDto;
 import com.ilm.projecto_ilm_backend.dto.project.ProjectProfileDto;
@@ -85,7 +86,6 @@ public class ProjectService {
             logger.error("An error occurred while retrieving home projects: " + e.getMessage() + " from IP address: " + clientIP);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("An error occurred while retrieving home projects").build();
         }
-
     }
 
     @GET
@@ -486,6 +486,12 @@ public class ProjectService {
         }
     }
 
+    @POST
+    @Path("/members/{projectSystemName}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response addMembers(@CookieParam("session-id") String sessionId, ProjectCreationMembersDto projectCreationMembersDto,@PathParam("projectSystemName")String projectSystemName) throws UnknownHostException {
+        String clientIP = InetAddress.getLocalHost().getHostAddress();
+        logger.info("Received a request to create a project from a user with IP address: " + clientIP);
     @GET
     @Path("/getProjectMembersPage")
     @Produces(MediaType.APPLICATION_JSON)
@@ -493,6 +499,11 @@ public class ProjectService {
         String clientIP = InetAddress.getLocalHost().getHostAddress();
         logger.info("Received a request to get project members page from IP address: " + clientIP);
 
+        if (databaseValidator.checkSessionId(sessionId)) {
+            if(projectBean.addInitialMembers(projectCreationMembersDto, projectSystemName,sessionId)){
+                return Response.status(Response.Status.OK).build();
+            }
+            else return Response.status(Response.Status.BAD_REQUEST).build();
         if (databaseValidator.checkSessionId(sessionId)) {
             try {
                 int userId = userBean.getUserBySessionId(sessionId).getId();
@@ -510,6 +521,9 @@ public class ProjectService {
         }
     }
 
+        }
+        else return Response.status(Response.Status.UNAUTHORIZED).build();
+    }
     @POST
     @Path("/changeUserInProjectType")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -517,6 +531,33 @@ public class ProjectService {
     public Response changeUserInProjectType(@CookieParam("session-id") String sessionId, @QueryParam("projectSystemName") String projectSystemName, @QueryParam("userId") int userId, @QueryParam("newType") UserInProjectTypeENUM newType) throws UnknownHostException {
         String clientIP = InetAddress.getLocalHost().getHostAddress();
         logger.info("Received a request to change user in project type from IP address: " + clientIP);
+
+
+    @GET
+    @Path("/checkName/{projectName}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response checkProjectName(@CookieParam("session-id") String sessionId,@PathParam("projectName") String projectName ) throws UnknownHostException {
+        String clientIP = InetAddress.getLocalHost().getHostAddress();
+        logger.info("Received a request to check if the name of the project is valid from a user from IP address: " + clientIP);
+
+        if (databaseValidator.checkSessionId(sessionId)) {
+            try {
+                if (projectName == null || projectName.isEmpty() || projectName.length() < 3 || projectName.length() > 35 ) {
+                    return Response.status(Response.Status.BAD_REQUEST).build();
+                }
+                if(!databaseValidator.checkProjectName(projectName)){
+                    return Response.ok().build();
+                }
+                else return Response.status(Response.Status.CONFLICT).build();
+
+            } catch (Exception e) {
+                logger.error("An error occurred while checking if the name of the project is valid : " + e.getMessage() + " from IP address: " + clientIP);
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("An error occurred while checking if the name of the project is valid").build();
+            }
+        } else {
+            return Response.status(Response.Status.UNAUTHORIZED).entity("Unauthorized access").build();
+        }
+    }
 
         if (databaseValidator.checkSessionId(sessionId)) {
             try {

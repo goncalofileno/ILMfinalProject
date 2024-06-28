@@ -169,3 +169,40 @@ td {
   width: 100%;
   text-align: center;
 }
+
+.table-resources-proj-creation {
+  height: 100%;
+}
+
+.table-resources-proj-creation th,
+td {
+  text-align: center;
+}
+
+.table-resources-proj-creation button {
+  background-color: #f39c12;
+  border: none;
+  border-radius: 50%;
+  height: 65%;
+  aspect-ratio: 1/1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  visibility: hidden;
+  transition: background-color 0.5s ease;
+}
+
+.last-column-table-resources {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.table-resources-proj-creation tbody tr:hover button {
+  visibility: visible;
+}
+
+.table-resources-proj-creation button:hover {
+  background-color: #c67e0b;
+}

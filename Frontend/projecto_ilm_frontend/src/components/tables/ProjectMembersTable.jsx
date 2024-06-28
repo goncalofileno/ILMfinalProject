@@ -13,17 +13,27 @@ const ProjectMembersTable = ({ members }) => {
   };
 
   return (
-    <Table striped bordered hover className="mt-2">
+    <Table
+      striped
+      bordered
+      hover
+      className="mt-2"
+      style={{ height: "90%" }}
+      id="table-users-project-table"
+    >
       <thead>
-        <tr>
+        <tr id="table-users-project">
           <th>Photo</th>
           <th>Name</th>
           <th>Type</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody id="body-table-users-project">
         {members.map((member, index) => (
-          <tr key={index}>
+          <tr
+            key={index}
+            onClick={() => handleNavigateToProfile(member.systemUsername)}
+          >
             <td>
               <Image
                 src={member.profilePicture}
@@ -31,11 +41,10 @@ const ProjectMembersTable = ({ members }) => {
                 className="member-profile-picture"
               />
             </td>
-            <td
-              onClick={() => handleNavigateToProfile(member.systemUsername)}
-              style={{ cursor: "pointer", color: "black" }}
-            >
-              {member.systemUsername === userSystemUsername ? "You" : member.name}
+            <td style={{ cursor: "pointer", color: "black" }}>
+              {member.systemUsername === userSystemUsername
+                ? "You"
+                : member.name}
             </td>
             <td>{member.type}</td>
           </tr>

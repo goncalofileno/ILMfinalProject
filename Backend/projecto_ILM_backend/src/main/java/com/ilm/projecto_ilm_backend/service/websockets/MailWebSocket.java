@@ -145,6 +145,10 @@ public class MailWebSocket {
         sendNotification(sessionId, notificationDto);
     }
 
+    public static void sendProjectInsertedNotification(String sessionId, NotificationDto notificationDto) {
+        sendNotification(sessionId, notificationDto);
+    }
+
     public static void sendTypeChangedNotification(String sessionId, NotificationDto notificationDto) {
         sendNotification(sessionId, notificationDto);
     }

@@ -1344,9 +1344,50 @@ async function getUserProjectCreation(
   }
 }
 
+async function addMembers(systemProjectName, projectCreationMembersDto) {
+  try {
+    const response = await fetch(
+      `${baseURL}project/members/${systemProjectName}`,
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(projectCreationMembersDto),
+      }
+    );
+
+    return response;
+  } catch (error) {
+    console.error("Error during creating profile:", error);
+    throw error;
+  }
+}
+
+async function checkProjectName(projectName) {
+  try {
+    const response = await fetch(`${baseURL}project/checkName/${projectName}`, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+
+    return response;
+  } catch (error) {
+    console.error("Error during creating profile:", error);
+    throw error;
+  }
+}
 async function getChatPage(sessionId, projectSystemName) {
   try {
-    const endpoint = `${baseURL}message/chatPage?projectSystemName=${encodeURIComponent(projectSystemName)}`;
+    const endpoint = `${baseURL}message/chatPage?projectSystemName=${encodeURIComponent(
+      projectSystemName
+    )}`;
     const fetchResponse = await fetch(endpoint, {
       method: "GET",
       headers: {
@@ -1371,7 +1412,9 @@ async function getChatPage(sessionId, projectSystemName) {
 
 async function sendChatMessage(sessionId, projectSystemName, messageContent) {
   try {
-    const endpoint = `${baseURL}message/sendMessage?projectSystemName=${encodeURIComponent(projectSystemName)}`;
+    const endpoint = `${baseURL}message/sendMessage?projectSystemName=${encodeURIComponent(
+      projectSystemName
+    )}`;
     const messageDto = {
       message: messageContent,
     };
@@ -1578,7 +1621,6 @@ export {
   editResource,
   markAsDone,
   createNote,
-  getTasksSuggestions,
   createProject,
   uploadProjectPhoto,
   getUserProjectCreation,
@@ -1586,6 +1628,8 @@ export {
   sendChatMessage,
   getChatPage,
   markNotificationAsClicked,
+  addMembers,
+  checkProjectName,
   getProjectMembersPage,
   removeUserFromProject,
   changeUserInProjectType,

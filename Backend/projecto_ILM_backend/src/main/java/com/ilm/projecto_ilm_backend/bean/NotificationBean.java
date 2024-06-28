@@ -179,6 +179,22 @@ public class NotificationBean {
         }
     }
 
+    public void createProjectInsertedNotification(String projectSystemName, String userName, UserEntity receptor, String systemUserName) {
+        NotificationEntity notification = new NotificationEntity();
+        notification.setType(NotificationTypeENUM.PROJECT_INSERTED);
+        notification.setReadStatus(false);
+        notification.setSendDate(LocalDateTime.now());
+        notification.setProjectSystemName(projectSystemName);
+        notification.setUserName(userName);
+        notification.setSystemUserName(systemUserName);
+        notification.setReceptor(receptor);
+        notification.setMessageNotificationClicked(false);
+        notificationDao.persist(notification);
+        if(sessionDao.findSessionIdByUserId(receptor.getId()) != null) {
+            MailWebSocket.sendProjectInsertedNotification(sessionDao.findSessionIdByUserId(receptor.getId()), toDto(notification));
+        }
+    }
+
     public void createInviteAcceptedNotification(String projectSystemName, String userName, UserEntity receptor, String systemUserName) {
         NotificationEntity notification = new NotificationEntity();
         notification.setType(NotificationTypeENUM.INVITE_ACCEPTED);
