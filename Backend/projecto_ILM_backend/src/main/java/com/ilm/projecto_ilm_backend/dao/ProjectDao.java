@@ -280,4 +280,14 @@ public class ProjectDao extends AbstractDao<ProjectEntity>{
         query.setParameter("skillName", skillName);
         return query.getSingleResult();
     }
+
+    public boolean doesProjectExists(String name) {
+        try {
+            return em.createNamedQuery("Project.doesProjectExist", Boolean.class).setParameter("name", name)
+                    .getSingleResult();
+
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }

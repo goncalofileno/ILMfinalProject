@@ -922,6 +922,7 @@ public class ProjectBean {
 
     public boolean createProject(ProjectCreationDto projectCreationInfoDto, String sessionId){
 
+        if(projectDao.doesProjectExists(projectCreationInfoDto.getName())) return false;
         LocalDateTime localStartDateTime=convertStringToLocalDateTime(projectCreationInfoDto.getStartDate());
         LocalDateTime localEndDateTime=convertStringToLocalDateTime(projectCreationInfoDto.getEndDate());
 
@@ -1078,7 +1079,7 @@ public class ProjectBean {
      ProjectEntity project = projectDao.findBySystemName(projectSystemName);
 
      int numberOfMembersInProject = userProjectDao.getNumberOfUsersByProjectId(project.getId());
-     if(numberOfMembersInProject!=0){
+     if(numberOfMembersInProject!=1){
          return false;
      }
      for (Integer userInProject : usersInProject) {

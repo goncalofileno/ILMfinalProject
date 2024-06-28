@@ -1,5 +1,6 @@
 package com.ilm.projecto_ilm_backend.validator;
 
+import com.ilm.projecto_ilm_backend.dao.ProjectDao;
 import com.ilm.projecto_ilm_backend.dao.SessionDao;
 import com.ilm.projecto_ilm_backend.dao.UserDao;
 import jakarta.ejb.EJB;
@@ -13,6 +14,8 @@ public class DatabaseValidator {
     private UserDao userDao;
     @Inject
     private SessionDao sessionDao;
+    @Inject
+    private ProjectDao projectDao;
 
     /**
      * Checks if the provided email is already present in the database.
@@ -49,5 +52,8 @@ public class DatabaseValidator {
         return sessionDao.isUserLogged(sessionId);
     }
 
+    public boolean checkProjectName(String projectName) {
+        return projectDao.doesProjectExists(projectName);
+    }
 
 }

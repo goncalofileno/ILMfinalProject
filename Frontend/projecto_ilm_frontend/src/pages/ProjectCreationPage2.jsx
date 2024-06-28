@@ -7,6 +7,8 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import StandardModal from "../components/modals/StandardModal";
 
+import { useNavigate } from "react-router-dom";
+
 export default function ProjectCreationPage2() {
   const [users, setUsers] = useState([]);
   const { systemProjectName } = useParams();
@@ -18,6 +20,10 @@ export default function ProjectCreationPage2() {
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [maxMembers, setMaxMembers] = useState(4);
+  const [modalType, setModalType] = useState("warning");
+  const [modalMessage, setModalMessage] = useState("");
+  const [modalActive, setModalActive] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     console.log("rejected users changed", rejectedUsers);
@@ -51,26 +57,49 @@ export default function ProjectCreationPage2() {
   };
 
   const handleSubmit = () => {
-    let projectCreationMembersDto = {
-      maxMembers: maxMembers,
-      usersInProject: usersInProject.map((user) => user.id),
-    };
-    addMembers(systemProjectName, projectCreationMembersDto).then(
-      (response) => {
-        if (response.status === 200) {
-          console.log("Members added successfully");
-        }
+    console.log("maxMembers", maxMembers);
+    if (maxMembers < 31) {
+      if (usersInProject.length <= maxMembers) {
+        let projectCreationMembersDto = {
+          maxMembers: maxMembers,
+          usersInProject: usersInProject.map((user) => user.id),
+        };
+        addMembers(systemProjectName, projectCreationMembersDto).then(
+          (response) => {
+            if (response.status === 200) {
+              setModalType("success");
+              setModalMessage(
+                "The members have been added to the project successfully"
+              );
+              setModalActive(true);
+              setTimeout(() => {
+                navigate(`/create-project/${systemProjectName}/resources`);
+              }, 1500);
+            }
+          }
+        );
+      } else {
+        setModalType("danger");
+        setModalMessage("You have exceeded the maximum number of members");
+        setModalActive(true);
       }
-    );
+    } else {
+      setModalType("danger");
+      setModalMessage(
+        "Please select a maximum number of members value smaller or equal to 30"
+      );
+      setModalActive(true);
+    }
   };
 
   return (
     <>
       <AppNavbar />
       <StandardModal
-        modalType="success"
-        message="alerta"
-        modalActive={true}
+        modalType={modalType}
+        message={modalMessage}
+        modalActive={modalActive}
+        setModalActive={setModalActive}
       ></StandardModal>
       <AsideProjectCreationPage2
         selectedLab={selectedLab}

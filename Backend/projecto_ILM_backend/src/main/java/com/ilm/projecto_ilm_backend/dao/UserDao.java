@@ -173,9 +173,9 @@ public class UserDao extends AbstractDao<UserEntity> {
     }
 
     //recebe o systemUsername e retorna o nome completo do utilizador, firstName + " " + lastName
-    public List<Object[]> getUserProjectCreationDto(int userId, List<Long> rejectedUsersId, int usersPerPage, int page, LabEntity lab, String keyword){
+    public List<Object[]> getUserProjectCreationDto(int userId, List<Long> rejectedUsersId, int usersPerPage, int page, LabEntity lab, String keyword, List<String> skillNames){
         try {
-                return em.createNamedQuery("User.getUserProjectCreationDto", Object[].class).setParameter("id",userId).setParameter("excludedIds",rejectedUsersId).setParameter("lab",lab).setParameter("keyword",keyword).setFirstResult(usersPerPage * (page - 1)).setMaxResults(usersPerPage).getResultList();
+                return em.createNamedQuery("User.getUserProjectCreationDto", Object[].class).setParameter("id",userId).setParameter("excludedIds",rejectedUsersId).setParameter("lab",lab).setParameter("keyword",keyword).setParameter("skillNames",skillNames).setFirstResult(usersPerPage * (page - 1)).setMaxResults(usersPerPage).getResultList();
 
         } catch (Exception e) {
             return null;

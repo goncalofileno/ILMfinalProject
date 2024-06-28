@@ -9,6 +9,7 @@ import {
   getLabsWithSessionId,
   createProject,
   uploadProjectPhoto,
+  checkProjectName,
 } from "../utilities/services";
 import { formatLab } from "../utilities/converters";
 import defaultPhoto from "../resources/avatares/defaultProjectAvatar.jpg";
@@ -30,6 +31,8 @@ export default function ProjectCreationPage1() {
   const [modalActive, setModalActive] = useState(false);
   const [modalType, setModalType] = useState("success");
   const [modalMessage, setModalMessage] = useState("");
+  const [warningType, setWarningType] = useState("");
+  const [warningTxt, setWarningTxt] = useState("");
 
   const navigate = useNavigate();
 
@@ -123,6 +126,29 @@ export default function ProjectCreationPage1() {
     }
   };
 
+  const handleOnBlur = () => {
+    if (projectName !== "") {
+      checkProjectName(projectName).then((response) => {
+        if (response.status === 200) {
+          setWarningType("success");
+          setWarningTxt("Project name available");
+        } else if (response.status === 409) {
+          setWarningType("incorrect");
+          setWarningTxt("Project name already exists");
+        } else if (response.status === 400) {
+          setWarningType("incorrect");
+          if (projectName.length < 3)
+            setWarningTxt("Name has to be at least 3 characters long");
+          else if (projectName.length > 35)
+            setWarningTxt("Name has to be at most 35 characters long");
+          else setWarningTxt("Invalid project name");
+        }
+      });
+    } else {
+      setWarningType("");
+      setWarningTxt("");
+    }
+  };
   return (
     <>
       <AppNavbar />
@@ -188,6 +214,10 @@ export default function ProjectCreationPage1() {
                   label="Project Name"
                   value={projectName}
                   setValue={setProjectName}
+                  warningType={warningType}
+                  warningTxt={warningTxt}
+                  handleOnBlur={handleOnBlur}
+                  onBlurActive={true}
                 ></InputForm>
               </Col>
               <Col sm={2}>
@@ -295,7 +325,8 @@ export default function ProjectCreationPage1() {
                   motivation !== "" &&
                   startDate !== "" &&
                   endDate !== "" &&
-                  selectedInterests.length > 0
+                  selectedInterests.length > 0 &&
+                  warningType === "success"
                     ? false
                     : true
                 }

@@ -710,7 +710,8 @@ public class UserBean {
         else lab = labDao.findbyLocal(WorkLocalENUM.valueOf(labName));
         if (keyword.equals("")) keyword = null;
 
-        List<Object[]> userInfo= userDao.getUserProjectCreationDto(userId, rejectedUsersDto.getRejectedUsersId(),NUMBER_OF_USERS_PER_PAGE,page, lab, keyword);
+        List<String> skillsInProject=projectDao.getSkillsBySystemName(systemProjectName);
+        List<Object[]> userInfo= userDao.getUserProjectCreationDto(userId, rejectedUsersDto.getRejectedUsersId(),NUMBER_OF_USERS_PER_PAGE,page, lab, keyword,skillsInProject);
 
         ArrayList<UserProjectCreationDto> userProjectCreationDtos= new ArrayList<>();
         UserProjectCreationInfoDto userProjectCreationInfoDto=new UserProjectCreationInfoDto();
@@ -722,7 +723,7 @@ public class UserBean {
             userProjectCreationDto.setName((String) user[1]+" "+(String) user[2]);
             userProjectCreationDto.setPhoto((String) user[3]);
             userProjectCreationDto.setId((int) user[4]);
-            List<String> skillsInProject=projectDao.getSkillsBySystemName(systemProjectName);
+
             List<SkillEntity> skillsEntities= userDao.getUserSkills((int) user[4], skillsInProject);
             List<SkillDto> skills= new ArrayList<>();
             for(SkillEntity skill: skillsEntities){
@@ -740,6 +741,9 @@ public class UserBean {
             userProjectCreationDtos.add(userProjectCreationDto);
             int numberOfUsers =userDao.getNumberUserProjectCreationDto(userId, rejectedUsersDto.getRejectedUsersId(),lab, keyword);
             int maxPageNumber=calculateMaximumPageUsers(numberOfUsers,NUMBER_OF_USERS_PER_PAGE);
+            System.out.println("max page: " + maxPageNumber);
+            System.out.println("number of users: " + numberOfUsers);
+
             userProjectCreationInfoDto.setUserProjectCreationDtos(userProjectCreationDtos);
             userProjectCreationInfoDto.setMaxPageNumber(maxPageNumber);
         }

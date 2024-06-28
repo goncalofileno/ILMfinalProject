@@ -82,7 +82,6 @@ public class ProjectService {
             logger.error("An error occurred while retrieving home projects: " + e.getMessage() + " from IP address: " + clientIP);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("An error occurred while retrieving home projects").build();
         }
-
     }
 
     @GET
@@ -501,5 +500,31 @@ public class ProjectService {
         else return Response.status(Response.Status.UNAUTHORIZED).build();
     }
 
+
+    @GET
+    @Path("/checkName/{projectName}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response checkProjectName(@CookieParam("session-id") String sessionId,@PathParam("projectName") String projectName ) throws UnknownHostException {
+        String clientIP = InetAddress.getLocalHost().getHostAddress();
+        logger.info("Received a request to check if the name of the project is valid from a user from IP address: " + clientIP);
+
+        if (databaseValidator.checkSessionId(sessionId)) {
+            try {
+                if (projectName == null || projectName.isEmpty() || projectName.length() < 3 || projectName.length() > 35 ) {
+                    return Response.status(Response.Status.BAD_REQUEST).build();
+                }
+                if(!databaseValidator.checkProjectName(projectName)){
+                    return Response.ok().build();
+                }
+                else return Response.status(Response.Status.CONFLICT).build();
+
+            } catch (Exception e) {
+                logger.error("An error occurred while checking if the name of the project is valid : " + e.getMessage() + " from IP address: " + clientIP);
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("An error occurred while checking if the name of the project is valid").build();
+            }
+        } else {
+            return Response.status(Response.Status.UNAUTHORIZED).entity("Unauthorized access").build();
+        }
+    }
 
 }

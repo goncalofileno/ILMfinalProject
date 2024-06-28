@@ -28,6 +28,7 @@ import ProjectCreationPage1 from "./pages/ProjectCreationPage1";
 import ProjectCreationPage2 from "./pages/ProjectCreationPage2";
 import ProjectChatPage from "./pages/ProjectChatPage";
 import ProjectChatWebSocket from "./utilities/websockets/ProjectChatWebSocket";
+import ProjectCreationPage3 from "./pages/ProjectCreationPage3";
 
 const AppWithWebSocket = () => {
   const location = useLocation();
@@ -37,17 +38,16 @@ const AppWithWebSocket = () => {
   return (
     <>
       <MailWebSocket isInbox={isInbox} />
-      {isProjectChat && <ProjectChatWebSocket projectId={isProjectChat[0].split("/")[2]} />}
+      {isProjectChat && (
+        <ProjectChatWebSocket projectId={isProjectChat[0].split("/")[2]} />
+      )}
       <Routes>
         <Route index element={<App />} />
         <Route path="/register" element={<Register />} />
         <Route path="/create-profile/:token" element={<CreateProfilePage />} />
         <Route path="/projects" element={<ProjectsPage />} />
         <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
-        <Route
-          path="/profile/:systemUsername"
-          element={<Navigate to="projects" />}
-        />
+        <Route path="/profile/:systemUsername" element={<ProfilePage />} />
         <Route
           path="/profile/:systemUsername/:section"
           element={<ProfilePage />}
@@ -78,6 +78,10 @@ const AppWithWebSocket = () => {
         <Route
           path="/create-project/:systemProjectName/members"
           element={<ProjectCreationPage2 />}
+        />
+        <Route
+          path="/create-project/:systemProjectName/resources"
+          element={<ProjectCreationPage3 />}
         />
       </Routes>
     </>

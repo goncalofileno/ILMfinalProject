@@ -140,3 +140,38 @@
   display: flex;
   justify-content: flex-end;
 }
+
+.row-container2 {
+  margin-top: 1.2%;
+  height: 77%;
+  --bs-gutter-x: none;
+}
+
+.last-row-resources-creation {
+  height: 10%;
+  width: 100%;
+  margin-top: 2%;
+}
+
+.gap-10px {
+  gap: 10px;
+}
+
+.justify-align-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.h4-resources-project-creat {
+  height: 80%;
+  display: flex;
+  align-items: flex-end;
+  color: rgb(30, 40, 82);
+}
+
+.table-resources-pagination {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+}

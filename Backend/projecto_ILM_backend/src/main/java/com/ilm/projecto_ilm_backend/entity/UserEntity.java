@@ -23,15 +23,19 @@ import java.util.List;
         @NamedQuery(name = "User.checkSystemUsername", query = "SELECT u FROM UserEntity u WHERE u.systemUsername = :systemUsername"),
         @NamedQuery(name = "User.findBySystemUsername", query = "SELECT u FROM UserEntity u WHERE u.systemUsername = :systemUsername"),
         @NamedQuery(name = "User.getFullNameBySystemUsername)", query = "SELECT u.firstName, u.lastName FROM UserEntity u WHERE u.systemUsername = :systemUsername"),
-        @NamedQuery(name = "User.getUserProjectCreationDto", query = "SELECT u.lab.local, u.firstName, u.lastName,u.thumbnailPhoto, u.id, u.systemUsername " +
+        @NamedQuery(name = "User.getUserProjectCreationDto", query = "SELECT u.lab.local, u.firstName, u.lastName, u.thumbnailPhoto, u.id, u.systemUsername, COUNT(s) AS matchingSkillCount " +
                 "FROM UserEntity u " +
-                "WHERE u.id <> :id AND u.id NOT IN :excludedIds AND (:lab IS NULL OR u.lab = :lab) " +
+                "LEFT JOIN u.skills s ON s.name IN :skillNames " +
+                "WHERE u.id <> :id AND u.id NOT IN :excludedIds AND u.profileCreated = true " +
+                "AND (:lab IS NULL OR u.lab = :lab) " +
                 "AND (:keyword IS NULL OR (LOWER(u.firstName) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
-                "OR  LOWER(u.lastName) LIKE LOWER(CONCAT('%', :keyword, '%'))))"),
+                "OR LOWER(u.lastName) LIKE LOWER(CONCAT('%', :keyword, '%')))) " +
+                "GROUP BY u.lab.local, u.firstName, u.lastName, u.thumbnailPhoto, u.id, u.systemUsername " +
+                "ORDER BY matchingSkillCount DESC"),
 
         @NamedQuery(name = "User.countUserProjectCreationDto", query = "SELECT COUNT(u)" +
                 " FROM UserEntity u " +
-                "WHERE u.id <> :id AND u.id NOT IN :excludedIds" +
+                "WHERE u.id <> :id AND u.id NOT IN :excludedIds AND u.profileCreated=true " +
                 " AND (:lab IS NULL OR u.lab = :lab) " +
                 "AND (:keyword IS NULL OR (LOWER(u.firstName) LIKE LOWER(CONCAT('%', :keyword, '%'))" +
                 " OR  LOWER(u.lastName) LIKE LOWER(CONCAT('%', :keyword, '%'))))"),
