@@ -571,4 +571,30 @@ public class ProjectService {
         }
     }
 
+    @POST
+    @Path("/removeInvitation")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response removeInvitation(@CookieParam("session-id") String sessionId, @QueryParam("projectSystemName") String projectSystemName, @QueryParam("userId") int userId) throws UnknownHostException {
+        String clientIP = InetAddress.getLocalHost().getHostAddress();
+        logger.info("Received a request to remove invitation from IP address: " + clientIP);
+
+        if (databaseValidator.checkSessionId(sessionId)) {
+            try {
+                int currentUserId = userBean.getUserBySessionId(sessionId).getId();
+                if (projectBean.isUserCreatorOrManager(currentUserId, projectSystemName)) {
+                    String result = projectBean.removeInvitation(projectSystemName, userId, currentUserId, sessionId);
+                    return Response.ok(Response.Status.OK).entity(Collections.singletonMap("message", result)).build();
+                } else {
+                    return Response.status(Response.Status.FORBIDDEN).entity(Collections.singletonMap("message", "User does not have permission to remove invitation.")).build();
+                }
+            } catch (Exception e) {
+                logger.error("An error occurred while removing invitation: " + e.getMessage() + " from IP address: " + clientIP);
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(Collections.singletonMap("message", "An error occurred while removing invitation")).build();
+            }
+        } else {
+            return Response.status(Response.Status.UNAUTHORIZED).entity(Collections.singletonMap("message", "Unauthorized access")).build();
+        }
+    }
+
 }

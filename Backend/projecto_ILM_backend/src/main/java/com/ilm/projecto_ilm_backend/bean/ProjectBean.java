@@ -54,6 +54,9 @@ public class ProjectBean {
     private UserTaskDao userTaskDao;
 
     @Inject
+    private NotificationDao notificationDao;
+
+    @Inject
     private UserProjectDao userProjectDao;
 
     @Inject
@@ -1155,6 +1158,7 @@ public class ProjectBean {
 
         return localDateTime;
     }
+
  public boolean addInitialMembers(ProjectCreationMembersDto projectCreationMembersDto, String projectSystemName, String sessionId){
     ArrayList<Integer> usersInProject=projectCreationMembersDto.getUsersInProject();
     if(projectCreationMembersDto.getMaxMembers()>MAX_PROJECT_MEMBERS_MAX || usersInProject.size()>projectCreationMembersDto.getMaxMembers()){
@@ -1197,5 +1201,40 @@ public class ProjectBean {
      projectDao.merge(project);
     return true;
     }
+
+    public String removeInvitation(String projectSystemName, int userToRemoveId, int currentUserId, String sessionId){
+        ProjectEntity project = projectDao.findBySystemName(projectSystemName);
+        UserEntity userToRemove = userDao.findById(userToRemoveId);
+        UserEntity currentUser = userDao.findById(currentUserId);
+        UserProjectEntity userProject = userProjectDao.findByUserIdAndProjectId(userToRemoveId, project.getId());
+
+        if (userProject == null || userProject.getType() != UserInProjectTypeENUM.PENDING_BY_INVITATION) {
+            throw new IllegalArgumentException("User is not invited to the project");
+        }
+
+        userProjectDao.remove(userProject);
+
+        notificationDao.removeByProjectIdAndReceptorAndType(project.getSystemName(), userToRemove.getId(), NotificationTypeENUM.INVITE);
+
+        String subject = "Invitation to project " + project.getName() + " removed";
+        String text = "<p>Dear " + userToRemove.getFirstName() + " " + userToRemove.getLastName() + ",</p>" +
+                "<p>We regret to inform you that the invitation to join the project <strong><a href=\"http://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong> has been removed.</p>" +
+                "<p>Best regards,<br>ILM Management Team</p>";
+
+        MailDto mailDto = new MailDto(
+                subject,
+                text,
+                userDao.getFullNameBySystemUsername(currentUser.getSystemUsername()),
+                currentUser.getEmail(),
+                userToRemove.getFirstName() + " " + userToRemove.getLastName(),
+                userToRemove.getEmail()
+        );
+
+        mailBean.sendMail(sessionId, mailDto);
+
+        return "Invitation removed successfully";
+    }
+
+
 
 }

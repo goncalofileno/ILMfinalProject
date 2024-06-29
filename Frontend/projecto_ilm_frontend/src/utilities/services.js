@@ -784,6 +784,8 @@ async function inviteUserToProject(sessionId, projectName, systemUsername) {
   }
 }
 
+
+
 async function getAllResources(
   page,
   brand,
@@ -1324,6 +1326,7 @@ async function getUserProjectCreation(
   };
 
   try {
+    console.log("RejectedUsersDto", RejectedUsersDto);
     const response = await fetch(
       `${baseURL}user/userProjectCreation/${systemProjectName}?page=${currentPage}&lab=${lab}&keyword=${keyword}`,
       {
@@ -1562,7 +1565,24 @@ async function respondToApplication(sessionId, projectSystemName, userId, respon
   }
 }
 
+async function removeInvitation(sessionId, projectSystemName, userId) {
+  try {
+    const response = await fetch(
+      `${baseURL}project/removeInvitation?projectSystemName=${projectSystemName}&userId=${userId}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      }
+    );
 
+    return response.json();
+  } catch (error) {
+    console.error("Error removing invitation:", error);
+  }
+}
 
 export {
   registerUser,
@@ -1634,4 +1654,5 @@ export {
   removeUserFromProject,
   changeUserInProjectType,
   respondToApplication,
+  removeInvitation,
 };
