@@ -866,7 +866,7 @@ public class ProjectBean {
         return "User removed successfully";
     }
 
-    public String acceptApplication(String systemProjectName, int userToAccept, int currentUserId){
+    public String acceptApplication(String systemProjectName, int userToAccept, int currentUserId, String sessionId){
         ProjectEntity project = projectDao.findBySystemName(systemProjectName);
         UserEntity user = userDao.findById(userToAccept);
         UserEntity currentUser = userDao.findById(currentUserId);
@@ -897,12 +897,12 @@ public class ProjectBean {
         logBean.createMemberAddedLog(project, currentUser, user.getFullName());
 
 
-        mailBean.sendMail(sessionDao.findSessionIdByUserId(userToAccept), mailDto);
+        mailBean.sendMail(sessionId, mailDto);
 
         return "Application accepted successfully";
     }
 
-    public String rejectApplication(String systemProjectName, int userToReject, int currentUserId, String reason){
+    public String rejectApplication(String systemProjectName, int userToReject, int currentUserId, String reason, String sessionId){
         ProjectEntity project = projectDao.findBySystemName(systemProjectName);
         UserEntity user = userDao.findById(userToReject);
         UserEntity currentUser = userDao.findById(currentUserId);
@@ -930,7 +930,7 @@ public class ProjectBean {
                 user.getEmail()
         );
 
-        mailBean.sendMail(sessionDao.findSessionIdByUserId(userToReject), mailDto);
+        mailBean.sendMail(sessionId, mailDto);
 
         return "Application rejected successfully";
     }

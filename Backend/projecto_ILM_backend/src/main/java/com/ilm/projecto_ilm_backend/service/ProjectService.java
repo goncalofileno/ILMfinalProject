@@ -465,9 +465,9 @@ public class ProjectService {
                 if (projectBean.isUserCreatorOrManager(currentUserId, projectSystemName)) {
                     String result;
                     if (response) {
-                        result = projectBean.acceptApplication(projectSystemName, userId, currentUserId);
+                        result = projectBean.acceptApplication(projectSystemName, userId, currentUserId, sessionId);
                     } else {
-                        result = projectBean.rejectApplication(projectSystemName, userId, currentUserId, reason);
+                        result = projectBean.rejectApplication(projectSystemName, userId, currentUserId, reason, sessionId);
                     }
                     return Response.ok(Collections.singletonMap("message", result)).build();
                 } else {
