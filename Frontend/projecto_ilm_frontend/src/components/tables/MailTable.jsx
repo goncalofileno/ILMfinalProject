@@ -12,18 +12,24 @@ import ComposeMailModal from "../modals/ComposeMailModal";
 import "./MailTable.css";
 import DOMPurify from "dompurify";
 import { useNavigate, useLocation } from "react-router-dom";
+import useMailStore from "../../stores/useMailStore";
 
 const MailTable = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const {
+    receivedMails,
+    totalMails,
+    fetchMailsInInbox,
+    setReceivedMails,
+    setTotalMails,
+  } = useMailStore();
   const [loading, setLoading] = useState(true);
   const [selectedMail, setSelectedMail] = useState(null);
   const [searchInput, setSearchInput] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [unreadOnly, setUnreadOnly] = useState(false);
   const pageSize = 8;
-  const [receivedMails, setReceivedMails] = useState([]);
-  const [totalMails, setTotalMails] = useState(0);
   const sessionId = Cookies.get("session-id");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [mailToDelete, setMailToDelete] = useState(null);

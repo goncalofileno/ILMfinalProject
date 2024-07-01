@@ -17,4 +17,18 @@
   .custom-table tbody td {
     vertical-align: middle;
   }
+
+  .skill-badge {
+    display: inline-block;
+    margin-right: 5px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    background-color: #f0f0f0;
+  }
+  
+  .skill-badge.in-project {
+    background-color: #d4edda;
+    color: #155724;
+  }
+  
   

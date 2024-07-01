@@ -45,7 +45,7 @@ import com.ilm.projecto_ilm_backend.ENUMS.ConvertersENUM.StateProjectEnumConvert
 
 @NamedQuery(
         name = "Project.getMyProjectsInfo",
-        query = "SELECT p.id, p.name, p.lab, p.status, FUNCTION('DATE', p.startDate), FUNCTION('DATE', p.endDate), p.maxMembers,p.cardPhoto, up.type, p.systemName " +
+        query = "SELECT p.id, p.name, p.lab, p.status, FUNCTION('DATE', p.startDate), FUNCTION('DATE', p.endDate), p.maxMembers,p.photo, up.type, p.systemName " +
                 "FROM ProjectEntity p LEFT JOIN UserProjectEntity up ON p.id = up.project.id " +
                 "WHERE (:lab IS NULL OR p.lab = :lab) " +
                 "AND (:status IS NULL OR p.status = :status) " +
@@ -118,7 +118,7 @@ public class ProjectEntity implements Serializable {
      * The end initial date of the project.
      */
     @Column(name = "inProgressDate", nullable = true, unique = false, updatable = true)
-    private LocalDateTime initialDate;
+    private LocalDateTime inProgressDate;
 
     /**
      * The end date of the project.
@@ -274,17 +274,17 @@ public class ProjectEntity implements Serializable {
      *
      * @return the initial date of this project.
      */
-    public LocalDateTime getInitialDate() {
-        return initialDate;
+    public LocalDateTime getinProgressDate() {
+        return inProgressDate;
     }
 
     /**
      * Sets the initial date of this project.
      *
-     * @param initialDate the new initial date of this project.
+     * @param inProgressDate the new initial date of this project.
      */
-    public void setInitialDate(LocalDateTime initialDate) {
-        this.initialDate = initialDate;
+    public void setinProgressDate(LocalDateTime inProgressDate) {
+        this.inProgressDate = inProgressDate;
     }
 
     /**

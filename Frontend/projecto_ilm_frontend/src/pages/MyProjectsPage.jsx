@@ -169,6 +169,7 @@ export default function MyProjectsPage() {
                             status={project.status}
                             typeMember={project.userInProjectType}
                             systemProjectName={project.systemProjectName}
+                            photo={project.photo}
                           ></MyProjectCard>
                         </div>
                       )
@@ -190,6 +191,7 @@ export default function MyProjectsPage() {
                           status={project.status}
                           typeMember={project.userInProjectType}
                           systemProjectName={project.systemProjectName}
+                          photo={project.photo}
                         ></MyProjectCard>
                       </div>
                     ) : (
@@ -206,6 +208,7 @@ export default function MyProjectsPage() {
                             status={project.status}
                             typeMember={project.userInProjectType}
                             systemProjectName={project.systemProjectName}
+                            photo={project.photo}
                           ></MyProjectCard>
                         </div>
                       )
@@ -227,6 +230,7 @@ export default function MyProjectsPage() {
                           status={project.status}
                           typeMember={project.userInProjectType}
                           systemProjectName={project.systemProjectName}
+                          photo={project.photo}
                         ></MyProjectCard>
                       </div>
                     ) : (
@@ -243,6 +247,7 @@ export default function MyProjectsPage() {
                             status={project.status}
                             typeMember={project.userInProjectType}
                             systemProjectName={project.systemProjectName}
+                            photo={project.photo}
                           ></MyProjectCard>
                         </div>
                       )
