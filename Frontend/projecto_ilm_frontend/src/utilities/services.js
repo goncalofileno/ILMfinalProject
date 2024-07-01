@@ -1584,6 +1584,53 @@ async function removeInvitation(sessionId, projectSystemName, userId) {
   }
 }
 
+async function getProjectDetails(systemProjectName) {
+  try {
+    const response = await fetch(
+      `${baseURL}project/details/${systemProjectName}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch project details");
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error("Error fetching project details:", error);
+    return null;
+  }
+}
+
+async function updateProject(projectUpdateDto, systemProjectName) {
+  try {
+    const response = await fetch(`${baseURL}project/updateProject/${systemProjectName}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(projectUpdateDto),
+    });
+
+    if (!response.ok) {
+      const responseJson = await response.json();
+      throw new Error(responseJson.message || "An error occurred");
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error updating project:", error);
+    return { error: error.message };
+  }
+}
+
 export {
   registerUser,
   getInterests,
@@ -1655,4 +1702,6 @@ export {
   changeUserInProjectType,
   respondToApplication,
   removeInvitation,
+  getProjectDetails,
+  updateProject,
 };

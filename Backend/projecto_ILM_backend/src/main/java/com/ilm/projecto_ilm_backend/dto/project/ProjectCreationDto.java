@@ -2,6 +2,7 @@ package com.ilm.projecto_ilm_backend.dto.project;
 
 import com.ilm.projecto_ilm_backend.dto.interest.InterestDto;
 import com.ilm.projecto_ilm_backend.dto.skill.SkillDto;
+
 import java.util.List;
 
 public class ProjectCreationDto {
@@ -14,6 +15,7 @@ public class ProjectCreationDto {
     private String motivation;
     private String startDate;
     private String endDate;
+    private String photo;
 
     public ProjectCreationDto() {
     }
@@ -82,4 +84,11 @@ public class ProjectCreationDto {
         this.endDate = endDate;
     }
 
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
 }

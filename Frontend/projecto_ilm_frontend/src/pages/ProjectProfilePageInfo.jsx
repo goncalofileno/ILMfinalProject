@@ -287,7 +287,7 @@ const ProjectProfilePageInfo = () => {
                         marginRight: "10px",
                         marginBottom: "10px",
                       }}
-                      onClick={() => setShowReasonModal(true)}
+                      onClick={() => navigate('/editProject/' + systemProjectName)}
                       disabled={["CANCELED", "READY"].includes(
                         projectInfo.state
                       )}

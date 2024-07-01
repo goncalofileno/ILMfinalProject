@@ -56,6 +56,54 @@ public class ProjectService {
     }
 
     @PATCH
+    @Path("/updateProject/{systemProjectName}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateProject(@CookieParam("session-id") String sessionId, ProjectCreationDto projectUpdateDto, @PathParam("systemProjectName") String systemProjectName) throws UnknownHostException {
+        String clientIP = InetAddress.getLocalHost().getHostAddress();
+        logger.info("Received a request to update project from IP address: " + clientIP);
+
+        if (databaseValidator.checkSessionId(sessionId)) {
+            try {
+                boolean isUpdated = projectBean.updateProject(projectUpdateDto, sessionId, systemProjectName);
+                if (isUpdated) {
+                    logger.info("Project updated successfully from IP address: " + clientIP);
+                    return Response.ok(Collections.singletonMap("message", "Project updated successfully")).build();
+                } else {
+                    logger.error("Error updating project from IP address: " + clientIP);
+                    return Response.status(Response.Status.BAD_REQUEST).entity(Collections.singletonMap("message", "Error updating project")).build();
+                }
+            } catch (Exception e) {
+                logger.error("An error occurred while updating project: " + e.getMessage() + " from IP address: " + clientIP);
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(Collections.singletonMap("message", "An error occurred while updating project")).build();
+            }
+        } else {
+            return Response.status(Response.Status.UNAUTHORIZED).entity(Collections.singletonMap("message", "Unauthorized access")).build();
+        }
+    }
+
+
+    @GET
+    @Path("/details/{systemProjectName}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getProjectDetails(@CookieParam("session-id") String sessionId, @PathParam("systemProjectName") String systemProjectName) throws UnknownHostException {
+        String clientIP = InetAddress.getLocalHost().getHostAddress();
+        logger.info("Received a request to get project details from IP address: " + clientIP);
+
+        if (databaseValidator.checkSessionId(sessionId)) {
+            try {
+                ProjectCreationDto projectDetails = projectBean.getProjectDetails(systemProjectName, sessionId);
+                return Response.ok(projectDetails).build();
+            } catch (Exception e) {
+                logger.error("An error occurred while getting project details: " + e.getMessage() + " from IP address: " + clientIP);
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(Collections.singletonMap("message", "An error occurred while getting project details")).build();
+            }
+        } else {
+            return Response.status(Response.Status.UNAUTHORIZED).entity(Collections.singletonMap("message", "Unauthorized access")).build();
+        }
+    }
+
+    @PATCH
     @Path("/photo/{projectName}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateProjectPhoto(@CookieParam("session-id") String sessionId, Map<String, String> request, @PathParam("projectName") String projectName) throws UnknownHostException {

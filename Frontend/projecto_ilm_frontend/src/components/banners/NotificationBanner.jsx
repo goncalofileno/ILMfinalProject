@@ -36,6 +36,8 @@ const NotificationBanner = ({ notification, onClick, onEnd }) => {
         return `You have a new message in the project <strong>${projectName}</strong> chat from <strong>${userName}</strong>.`;
       case "USER_TYPE_CHANGED":
         return `Your user type was changed to <strong>${newUserType}</strong> by <strong>${userName}</strong> in the project <strong>${projectName}</strong>.`;
+        case "PROJECT_UPDATED":
+        return `The project <strong>${projectName}</strong> was updated by <strong>${userName}</strong>.`;
       default:
         return "You have a new notification.";
     }

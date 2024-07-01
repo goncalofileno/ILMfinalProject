@@ -119,6 +119,7 @@ const MailWebSocket = () => {
         case "PROJECT":
         case "PROJECT_REJECTED":
         case "USER_TYPE_CHANGED":
+        case "PROJECT_UPDATED":
           navigate(`/project/${projectSystemName}`);
           break;
         case "APPLIANCE":

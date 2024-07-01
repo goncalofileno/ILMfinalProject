@@ -1,9 +1,14 @@
 package com.ilm.projecto_ilm_backend.bean;
 
 import com.ilm.projecto_ilm_backend.ENUMS.TaskStatusENUM;
+import com.ilm.projecto_ilm_backend.ENUMS.UserInProjectTypeENUM;
 import com.ilm.projecto_ilm_backend.ENUMS.UserInTaskTypeENUM;
 import com.ilm.projecto_ilm_backend.dao.*;
+import com.ilm.projecto_ilm_backend.dto.project.ProjectMemberDto;
+import com.ilm.projecto_ilm_backend.dto.task.MemberInTaskDto;
+import com.ilm.projecto_ilm_backend.dto.task.TaskDto;
 import com.ilm.projecto_ilm_backend.dto.task.TaskSuggestionDto;
+import com.ilm.projecto_ilm_backend.dto.task.TasksPageDto;
 import com.ilm.projecto_ilm_backend.entity.ProjectEntity;
 import com.ilm.projecto_ilm_backend.entity.TaskEntity;
 import com.ilm.projecto_ilm_backend.entity.UserEntity;
@@ -48,6 +53,9 @@ public class TaskBean {
 
     @Inject
     private UserProjectDao userProjectDao;
+
+    @Inject
+    private ProjectBean projectBean;
 
     private int numberOfProjectsToCreate = 20;
 
@@ -170,5 +178,83 @@ public class TaskBean {
 
         return tasksSuggestions;
 
+    }
+
+    public TasksPageDto getTasksPageDto(String sessionId, String systemProjectName) throws Exception {
+        ProjectEntity project = projectDao.findBySystemName(systemProjectName);
+        UserEntity user = userBean.getUserBySessionId(sessionId);
+
+        if (project == null) {
+            throw new ProjectNotFoundException("Project not found: " + systemProjectName);
+        }
+
+        if (user == null) {
+            throw new UserNotFoundException("User not found for session id: " + sessionId);
+        }
+
+        if (!userProjectDao.isUserInProject(project.getId(), user.getId())) {
+            throw new UserNotInProjectException("User not part of project");
+        }
+
+        String projectName = project.getName();
+
+        TaskDto projectTask = new TaskDto();
+        projectTask.setId(0);
+        projectTask.setTitle(project.getName());
+        projectTask.setSystemTitle(project.getSystemName());
+        projectTask.setDescription(project.getDescription());
+        projectTask.setStatus(TaskStatusENUM.PLANNED);
+        projectTask.setInitialDate(project.getStartDate());
+        projectTask.setFinalDate(project.getEndDate());
+
+        List<TaskEntity> tasks = taskDao.findByProject(project.getId());
+        List<TaskDto> tasksDto = new ArrayList<>();
+        for (TaskEntity task : tasks) {
+            TaskDto taskDto = new TaskDto();
+            taskDto.setId(task.getId());
+            taskDto.setTitle(task.getTitle());
+            taskDto.setSystemTitle(task.getSystemTitle());
+            taskDto.setDescription(task.getDescription());
+            taskDto.setStatus(task.getStatus());
+            taskDto.setInitialDate(task.getInitialDate());
+            taskDto.setFinalDate(task.getFinalDate());
+            taskDto.setOutColaboration(task.getOutColaboration());
+            List<TaskDto> dependentTasks = new ArrayList<>();
+            for (TaskEntity dependentTask : task.getDependentTasks()) {
+                dependentTasks.add(taskToDto(dependentTask));
+            }
+            List<MemberInTaskDto> membersOfTask = new ArrayList<>();
+            for (UserTaskEntity userTask : task.getUserTasks()) {
+                membersOfTask.add(new MemberInTaskDto(userTask.getUser().getId(), userTask.getUser().getFullName(), userTask.getType(), userProjectDao.findUserTypeByUserIdAndProjectId(userTask.getUser().getId(), project.getId()), userTask.getUser().getSystemUsername()));
+            }
+            taskDto.setDependentTasks(dependentTasks);
+            tasksDto.add(taskDto);
+        }
+
+        UserInProjectTypeENUM userSeingTasksType = projectBean.getUserTypeInProject(user.getId(), project.getId());
+
+        List<ProjectMemberDto> projectMembers = projectBean.getProjectMembers(project.getId());
+
+        TasksPageDto tasksPageDto = new TasksPageDto();
+        tasksPageDto.setProjectName(projectName);
+        tasksPageDto.setProjectTask(projectTask);
+        tasksPageDto.setTasks(tasksDto);
+        tasksPageDto.setUserSeingTasksType(userSeingTasksType);
+        tasksPageDto.setProjectMembers(projectMembers);
+
+        return tasksPageDto;
+    }
+
+    private TaskDto taskToDto(TaskEntity task) {
+        TaskDto taskDto = new TaskDto();
+        taskDto.setId(task.getId());
+        taskDto.setTitle(task.getTitle());
+        taskDto.setSystemTitle(task.getSystemTitle());
+        taskDto.setDescription(task.getDescription());
+        taskDto.setStatus(task.getStatus());
+        taskDto.setInitialDate(task.getInitialDate());
+        taskDto.setFinalDate(task.getFinalDate());
+        taskDto.setOutColaboration(task.getOutColaboration());
+        return taskDto;
     }
 }
