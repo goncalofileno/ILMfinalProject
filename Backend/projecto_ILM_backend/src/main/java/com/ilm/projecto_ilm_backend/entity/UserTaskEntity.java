@@ -14,6 +14,10 @@ import java.io.Serializable;
 @Table(name = "user_task")
 @NamedQuery(name = "UserTask.findById", query = "SELECT ut FROM UserTaskEntity ut WHERE ut.id = :id"
 )
+@NamedQuery(name = "UserTask.findUsersByTaskId", query = "SELECT ut.user FROM UserTaskEntity ut WHERE ut.task.id = :taskId"
+)
+@NamedQuery(name = "UserTask.findUserTypeByTaskIdAndUserId", query = "SELECT ut.type FROM UserTaskEntity ut WHERE ut.task.id = :taskId AND ut.user.id = :userId"
+)
 public class UserTaskEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;

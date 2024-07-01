@@ -76,7 +76,7 @@ public class TaskBean {
             UserTaskEntity userTask1 = new UserTaskEntity();
             userTask1.setTask(task1);
             userTask1.setUser(userDao.findById(1));
-            userTask1.setType(UserInTaskTypeENUM.CREATOR);
+            userTask1.setType(UserInTaskTypeENUM.CREATOR_INCHARGE);
             userTaskDao.persist(userTask1);
 
             UserTaskEntity userTask2 = new UserTaskEntity();
@@ -101,7 +101,7 @@ public class TaskBean {
             UserTaskEntity userTask3 = new UserTaskEntity();
             userTask3.setTask(task2);
             userTask3.setUser(userDao.findById(1));
-            userTask3.setType(UserInTaskTypeENUM.CREATOR);
+            userTask3.setType(UserInTaskTypeENUM.CREATOR_INCHARGE);
             userTaskDao.persist(userTask3);
 
             UserTaskEntity userTask4 = new UserTaskEntity();
@@ -127,7 +127,7 @@ public class TaskBean {
             UserTaskEntity userTask5 = new UserTaskEntity();
             userTask5.setTask(task3);
             userTask5.setUser(userDao.findById(1));
-            userTask5.setType(UserInTaskTypeENUM.CREATOR);
+            userTask5.setType(UserInTaskTypeENUM.CREATOR_INCHARGE);
             userTaskDao.persist(userTask5);
 
             UserTaskEntity userTask6 = new UserTaskEntity();
@@ -224,9 +224,11 @@ public class TaskBean {
                 dependentTasks.add(taskToDto(dependentTask));
             }
             List<MemberInTaskDto> membersOfTask = new ArrayList<>();
-            for (UserTaskEntity userTask : task.getUserTasks()) {
-                membersOfTask.add(new MemberInTaskDto(userTask.getUser().getId(), userTask.getUser().getFullName(), userTask.getType(), userProjectDao.findUserTypeByUserIdAndProjectId(userTask.getUser().getId(), project.getId()), userTask.getUser().getSystemUsername()));
+            List<UserEntity> usersInTask = userTaskDao.findUsersByTaskId(task.getId());
+            for (UserEntity userInTask : usersInTask) {
+                membersOfTask.add(new MemberInTaskDto(userInTask.getId(), userInTask.getFullName(), userTaskDao.findUserTypeByTaskIdAndUserId(task.getId(), userInTask.getId()), userProjectDao.findUserTypeByUserIdAndProjectId(userInTask.getId(), project.getId()), userInTask.getSystemUsername(), userInTask.getPhoto()));
             }
+            taskDto.setMembersOfTask(membersOfTask);
             taskDto.setDependentTasks(dependentTasks);
             tasksDto.add(taskDto);
         }
