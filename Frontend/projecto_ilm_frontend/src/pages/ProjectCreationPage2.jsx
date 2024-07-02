@@ -59,7 +59,7 @@ export default function ProjectCreationPage2() {
   const handleSubmit = () => {
     console.log("maxMembers", maxMembers);
     if (maxMembers < 31) {
-      if (usersInProject.length <= maxMembers) {
+      if (usersInProject.length <= maxMembers - 1) {
         let projectCreationMembersDto = {
           maxMembers: maxMembers,
           usersInProject: usersInProject.map((user) => user.id),

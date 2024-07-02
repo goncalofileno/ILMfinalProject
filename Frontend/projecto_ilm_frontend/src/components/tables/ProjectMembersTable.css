@@ -14,13 +14,15 @@
 }
 
 #body-table-users-project tr {
-  height: 10%;
+  height: 14.3%;
 }
 
 #body-table-users-project {
-  height: 100%;
-  overflow-y: auto;
-  max-height: 100%;
+  height: calc(100% - 34px);
+  max-height: calc(100% - 34px);
+  display: block;
+  overflow: auto;
+  width: 100%;
 }
 
 .card-body-text {
@@ -28,4 +30,41 @@
   max-height: 70%;
   overflow-y: auto;
   overflow-x: hidden;
+}
+
+#table-users-project-table {
+  height: 100%;
+  max-height: 100%;
+}
+
+.table-users-project-table thead,
+.table-users-project-table tr,
+.table-users-project-table tbody {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+#body-table-users-project::-webkit-scrollbar {
+  width: 7px;
+  height: 6px; /* Espessura da barra de rolagem */
+}
+
+#body-table-users-project::-webkit-scrollbar-track {
+  background: rgba(
+    158,
+    176,
+    255,
+    0.216
+  ); /* Cor do trilho da barra de rolagem */
+  border-radius: 8px;
+}
+
+#body-table-users-project::-webkit-scrollbar-thumb {
+  background: #888; /* Cor da barra de rolagem */
+  border-radius: 8px; /*Arredonda os cantos*/
+}
+
+#body-table-users-project::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Cor da barra de rolagem ao passar o mouse */
 }

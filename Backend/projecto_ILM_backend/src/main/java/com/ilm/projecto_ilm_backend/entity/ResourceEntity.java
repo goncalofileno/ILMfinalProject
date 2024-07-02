@@ -56,9 +56,9 @@ import java.util.List;
 
 @NamedQuery(
         name = "Resource.getResourcesDetails",
-        query = "SELECT r.name, r.brand, r.type, rs.supplier.id,r.id FROM ResourceEntity r " +
+        query = "SELECT r.name, r.brand, r.type, rs.supplier.id,r.id,rs.id FROM ResourceEntity r " +
                 "LEFT JOIN ResourceSupplierEntity rs ON r.id = rs.resource.id " +
-                "WHERE (:brand IS NULL OR r.brand = :brand) "+
+                "WHERE rs.id NOT IN :rejectedIds AND (:brand IS NULL OR r.brand = :brand) "+
                 "AND (:type IS NULL OR r.type = :type) "+
                 "AND (:supplierId IS NULL OR rs.supplier.id = :supplierId) "+
                 "AND (:name IS NULL OR LOWER(r.name) LIKE LOWER(CONCAT('%', :name, '%'))) "+
@@ -69,7 +69,7 @@ import java.util.List;
         name = "Resource.getNumberOfResourcesDetails",
         query = "SELECT COUNT(r) FROM ResourceEntity r " +
                 "LEFT JOIN ResourceSupplierEntity rs ON r.id = rs.resource.id "+
-                "WHERE (:brand IS NULL OR r.brand = :brand) "+
+                "WHERE rs.id NOT IN :rejectedIds AND (:brand IS NULL OR r.brand = :brand) "+
                 "AND (:type IS NULL OR r.type = :type) "+
                 "AND (:supplierId IS NULL OR rs.supplier.id = :supplierId) "+
                 "AND (:name IS NULL OR LOWER(r.name) LIKE LOWER(CONCAT('%', :name, '%'))) "+
@@ -84,7 +84,13 @@ import java.util.List;
         name = "Resource.getNames",
         query = "SELECT DISTINCT r.name FROM ResourceEntity r ")
 
-
+@NamedQuery(
+        name = "Resource.getResourcesDetailsFromProjectId",
+        query = "SELECT r.name, r.brand, r.type, rs.supplier.id,r.id,rs.id FROM ResourceEntity r " +
+                "LEFT JOIN ResourceSupplierEntity rs ON r.id = rs.resource.id "+
+                "LEFT JOIN ProjectResourceEntity pr ON r.id = pr.resource.id " +
+                "WHERE (pr.project.id = :projectId) "
+)
 
 
 
@@ -143,8 +149,7 @@ public class ResourceEntity implements Serializable {
     /**
      * The project resources associated with the resource. This is a one-to-many relationship with the ProjectResourceEntity class.
      */
-    @OneToMany(mappedBy = "resources")
-    private List<ProjectResourceEntity> projectResources;
+
 
     /**
      * Default constructor.
@@ -188,23 +193,7 @@ public class ResourceEntity implements Serializable {
         this.type = type;
     }
 
-    /**
-     * Returns the project resources associated with this resource.
-     *
-     * @return the project resources associated with this resource.
-     */
-    public List<ProjectResourceEntity> getProjectResources() {
-        return projectResources;
-    }
 
-    /**
-     * Sets the project resources associated with this resource.
-     *
-     * @param projectResources the new project resources associated with this resource.
-     */
-    public void setProjectResources(List<ProjectResourceEntity> projectResources) {
-        this.projectResources = projectResources;
-    }
 
     /**
      * Returns the name of this resource.

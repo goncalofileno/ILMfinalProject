@@ -47,7 +47,7 @@ export default function UserCard({
 
   return (
     <div style={{ height: "100%" }}>
-      <div className="my-project-card" style={{ height: "100%" }}>
+      <div className="my-project-card user-card" style={{ height: "100%" }}>
         <div
           className="my-projects-banner user-card-banner"
           onClick={openNewWindow}
@@ -76,7 +76,7 @@ export default function UserCard({
           <button
             className="submit-button user-card-button"
             onClick={handleAddUser}
-            disabled={numberOfMembersInProject >= maxMembers ? true : false}
+            disabled={numberOfMembersInProject >= maxMembers - 1 ? true : false}
           >
             Add
           </button>

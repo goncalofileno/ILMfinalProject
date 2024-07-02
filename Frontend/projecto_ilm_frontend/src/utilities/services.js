@@ -797,7 +797,74 @@ async function getAllResources(
 ) {
   try {
     const response = await fetch(
-      `${baseURL}resource?page=${page}&brand=${brand}&type=${type}&supplier=${supplier}&keyword=${keyword}&nameAsc=${nameAsc}&typeAsc=${typeAsc}&brandAsc=${brandAsc}&supplierAsc=${supplierAsc}`,
+      `${baseURL}resource/getResources?page=${page}&brand=${brand}&type=${type}&supplier=${supplier}&keyword=${keyword}&nameAsc=${nameAsc}&typeAsc=${typeAsc}&brandAsc=${brandAsc}&supplierAsc=${supplierAsc}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      }
+    );
+
+    return response;
+  } catch (error) {
+    console.error("Error receiving all resources:", error);
+  }
+}
+
+async function getAllResourcesCreatingProject(
+  page,
+  brand,
+  type,
+  supplier,
+  keyword,
+  nameAsc,
+  typeAsc,
+  brandAsc,
+  supplierAsc,
+  rejectedIds
+) {
+  try {
+    const response = await fetch(
+      `${baseURL}resource/getResources?page=${page}&brand=${brand}&type=${type}&supplier=${supplier}&keyword=${keyword}&nameAsc=${nameAsc}&typeAsc=${typeAsc}&brandAsc=${brandAsc}&supplierAsc=${supplierAsc}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(rejectedIds),
+      }
+    );
+
+    return response;
+  } catch (error) {
+    console.error("Error receiving all resources:", error);
+  }
+}
+
+async function addInitialResources(projectSystemName, resourcesIds) {
+  try {
+    const response = await fetch(`${baseURL}project/${projectSystemName}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(resourcesIds),
+    });
+
+    return response;
+  } catch (error) {
+    console.error("Error receiving all resources:", error);
+  }
+}
+
+async function getProjectResources(projectSystemName) {
+  try {
+    const response = await fetch(
+      `${baseURL}resource/project/${projectSystemName}`,
       {
         method: "GET",
         headers: {
@@ -813,10 +880,10 @@ async function getAllResources(
   }
 }
 
-async function getResourcesFilters(withNames) {
+async function getResourcesFilters(withNames, withTypes) {
   try {
     const response = await fetch(
-      `${baseURL}resource/filters?withNames=${withNames}`,
+      `${baseURL}resource/filters?withNames=${withNames}&withTypes=${withTypes}`,
       {
         method: "GET",
         headers: {
@@ -1319,8 +1386,8 @@ async function getUserProjectCreation(
   lab,
   keyword
 ) {
-  let RejectedUsersDto = {
-    rejectedUsersId: rejectedUsers,
+  let RejectedIdsDto = {
+    rejectedIds: rejectedUsers,
   };
 
   try {
@@ -1334,7 +1401,7 @@ async function getUserProjectCreation(
           "Content-Type": "application/json",
         },
         credentials: "include",
-        body: JSON.stringify(RejectedUsersDto),
+        body: JSON.stringify(RejectedIdsDto),
       }
     );
 
@@ -1830,4 +1897,7 @@ export {
   updateTask,
   createTask,
   deleteTask,
+  getAllResourcesCreatingProject,
+  addInitialResources,
+  getProjectResources,
 };

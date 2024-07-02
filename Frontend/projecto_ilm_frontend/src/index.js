@@ -32,6 +32,7 @@ import ProjectCreationPage3 from "./pages/ProjectCreationPage3";
 import ProjectMembersPage from "./pages/ProjectMembersPage";
 import EditProjectPage from "./pages/EditProjectPage";
 import ProjectPlanPage from "./pages/ProjectPlanPage";
+import ProjectProfileResourcesPage from "./pages/ProjectProfileResourcesPage";
 
 const AppWithWebSocket = () => {
   const location = useLocation();
@@ -71,7 +72,14 @@ const AppWithWebSocket = () => {
           path="/project/:systemProjectName/chat"
           element={<ProjectChatPage />}
         />
-        <Route path="/project/:systemProjectName/members" element={<ProjectMembersPage />} />
+        <Route
+          path="/project/:systemProjectName/resources"
+          element={<ProjectProfileResourcesPage />}
+        />
+        <Route
+          path="/project/:systemProjectName/members"
+          element={<ProjectMembersPage />}
+        />
         <Route path="/editProfile" element={<EditProfilePage />} />
         <Route path="/mail/inbox" element={<InboxMailPage />} />
         <Route path="/mail/sent" element={<SentMailPage />} />

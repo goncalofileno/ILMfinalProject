@@ -24,7 +24,7 @@ export default function AsideResourcesPage({
   const [suppliers, setSuppliers] = useState([]);
   const [brands, setBrands] = useState([]);
   useEffect(() => {
-    getResourcesFilters(false)
+    getResourcesFilters(false, true)
       .then((response) => response.json())
       .then((data) => {
         console.log(data);

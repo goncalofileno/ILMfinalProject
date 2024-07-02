@@ -5,7 +5,9 @@ import com.ilm.projecto_ilm_backend.dao.*;
 import com.ilm.projecto_ilm_backend.dto.interest.InterestDto;
 import com.ilm.projecto_ilm_backend.dto.mail.MailDto;
 import com.ilm.projecto_ilm_backend.dto.project.*;
+import com.ilm.projecto_ilm_backend.dto.resource.ResourceTableDto;
 import com.ilm.projecto_ilm_backend.dto.skill.SkillDto;
+import com.ilm.projecto_ilm_backend.dto.user.RejectedIdsDto;
 import com.ilm.projecto_ilm_backend.entity.*;
 import com.ilm.projecto_ilm_backend.security.exceptions.NoProjectsForInviteeException;
 import com.ilm.projecto_ilm_backend.security.exceptions.NoProjectsToInviteException;
@@ -63,6 +65,9 @@ public class ProjectBean {
     private NotificationBean notificationBean;
 
     @Inject
+    private ResourceBean resourceBean;
+
+    @Inject
     SessionDao sessionDao;
 
     @Inject
@@ -74,9 +79,16 @@ public class ProjectBean {
     @Inject
     LogBean logBean;
 
+    @Inject
+    ResourceSupplierDao resourceSupplierDao;
 
-    private static final int NUMBER_OF_MYPROJECTS_PER_PAGE = 6;
-    private static final int NUMBER_OF_PROJECTS_PER_PAGE = 8;
+    @Inject
+    ProjectResourceDao projectResourceDao;
+
+
+
+    private static final int NUMBER_OF_MYPROJECTS_PER_PAGE=6;
+    private static final int NUMBER_OF_PROJECTS_PER_PAGE=8;
     private int numberOfProjectsToCreate = 20;
     private static final int MAX_PROJECT_MEMBERS_DEFAULT = 4;
     private static final int MAX_PROJECT_MEMBERS_MAX = 30;
@@ -288,7 +300,8 @@ public class ProjectBean {
         ProjectTableInfoDto projectTableInfoDto = new ProjectTableInfoDto();
 
         projectTableInfoDto.setTableProjects(projectsTableDtos);
-        projectTableInfoDto.setMaxPageNumber(calculateMaximumPageTableProjects(projectDao.getNumberOfMyProjectsDtoInfo(lab, state, keyword, userId, typeEnum), NUMBER_OF_MYPROJECTS_PER_PAGE));
+        projectTableInfoDto.setMaxPageNumber(calculateMaximumPageTableProjects(projectDao.getNumberOfMyProjectsDtoInfo(lab, state, keyword, userId,typeEnum),NUMBER_OF_MYPROJECTS_PER_PAGE));
+
 
         return projectTableInfoDto;
     }
@@ -1353,5 +1366,34 @@ public class ProjectBean {
         return "Invitation removed successfully";
     }
 
+
+    public boolean addResourcesToProject(String projectSystemName,RejectedIdsDto resourcesSuppliersIds){
+        ProjectEntity project = projectDao.findBySystemName(projectSystemName);
+        List<ProjectResourceEntity> atualProjectResources=projectResourceDao.findResourcesById(project.getId());
+
+        ArrayList<Integer> atualProjectResourcesIds=new ArrayList<>();
+        for (ProjectResourceEntity atualProjectResource : atualProjectResources) {
+            atualProjectResourcesIds.add(atualProjectResource.getId());
+        }
+
+        for(Integer atualProjectResource:atualProjectResourcesIds){
+            if(!resourcesSuppliersIds.getRejectedIds().contains(atualProjectResource)){
+                projectResourceDao.remove(projectResourceDao.findById(atualProjectResource.intValue()));
+            }
+        }
+
+        if(project==null) return false;
+        for (Integer rejectedId : resourcesSuppliersIds.getRejectedIds()) {
+            if(!atualProjectResourcesIds.contains(rejectedId)) {
+                ResourceSupplierEntity resourceSupplierEntity = resourceSupplierDao.find(rejectedId.intValue());
+                if (resourceSupplierEntity == null) return false;
+                ProjectResourceEntity projectResourceEntity = new ProjectResourceEntity();
+                projectResourceEntity.setProject(project);
+                projectResourceEntity.setResources(resourceSupplierEntity);
+                projectResourceDao.persist(projectResourceEntity);
+            }
+        }
+        return true;
+    }
 
 }

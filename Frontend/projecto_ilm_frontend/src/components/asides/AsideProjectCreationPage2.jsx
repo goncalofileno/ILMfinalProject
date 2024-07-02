@@ -28,7 +28,6 @@ export default function AsideProjectCreationPage2({
   }, []);
 
   const removeUser = (id) => {
-    console.log("removing user", id);
     setUsersInProject(usersInProject.filter((user) => user.id !== id));
     setRejectedUsers(rejectedUsers.filter((userId) => userId !== id));
     setGetUsersTrigger((prev) => !prev);
@@ -84,11 +83,8 @@ export default function AsideProjectCreationPage2({
                   />
                   <div>{user.name}</div>
                   <div className="cross-user-in-project">
-                    <button>
-                      <i
-                        class="fas fa-times"
-                        onClick={() => removeUser(user.id)}
-                      ></i>
+                    <button onClick={() => removeUser(user.id)}>
+                      <i class="fas fa-times"></i>
                     </button>
                   </div>
                 </div>

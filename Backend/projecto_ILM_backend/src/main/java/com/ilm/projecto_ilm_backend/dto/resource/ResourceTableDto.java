@@ -6,6 +6,7 @@ public class ResourceTableDto {
     private String type;
     private String supplier;
     private int id;
+    private int resourceSupplierId;
 
     public ResourceTableDto() {
     }
@@ -48,5 +49,13 @@ public class ResourceTableDto {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getResourceSupplierId() {
+        return resourceSupplierId;
+    }
+
+    public void setResourceSupplierId(int resouceSupplierId) {
+        this.resourceSupplierId = resouceSupplierId;
     }
 }

@@ -42,6 +42,7 @@ export default function MyProjectsPage() {
       .then((data) => {
         setProjects(data.tableProjects);
         setTotalPages(data.maxPageNumber);
+        console.log(data.tableProjects);
       });
 
     const queryParamsObj = {};
