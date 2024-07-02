@@ -142,12 +142,12 @@ const ProjectPlanPage = () => {
 
   const checkSaveEnabled = (details) => {
     return (
-      details.title &&
-      details.description &&
-      details.status &&
-      details.initialDate &&
-      details.finalDate &&
-      details.inCharge &&
+      details.title ||
+      details.description ||
+      details.status ||
+      details.initialDate ||
+      details.finalDate ||
+      details.inCharge ||
       !titleError
     );
   };

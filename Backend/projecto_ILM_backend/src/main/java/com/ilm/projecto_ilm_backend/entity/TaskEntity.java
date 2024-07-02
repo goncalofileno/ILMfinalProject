@@ -84,6 +84,9 @@ public class TaskEntity implements Serializable {
     @ManyToMany
     private List<TaskEntity> dependentTasks;
 
+    @ManyToMany(mappedBy = "dependentTasks")
+    private List<TaskEntity> childTasks;
+
     /**
      * The user tasks associated with this task. This is a one-to-many relationship with the UserTaskEntity class.
      */
@@ -261,6 +264,14 @@ public class TaskEntity implements Serializable {
      */
     public void setDependentTasks(List<TaskEntity> dependentTasks) {
         this.dependentTasks = dependentTasks;
+    }
+
+    public List<TaskEntity> getChildTasks() {
+        return childTasks;
+    }
+
+    public void setChildTasks(List<TaskEntity> childTasks) {
+        this.childTasks = childTasks;
     }
 
     /**
