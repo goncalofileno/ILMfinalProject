@@ -10,6 +10,7 @@ import com.ilm.projecto_ilm_backend.dto.project.ProjectMembersPageDto;
 import com.ilm.projecto_ilm_backend.dto.project.ProjectCreationDto;
 import com.ilm.projecto_ilm_backend.dto.project.ProjectProfileDto;
 import com.ilm.projecto_ilm_backend.dto.project.ProjectProfilePageDto;
+import com.ilm.projecto_ilm_backend.dto.user.RejectedIdsDto;
 import com.ilm.projecto_ilm_backend.security.exceptions.NoProjectsForInviteeException;
 import com.ilm.projecto_ilm_backend.security.exceptions.NoProjectsToInviteException;
 import com.ilm.projecto_ilm_backend.security.exceptions.UnauthorizedAccessException;
@@ -570,5 +571,19 @@ public class ProjectService {
             return Response.status(Response.Status.UNAUTHORIZED).entity(Collections.singletonMap("message", "Unauthorized access")).build();
         }
     }
+    @PATCH
+    @Path("/{projectSystemName}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateProjectPhoto(@CookieParam("session-id") String sessionId, @PathParam("projectSystemName") String projectSystemName, RejectedIdsDto resourcesSuppliersIds ) throws UnknownHostException {
+        String clientIP = InetAddress.getLocalHost().getHostAddress();
+        logger.info("Received a request to create a project from a user with IP address: " + clientIP);
+
+        if (databaseValidator.checkSessionId(sessionId)) {
+            if (projectBean.addResourcesToProject(projectSystemName, resourcesSuppliersIds)) {
+                return Response.status(Response.Status.OK).build();
+            } else return Response.status(Response.Status.BAD_REQUEST).build();
+        } else return Response.status(Response.Status.UNAUTHORIZED).build();
+    }
+
 
 }

@@ -2,6 +2,7 @@ package com.ilm.projecto_ilm_backend.dao;
 
 import com.ilm.projecto_ilm_backend.ENUMS.ResourceTypeENUM;
 import com.ilm.projecto_ilm_backend.ENUMS.StateProjectENUM;
+import com.ilm.projecto_ilm_backend.dto.user.RejectedIdsDto;
 import com.ilm.projecto_ilm_backend.entity.LabEntity;
 import jakarta.ejb.Stateless;
 import com.ilm.projecto_ilm_backend.entity.ResourceEntity;
@@ -89,7 +90,7 @@ public class ResourceDao extends AbstractDao<ResourceEntity> {
     }
 
     public List<Object[]> getResourceDetails(int page, int resourcesPerPage, String brand, ResourceTypeENUM type, Integer supplierId, String name,
-                                             String nameAsc, String typeAsc,String brandAsc, String supplierAsc){
+                                             String nameAsc, String typeAsc,String brandAsc, String supplierAsc, RejectedIdsDto rejectedIds) {
 
         String baseQueryString = em
                 .createNamedQuery("Resource.getResourcesDetails", Object[].class)
@@ -113,15 +114,16 @@ public class ResourceDao extends AbstractDao<ResourceEntity> {
         query.setParameter("type", type);
         query.setParameter("supplierId", supplierId);
         query.setParameter("name", name);
+        query.setParameter("rejectedIds", rejectedIds.getRejectedIds());
 
         query.setFirstResult(resourcesPerPage * (page - 1));
         query.setMaxResults(resourcesPerPage);
         return query.getResultList();
     }
 
-    public int getNumberOfResources(String brand, ResourceTypeENUM type, Integer supplierId, String name) {
+    public int getNumberOfResources(String brand, ResourceTypeENUM type, Integer supplierId, String name, RejectedIdsDto rejectedIds) {
         try {
-            return  em.createNamedQuery("Resource.getNumberOfResourcesDetails", Long.class).setParameter("brand",brand).setParameter("type",type).setParameter("supplierId",supplierId).setParameter("name",name).getSingleResult().intValue();
+            return  em.createNamedQuery("Resource.getNumberOfResourcesDetails", Long.class).setParameter("brand",brand).setParameter("type",type).setParameter("supplierId",supplierId).setParameter("name",name).setParameter("rejectedIds",rejectedIds.getRejectedIds()).getSingleResult().intValue();
 
         } catch (Exception e) {
             return 0;
@@ -172,6 +174,15 @@ public class ResourceDao extends AbstractDao<ResourceEntity> {
                 .setParameter("supplierName", supplierName)
                 .setParameter("id", id)
                 .getSingleResult();
+    }
+
+    public List<Object[]> getResourcesFromProjectId(int projectId) {
+        try {
+            return  em.createNamedQuery("Resource.getResourcesDetailsFromProjectId", Object[].class).setParameter("projectId",projectId).getResultList()   ;
+
+        } catch (Exception e) {
+            return null;
+        }
     }
 
 }

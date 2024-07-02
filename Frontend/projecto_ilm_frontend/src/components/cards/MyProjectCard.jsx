@@ -16,6 +16,7 @@ export default function MyProjectCard({
   photo,
 }) {
   const navigate = useNavigate();
+  console.log(name + " " + photo);
   return (
     <>
       <div
@@ -24,7 +25,6 @@ export default function MyProjectCard({
       >
         <div className="my-project-title">{name}</div>
         <div className="my-project-card">
-          {console.log(name + " " + photo)}
           <div
             className="my-projects-banner"
             style={{

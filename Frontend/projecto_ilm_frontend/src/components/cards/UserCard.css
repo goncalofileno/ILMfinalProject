@@ -3,6 +3,7 @@
   flex-direction: row;
   align-items: center;
   padding-left: 10px;
+  background-color: rgba(30, 40, 82, 0.159);
 }
 
 .user-card-img {
@@ -129,4 +130,8 @@
   padding-top: 7px;
   padding-bottom: 7px;
   border-radius: 10px;
+}
+
+.user-card {
+  background-color: rgba(187, 200, 249, 0.264);
 }

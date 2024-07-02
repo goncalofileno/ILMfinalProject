@@ -1,6 +1,9 @@
 import AppNavbar from "../components/headers/AppNavbar";
-import "./ProjectCreationPage.css";
-import { Row, Col, InputGroup, Form, Button } from "react-bootstrap";
+import ProjectTabs from "../components/headers/ProjectTabs";
+import { Row, Col, Form, InputGroup, Button } from "react-bootstrap";
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import Cookies from "js-cookie";
 import ResourcesProjectCreationTable from "../components/tables/ResourcesProjectCreationTable";
 import YourResourcesProjectCreationTable from "../components/tables/YourResourcesProjectCreationTable";
 import TablePagination from "../components/paginations/TablePagination";
@@ -8,15 +11,13 @@ import {
   getResourcesFilters,
   getAllResourcesCreatingProject,
   addInitialResources,
+  getProjectResources,
 } from "../utilities/services";
-import { useEffect, useState } from "react";
-import AddResourceModal from "../components/modals/AddResourceModal";
-import { useParams } from "react-router-dom";
-import Cookies from "js-cookie";
-import StandardModal from "../components/modals/StandardModal";
 import { useNavigate } from "react-router-dom";
+import AddResourceModal from "../components/modals/AddResourceModal";
+import StandardModal from "../components/modals/StandardModal";
 
-export default function ProjectCreationPage3() {
+export default function ProjectProfileResourcesPage() {
   const { systemProjectName } = useParams();
   const [brands, setBrands] = useState([]);
   const [suppliers, setSuppliers] = useState([]);
@@ -42,19 +43,112 @@ export default function ProjectCreationPage3() {
   const [modalType, setModalType] = useState("warning");
   const [modalMessage, setModalMessage] = useState("");
   const [modalActive, setModalActive] = useState(false);
+  const [selectedResources, setSelectedResources] = useState([]);
+  const [userInProjectType, setUserInProjectType] = useState("");
   const navigate = useNavigate();
-
-  useEffect(() => {
-    return () => {
-      // Clear the cookies you want to remove
-
-      Cookies.remove("yourResources");
-    };
-  }, []);
 
   useEffect(() => {
     Cookies.set("yourResources", JSON.stringify(yourResources));
   }, [yourResources]);
+
+  useEffect(() => {
+    console.log("resource.lenght " + yourResources.length);
+    if (yourResources.length === 0) {
+      console.log("here");
+      getProjectResources(systemProjectName)
+        .then((response) => response.json())
+        .then((data) => {
+          setYourResources(data.resources);
+          setUserInProjectType(data.userInProjectTypeENUM);
+          Cookies.set("yourResources", JSON.stringify(data.resources));
+          const rejectedIdsDto = {
+            rejectedIds: data.resources.map(
+              (resource) => resource.resourceSupplierId
+            ),
+          };
+          getAllResourcesCreatingProject(
+            currentPage,
+            brand,
+            type,
+            supplier,
+            keyword,
+            nameAsc,
+            typeAsc,
+            brandAsc,
+            supplierAsc,
+            rejectedIdsDto
+          )
+            .then((response) => response.json())
+            .then((data) => {
+              console.log(data);
+              setResources(data.tableResources);
+              setTotalPages(data.maxPageNumber);
+            });
+        });
+    } else {
+      const rejectedIdsDto = {
+        rejectedIds: yourResources.map(
+          (resource) => resource.resourceSupplierId
+        ),
+      };
+      getAllResourcesCreatingProject(
+        currentPage,
+        brand,
+        type,
+        supplier,
+        keyword,
+        nameAsc,
+        typeAsc,
+        brandAsc,
+        supplierAsc,
+        rejectedIdsDto
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+          setResources(data.tableResources);
+          setTotalPages(data.maxPageNumber);
+        });
+    }
+
+    getResourcesFilters(false, false)
+      .then((response) => response.json())
+      .then((data) => {
+        setBrands(data.brands);
+        setSuppliers(data.suppliers);
+      });
+  }, []);
+  useEffect(() => {
+    const rejectedIdsDto = {
+      rejectedIds: yourResources.map((resource) => resource.resourceSupplierId),
+    };
+    getAllResourcesCreatingProject(
+      currentPage,
+      brand,
+      type,
+      supplier,
+      keyword,
+      nameAsc,
+      typeAsc,
+      brandAsc,
+      supplierAsc,
+      rejectedIdsDto
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        setResources(data.tableResources);
+        setTotalPages(data.maxPageNumber);
+      });
+  }, [resourcesTableTrigger]);
+  useEffect(() => {
+    return () => {
+      // Clear the cookies you want to remove
+
+      Cookies.set("yourResources", []);
+      Cookies.remove("yourResources");
+    };
+  }, []);
 
   const sortByName = () => {
     if (typeAsc !== "") setTypeAsc("");
@@ -92,39 +186,6 @@ export default function ProjectCreationPage3() {
     setResourcesTableTrigger((prev) => !prev);
   };
 
-  useEffect(() => {
-    const rejectedIdsDto = {
-      rejectedIds: yourResources.map((resource) => resource.resourceSupplierId),
-    };
-    getAllResourcesCreatingProject(
-      currentPage,
-      brand,
-      type,
-      supplier,
-      keyword,
-      nameAsc,
-      typeAsc,
-      brandAsc,
-      supplierAsc,
-      rejectedIdsDto
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        setResources(data.tableResources);
-        setTotalPages(data.maxPageNumber);
-      });
-  }, [resourcesTableTrigger]);
-
-  useEffect(() => {
-    getResourcesFilters(false, false)
-      .then((response) => response.json())
-      .then((data) => {
-        setBrands(data.brands);
-        setSuppliers(data.suppliers);
-      });
-  }, []);
-
   const handleSubmit = () => {
     const rejectedIdsDto = {
       rejectedIds: yourResources.map((resource) => resource.resourceSupplierId),
@@ -132,25 +193,18 @@ export default function ProjectCreationPage3() {
     addInitialResources(systemProjectName, rejectedIdsDto).then((response) => {
       if (response.status === 200) {
         setModalType("success");
-        setModalMessage(
-          "The resources have been added to the project successfully"
-        );
+        setModalMessage("The resources have been saved successfully!");
         setModalActive(true);
-        setTimeout(() => {
-          navigate(`/project/${systemProjectName}`);
-        }, 1500);
       }
     });
   };
   return (
-    <div>
+    <>
       <AppNavbar />
-      <div className="ilm-pageb">
-        <h1 className="page-title">
-          <span className="app-slogan-1">Project </span>
-          <span className="app-slogan-2">Resources</span>
-        </h1>
-        <Row className="row-container2">
+      <div className="bckg-color-ilm-page ilm-pageb">
+        <ProjectTabs typeOfUserSeingProject={userInProjectType} />
+
+        <Row className="row-container2" style={{ marginTop: "0px" }}>
           <Col sm={1}></Col>
           <Col sm={5}>
             <Row style={{ height: "100%" }}>
@@ -245,6 +299,7 @@ export default function ProjectCreationPage3() {
                     yourResources={yourResources}
                     setResourcesTableTrigger={setResourcesTableTrigger}
                     setSelectedResource={setSelectedResource}
+                    setSelectedResources={setSelectedResources}
                   ></ResourcesProjectCreationTable>
                 </Col>
                 <Col sm={1}></Col>
@@ -283,6 +338,7 @@ export default function ProjectCreationPage3() {
                     setResourceId={setResourceId}
                     setResourcesTableTrigger={setResourcesTableTrigger}
                     setSelectedResource={setSelectedResource}
+                    setSelectedResources={setSelectedResources}
                   ></YourResourcesProjectCreationTable>
                 </Col>
               </Row>
@@ -319,7 +375,7 @@ export default function ProjectCreationPage3() {
               style={{ width: "100%" }}
               onClick={handleSubmit}
             >
-              Finish Project Creation
+              Save Resources
             </button>
           </Col>
           <Col sm={1}></Col>
@@ -333,7 +389,8 @@ export default function ProjectCreationPage3() {
         resourceSupplier={resourceSupplier}
         setResourceSupplier={setResourceSupplier}
         resource={selectedResource}
-        yourResources={yourResources}
+        yourResources={selectedResources}
+        setSelectedResources={setSelectedResources}
         setYourResources={setYourResources}
         setTableTrigger={setResourcesTableTrigger}
       ></AddResourceModal>
@@ -343,6 +400,6 @@ export default function ProjectCreationPage3() {
         modalActive={modalActive}
         setModalActive={setModalActive}
       ></StandardModal>
-    </div>
+    </>
   );
 }

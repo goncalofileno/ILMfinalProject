@@ -1,12 +1,10 @@
 package com.ilm.projecto_ilm_backend.bean;
 
-import com.ilm.projecto_ilm_backend.ENUMS.SkillTypeENUM;
-import com.ilm.projecto_ilm_backend.ENUMS.UserInProjectTypeENUM;
-import com.ilm.projecto_ilm_backend.ENUMS.UserTypeENUM;
-import com.ilm.projecto_ilm_backend.ENUMS.WorkLocalENUM;
+import com.ilm.projecto_ilm_backend.ENUMS.*;
 import com.ilm.projecto_ilm_backend.dao.*;
 import com.ilm.projecto_ilm_backend.dto.interest.InterestDto;
 import com.ilm.projecto_ilm_backend.dto.project.ProjectProfileDto;
+import com.ilm.projecto_ilm_backend.dto.resource.ResourcesProjectProfileDto;
 import com.ilm.projecto_ilm_backend.dto.skill.SkillDto;
 import com.ilm.projecto_ilm_backend.dto.user.*;
 import com.ilm.projecto_ilm_backend.entity.*;
@@ -81,6 +79,10 @@ public class UserBean {
 
     @Inject
     ProjectDao projectDao;
+
+    @Inject
+    ProjectBean projectBean;
+
 
     private static final int NUMBER_OF_USERS_PER_PAGE=6;
     /**
@@ -703,7 +705,7 @@ public class UserBean {
         return false;
     }
 
-    public UserProjectCreationInfoDto getUserProjectCreationInfoDto(String sessionId, String systemProjectName, RejectedUsersDto rejectedUsersDto, int page, String labName, String keyword){
+    public UserProjectCreationInfoDto getUserProjectCreationInfoDto(String sessionId, String systemProjectName, RejectedIdsDto rejectedUsersDto, int page, String labName, String keyword){
         int userId = sessionDao.findBySessionId(sessionId).getUser().getId();
         LabEntity lab;
         if (labName == null || labName.equals("")) lab = null;
@@ -711,7 +713,7 @@ public class UserBean {
         if (keyword.equals("")) keyword = null;
 
         List<String> skillsInProject=projectDao.getSkillsBySystemName(systemProjectName);
-        List<Object[]> userInfo= userDao.getUserProjectCreationDto(userId, rejectedUsersDto.getRejectedUsersId(),NUMBER_OF_USERS_PER_PAGE,page, lab, keyword,skillsInProject);
+        List<Object[]> userInfo= userDao.getUserProjectCreationDto(userId, rejectedUsersDto.getRejectedIds(),NUMBER_OF_USERS_PER_PAGE,page, lab, keyword,skillsInProject);
 
         ArrayList<UserProjectCreationDto> userProjectCreationDtos= new ArrayList<>();
         UserProjectCreationInfoDto userProjectCreationInfoDto=new UserProjectCreationInfoDto();
@@ -739,7 +741,7 @@ public class UserBean {
             userProjectCreationDto.setSkills(skills);
             userProjectCreationDto.setSystemUsername((String) user[5]);
             userProjectCreationDtos.add(userProjectCreationDto);
-            int numberOfUsers =userDao.getNumberUserProjectCreationDto(userId, rejectedUsersDto.getRejectedUsersId(),lab, keyword);
+            int numberOfUsers =userDao.getNumberUserProjectCreationDto(userId, rejectedUsersDto.getRejectedIds(),lab, keyword);
             int maxPageNumber=calculateMaximumPageUsers(numberOfUsers,NUMBER_OF_USERS_PER_PAGE);
             System.out.println("max page: " + maxPageNumber);
             System.out.println("number of users: " + numberOfUsers);
@@ -754,4 +756,15 @@ public class UserBean {
     public int calculateMaximumPageUsers(int numberOfProjects, int numberOfProjectPerPage) {
         return (int) Math.ceil((double) numberOfProjects / numberOfProjectPerPage);
     }
+
+    public UserInProjectTypeENUM getUserInProjectENUM(String sessionId, String projectSystemName) {
+        UserEntity user = getUserBySessionId(sessionId);
+        int projectId=projectDao.getIdBySystemName(projectSystemName);
+        if (user != null) {
+            return projectBean.getUserTypeInProject(user.getId(),projectId);
+        }
+        return null;
+    }
+
+
 }

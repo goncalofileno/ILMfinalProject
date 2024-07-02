@@ -3,6 +3,9 @@ package com.ilm.projecto_ilm_backend.service;
 import com.ilm.projecto_ilm_backend.bean.ResourceBean;
 import com.ilm.projecto_ilm_backend.dto.resource.ResourceCreationDto;
 import com.ilm.projecto_ilm_backend.dto.resource.ResourceDto;
+import com.ilm.projecto_ilm_backend.dto.resource.ResourceTableDto;
+import com.ilm.projecto_ilm_backend.dto.resource.ResourcesProjectProfileDto;
+import com.ilm.projecto_ilm_backend.dto.user.RejectedIdsDto;
 import com.ilm.projecto_ilm_backend.validator.DatabaseValidator;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
@@ -13,6 +16,8 @@ import org.apache.logging.log4j.Logger;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Path("/resource")
 public class ResourceService {
@@ -25,18 +30,18 @@ public class ResourceService {
 
 
 
-    @GET
-    @Path("/")
+    @POST
+    @Path("/getResources")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getResources(@CookieParam("session-id") String sessionId, @QueryParam("page") int page, @QueryParam("brand") String brand,
-                                 @QueryParam("type") String type, @QueryParam("supplier")String supplierName,@QueryParam("keyword")String searchKeyword,
+                                 @QueryParam("type") String type, @QueryParam("supplier")String supplierName, @QueryParam("keyword")String searchKeyword,
                                  @QueryParam("nameAsc")String nameAsc, @QueryParam("typeAsc")String typeAsc, @QueryParam("brandAsc")String brandAsc,
-                                 @QueryParam("supplierAsc")String supplierAsc) throws UnknownHostException {
+                                 @QueryParam("supplierAsc")String supplierAsc, RejectedIdsDto rejectedIdsDto) throws UnknownHostException {
         String clientIP = InetAddress.getLocalHost().getHostAddress();
         logger.info("Received a request to receive all resources from a user from IP address: " + clientIP);
         if(databaseValidator.checkSessionId(sessionId)) {
             try {
-                return Response.ok(resourceBean.getResourceDetails(page,brand,type,supplierName,searchKeyword, nameAsc,typeAsc,brandAsc,supplierAsc)).build();
+                return Response.ok(resourceBean.getResourceDetails(page,brand,type,supplierName,searchKeyword, nameAsc,typeAsc,brandAsc,supplierAsc, rejectedIdsDto)).build();
             } catch (Exception e) {
                 logger.error("An error occurred while retrieving home projects: " + e.getMessage() + " from IP address: " + clientIP);
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("An error occurred while retrieving all resources").build();
@@ -84,6 +89,26 @@ public class ResourceService {
             } catch (Exception e) {
                 logger.error("An error occurred while editing the resource "+resourceDto.getName()+": " + e.getMessage() + " from IP address: " + clientIP);
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("An error occurred while editing the resource " +resourceDto.getName()).build();
+            }
+        }else {
+            return Response.status(Response.Status.UNAUTHORIZED).entity("Unauthorized access").build();
+        }
+    }
+
+    @GET
+    @Path("/project/{projectSystemName}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getProjectResources(@CookieParam("session-id") String sessionId,@PathParam("projectSystemName")String projectSystemName) throws UnknownHostException {
+        String clientIP = InetAddress.getLocalHost().getHostAddress();
+        logger.info("Received a request to get the resources from the project" +projectSystemName+" from a user from IP address: " + clientIP);
+        if(databaseValidator.checkSessionId(sessionId)) {
+//            List<ResourceTableDto> resourceTableDtos=resourceBean.getProjectResources(projectSystemName);
+            ResourcesProjectProfileDto resourcesProjectProfileDto=resourceBean.getResourcesProjectProfile(sessionId,projectSystemName);
+            if(resourcesProjectProfileDto!=null) {
+                return Response.ok(resourcesProjectProfileDto).build();
+            }else {
+                return Response.status(Response.Status.BAD_REQUEST).entity("This project does not exist").build();
             }
         }else {
             return Response.status(Response.Status.UNAUTHORIZED).entity("Unauthorized access").build();
@@ -152,12 +177,12 @@ public class ResourceService {
     @GET
     @Path("/filters")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getResourcesFilters(@CookieParam("session-id") String sessionId, @QueryParam("withNames")boolean withNames) throws UnknownHostException {
+    public Response getResourcesFilters(@CookieParam("session-id") String sessionId, @QueryParam("withNames")boolean withNames, @QueryParam("withTypes")boolean withTypes) throws UnknownHostException {
         String clientIP = InetAddress.getLocalHost().getHostAddress();
         logger.info("Received a request to receive the resource filters from a user from IP address: " + clientIP);
         if(databaseValidator.checkSessionId(sessionId)) {
             try {
-                return Response.ok(resourceBean.getResourceFiltersDto(withNames)).build();
+                return Response.ok(resourceBean.getResourceFiltersDto(withNames,withTypes)).build();
             } catch (Exception e) {
                 logger.error("An error occurred while retrieving resources filters: " + e.getMessage() + " from IP address: " + clientIP);
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("An error occurred while retrieving all resources brands").build();
