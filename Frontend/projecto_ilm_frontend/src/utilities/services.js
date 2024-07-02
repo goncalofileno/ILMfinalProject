@@ -1707,6 +1707,52 @@ const updateTask = async (updateTaskDto) => {
   }
 };
 
+const createTask = async (newTaskDto) => {
+  try {
+    const response = await fetch(`${baseURL}task/addTask`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(newTaskDto),
+    });
+
+    if (!response.ok) {
+      const responseJson = await response.json();
+      throw new Error(responseJson.message || "An error occurred");
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error creating task:", error);
+    return { error: error.message };
+  }
+};
+
+const deleteTask = async (updateTaskDto) => {
+  try {
+    const response = await fetch(`${baseURL}task/deleteTask`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(updateTaskDto),
+    });
+
+    if (!response.ok) {
+      const responseJson = await response.json();
+      throw new Error(responseJson.message || "An error occurred");
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error deleting task:", error);
+    return { error: error.message };
+  }
+}
+
 export {
   registerUser,
   getInterests,
@@ -1782,4 +1828,6 @@ export {
   updateProject,
   getTasksPage,
   updateTask,
+  createTask,
+  deleteTask,
 };

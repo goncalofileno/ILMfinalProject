@@ -73,6 +73,7 @@ public class TaskBean {
             task1.setFinalDate(LocalDateTime.now().plus(3, ChronoUnit.YEARS));
             task1.setStatus(TaskStatusENUM.PLANNED);
             task1.setProject(projectDao.findById(i));
+            task1.setDeleted(false);
             taskDao.persist(task1);
 
             UserTaskEntity userTask1 = new UserTaskEntity();
@@ -95,6 +96,7 @@ public class TaskBean {
             task2.setFinalDate(LocalDateTime.now().plus(2, ChronoUnit.YEARS));
             task2.setStatus(TaskStatusENUM.IN_PROGRESS);
             task2.setProject(projectDao.findById(i));
+            task2.setDeleted(false);
             List<TaskEntity> tasks = new ArrayList<>();
             tasks.add(task1);
             task2.setDependentTasks(tasks);
@@ -120,6 +122,7 @@ public class TaskBean {
             task3.setFinalDate(LocalDateTime.now().plus(1, ChronoUnit.YEARS));
             task3.setStatus(TaskStatusENUM.DONE);
             task3.setProject(projectDao.findById(i));
+            task3.setDeleted(false);
             List<TaskEntity> tasks2 = new ArrayList<>();
             tasks2.add(task1);
             tasks2.add(task2);
@@ -144,9 +147,9 @@ public class TaskBean {
 
         String systemTitle = originalName.replaceAll("\\s+", "").toLowerCase();
 
-        if(taskDao.findTaskBySystemTitle(systemTitle) == null) {
+        if (taskDao.findTaskBySystemTitle(systemTitle) == null) {
             return systemTitle;
-        }else {
+        } else {
             int i = 1;
             while (taskDao.findTaskBySystemTitle(systemTitle + i) != null) {
                 i++;
@@ -263,15 +266,93 @@ public class TaskBean {
     }
 
     @Transactional
-    public void updateTask(String sessionId, UpdateTaskDto updateTaskDto) throws ProjectNotFoundException, UserNotFoundException, UserNotInProjectException {
+    public void addTask(String sessionId, UpdateTaskDto updateTaskDto) throws ProjectNotFoundException, UserNotFoundException, UserNotInProjectException {
+        System.out.println("Received request to add new task: " + updateTaskDto.toString());
 
-        // Encontrar a entidade Task
+        UserEntity user = userBean.getUserBySessionId(sessionId);
+        ProjectEntity project = projectDao.findBySystemName(updateTaskDto.getSystemProjectName());
+
+        if (project == null) {
+            throw new ProjectNotFoundException("Project not found");
+        }
+
+        if (user == null) {
+            throw new UserNotFoundException("User not found");
+        }
+
+        if (!userProjectDao.isUserInProject(project.getId(), user.getId())) {
+            throw new UserNotInProjectException("User not part of project");
+        }
+
+        List<TaskEntity> tasks = taskDao.findByProject(project.getId());
+
+        TaskEntity task = new TaskEntity();
+        task.setTitle(updateTaskDto.getTitle());
+        task.setSystemTitle(taskSystemNameGenerator(task.getTitle()));
+        task.setDescription(updateTaskDto.getDescription());
+        task.setStatus(TaskStatusENUM.PLANNED);
+        task.setInitialDate(updateTaskDto.getInitialDate());
+        task.setFinalDate(updateTaskDto.getFinalDate());
+        task.setOutColaboration(updateTaskDto.getOutColaboration());
+        task.setProject(project);
+        task.setDeleted(false);
+
+        taskDao.persist(task);
+
+        UserTaskEntity userTask = new UserTaskEntity();
+        userTask.setTask(task);
+        userTask.setUser(user);
+        userTask.setType(UserInTaskTypeENUM.CREATOR);
+        userTaskDao.persist(userTask);
+
+        UserEntity inCharge = userDao.findById(updateTaskDto.getInChargeId());
+        if (inCharge != null) {
+            if (inCharge.getId() != user.getId()) {
+                UserTaskEntity userTaskInCharge = new UserTaskEntity();
+                userTaskInCharge.setTask(task);
+                userTaskInCharge.setUser(inCharge);
+                userTaskInCharge.setType(UserInTaskTypeENUM.INCHARGE);
+                userTaskDao.persist(userTaskInCharge);
+            } else {
+                userTask.setType(UserInTaskTypeENUM.CREATOR_INCHARGE);
+                userTaskDao.merge(userTask);
+            }
+        }
+
+        List<UserEntity> membersOfTask = updateTaskDto.getMemberIds().stream()
+                .map(memberId -> userDao.findById(memberId))
+                .collect(Collectors.toList());
+
+        for (UserEntity member : membersOfTask) {
+            if (member.getId() != user.getId()) {
+                if (member.getId() != inCharge.getId()) {
+                    UserTaskEntity userTaskMember = new UserTaskEntity();
+                    userTaskMember.setTask(task);
+                    userTaskMember.setUser(member);
+                    userTaskMember.setType(UserInTaskTypeENUM.MEMBER);
+                    userTaskDao.persist(userTaskMember);
+                }
+            }
+        }
+
+        List<TaskEntity> dependentTasks = updateTaskDto.getDependentTaskIds().stream()
+                .map(taskId -> taskDao.findById(taskId))
+                .collect(Collectors.toList());
+
+        task.setDependentTasks(dependentTasks);
+
+        taskDao.merge(task);
+    }
+
+    @Transactional
+    public void updateTask(String sessionId, UpdateTaskDto updateTaskDto) throws ProjectNotFoundException, UserNotFoundException, UserNotInProjectException {
         TaskEntity task = taskDao.findById(updateTaskDto.getId());
         if (task == null) {
             throw new ProjectNotFoundException("Task not found");
         }
 
-        // Atualizar a entidade Task
+        List<TaskEntity> tasks = taskDao.findByProject(task.getProject().getId());
+
         task.setTitle(updateTaskDto.getTitle());
         task.setDescription(updateTaskDto.getDescription());
         task.setStatus(updateTaskDto.getStatus());
@@ -279,17 +360,12 @@ public class TaskBean {
         task.setFinalDate(updateTaskDto.getFinalDate());
         task.setOutColaboration(updateTaskDto.getOutColaboration());
 
-
-
-        // Atualizar membersOfTask
         List<UserEntity> membersOfTask = updateTaskDto.getMemberIds().stream()
                 .map(memberId -> userDao.findById(memberId))
                 .collect(Collectors.toList());
 
-        // Remover todos os membros existentes
         userTaskDao.deleteAllByTaskId(task.getId());
 
-        // Adicionar os novos membros
         for (UserEntity member : membersOfTask) {
             UserTaskEntity userTask = new UserTaskEntity();
             userTask.setTask(task);
@@ -298,7 +374,6 @@ public class TaskBean {
             userTaskDao.persist(userTask);
         }
 
-        // Atualizar creator
         UserEntity creator = userDao.findById(updateTaskDto.getCreatorId());
         if (creator != null) {
             UserTaskEntity userTask = userTaskDao.findByTaskIdAndUserId(task.getId(), creator.getId());
@@ -306,25 +381,59 @@ public class TaskBean {
             userTaskDao.merge(userTask);
         }
 
-        // Atualizar inCharge
         UserEntity inCharge = userDao.findById(updateTaskDto.getInChargeId());
         if (inCharge != null) {
-            // Atualizar o tipo de usuário na tarefa atual
             UserTaskEntity userTask = userTaskDao.findByTaskIdAndUserId(task.getId(), inCharge.getId());
-            if(userTask.getType() == UserInTaskTypeENUM.CREATOR || userTask.getType() == UserInTaskTypeENUM.CREATOR_INCHARGE) {
+            if (userTask.getType() == UserInTaskTypeENUM.CREATOR || userTask.getType() == UserInTaskTypeENUM.CREATOR_INCHARGE) {
                 userTask.setType(UserInTaskTypeENUM.CREATOR_INCHARGE);
             } else {
                 userTask.setType(UserInTaskTypeENUM.INCHARGE);
             }
         }
 
-        // Atualizar dependentTasks
         List<TaskEntity> dependentTasks = updateTaskDto.getDependentTaskIds().stream()
                 .map(taskId -> taskDao.findById(taskId))
                 .collect(Collectors.toList());
         task.setDependentTasks(dependentTasks);
 
-        // Persistir as alterações
         taskDao.merge(task);
     }
+
+    public void deleteTask(String sessionId, UpdateTaskDto updateTaskDto) throws ProjectNotFoundException, UserNotFoundException, UserNotInProjectException {
+        TaskEntity task = taskDao.findById(updateTaskDto.getId());
+        UserEntity user = userBean.getUserBySessionId(sessionId);
+        ProjectEntity project = projectDao.findBySystemName(updateTaskDto.getSystemProjectName());
+
+        if (task == null) {
+            throw new ProjectNotFoundException("Task not found");
+        }
+
+        if (project == null) {
+            throw new ProjectNotFoundException("Project not found");
+        }
+
+        if (user == null) {
+            throw new UserNotFoundException("User not found");
+        }
+
+        if (!userProjectDao.isUserInProject(project.getId(), user.getId())) {
+            throw new UserNotInProjectException("User not part of project");
+        }
+
+        task.setDeleted(true);
+
+        List<TaskEntity> tasks = taskDao.findByProject(project.getId());
+
+        for(TaskEntity taskWithDependent : tasks) {
+            List<TaskEntity> dependentTasks = taskWithDependent.getDependentTasks();
+            if(dependentTasks.contains(task)) {
+                dependentTasks.remove(task);
+                taskWithDependent.setDependentTasks(dependentTasks);
+                taskDao.merge(taskWithDependent);
+            }
+        }
+
+        taskDao.merge(task);
+    }
+
 }

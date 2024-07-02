@@ -90,9 +90,8 @@ public class ProjectBean {
                 project.setSystemName(projectSystemNameGenerator(project.getName()));
                 project.setDescription("This project aims to develop an innovative software solution for managing large-scale data in real-time. The system will leverage cutting-edge technologies to handle vast amounts of information efficiently.");
                 project.setCreatedAt(LocalDateTime.now());
-                project.setStartDate(LocalDateTime.now().minus(1, ChronoUnit.YEARS));
-                project.setStartDate(LocalDateTime.now().minus(1, ChronoUnit.YEARS));
-                project.setEndDate(LocalDateTime.now().plus(1, ChronoUnit.YEARS));
+                project.setStartDate(LocalDateTime.now().minus(5, ChronoUnit.YEARS));
+                project.setEndDate(LocalDateTime.now().plus(5, ChronoUnit.YEARS));
                 project.setStatus(StateProjectENUM.IN_PROGRESS);
                 project.setPhoto("https://cdn.pixabay.com/photo/2016/03/29/08/48/project-1287781_1280.jpg");
                 project.setMotivation("This project aims to develop an innovative software solution for managing large-scale data in real-time. The system will leverage cutting-edge technologies to handle vast amounts of information efficiently.");

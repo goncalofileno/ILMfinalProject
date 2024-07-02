@@ -10,9 +10,11 @@ import { Gantt, ViewMode } from "gantt-task-react";
 import "gantt-task-react/dist/index.css";
 import AppNavbar from "../components/headers/AppNavbar";
 import ProjectTabs from "../components/headers/ProjectTabs";
-import { getTasksPage, updateTask } from "../utilities/services"; // Importe a função updateTask
+import { getTasksPage, updateTask, deleteTask } from "../utilities/services"; // Importe a função deleteTask
 import Cookies from "js-cookie";
 import EditTaskModal from "../components/modals/EditTaskModal";
+import AddTaskModal from "../components/modals/AddTaskModal";
+import DeleteTaskModal from "../components/modals/DeleteTaskModal"; // Importe o modal de confirmação de eliminação
 import { formatTaskStatus } from "../utilities/converters";
 import "./ProjectPlanPage.css";
 
@@ -79,6 +81,8 @@ const ProjectPlanPage = () => {
   const [selectedTask, setSelectedTask] = useState(null);
   const [taskDetails, setTaskDetails] = useState({});
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isAddModalVisible, setIsAddModalVisible] = useState(false); // New state for AddTaskModal
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false); // Novo estado para o modal de confirmação de eliminação
   const [isSaveEnabled, setIsSaveEnabled] = useState(false);
   const [projectMembers, setProjectMembers] = useState([]);
   const [taskTitles, setTaskTitles] = useState([]);
@@ -169,6 +173,7 @@ const ProjectPlanPage = () => {
       inChargeId: taskDetails.membersOfTask.find(
         (member) => member.systemName === taskDetails.inCharge
       )?.id,
+      systemProjectName: systemProjectName,
     };
 
     console.log("Update Task DTO:", updateTaskDto);
@@ -283,6 +288,50 @@ const ProjectPlanPage = () => {
     }
   };
 
+  const handleDeleteClick = () => {
+    setIsModalVisible(false);
+    setIsDeleteModalVisible(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    console.log("Task to delete:", taskDetails);
+    const deleteTaskDto = {
+      id: taskDetails.id,
+      title: taskDetails.title,
+      systemTitle: taskDetails.systemTitle,
+      description: taskDetails.description,
+      status: taskDetails.status,
+      initialDate: formatToLocalDateTime(taskDetails.initialDate.split("T")[0]),
+      finalDate: formatToLocalDateTime(taskDetails.finalDate.split("T")[0]),
+      outColaboration: taskDetails.outColaboration || "",
+      dependentTaskIds: taskDetails.dependentTasks
+        ? taskDetails.dependentTasks.map((task) => task.id)
+        : [],
+      memberIds: taskDetails.membersOfTask
+        ? taskDetails.membersOfTask.map((member) => member.id)
+        : [],
+      creatorId: taskDetails.membersOfTask.find(
+        (member) =>
+          member.type === "CREATOR" || member.type === "CREATOR_INCHARGE"
+      )?.id,
+      inChargeId: taskDetails.membersOfTask.find(
+        (member) => member.systemName === taskDetails.inCharge
+      )?.id,
+      systemProjectName: systemProjectName,
+    };
+
+    console.log("Delete Task DTO:", deleteTaskDto);
+
+    try {
+      await deleteTask(deleteTaskDto);
+      setIsDeleteModalVisible(false);
+      fetchData(); // Re-fetch the data to update the state
+    } catch (error) {
+      console.error("Error deleting task:", error);
+    }
+  };
+
+
   const availableMembers = projectMembers.filter(
     (member) =>
       !taskDetails.membersOfTask?.some(
@@ -309,6 +358,9 @@ const ProjectPlanPage = () => {
             <Col>
               <h1>Project Plan</h1>
               <h2>{projectName}</h2>
+              <Button onClick={() => setIsAddModalVisible(true)}>
+                Add New Task
+              </Button>
               {tasks.length > 0 && (
                 <Gantt
                   tasks={tasks}
@@ -332,6 +384,7 @@ const ProjectPlanPage = () => {
         taskDetails={taskDetails}
         handleInputChange={handleInputChange}
         handleSave={handleSave}
+        handleDeleteClick={handleDeleteClick}
         isSaveEnabled={isSaveEnabled}
         titleError={titleError}
         availableMembers={availableMembers}
@@ -340,6 +393,22 @@ const ProjectPlanPage = () => {
         availableTasks={availableTasks}
         handleAddDependentTask={handleAddDependentTask}
         handleRemoveDependentTask={handleRemoveDependentTask}
+      />
+
+      <AddTaskModal
+        show={isAddModalVisible}
+        handleClose={() => setIsAddModalVisible(false)}
+        projectMembers={projectMembers}
+        fetchData={fetchData}
+        tasks={tasks}
+        titleError={titleError}
+        systemProjectName={systemProjectName}
+      />
+
+      <DeleteTaskModal
+        show={isDeleteModalVisible}
+        handleClose={() => setIsDeleteModalVisible(false)}
+        handleConfirmDelete={handleConfirmDelete}
       />
     </>
   );

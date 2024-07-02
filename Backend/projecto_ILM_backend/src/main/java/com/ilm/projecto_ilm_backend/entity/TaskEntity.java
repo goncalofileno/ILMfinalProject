@@ -17,7 +17,7 @@ import java.util.List;
 @NamedQueries({
         @NamedQuery(name = "Task.findById", query = "SELECT t FROM TaskEntity t WHERE t.id = :id"),
         @NamedQuery(name = "Task.findAll", query = "SELECT t FROM TaskEntity t"),
-        @NamedQuery(name = "Task.findByProject", query = "SELECT t FROM TaskEntity t WHERE t.project.id = :id"),
+        @NamedQuery(name = "Task.findByProject", query = "SELECT t FROM TaskEntity t WHERE t.project.id = :id AND t.isDeleted = false"),
         @NamedQuery(name = "Task.findBySystemTitle", query = "SELECT t FROM TaskEntity t WHERE t.systemTitle = :systemTitle")
 })
 public class TaskEntity implements Serializable {
@@ -74,6 +74,9 @@ public class TaskEntity implements Serializable {
      */
     @Column(name = "outColaboration", nullable = true, unique = false, updatable = true)
     private String outColaboration;
+
+    @Column(name = "isDeleted", nullable = false, unique = false, updatable = true)
+    private boolean isDeleted;
 
     /**
      * The tasks that this task depends on. This is a many-to-many relationship with the TaskEntity class.
@@ -235,6 +238,13 @@ public class TaskEntity implements Serializable {
         this.outColaboration = outColaboration;
     }
 
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean isDeleted) {
+        this.isDeleted = isDeleted;
+    }
     /**
      * Returns the tasks that this task depends on.
      *
@@ -287,5 +297,9 @@ public class TaskEntity implements Serializable {
      */
     public void setUserTasks(List<UserTaskEntity> userTasks) {
         this.userTasks = userTasks;
+    }
+
+    public int getDurationDays() {
+        return (int) (finalDate.toLocalDate().toEpochDay() - initialDate.toLocalDate().toEpochDay());
     }
 }

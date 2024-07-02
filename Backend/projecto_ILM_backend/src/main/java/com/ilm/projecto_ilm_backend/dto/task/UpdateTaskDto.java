@@ -18,6 +18,7 @@ public class UpdateTaskDto {
     private List<Integer> memberIds;
     private int creatorId;
     private int inChargeId;
+    private String systemProjectName;
 
     public UpdateTaskDto() {
     }
@@ -116,5 +117,32 @@ public class UpdateTaskDto {
 
     public void setInChargeId(int inChargeId) {
         this.inChargeId = inChargeId;
+    }
+
+    public String getSystemProjectName() {
+        return systemProjectName;
+    }
+
+    public void setSystemProjectName(String systemProjectName) {
+        this.systemProjectName = systemProjectName;
+    }
+
+    @Override
+    public String toString() {
+        return "UpdateTaskDto{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", systemTitle='" + systemTitle + '\'' +
+                ", description='" + description + '\'' +
+                ", status=" + status +
+                ", initialDate=" + initialDate +
+                ", finalDate=" + finalDate +
+                ", outColaboration='" + outColaboration + '\'' +
+                ", dependentTaskIds=" + dependentTaskIds +
+                ", memberIds=" + memberIds +
+                ", creatorId=" + creatorId +
+                ", inChargeId=" + inChargeId +
+                ", systemProjectName='" + systemProjectName + '\'' +
+                '}';
     }
 }

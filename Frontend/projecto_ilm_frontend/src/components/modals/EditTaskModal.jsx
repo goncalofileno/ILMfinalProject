@@ -16,6 +16,7 @@ const EditTaskModal = ({
   availableTasks,
   handleAddDependentTask,
   handleRemoveDependentTask,
+  handleDeleteClick, // Adicione esta linha
 }) => {
   return (
     <Modal show={show} onHide={handleClose}>
@@ -207,6 +208,14 @@ const EditTaskModal = ({
       <Modal.Footer>
         <Button variant="secondary" onClick={handleClose}>
           Close
+        </Button>
+        
+        <Button
+          variant="danger"
+          onClick={handleDeleteClick} // Adicione esta linha
+          style={{ marginLeft: "auto" }}
+        >
+          Delete Task
         </Button>
         <Button
           variant="primary"
