@@ -121,6 +121,13 @@ export default function ProjectCreationPage1() {
     const file = e.target.files[0];
     setSelectedFile(file);
     if (file) {
+      if (!file.type.includes("jpeg") && !file.type.includes("png")) {
+        setModalMessage("Please select a .jpg or .png file.");
+        setModalType("danger");
+        setModalActive(true);
+        e.target.value = ""; // Reset the input field to clear the invalid selection
+        return;
+      }
       const previewUrl = URL.createObjectURL(file);
       setPreview(previewUrl);
     }
@@ -158,7 +165,7 @@ export default function ProjectCreationPage1() {
         modalActive={modalActive}
         setModalActive={setModalActive}
       ></StandardModal>
-      <div className="ilm-pageb">
+      <div className="ilm-pageb" style={{ paddingTop: "15px" }}>
         <h1 className="page-title">
           <span className="app-slogan-1">Project </span>
           <span className="app-slogan-2">Creation</span>
@@ -190,6 +197,7 @@ export default function ProjectCreationPage1() {
                       borderTopLeftRadius: "0",
                       borderTopRightRadius: "0",
                     }}
+                    accept=".jpg, .jpeg, .png"
                   />
                 </Form.Group>
               </div>

@@ -627,7 +627,7 @@ public class ProjectService {
         logger.info("Received a request to create a project from a user with IP address: " + clientIP);
 
         if (databaseValidator.checkSessionId(sessionId)) {
-            if (projectBean.addResourcesToProject(projectSystemName, resourcesSuppliersIds)) {
+            if (projectBean.addResourcesToProject(projectSystemName, resourcesSuppliersIds, sessionId)) {
                 return Response.status(Response.Status.OK).build();
             } else return Response.status(Response.Status.BAD_REQUEST).build();
         } else return Response.status(Response.Status.UNAUTHORIZED).build();

@@ -1,34 +1,96 @@
 .custom-table {
-    max-height: 500px;
-    overflow-y: auto;
-  }
-  
-  .custom-table thead th {
-    position: sticky;
-    top: 0;
-    background-color: #fff;
-    z-index: 1;
-  }
-  
-  .custom-table tbody tr {
-    max-height: 50px;
-  }
-  
-  .custom-table tbody td {
-    vertical-align: middle;
-  }
+  max-height: 500px;
+  overflow-y: auto;
+}
 
-  .skill-badge {
-    display: inline-block;
-    margin-right: 5px;
-    padding: 5px 10px;
-    border-radius: 5px;
-    background-color: #f0f0f0;
-  }
-  
-  .skill-badge.in-project {
-    background-color: #d4edda;
-    color: #155724;
-  }
-  
-  
+.custom-table thead th {
+  position: sticky;
+  top: 0;
+  background-color: #fff;
+  z-index: 1;
+}
+
+.custom-table tbody tr {
+  max-height: 50px;
+}
+
+.custom-table tbody td {
+  vertical-align: middle;
+}
+
+.skill-badge {
+  display: inline-block;
+  margin-right: 5px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  background-color: #f0f0f0;
+}
+
+.skill-badge.in-project {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+#body-table-members-project {
+  height: calc(100% - 34px);
+  max-height: calc(100% - 34px);
+  display: block;
+  overflow: auto;
+  width: 100%;
+}
+
+#body-table-members-project tr {
+  height: 20%;
+}
+
+#body-table-members-project::-webkit-scrollbar {
+  width: 7px;
+  height: 6px; /* Espessura da barra de rolagem */
+}
+
+#body-table-members-project::-webkit-scrollbar-track {
+  background: rgba(
+    158,
+    176,
+    255,
+    0.216
+  ); /* Cor do trilho da barra de rolagem */
+  border-radius: 8px;
+}
+
+#body-table-members-project::-webkit-scrollbar-thumb {
+  background: #888; /* Cor da barra de rolagem */
+  border-radius: 8px; /*Arredonda os cantos*/
+}
+
+#body-table-members-project::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Cor da barra de rolagem ao passar o mouse */
+}
+
+#body-table-members-project .skills-td-users {
+  padding: 7px;
+  height: 100%;
+  max-height: 100%;
+  overflow-y: auto;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.skills-td-users::-webkit-scrollbar {
+  width: 7px;
+  height: 6px; /* Espessura da barra de rolagem */
+}
+
+.skills-td-users::-webkit-scrollbar-track {
+  background: var(--tertiary-color); /* Cor do trilho da barra de rolagem */
+  border-radius: 8px;
+}
+
+.skills-td-users::-webkit-scrollbar-thumb {
+  background: #888; /* Cor da barra de rolagem */
+  border-radius: 8px; /*Arredonda os cantos*/
+}
+
+.skills-td-users::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Cor da barra de rolagem ao passar o mouse */
+}

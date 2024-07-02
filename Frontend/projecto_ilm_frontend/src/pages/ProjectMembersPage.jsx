@@ -53,6 +53,7 @@ const ProjectMembersPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [maxPageNumber, setMaxPageNumber] = useState(1);
   const [navigateTableTrigger, setNavigateTableTrigger] = useState(false);
+  const NUMBER_OF_MEMBERS_PAGE = 5;
 
   const sessionId = Cookies.get("session-id");
   const userSystemUsername = Cookies.get("user-systemUsername");
@@ -246,7 +247,11 @@ const ProjectMembersPage = () => {
 
   const handleRemoveInvitation = async (userId) => {
     try {
-      const result = await removeInvitation(sessionId, systemProjectName, userId);
+      const result = await removeInvitation(
+        sessionId,
+        systemProjectName,
+        userId
+      );
       // if (!result.ok) {
       //   throw new Error(`HTTP error! status: ${result.status}`);
       // }
@@ -264,7 +269,13 @@ const ProjectMembersPage = () => {
     if (projectData) {
       fetchAllUsers(currentPage);
     }
-  }, [projectData, currentPage, selectedLab, searchKeyword, navigateTableTrigger]);
+  }, [
+    projectData,
+    currentPage,
+    selectedLab,
+    searchKeyword,
+    navigateTableTrigger,
+  ]);
 
   if (error) {
     return <div>Error: {error}</div>;
@@ -301,16 +312,16 @@ const ProjectMembersPage = () => {
   return (
     <>
       <AppNavbar />
-      <div className="bckg-color-ilm-page ilm-pageb">
-        <ProjectTabs typeOfUserSeingProject={projectData.userSeingProject} />
+      <div className="ilm-pageb-noheight">
+        <ProjectTabs
+          typeOfUserSeingProject={projectData.userSeingProject}
+          projectName={projectData.projectName}
+        />
         <Container>
-          <Row>
-            <h2>{projectData.projectName}</h2>
-          </Row>
           <Row>
             <Col>
               {projectData.projectState === "CANCELED" && (
-                <Alert variant="danger">
+                <Alert variant="danger" className="standard-modal">
                   The project is canceled and no changes can be made.
                 </Alert>
               )}
@@ -319,22 +330,47 @@ const ProjectMembersPage = () => {
           <Row>
             <Col>
               <div className="d-flex justify-content-between">
-                <Card style={{ width: "48%" }}>
-                  <Card.Header>Members</Card.Header>
-                  <Card.Body>
-                    <Table striped bordered hover className="custom-table">
-                      <thead>
+                <Card
+                  style={{
+                    width: "48%",
+                    border: "none",
+                    backgroundColor: "transparent",
+                  }}
+                >
+                  <Card.Header
+                    style={{ backgroundColor: "transparent", border: "none" }}
+                  >
+                    <h5>Members</h5>
+                  </Card.Header>
+                  <Card.Body
+                    style={{ border: "none", backgroundColor: "transparent" }}
+                  >
+                    <table
+                      className="table-users-project-table"
+                      style={{ height: "440px" }}
+                    >
+                      <thead id="table-users-project-head">
                         <tr>
-                          <th>Photo</th>
+                          <th style={{ width: "17%" }}>Photo</th>
                           <th>Name</th>
                           <th>Type</th>
                           <th>Actions</th>
                         </tr>
                       </thead>
-                      <tbody>
+                      <tbody
+                        id="body-table-members-project"
+                        style={{
+                          overflow:
+                            members.length <= NUMBER_OF_MEMBERS_PAGE &&
+                            "hidden",
+                        }}
+                      >
                         {members.map((member) => (
                           <tr key={member.id}>
-                            <td className="align-middle">
+                            <td
+                              className="align-middle"
+                              style={{ width: "17%" }}
+                            >
                               <img
                                 src={member.profilePicture}
                                 alt={member.name}
@@ -384,30 +420,58 @@ const ProjectMembersPage = () => {
                             </td>
                           </tr>
                         ))}
+                        {members.length < NUMBER_OF_MEMBERS_PAGE &&
+                          Array(NUMBER_OF_MEMBERS_PAGE - members.length)
+                            .fill()
+                            .map((index) => (
+                              <tr key={index + members.length}>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                              </tr>
+                            ))}
                       </tbody>
-                    </Table>
+                    </table>
                   </Card.Body>
                 </Card>
 
-                <Card style={{ width: "48%" }}>
-                  <Card.Header>Requests and Applications</Card.Header>
-                  <Card.Body>
+                <Card
+                  style={{
+                    width: "48%",
+                    border: "none",
+                    backgroundColor: "transparent",
+                  }}
+                >
+                  <Card.Header
+                    style={{ backgroundColor: "transparent", border: "none" }}
+                  >
+                    <h5>Requests and Applications</h5>
+                  </Card.Header>
+                  <Card.Body
+                    style={{ border: "none", backgroundColor: "transparent" }}
+                  >
                     {requests.length === 0 ? (
                       <p>No requests or applications to show.</p>
                     ) : (
-                      <Table striped bordered hover className="custom-table">
-                        <thead>
+                      <table
+                        className="table-users-project-table"
+                        style={{ height: "440px" }}
+                      >
+                        <thead id="table-users-project-head">
                           <tr>
-                            <th>Photo</th>
+                            <th style={{ width: "17%" }}>Photo</th>
                             <th>Name</th>
                             <th>Type</th>
-                            <th>Actions</th>
+                            <th style={{ width: "33%" }}>Actions</th>
                           </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="body-table-members-project">
                           {requests.map((member) => (
                             <tr key={member.id}>
-                              <td className="align-middle">
+                              <td
+                                className="align-middle"
+                                style={{ width: "17%" }}
+                              >
                                 <img
                                   src={member.profilePicture}
                                   alt={member.name}
@@ -424,7 +488,10 @@ const ProjectMembersPage = () => {
                               <td className="align-middle">
                                 {typeLabels[member.type]}
                               </td>
-                              <td className="align-middle">
+                              <td
+                                className="align-middle"
+                                style={{ width: "33%" }}
+                              >
                                 {member.type === "PENDING_BY_APPLIANCE" && (
                                   <>
                                     <Button
@@ -463,15 +530,25 @@ const ProjectMembersPage = () => {
                                         projectData.projectState === "CANCELED"
                                       }
                                     >
-                                      Remove Invitation
+                                      Cancel
                                     </Button>
                                   </>
                                 )}
                               </td>
                             </tr>
                           ))}
+                          {requests.length < NUMBER_OF_MEMBERS_PAGE &&
+                            Array(NUMBER_OF_MEMBERS_PAGE - requests.length)
+                              .fill()
+                              .map((index) => (
+                                <tr key={index + members.length}>
+                                  <td></td>
+                                  <td></td>
+                                  <td></td>
+                                </tr>
+                              ))}
                         </tbody>
-                      </Table>
+                      </table>
                     )}
                   </Card.Body>
                 </Card>
@@ -481,114 +558,151 @@ const ProjectMembersPage = () => {
 
           <Row className="mt-4">
             <Col>
-              <Card>
-                <Card.Header>Available Users</Card.Header>
-                <Card.Body>
-                  <Form.Group as={Row} className="mb-3">
-                    <Form.Label column sm={2}>
-                      Search
-                    </Form.Label>
-                    <Col sm={10}>
-                      <Form.Control
-                        type="text"
-                        value={searchKeyword}
-                        onChange={(e) => setSearchKeyword(e.target.value)}
-                      />
+              <Card
+                style={{
+                  border: "none",
+                  backgroundColor: "transparent",
+                }}
+              >
+                <Card.Header
+                  style={{ backgroundColor: "transparent", border: "none" }}
+                >
+                  <h5>Available Users</h5>
+                </Card.Header>
+                <Card.Body
+                  style={{ border: "none", backgroundColor: "transparent" }}
+                >
+                  <Row>
+                    <Col sm={8}>
+                      <Form.Group as={Col} className="mb-3">
+                        <Form.Label column sm={2}>
+                          <h6>Search</h6>
+                        </Form.Label>
+                        <Col sm={10}>
+                          <Form.Control
+                            type="text"
+                            value={searchKeyword}
+                            onChange={(e) => setSearchKeyword(e.target.value)}
+                          />
+                        </Col>
+                      </Form.Group>
                     </Col>
-                  </Form.Group>
-                  <Form.Group as={Row} className="mb-3">
-                    <Form.Label column sm={2}>
-                      Lab
-                    </Form.Label>
-                    <Col sm={10}>
-                      <Form.Select
-                        value={selectedLab}
-                        onChange={(e) => setSelectedLab(e.target.value)}
-                      >
-                        <option value="">All Labs</option>
-                        {labs.map((lab) => (
-                          <option key={lab.local} value={lab.local}>
-                            {formatLab(lab.local)}
-                          </option>
-                        ))}
-                      </Form.Select>
+                    <Col sm={4}>
+                      <Form.Group as={Col} className="mb-3">
+                        <Form.Label column sm={2}>
+                          <h6>Lab</h6>
+                        </Form.Label>
+                        <Col sm={10}>
+                          <Form.Select
+                            value={selectedLab}
+                            onChange={(e) => setSelectedLab(e.target.value)}
+                          >
+                            <option value="">All Labs</option>
+                            {labs.map((lab) => (
+                              <option key={lab.local} value={lab.local}>
+                                {formatLab(lab.local)}
+                              </option>
+                            ))}
+                          </Form.Select>
+                        </Col>
+                      </Form.Group>
                     </Col>
-                  </Form.Group>
-                  {allUsers.length === 0 ? (
-                    <p>No users available to show based on the selected criteria.</p>
-                  ) : (
-                    <>
-                      <Table striped bordered hover className="custom-table">
-                        <thead>
-                          <tr>
-                            <th>Photo</th>
-                            <th>Name</th>
-                            <th>Lab</th>
-                            <th>Skills</th>
-                            <th>Actions</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {allUsers.map((user) => (
-                            <tr
-                              key={user.id}
-                              onClick={() =>
-                                window.open(
-                                  `/profile/${user.systemUsername}`,
-                                  "_blank"
-                                )
-                              }
-                            >
-                              <td className="align-middle">
-                                <img
-                                  src={user.photo}
-                                  alt={user.name}
-                                  width={50}
-                                  height={50}
-                                  className="rounded-circle"
-                                />
-                              </td>
-                              <td className="align-middle">
-                                {user.systemUsername === userSystemUsername
-                                  ? "You"
-                                  : user.name}
-                              </td>
-                              <td className="align-middle">{formatLab(user.lab)}</td>
-                              <td className="align-middle">
+                  </Row>
+                  <table
+                    className="table-users-project-table"
+                    style={{ height: "500px", marginBottom: "15px" }}
+                  >
+                    <thead id="table-users-project-head">
+                      <tr>
+                        <th>Photo</th>
+                        <th>Name</th>
+                        <th>Lab</th>
+                        <th>Skills</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="body-table-members-project">
+                      {allUsers.length === 0 ? (
+                        <tr style={{ height: "100%" }}>
+                          <td colspan="7">
+                            <div className="no-results no-results-align">
+                              No users available to show based on the selected
+                              criteria.
+                            </div>
+                          </td>
+                        </tr>
+                      ) : (
+                        allUsers.map((user) => (
+                          <tr
+                            key={user.id}
+                            onClick={() =>
+                              window.open(
+                                `/profile/${user.systemUsername}`,
+                                "_blank"
+                              )
+                            }
+                            style={{ height: "16.67%" }}
+                          >
+                            <td className="align-middle">
+                              <img
+                                src={user.photo}
+                                alt={user.name}
+                                width={50}
+                                height={50}
+                                className="rounded-circle"
+                              />
+                            </td>
+                            <td className="align-middle">
+                              {user.systemUsername === userSystemUsername
+                                ? "You"
+                                : user.name}
+                            </td>
+                            <td className="align-middle">
+                              {formatLab(user.lab)}
+                            </td>
+                            <td>
+                              <div className="skills-td-users">
                                 {user.skills.map((skill) => (
-                                  <span
-                                    key={skill.id}
-                                    className={
-                                      skill.inProject ? "text-success" : ""
-                                    }
+                                  <div
+                                    className={`skill-div-${skill.inProject}`}
+                                    style={{
+                                      marginTop: "0px",
+                                      marginBottom: "6px",
+                                      height: "50%",
+                                    }}
                                   >
-                                    {formatSkill(skill.name)}
-                                    <br />
-                                  </span>
+                                    <div className="skill-div-col1">
+                                      {skill.name}
+                                    </div>
+                                  </div>
                                 ))}
-                              </td>
-                              <td className="align-middle">
-                                <Button
-                                  variant="primary"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleInvite(user.systemUsername);
-                                  }}
-                                >
-                                  Invite
-                                </Button>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </Table>
-                      <TablePagination
-                        totalPages={maxPageNumber}
-                        currentPage={currentPage}
-                        setCurrentPage={setCurrentPage}
-                        setNavigateTableTrigger={setNavigateTableTrigger}
-                      />
-                    </>
+                              </div>
+                            </td>
+                            <td className="align-middle">
+                              <Button
+                                variant="primary"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleInvite(user.systemUsername);
+                                }}
+                              >
+                                Invite
+                              </Button>
+                            </td>
+                          </tr>
+                        ))
+                      )}
+                    </tbody>
+                  </table>
+                  {allUsers.length > 0 ? (
+                    <TablePagination
+                      totalPages={maxPageNumber}
+                      currentPage={currentPage}
+                      setCurrentPage={setCurrentPage}
+                      setNavigateTableTrigger={setNavigateTableTrigger}
+                    />
+                  ) : (
+                    <div style={{ height: "53.6px" }}></div>
                   )}
                 </Card.Body>
               </Card>

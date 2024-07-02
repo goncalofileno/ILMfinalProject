@@ -16,6 +16,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import AddResourceModal from "../components/modals/AddResourceModal";
 import StandardModal from "../components/modals/StandardModal";
+import { Alert } from "react-bootstrap";
 
 export default function ProjectProfileResourcesPage() {
   const { systemProjectName } = useParams();
@@ -45,6 +46,8 @@ export default function ProjectProfileResourcesPage() {
   const [modalActive, setModalActive] = useState(false);
   const [selectedResources, setSelectedResources] = useState([]);
   const [userInProjectType, setUserInProjectType] = useState("");
+  const [projectName, setProjectName] = useState("");
+  const [projectState, setProjectState] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -60,6 +63,8 @@ export default function ProjectProfileResourcesPage() {
         .then((data) => {
           setYourResources(data.resources);
           setUserInProjectType(data.userInProjectTypeENUM);
+          setProjectName(data.projectName);
+          setProjectState(data.projectStatus);
           Cookies.set("yourResources", JSON.stringify(data.resources));
           const rejectedIdsDto = {
             rejectedIds: data.resources.map(
@@ -202,9 +207,24 @@ export default function ProjectProfileResourcesPage() {
     <>
       <AppNavbar />
       <div className="bckg-color-ilm-page ilm-pageb">
-        <ProjectTabs typeOfUserSeingProject={userInProjectType} />
+        <ProjectTabs
+          typeOfUserSeingProject={userInProjectType}
+          projectName={projectName}
+        />
 
         <Row className="row-container2" style={{ marginTop: "0px" }}>
+          {projectState === "CANCELED" && (
+            <>
+              <div className="background-disabled"></div>
+              <Row>
+                <Col>
+                  <Alert variant="danger" className="standard-modal">
+                    The project is canceled, and the chat is disabled.
+                  </Alert>
+                </Col>
+              </Row>
+            </>
+          )}
           <Col sm={1}></Col>
           <Col sm={5}>
             <Row style={{ height: "100%" }}>

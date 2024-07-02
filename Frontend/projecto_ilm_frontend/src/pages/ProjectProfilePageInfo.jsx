@@ -287,7 +287,9 @@ const ProjectProfilePageInfo = () => {
                         marginRight: "10px",
                         marginBottom: "10px",
                       }}
-                      onClick={() => navigate('/editProject/' + systemProjectName)}
+                      onClick={() =>
+                        navigate("/editProject/" + systemProjectName)
+                      }
                       disabled={["CANCELED", "READY"].includes(
                         projectInfo.state
                       )}
@@ -400,6 +402,7 @@ const ProjectProfilePageInfo = () => {
       <div className="ilm-pageb-noheight">
         <ProjectTabs
           typeOfUserSeingProject={projectInfo.typeOfUserSeingProject}
+          projectName={projectInfo.title}
         />
         <Container className="mt-4" style={{ height: "100%" }}>
           <Row className="justify-content-md-center" style={{ height: "100%" }}>
