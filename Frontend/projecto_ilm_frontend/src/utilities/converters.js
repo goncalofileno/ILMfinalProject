@@ -19,6 +19,8 @@ function formatStatusDropDown(status) {
   return status.charAt(0) + status.slice(1).toLowerCase();
 }
 
+
+
 const formatSkill = (skill) => {
   return skill
     .toLowerCase()
@@ -26,6 +28,9 @@ const formatSkill = (skill) => {
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
 };
+
+
+
 
 function formatResourceType(type) {
   return type.charAt(0) + type.slice(1).toLowerCase();
@@ -35,6 +40,33 @@ function formatTypeUserInProject(type) {
   return type.charAt(0) + type.slice(1).toLowerCase();
 }
 
+function translateUserInProjectType(type) {
+  switch (type) {
+    case "CREATOR":
+      return "Creator";
+    case "MANAGER":
+      return "Manager";
+    case "MEMBER":
+      return "Member";
+    case "MEMBER_BY_INVITATION":
+      return "Member by Invitation";
+    case "MEMBER_BY_APPLIANCE":
+      return "Member by Application";
+    case "PENDING_BY_APPLIANCE":
+      return "Pending by Application";
+    case "PENDING_BY_INVITATION":
+      return "Pending by Invitation";
+    case "EXMEMBER":
+      return "Ex-Member";
+    case "ADMIN":
+      return "Admin";
+    case "GUEST":
+      return "Guest";
+    default:
+      return type;
+  }
+}
+
 export {
   formatLab,
   formatStatus,
@@ -42,4 +74,5 @@ export {
   formatSkill,
   formatResourceType,
   formatTypeUserInProject,
+  translateUserInProjectType
 };

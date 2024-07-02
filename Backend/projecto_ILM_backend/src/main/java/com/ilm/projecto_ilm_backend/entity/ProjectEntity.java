@@ -119,7 +119,7 @@ public class ProjectEntity implements Serializable {
      * The end initial date of the project.
      */
     @Column(name = "inProgressDate", nullable = true, unique = false, updatable = true)
-    private LocalDateTime initialDate;
+    private LocalDateTime inProgressDate;
 
     /**
      * The end date of the project.
@@ -275,17 +275,17 @@ public class ProjectEntity implements Serializable {
      *
      * @return the initial date of this project.
      */
-    public LocalDateTime getInitialDate() {
-        return initialDate;
+    public LocalDateTime getinProgressDate() {
+        return inProgressDate;
     }
 
     /**
      * Sets the initial date of this project.
      *
-     * @param initialDate the new initial date of this project.
+     * @param inProgressDate the new initial date of this project.
      */
-    public void setInitialDate(LocalDateTime initialDate) {
-        this.initialDate = initialDate;
+    public void setinProgressDate(LocalDateTime inProgressDate) {
+        this.inProgressDate = inProgressDate;
     }
 
     /**

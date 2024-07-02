@@ -610,22 +610,21 @@ public class UserService {
 
     @POST
     @Path("/userProjectCreation/{systemProjectName}")
-    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUserProjectCreationInfo(@CookieParam("session-id") String sessionId, @PathParam("systemProjectName") String systemProjectName, RejectedIdsDto rejectedUsersDto, @QueryParam("page") int page, @QueryParam("lab") String lab, @QueryParam("keyword") String keyword) {
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response getUserProjectCreationInfo(@CookieParam("session-id") String sessionId, @PathParam("systemProjectName") String systemProjectName, RejectedUsersDto rejectedUsersDto, @QueryParam("page") int page, @QueryParam("lab") String lab, @QueryParam("keyword") String keyword) {
         try {
-                logger.info("Received a request to get the users information from a user with session ID: " + sessionId);
-                if (databaseValidator.checkSessionId(sessionId)) {
-                    return Response.status(Response.Status.OK).entity(userBean.getUserProjectCreationInfoDto(sessionId, systemProjectName,rejectedUsersDto,page,lab,keyword)).build();
-                }
-                else {
-                    return Response.status(Response.Status.UNAUTHORIZED).build();
-                }
-            } catch(Exception e){
-                logger.error("Error updating profile: " + e.getMessage());
-                return Response.status(Response.Status.BAD_REQUEST).entity(Collections.singletonMap("message", e.getMessage())).build();
+            logger.info("Received a request to get the users information from a user with session ID: " + sessionId);
+            logger.info("ESTOU A PUXAR OS USERS TO INVITE");
+            if (databaseValidator.checkSessionId(sessionId)) {
+                return Response.status(Response.Status.OK).entity(userBean.getUserProjectCreationInfoDto(sessionId, systemProjectName, rejectedUsersDto, page, lab, keyword)).build();
+            } else {
+                return Response.status(Response.Status.UNAUTHORIZED).build();
             }
-
+        } catch (Exception e) {
+            logger.error("Error updating profile: " + e.getMessage());
+            return Response.status(Response.Status.BAD_REQUEST).entity(Collections.singletonMap("message", e.getMessage())).build();
+        }
     }
 
 }

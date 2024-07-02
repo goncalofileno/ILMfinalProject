@@ -50,15 +50,10 @@ const MailWebSocket = () => {
 
       socket.onmessage = (event) => {
         console.log("WebSocket message received:", event.data);
-        if (event.data.startsWith("new_mail:")) {
+        if (event.data.startsWith("new_mail:") && isInboxPage) {
+          console.log("Real-time mail received");
           incrementUnreadCount();
-          const senderName = event.data.split(":")[1];
-          if (audioEnabled) {
-            audioRef.current.play();
-          }
-        } else if (event.data.startsWith("real_time_mail:") && isInboxPage) {
-          incrementUnreadCount();
-          fetchMailsInInbox();
+          fetchMailsInInbox(true);  // Ensure fetching mails
           const senderName = event.data.split(":")[1];
           if (audioEnabled) {
             audioRef.current.play();
@@ -71,7 +66,7 @@ const MailWebSocket = () => {
             if (parsedData.type === "online_members") {
               setOnlineMembers(parsedData.message.members);
             } else {
-              setNotification(parsedData); // Handle other notifications
+              setNotification(parsedData);
               incrementUnreadNotificationsCount();
               if (audioEnabled) {
                 audioRef.current.play();
@@ -111,7 +106,7 @@ const MailWebSocket = () => {
     Cookies.remove("session-id");
     Cookies.remove("user-systemUsername");
     Cookies.remove("user-userType");
-    navigate("/"); // Redireciona para a página de login
+    navigate("/"); // Redirect to login page
   };
 
   const handleNotificationClick = () => {
@@ -124,6 +119,7 @@ const MailWebSocket = () => {
         case "PROJECT":
         case "PROJECT_REJECTED":
         case "USER_TYPE_CHANGED":
+        case "PROJECT_UPDATED":
           navigate(`/project/${projectSystemName}`);
           break;
         case "APPLIANCE":
@@ -148,7 +144,7 @@ const MailWebSocket = () => {
   };
 
   const handleNotificationEnd = () => {
-    setNotification(null); // Reseta a notificação após a animação
+    setNotification(null); // Reset notification after animation ends
   };
 
   return (
@@ -161,7 +157,7 @@ const MailWebSocket = () => {
         <NotificationBanner
           notification={notification}
           onClick={handleNotificationClick}
-          onEnd={handleNotificationEnd} // Adiciona a função para resetar a notificação
+          onEnd={handleNotificationEnd} // Reset notification after animation ends
         />
       )}
     </>

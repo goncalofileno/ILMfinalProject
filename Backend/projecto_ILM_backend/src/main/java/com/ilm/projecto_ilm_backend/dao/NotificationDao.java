@@ -119,4 +119,13 @@ public class NotificationDao extends AbstractDao<NotificationEntity> {
             em.merge(notification);
         }
     }
+
+    @Transactional
+    public void removeByProjectIdAndReceptorAndType(String projectSystemName, int receptorId, NotificationTypeENUM type) {
+        em.createNamedQuery("NotificationEntity.removeByProjectIdAndReceptorAndType")
+                .setParameter("projectSystemName", projectSystemName)
+                .setParameter("receptorId", receptorId)
+                .setParameter("type", type)
+                .executeUpdate();
+    }
 }

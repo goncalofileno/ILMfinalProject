@@ -30,6 +30,7 @@ import ProjectChatPage from "./pages/ProjectChatPage";
 import ProjectChatWebSocket from "./utilities/websockets/ProjectChatWebSocket";
 import ProjectCreationPage3 from "./pages/ProjectCreationPage3";
 import ProjectMembersPage from "./pages/ProjectMembersPage";
+import EditProjectPage from "./pages/EditProjectPage";
 import ProjectProfileResourcesPage from "./pages/ProjectProfileResourcesPage";
 
 const AppWithWebSocket = () => {
@@ -93,6 +94,7 @@ const AppWithWebSocket = () => {
           path="/create-project/:systemProjectName/resources"
           element={<ProjectCreationPage3 />}
         />
+        <Route path="/editProject/:systemProjectName" element={<EditProjectPage />} />
       </Routes>
     </>
   );

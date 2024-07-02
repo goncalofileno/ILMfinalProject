@@ -29,7 +29,9 @@ public enum NotificationTypeENUM {
 
     PROJECT_INSERTED(11),
 
-    USER_TYPE_CHANGED(12);
+    USER_TYPE_CHANGED(12),
+
+    PROJECT_UPDATED(13);
 
     private final int intValue;
 

@@ -35,6 +35,8 @@ import java.util.List;
         query = "SELECT n.systemUserName FROM NotificationEntity n WHERE n.receptor.id = :receptorId AND n.type = :type"),
         @NamedQuery(name = "NotificationEntity.findUnreadByUserIdAndProjectId",
                 query = "SELECT n FROM NotificationEntity n WHERE n.receptor.id = :userId AND n.projectSystemName = :projectSystemName AND n.readStatus = false AND n.messageNotificationClicked = false AND n.type = com.ilm.projecto_ilm_backend.ENUMS.NotificationTypeENUM.PROJECT_MESSAGE ORDER BY n.sendDate DESC"),
+        @NamedQuery(name = "NotificationEntity.removeByProjectIdAndReceptorAndType",
+                query = "DELETE FROM NotificationEntity n WHERE n.receptor.id = :receptorId AND n.projectSystemName = :projectSystemName AND n.type = :type"),
 })
 public class NotificationEntity implements Serializable {
 
