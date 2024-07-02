@@ -1,4 +1,10 @@
-1- Como controlar a página para o qual vamos quando clicamos no botão retroceder?
+Dúvidas:
 
 
-meter os users por ordem por numero de skils associadas ao projeto
+
+Bónus:
+
+-AddResourceModal: só deixa graver se houver alteraç
+oes em algum dos campos
+
+

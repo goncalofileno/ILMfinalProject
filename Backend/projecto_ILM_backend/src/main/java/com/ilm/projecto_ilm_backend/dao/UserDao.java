@@ -173,7 +173,7 @@ public class UserDao extends AbstractDao<UserEntity> {
     }
 
     //recebe o systemUsername e retorna o nome completo do utilizador, firstName + " " + lastName
-    public List<Object[]> getUserProjectCreationDto(int userId, List<Long> rejectedUsersId, int usersPerPage, int page, LabEntity lab, String keyword, List<String> skillNames){
+    public List<Object[]> getUserProjectCreationDto(int userId, List<Integer> rejectedUsersId, int usersPerPage, int page, LabEntity lab, String keyword, List<String> skillNames){
         try {
                 return em.createNamedQuery("User.getUserProjectCreationDto", Object[].class).setParameter("id",userId).setParameter("excludedIds",rejectedUsersId).setParameter("lab",lab).setParameter("keyword",keyword).setParameter("skillNames",skillNames).setFirstResult(usersPerPage * (page - 1)).setMaxResults(usersPerPage).getResultList();
 
@@ -182,7 +182,7 @@ public class UserDao extends AbstractDao<UserEntity> {
         }
     }
 
-    public int getNumberUserProjectCreationDto(int userId, List<Long> rejectedUsersId,LabEntity lab,String keyword) {
+    public int getNumberUserProjectCreationDto(int userId, List<Integer> rejectedUsersId,LabEntity lab,String keyword) {
         try {
             return  em.createNamedQuery("User.countUserProjectCreationDto", Long.class).setParameter("id",userId).setParameter("excludedIds",rejectedUsersId).setParameter("lab",lab).setParameter("keyword",keyword).getSingleResult().intValue();
 

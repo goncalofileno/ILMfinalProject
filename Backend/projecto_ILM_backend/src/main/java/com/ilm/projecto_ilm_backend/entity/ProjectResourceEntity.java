@@ -9,6 +9,26 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = "project_resource")
+@NamedQuery(
+        name = "ProjectResourceEntity.deleteById",
+        query = "DELETE FROM ProjectResourceEntity pr WHERE pr.id = :id"
+)
+
+@NamedQuery(
+        name = "ProjectResourceEntity.findById",
+        query = "SELECT pr FROM ProjectResourceEntity pr WHERE pr.id = :id"
+)
+
+@NamedQuery(
+        name = "ProjectResourceEntity.getByProjectId",
+        query = "SELECT pr FROM ProjectResourceEntity pr WHERE pr.project.id = :id "
+)
+
+
+
+
+
+
 public class ProjectResourceEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -32,8 +52,8 @@ public class ProjectResourceEntity implements Serializable {
      * The resource associated with the project. This is a many-to-one relationship with the ResourceEntity class.
      */
     @ManyToOne
-    @JoinColumn(name = "resource_id")
-    private ResourceEntity resources;
+    @JoinColumn(name = "resourceSupplier_id")
+    private ResourceSupplierEntity resource;
 
     /**
      * The stock of the resource in the project.
@@ -90,22 +110,12 @@ public class ProjectResourceEntity implements Serializable {
         this.project = project;
     }
 
-    /**
-     * Returns the resource associated with this project resource.
-     *
-     * @return the resource associated with this project resource.
-     */
-    public ResourceEntity getResources() {
-        return resources;
+    public ResourceSupplierEntity getResources() {
+        return resource;
     }
 
-    /**
-     * Sets the resource associated with this project resource.
-     *
-     * @param resources the new resource associated with this project resource.
-     */
-    public void setResources(ResourceEntity resources) {
-        this.resources = resources;
+    public void setResources(ResourceSupplierEntity resource) {
+        this.resource = resource;
     }
 
     /**

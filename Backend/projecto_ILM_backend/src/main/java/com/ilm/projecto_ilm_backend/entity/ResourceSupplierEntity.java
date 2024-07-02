@@ -3,6 +3,7 @@ package com.ilm.projecto_ilm_backend.entity;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Table(name = "resource_supplier")
@@ -34,6 +35,9 @@ public class ResourceSupplierEntity implements Serializable {
 
     @Column(name="is_deleted", nullable = false, unique = false, updatable = true)
     private boolean isDeleted;
+
+    @OneToMany(mappedBy = "resource")
+    private List<ProjectResourceEntity> projectResources;
 
     public ResourceSupplierEntity() {
     }
@@ -68,5 +72,13 @@ public class ResourceSupplierEntity implements Serializable {
 
     public void setDeleted(boolean deleted) {
         isDeleted = deleted;
+    }
+
+    public List<ProjectResourceEntity> getProjectResources() {
+        return projectResources;
+    }
+
+    public void setProjectResources(List<ProjectResourceEntity> projectResources) {
+        this.projectResources = projectResources;
     }
 }

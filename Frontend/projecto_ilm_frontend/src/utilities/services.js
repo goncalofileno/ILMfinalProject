@@ -797,7 +797,74 @@ async function getAllResources(
 ) {
   try {
     const response = await fetch(
-      `${baseURL}resource?page=${page}&brand=${brand}&type=${type}&supplier=${supplier}&keyword=${keyword}&nameAsc=${nameAsc}&typeAsc=${typeAsc}&brandAsc=${brandAsc}&supplierAsc=${supplierAsc}`,
+      `${baseURL}resource/getResources?page=${page}&brand=${brand}&type=${type}&supplier=${supplier}&keyword=${keyword}&nameAsc=${nameAsc}&typeAsc=${typeAsc}&brandAsc=${brandAsc}&supplierAsc=${supplierAsc}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      }
+    );
+
+    return response;
+  } catch (error) {
+    console.error("Error receiving all resources:", error);
+  }
+}
+
+async function getAllResourcesCreatingProject(
+  page,
+  brand,
+  type,
+  supplier,
+  keyword,
+  nameAsc,
+  typeAsc,
+  brandAsc,
+  supplierAsc,
+  rejectedIds
+) {
+  try {
+    const response = await fetch(
+      `${baseURL}resource/getResources?page=${page}&brand=${brand}&type=${type}&supplier=${supplier}&keyword=${keyword}&nameAsc=${nameAsc}&typeAsc=${typeAsc}&brandAsc=${brandAsc}&supplierAsc=${supplierAsc}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(rejectedIds),
+      }
+    );
+
+    return response;
+  } catch (error) {
+    console.error("Error receiving all resources:", error);
+  }
+}
+
+async function addInitialResources(projectSystemName, resourcesIds) {
+  try {
+    const response = await fetch(`${baseURL}project/${projectSystemName}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(resourcesIds),
+    });
+
+    return response;
+  } catch (error) {
+    console.error("Error receiving all resources:", error);
+  }
+}
+
+async function getProjectResources(projectSystemName) {
+  try {
+    const response = await fetch(
+      `${baseURL}resource/project/${projectSystemName}`,
       {
         method: "GET",
         headers: {
@@ -813,10 +880,10 @@ async function getAllResources(
   }
 }
 
-async function getResourcesFilters(withNames) {
+async function getResourcesFilters(withNames, withTypes) {
   try {
     const response = await fetch(
-      `${baseURL}resource/filters?withNames=${withNames}`,
+      `${baseURL}resource/filters?withNames=${withNames}&withTypes=${withTypes}`,
       {
         method: "GET",
         headers: {
@@ -1319,8 +1386,8 @@ async function getUserProjectCreation(
   lab,
   keyword
 ) {
-  let RejectedUsersDto = {
-    rejectedUsersId: rejectedUsers,
+  let RejectedIdsDto = {
+    rejectedIds: rejectedUsers,
   };
 
   try {
@@ -1333,7 +1400,7 @@ async function getUserProjectCreation(
           "Content-Type": "application/json",
         },
         credentials: "include",
-        body: JSON.stringify(RejectedUsersDto),
+        body: JSON.stringify(RejectedIdsDto),
       }
     );
 
@@ -1467,7 +1534,9 @@ async function markNotificationAsClicked(sessionId, notificationIds) {
 
 async function getProjectMembersPage(sessionId, projectSystemName) {
   try {
-    const endpoint = `${baseURL}project/getProjectMembersPage?projectSystemName=${encodeURIComponent(projectSystemName)}`;
+    const endpoint = `${baseURL}project/getProjectMembersPage?projectSystemName=${encodeURIComponent(
+      projectSystemName
+    )}`;
 
     const fetchResponse = await fetch(endpoint, {
       method: "GET",
@@ -1489,9 +1558,16 @@ async function getProjectMembersPage(sessionId, projectSystemName) {
   }
 }
 
-async function removeUserFromProject(sessionId, projectSystemName, userId, reason) {
+async function removeUserFromProject(
+  sessionId,
+  projectSystemName,
+  userId,
+  reason
+) {
   try {
-    const endpoint = `${baseURL}project/removeUserFromProject?projectSystemName=${encodeURIComponent(projectSystemName)}&userId=${userId}`;
+    const endpoint = `${baseURL}project/removeUserFromProject?projectSystemName=${encodeURIComponent(
+      projectSystemName
+    )}&userId=${userId}`;
 
     const fetchResponse = await fetch(endpoint, {
       method: "POST",
@@ -1514,9 +1590,16 @@ async function removeUserFromProject(sessionId, projectSystemName, userId, reaso
   }
 }
 
-async function changeUserInProjectType(sessionId, projectSystemName, userId, newType) {
+async function changeUserInProjectType(
+  sessionId,
+  projectSystemName,
+  userId,
+  newType
+) {
   try {
-    const endpoint = `${baseURL}project/changeUserInProjectType?projectSystemName=${encodeURIComponent(projectSystemName)}&userId=${userId}&newType=${newType}`;
+    const endpoint = `${baseURL}project/changeUserInProjectType?projectSystemName=${encodeURIComponent(
+      projectSystemName
+    )}&userId=${userId}&newType=${newType}`;
 
     const fetchResponse = await fetch(endpoint, {
       method: "POST",
@@ -1538,9 +1621,17 @@ async function changeUserInProjectType(sessionId, projectSystemName, userId, new
   }
 }
 
-async function respondToApplication(sessionId, projectSystemName, userId, response, reason = "") {
+async function respondToApplication(
+  sessionId,
+  projectSystemName,
+  userId,
+  response,
+  reason = ""
+) {
   try {
-    const endpoint = `${baseURL}project/respondToApplication?projectSystemName=${encodeURIComponent(projectSystemName)}&userId=${userId}&response=${response}`;
+    const endpoint = `${baseURL}project/respondToApplication?projectSystemName=${encodeURIComponent(
+      projectSystemName
+    )}&userId=${userId}&response=${response}`;
     const fetchResponse = await fetch(endpoint, {
       method: "POST",
       headers: {
@@ -1561,8 +1652,6 @@ async function respondToApplication(sessionId, projectSystemName, userId, respon
     return { error: error.message };
   }
 }
-
-
 
 export {
   registerUser,
@@ -1634,4 +1723,7 @@ export {
   removeUserFromProject,
   changeUserInProjectType,
   respondToApplication,
+  getAllResourcesCreatingProject,
+  addInitialResources,
+  getProjectResources,
 };

@@ -16,6 +16,7 @@ import com.ilm.projecto_ilm_backend.ENUMS.ConvertersENUM.StateProjectEnumConvert
 @Entity
 @Table(name = "project")
 @NamedQuery(name = "Project.findById", query = "SELECT p FROM ProjectEntity p WHERE p.id = :id")
+@NamedQuery(name = "Project.findIdBySystemName", query = "SELECT p.id FROM ProjectEntity p WHERE p.systemName = :systemName")
 @NamedQuery(name = "Project.findNameAndDescriptionHome", query = "SELECT p.name, p.description FROM ProjectEntity p WHERE p.status = 1 OR  p.status = 2 OR  p.status = 3 OR  p.status = 4 ")
 @NamedQuery(
         name = "Project.getProjectTableDtoInfo",
@@ -45,7 +46,7 @@ import com.ilm.projecto_ilm_backend.ENUMS.ConvertersENUM.StateProjectEnumConvert
 
 @NamedQuery(
         name = "Project.getMyProjectsInfo",
-        query = "SELECT p.id, p.name, p.lab, p.status, FUNCTION('DATE', p.startDate), FUNCTION('DATE', p.endDate), p.maxMembers,p.cardPhoto, up.type, p.systemName " +
+        query = "SELECT p.id, p.name, p.lab, p.status, FUNCTION('DATE', p.startDate), FUNCTION('DATE', p.endDate), p.maxMembers,p.photo, up.type, p.systemName " +
                 "FROM ProjectEntity p LEFT JOIN UserProjectEntity up ON p.id = up.project.id " +
                 "WHERE (:lab IS NULL OR p.lab = :lab) " +
                 "AND (:status IS NULL OR p.status = :status) " +

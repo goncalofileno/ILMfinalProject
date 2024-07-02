@@ -390,31 +390,39 @@ const ProjectProfilePageInfo = () => {
         </div>
       );
     }
+
     return null;
   };
 
   return (
     <>
       <AppNavbar />
-      <div className="bckg-color-ilm-page ilm-pageb">
+      <div className="ilm-pageb-noheight">
+        <ProjectTabs
+          typeOfUserSeingProject={projectInfo.typeOfUserSeingProject}
+        />
         <Container className="mt-4" style={{ height: "100%" }}>
-          <ProjectTabs
-            typeOfUserSeingProject={projectInfo.typeOfUserSeingProject}
-          />
           <Row className="justify-content-md-center" style={{ height: "100%" }}>
             <Col md="12" style={{ height: "100%" }}>
-              <Card className="shadow-sm" style={{ height: "100%" }}>
+              <Card
+                className="shadow-sm"
+                style={{ height: "100%", paddingBottom: "15px" }}
+              >
+                {console.log("projeto :" + projectInfo.photo)}
                 <div
                   className="project-cover-photo"
                   style={{
-                    backgroundImage: `url(${projectInfo.photo})`,
+                    backgroundImage:
+                      projectInfo.photo == null
+                        ? "url(https://cdn.pixabay.com/photo/2016/03/29/08/48/project-1287781_1280.jpg)"
+                        : `url(${projectInfo.photo})`,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                     height: "200px", // Adjust as necessary
                     marginBottom: "20px",
                   }}
                 ></div>
-                <Row>
+                <Row style={{ paddingRight: "10px", paddingLeft: "10px" }}>
                   <Col md="12">
                     <Card.Body>
                       <Card.Text>
@@ -427,7 +435,12 @@ const ProjectProfilePageInfo = () => {
                     </Card.Body>
                   </Col>
                 </Row>
-                <Row style={{ height: "100%" }}>
+                <Row
+                  style={{
+                    height: "100%",
+                    padding: "15px",
+                  }}
+                >
                   <Col md="6">
                     <Card.Body>
                       <Row style={{ marginBottom: "40px" }}>
@@ -497,54 +510,6 @@ const ProjectProfilePageInfo = () => {
                           </div>
                         </>
                       )}
-                      <Card.Text>
-                        <strong>Skills:</strong>
-                        <Row>
-                          {projectInfo.skills.length > 0 ? (
-                            projectInfo.skills.map((skill) => (
-                              <Col md="auto" key={skill.id}>
-                                <div className="skill-interest-card mb-3">
-                                  <p className="mb-1">
-                                    <strong>{formatSkill(skill.name)}</strong>
-                                  </p>
-                                  <p
-                                    className="text-muted mb-1"
-                                    style={{ fontSize: "0.85em" }}
-                                  >
-                                    {formatSkill(skill.type)}
-                                  </p>
-                                </div>
-                              </Col>
-                            ))
-                          ) : (
-                            <Col>
-                              <p className="centered-message">
-                                No skills available.
-                              </p>
-                            </Col>
-                          )}
-                        </Row>
-                      </Card.Text>
-                      <Card.Text>
-                        <strong>Keywords:</strong>
-                        <Row>
-                          {projectInfo.keywords.length > 0 ? (
-                            projectInfo.keywords.map((keyword, index) => (
-                              <Col md="auto" key={index}>
-                                <div className="skill-interest-card mb-3">
-                                  {keyword}
-                                </div>
-                              </Col>
-                            ))
-                          ) : (
-                            <Col>
-                              <p className="centered-message">
-                                No keywords available.
-                              </p>
-                            </Col>
-                          )}
-                        </Row>
-                      </Card.Text>
                     </Card.Body>
                   </Col>
                   <Col md="6" style={{ height: "100%" }}>
@@ -590,18 +555,63 @@ const ProjectProfilePageInfo = () => {
                     </Row>
                   </Col>
                 </Row>
-
-                <Row>
-                  <Col md="12">
-                    <Card.Body>
-                      <Card.Text>
-                        <strong>Type of User Seeing Project:</strong>{" "}
-                        {projectInfo.typeOfUserSeingProject}
-                      </Card.Text>
-                      <Card.Text>
-                        <strong>Type of user:</strong> {projectInfo.typeOfUser}
-                      </Card.Text>
-                    </Card.Body>
+                <Row
+                  style={{
+                    paddingLeft: "30px",
+                    paddingRight: "20px",
+                  }}
+                >
+                  <Col>
+                    <Card.Text>
+                      <strong>Skills:</strong>
+                      <Row style={{ marginTop: "10px" }}>
+                        {projectInfo.skills.length > 0 ? (
+                          projectInfo.skills.map((skill) => (
+                            <Col md="auto" key={skill.id}>
+                              <div className="skill-interest-card mb-3">
+                                <p className="mb-1">
+                                  <strong>{formatSkill(skill.name)}</strong>
+                                </p>
+                                <p
+                                  className="text-muted mb-1"
+                                  style={{ fontSize: "0.85em" }}
+                                >
+                                  {formatSkill(skill.type)}
+                                </p>
+                              </div>
+                            </Col>
+                          ))
+                        ) : (
+                          <Col>
+                            <p className="centered-message">
+                              No skills available.
+                            </p>
+                          </Col>
+                        )}
+                      </Row>
+                    </Card.Text>
+                  </Col>{" "}
+                  <Col>
+                    <Card.Text>
+                      <strong>Keywords:</strong>
+                      <Row style={{ marginTop: "10px" }}>
+                        {projectInfo.keywords.length > 0 ? (
+                          projectInfo.keywords.map((keyword, index) => (
+                            <Col md="auto" key={index}>
+                              <div className="skill-interest-card mb-3">
+                                {keyword}
+                              </div>
+                            </Col>
+                          ))
+                        ) : (
+                          <Col>
+                            <p className="centered-message">
+                              No keywords available.
+                            </p>
+                          </Col>
+                        )}
+                      </Row>
+                    </Card.Text>
                   </Col>
                 </Row>
               </Card>

@@ -42,6 +42,7 @@ export default function MyProjectsPage() {
       .then((data) => {
         setProjects(data.tableProjects);
         setTotalPages(data.maxPageNumber);
+        console.log(data.tableProjects);
       });
 
     const queryParamsObj = {};
@@ -169,6 +170,7 @@ export default function MyProjectsPage() {
                             status={project.status}
                             typeMember={project.userInProjectType}
                             systemProjectName={project.systemProjectName}
+                            photo={project.photo}
                           ></MyProjectCard>
                         </div>
                       )
@@ -190,6 +192,7 @@ export default function MyProjectsPage() {
                           status={project.status}
                           typeMember={project.userInProjectType}
                           systemProjectName={project.systemProjectName}
+                          photo={project.photo}
                         ></MyProjectCard>
                       </div>
                     ) : (
@@ -206,6 +209,7 @@ export default function MyProjectsPage() {
                             status={project.status}
                             typeMember={project.userInProjectType}
                             systemProjectName={project.systemProjectName}
+                            photo={project.photo}
                           ></MyProjectCard>
                         </div>
                       )
@@ -227,6 +231,7 @@ export default function MyProjectsPage() {
                           status={project.status}
                           typeMember={project.userInProjectType}
                           systemProjectName={project.systemProjectName}
+                          photo={project.photo}
                         ></MyProjectCard>
                       </div>
                     ) : (
@@ -243,6 +248,7 @@ export default function MyProjectsPage() {
                             status={project.status}
                             typeMember={project.userInProjectType}
                             systemProjectName={project.systemProjectName}
+                            photo={project.photo}
                           ></MyProjectCard>
                         </div>
                       )

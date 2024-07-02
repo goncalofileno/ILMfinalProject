@@ -1,15 +1,15 @@
 package com.ilm.projecto_ilm_backend.bean;
 
 import com.ilm.projecto_ilm_backend.ENUMS.ResourceTypeENUM;
-import com.ilm.projecto_ilm_backend.dao.ResourceSupplierDao;
+import com.ilm.projecto_ilm_backend.dao.*;
 import com.ilm.projecto_ilm_backend.dto.resource.*;
+import com.ilm.projecto_ilm_backend.dto.user.RejectedIdsDto;
+import com.ilm.projecto_ilm_backend.entity.ProjectResourceEntity;
 import com.ilm.projecto_ilm_backend.entity.ResourceEntity;
 import com.ilm.projecto_ilm_backend.entity.ResourceSupplierEntity;
 import com.ilm.projecto_ilm_backend.entity.SupplierEntity;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.ApplicationScoped;
-import com.ilm.projecto_ilm_backend.dao.ResourceDao;
-import com.ilm.projecto_ilm_backend.dao.SupplierDao;
 import jakarta.inject.Inject;
 
 import java.util.ArrayList;
@@ -35,6 +35,15 @@ public class ResourceBean {
 
     @Inject
     private ResourceSupplierDao resourceSupplierDao;
+
+    @Inject
+    private ProjectDao projectDao;
+
+    @Inject
+    private ProjectResourceDao projectResourceDao;
+
+    @Inject
+    UserBean userBean;
 
     private static final int NUMBER_OF_RESOURCES_PER_PAGE=8;
 
@@ -123,7 +132,7 @@ public class ResourceBean {
 
     }
 
-    public ResourceTableInfoDto getResourceDetails(int page, String brand, String type, String supplierName, String searchKeyword, String nameAsc, String typeAsc, String brandAsc, String supplierAsc) {
+    public ResourceTableInfoDto getResourceDetails(int page, String brand, String type, String supplierName, String searchKeyword, String nameAsc, String typeAsc, String brandAsc, String supplierAsc, RejectedIdsDto rejectedIdsDto) {
 
         ResourceTypeENUM typeEnum = null;
         Integer supplierId=null;
@@ -142,7 +151,13 @@ public class ResourceBean {
             searchKeyword=null;
         }
 
-        List <Object[]> resources = resourceDao.getResourceDetails(page, NUMBER_OF_RESOURCES_PER_PAGE, brand, typeEnum, supplierId, searchKeyword,  nameAsc, typeAsc, brandAsc,  supplierAsc);
+        if(rejectedIdsDto == null){
+            ArrayList<Integer> rejectedIds = new ArrayList<>();
+            rejectedIdsDto = new RejectedIdsDto();
+            rejectedIdsDto.setRejectedIds(rejectedIds);
+        }
+
+        List <Object[]> resources = resourceDao.getResourceDetails(page, NUMBER_OF_RESOURCES_PER_PAGE, brand, typeEnum, supplierId, searchKeyword,  nameAsc, typeAsc, brandAsc,  supplierAsc, rejectedIdsDto);
         ArrayList<ResourceTableDto> resourceTableDtos = new ArrayList<>();
         ResourceTableInfoDto resourceTableInfoDto = new ResourceTableInfoDto();
 
@@ -153,10 +168,11 @@ public class ResourceBean {
             resourceTableDto.setType(resource[2].toString());
             resourceTableDto.setSupplier(supplierDao.findNameById((int) resource[3]));
             resourceTableDto.setId((int) resource[4]);
+            resourceTableDto.setResourceSupplierId((int) resource[5]);
             resourceTableDtos.add(resourceTableDto);
         }
 
-        int numberOfResources = resourceDao.getNumberOfResources(brand, typeEnum, supplierId, searchKeyword);
+        int numberOfResources = resourceDao.getNumberOfResources(brand, typeEnum, supplierId, searchKeyword, rejectedIdsDto);
         resourceTableInfoDto.setTableResources(resourceTableDtos);
         resourceTableInfoDto.setMaxPageNumber(calculateMaximumPageTableResources(numberOfResources));
 
@@ -226,9 +242,10 @@ public class ResourceBean {
         }
     }
 
-    public ResourceFiltersDto getResourceFiltersDto(boolean withNames){
+    public ResourceFiltersDto getResourceFiltersDto(boolean withNames,boolean withTypes){
         ResourceFiltersDto resourceFiltersDto = new ResourceFiltersDto();
-        resourceFiltersDto.setTypes(getAllTypes());
+
+        if(withTypes) resourceFiltersDto.setTypes(getAllTypes());
         resourceFiltersDto.setSuppliers(supplierDao.getAllNames());
         resourceFiltersDto.setBrands(resourceDao.getAllBrands());
         if(withNames) resourceFiltersDto.setNames(resourceDao.getAllNames());
@@ -305,5 +322,38 @@ public class ResourceBean {
         }
     }
 
+
+
+
+    public List<ResourceTableDto> getProjectResources(String projectSystemName) {
+        try {
+            int projectId = projectDao.getIdBySystemName(projectSystemName);
+
+            List<ProjectResourceEntity> projectResources = projectResourceDao.findResourcesById(projectId);
+
+            List<ResourceTableDto> resourceTableDtos = new ArrayList<>();
+            for (ProjectResourceEntity projectResource : projectResources) {
+                ResourceTableDto resourceTableDto = new ResourceTableDto();
+                ResourceEntity resource=resourceDao.findById(projectResource.getResources().getResource().getId());
+                resourceTableDto.setName(resource.getName());
+                resourceTableDto.setBrand(resource.getBrand());
+                resourceTableDto.setType(resource.getType().toString());
+                resourceTableDto.setSupplier(projectResource.getResources().getSupplier().getName());
+                resourceTableDto.setId(resource.getId());
+                resourceTableDto.setResourceSupplierId(projectResource.getResources().getId());
+                resourceTableDtos.add(resourceTableDto);
+            }
+            return resourceTableDtos;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public ResourcesProjectProfileDto getResourcesProjectProfile(String sessionId, String projectSystemName){
+        ResourcesProjectProfileDto resourcesProjectProfileDto=new ResourcesProjectProfileDto();
+        resourcesProjectProfileDto.setResources(getProjectResources(projectSystemName));
+        resourcesProjectProfileDto.setUserInProjectTypeENUM(userBean.getUserInProjectENUM(sessionId,projectSystemName));
+        return resourcesProjectProfileDto;
+    }
 
 }

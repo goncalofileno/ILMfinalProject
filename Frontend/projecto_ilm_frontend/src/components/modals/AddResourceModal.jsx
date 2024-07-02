@@ -19,6 +19,11 @@ export default function AddResourceModal({
   resourceSupplier,
   setResourceSupplier,
   setResourceId,
+  resource,
+  yourResources,
+  setYourResources,
+  setTableTrigger,
+  setSelectedResources,
 }) {
   const [name, setName] = useState("");
   const [type, setType] = useState("");
@@ -38,7 +43,7 @@ export default function AddResourceModal({
   const [supplierContactDisabled, setSupplierContactDisabled] = useState(true);
 
   useEffect(() => {
-    getResourcesFilters(true)
+    getResourcesFilters(true, true)
       .then((response) => response.json())
       .then((data) => {
         setNamesSuggestions(data.names);
@@ -104,7 +109,6 @@ export default function AddResourceModal({
       supplierContact !== ""
     ) {
       if (resourceSupplier === null) {
-        console.log("nome " + name);
         createResource(
           name,
           description,
@@ -149,12 +153,32 @@ export default function AddResourceModal({
             setModalType("success");
             setModalErrorText("Resource edited successfully.");
             setModalErrorVisible(true);
-            setTimeout(() => {
-              window.location.reload();
+            console.log("3");
+            if (resource === null || resource === undefined) {
               setTimeout(() => {
+                console.log("4");
+                setTableTrigger((prev) => !prev);
+                setTimeout(() => {
+                  setIsModalActive(false);
+                }, 500);
+              }, 1000);
+            } else {
+              setTimeout(() => {
+                const updatedResources = yourResources.map((resource) => {
+                  if (resource.id === resourceId) {
+                    resource.name = name;
+                    resource.description = description;
+                    resource.type = type;
+                    resource.brand = brand;
+                  }
+                  return resource;
+                });
+
+                setYourResources(updatedResources);
+                setSelectedResources(null);
                 setIsModalActive(false);
-              }, 500);
-            }, 1000);
+              }, 1500);
+            }
           } else if (response.status === 400) {
             setModalErrorText("This resource already exists.");
             setModalErrorVisible(true);
@@ -207,7 +231,12 @@ export default function AddResourceModal({
                   width: "100%",
                 }}
               >
-                <h3 className="modal-title">Resource Creation</h3>
+                <h3 className="modal-title">
+                  {resourceSupplier === null
+                    ? "Resource Creation"
+                    : "Resource Edition"}
+                  {}
+                </h3>
                 {modalErrorVisible && (
                   <div
                     id={
@@ -325,7 +354,7 @@ export default function AddResourceModal({
                     className="submit-button"
                     id="create-resource-btn"
                   >
-                    Create
+                    {resourceSupplier === null ? "Create" : "Save"}
                   </button>
                 </div>
               </div>

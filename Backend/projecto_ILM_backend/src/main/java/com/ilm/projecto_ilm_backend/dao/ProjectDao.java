@@ -70,6 +70,17 @@ public class ProjectDao extends AbstractDao<ProjectEntity>{
         }
     }
 
+    public int getIdBySystemName(String systemName) {
+        try {
+            return em.createNamedQuery("Project.findIdBySystemName", Integer.class).setParameter("systemName", systemName)
+                    .getSingleResult().intValue();
+
+        } catch (Exception e) {
+            e.getMessage();
+            return -1;
+        }
+    }
+
 
     public ArrayList<HomeProjectDto> findAllNamesAndDescriptionsHome() {
         TypedQuery<Object[]> query = em.createNamedQuery("Project.findNameAndDescriptionHome", Object[].class);
