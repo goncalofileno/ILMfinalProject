@@ -1,10 +1,14 @@
 package com.ilm.projecto_ilm_backend.dao;
 
+import com.ilm.projecto_ilm_backend.ENUMS.UserInTaskTypeENUM;
+import com.ilm.projecto_ilm_backend.entity.UserEntity;
 import com.ilm.projecto_ilm_backend.entity.UserTaskEntity;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
+
+import java.util.List;
 
 @Stateless
 public class UserTaskDao extends AbstractDao<UserTaskEntity> {
@@ -35,5 +39,40 @@ public class UserTaskDao extends AbstractDao<UserTaskEntity> {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public UserTaskEntity findByTaskIdAndUserId(int taskId, int userId) {
+        try {
+            return em.createNamedQuery("UserTask.findByTaskIdAndUserId", UserTaskEntity.class).setParameter("taskId", taskId)
+                    .setParameter("userId", userId).getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public List<UserEntity> findUsersByTaskId(int taskId) {
+        try {
+            return em.createNamedQuery("UserTask.findUsersByTaskId", UserEntity.class).setParameter("taskId", taskId)
+                    .getResultList();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public UserInTaskTypeENUM findUserTypeByTaskIdAndUserId(int taskId, int userId) {
+        try {
+            return em.createNamedQuery("UserTask.findUserTypeByTaskIdAndUserId", UserInTaskTypeENUM.class)
+                    .setParameter("taskId", taskId).setParameter("userId", userId).getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public void deleteAllExceptCreatorOrCreatorInCharge(int taskId) {
+        em.createNamedQuery("UserTask.deleteAllExceptCreatorOrCreatorInCharge").setParameter("taskId", taskId).executeUpdate();
+    }
+
+    public void deleteAllByTaskId(int taskId) {
+        em.createQuery("DELETE FROM UserTaskEntity ut WHERE ut.task.id = :taskId").setParameter("taskId", taskId).executeUpdate();
     }
 }

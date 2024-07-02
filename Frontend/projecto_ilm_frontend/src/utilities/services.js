@@ -1723,6 +1723,103 @@ async function updateProject(projectUpdateDto, systemProjectName) {
   }
 }
 
+const getTasksPage = async (sessionId, systemProjectName) => {
+  console.log(`Fetching tasks for project: ${systemProjectName}`);
+
+  try {
+    const response = await fetch(
+      `${baseURL}task/tasksPage?systemProjectName=${encodeURIComponent(
+        systemProjectName
+      )}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("HTTP error!");
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching tasks:", error);
+    return { error: error.message };
+  }
+};
+
+const updateTask = async (updateTaskDto) => {
+  try {
+    const response = await fetch(`${baseURL}task/updateTask`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(updateTaskDto),
+    });
+
+    if (!response.ok) {
+      const responseJson = await response.json();
+      throw new Error(responseJson.message || "An error occurred");
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error updating task:", error);
+    return { error: error.message };
+  }
+};
+
+const createTask = async (newTaskDto) => {
+  try {
+    const response = await fetch(`${baseURL}task/addTask`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(newTaskDto),
+    });
+
+    if (!response.ok) {
+      const responseJson = await response.json();
+      throw new Error(responseJson.message || "An error occurred");
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error creating task:", error);
+    return { error: error.message };
+  }
+};
+
+const deleteTask = async (updateTaskDto) => {
+  try {
+    const response = await fetch(`${baseURL}task/deleteTask`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(updateTaskDto),
+    });
+
+    if (!response.ok) {
+      const responseJson = await response.json();
+      throw new Error(responseJson.message || "An error occurred");
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error deleting task:", error);
+    return { error: error.message };
+  }
+}
+
 export {
   registerUser,
   getInterests,
@@ -1796,6 +1893,10 @@ export {
   removeInvitation,
   getProjectDetails,
   updateProject,
+  getTasksPage,
+  updateTask,
+  createTask,
+  deleteTask,
   getAllResourcesCreatingProject,
   addInitialResources,
   getProjectResources,

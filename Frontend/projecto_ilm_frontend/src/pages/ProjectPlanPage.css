@@ -1,0 +1,20 @@
+/* ProjectPlanPage.css */
+.bckg-color-ilm-page {
+    background-color: #f5f5f5;
+  }
+  
+  .ilm-pageb {
+    padding: 20px;
+  }
+  
+  .tasks-list {
+    max-height: 500px;
+    overflow-y: auto;
+  }
+  
+  .tasks-list .list-group-item {
+    padding: 15px;
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+  }
+  
