@@ -148,3 +148,8 @@
 .states-to-change {
   margin-bottom: 20px;
 }
+
+#list-user-project-profile {
+  max-height: 100%;
+  overflow-y: auto;
+}

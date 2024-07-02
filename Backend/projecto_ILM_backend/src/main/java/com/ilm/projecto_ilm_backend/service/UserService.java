@@ -612,7 +612,7 @@ public class UserService {
     @Path("/userProjectCreation/{systemProjectName}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response getUserProjectCreationInfo(@CookieParam("session-id") String sessionId, @PathParam("systemProjectName") String systemProjectName, RejectedUsersDto rejectedUsersDto, @QueryParam("page") int page, @QueryParam("lab") String lab, @QueryParam("keyword") String keyword) {
+    public Response getUserProjectCreationInfo(@CookieParam("session-id") String sessionId, @PathParam("systemProjectName") String systemProjectName, RejectedIdsDto rejectedUsersDto, @QueryParam("page") int page, @QueryParam("lab") String lab, @QueryParam("keyword") String keyword) {
         try {
             logger.info("Received a request to get the users information from a user with session ID: " + sessionId);
             logger.info("ESTOU A PUXAR OS USERS TO INVITE");

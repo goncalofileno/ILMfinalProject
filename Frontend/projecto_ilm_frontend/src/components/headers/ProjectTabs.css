@@ -1,35 +1,48 @@
 /* ProjectTabs.css */
 .project-tabs {
-    display: flex;
-    border-bottom: 1px solid #ddd;
-    padding: 0;
-    list-style-type: none;
-    margin-bottom: 10px;
-  }
-  
-  .project-tabs .nav-item {
-    margin: 0;
-  }
-  
-  .project-tabs .nav-link {
-    color: rgb(30, 40, 82);
-    padding: 10px 15px;
-    cursor: pointer;
-    border: 1px solid transparent;
-    border-bottom: none;
-    font-size: 20px;
-    font-weight: 500;
-  }
-  
-  .project-tabs .nav-link:hover {
-    text-decoration: none;
-    background-color: #f8f9fa;
-  }
-  
-  .project-tabs .nav-link.active {
-    color: #f39c12;
-    background-color: #fff;
-    border-color: #ddd;
-    border-bottom-color: transparent;
-  }
-  
+  display: flex;
+  border-bottom: 1px solid #ddd;
+  padding: 0;
+  list-style-type: none;
+  margin-bottom: 10px;
+}
+
+.project-tabs .nav-item {
+  margin: 0;
+}
+
+.project-tabs .nav-link {
+  color: rgb(30, 40, 82);
+  padding: 10px 15px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  border-bottom: none;
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.project-tabs .nav-link:hover {
+  text-decoration: none;
+  background-color: #f8f9fa;
+}
+
+.project-tabs .nav-link.active {
+  color: #f39c12;
+  background-color: #fff;
+  border-color: #ddd;
+  border-bottom-color: transparent;
+}
+
+.project-name-tab-container {
+  width: 500px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-grow: 1;
+  padding-right: 50px;
+}
+
+.project-name-tab {
+  font-size: 30px;
+  font-weight: 500;
+}

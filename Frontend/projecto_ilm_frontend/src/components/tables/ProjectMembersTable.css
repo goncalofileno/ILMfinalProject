@@ -68,3 +68,7 @@
 #body-table-users-project::-webkit-scrollbar-thumb:hover {
   background: #555; /* Cor da barra de rolagem ao passar o mouse */
 }
+
+#table-users-project-head th {
+  text-align: center;
+}

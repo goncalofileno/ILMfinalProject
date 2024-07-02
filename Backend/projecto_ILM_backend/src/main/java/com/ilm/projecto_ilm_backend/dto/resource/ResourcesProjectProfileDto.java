@@ -8,6 +8,8 @@ import java.util.List;
 public class ResourcesProjectProfileDto {
     private List<ResourceTableDto> resources;
     private UserInProjectTypeENUM userInProjectTypeENUM;
+    private String projectName;
+    private String projectStatus;
 
     public ResourcesProjectProfileDto() {
     }
@@ -26,5 +28,21 @@ public class ResourcesProjectProfileDto {
 
     public void setUserInProjectTypeENUM(UserInProjectTypeENUM userInProjectTypeENUM) {
         this.userInProjectTypeENUM = userInProjectTypeENUM;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
+    }
+
+    public String getProjectStatus() {
+        return projectStatus;
+    }
+
+    public void setProjectStatus(String projectStatus) {
+        this.projectStatus = projectStatus;
     }
 }

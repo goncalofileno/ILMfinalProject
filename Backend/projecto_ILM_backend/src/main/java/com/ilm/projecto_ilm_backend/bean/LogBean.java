@@ -84,8 +84,8 @@ public class LogBean {
         if (!logDao.existsByType(LogTypeENUM.PROJECT_STATUS_UPDATED)) {
             createProjectStatusUpdatedLog(project, author, StateProjectENUM.PLANNING, StateProjectENUM.APPROVED);
         }
-        if (!logDao.existsByType(LogTypeENUM.RESOURCES_ADDED)) {
-            createResourcesAddedLog(project, author, "Default Resource", 100);
+        if (!logDao.existsByType(LogTypeENUM.RESOURCES_UPDATED)) {
+            createResourcesAddedLog(project, author);
         }
     }
 
@@ -183,14 +183,12 @@ public class LogBean {
         logDao.persist(log);
     }
 
-    public void createResourcesAddedLog(ProjectEntity project, UserEntity author, String resourceName, int resourceStock) {
+    public void createResourcesAddedLog(ProjectEntity project, UserEntity author) {
         LogEntity log = new LogEntity();
         log.setDate(LocalDateTime.now());
-        log.setType(LogTypeENUM.RESOURCES_ADDED);
+        log.setType(LogTypeENUM.RESOURCES_UPDATED);
         log.setAuthor(author);
         log.setProject(project);
-        log.setResourceName(resourceName);
-        log.setResourceStock(resourceStock);
         logDao.persist(log);
     }
 

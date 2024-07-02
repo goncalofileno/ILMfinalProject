@@ -4,10 +4,7 @@ import com.ilm.projecto_ilm_backend.ENUMS.ResourceTypeENUM;
 import com.ilm.projecto_ilm_backend.dao.*;
 import com.ilm.projecto_ilm_backend.dto.resource.*;
 import com.ilm.projecto_ilm_backend.dto.user.RejectedIdsDto;
-import com.ilm.projecto_ilm_backend.entity.ProjectResourceEntity;
-import com.ilm.projecto_ilm_backend.entity.ResourceEntity;
-import com.ilm.projecto_ilm_backend.entity.ResourceSupplierEntity;
-import com.ilm.projecto_ilm_backend.entity.SupplierEntity;
+import com.ilm.projecto_ilm_backend.entity.*;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -353,6 +350,9 @@ public class ResourceBean {
         ResourcesProjectProfileDto resourcesProjectProfileDto=new ResourcesProjectProfileDto();
         resourcesProjectProfileDto.setResources(getProjectResources(projectSystemName));
         resourcesProjectProfileDto.setUserInProjectTypeENUM(userBean.getUserInProjectENUM(sessionId,projectSystemName));
+        ProjectEntity project=projectDao.findBySystemName(projectSystemName);
+        resourcesProjectProfileDto.setProjectName(project.getName());
+        resourcesProjectProfileDto.setProjectStatus(project.getStatus().toString());
         return resourcesProjectProfileDto;
     }
 

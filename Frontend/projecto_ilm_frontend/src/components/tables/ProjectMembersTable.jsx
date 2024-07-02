@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import "./ProjectMembersTable.css";
 import "./Tables.css";
+import { formatTypeUserInProject } from "../../utilities/converters";
 
 const ProjectMembersTable = ({ members }) => {
   const navigate = useNavigate();
@@ -41,7 +42,7 @@ const ProjectMembersTable = ({ members }) => {
                 ? "You"
                 : member.name}
             </td>
-            <td>{member.type}</td>
+            <td>{formatTypeUserInProject(member.type)}</td>
           </tr>
         ))}
         {members.length < NUMBER_OF_MEMBERS_PAGE &&

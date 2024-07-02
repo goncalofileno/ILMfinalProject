@@ -27,6 +27,8 @@ import TaskLogIcon from "../resources/icons/logs/member-log-icon.png";
 import ProjectLogIcon from "../resources/icons/logs/project-log-icon.png";
 import ResourceLogIcon from "../resources/icons/logs/resource-log-icon.png";
 import "./ProjectLogsPage.css";
+import { formatStatusDropDown } from "../utilities/converters";
+import StandardModal from "../components/modals/StandardModal";
 
 const ProjectLogsPage = () => {
   const { systemProjectName } = useParams();
@@ -198,11 +200,11 @@ const ProjectLogsPage = () => {
             <strong>{log.projectNewState}</strong>.
           </>
         );
-      case "RESOURCES_ADDED":
+      case "RESOURCES_UPDATED":
         return (
           <>
-            The resource <strong>{log.resourceName}</strong> was added to the
-            project.
+            The resources in the project were updated by{" "}
+            <strong>{log.authorName}</strong>.
           </>
         );
       case "MEMBER_TYPE_CHANGED":
@@ -234,7 +236,7 @@ const ProjectLogsPage = () => {
       case "PROJECT_INFO_UPDATED":
       case "PROJECT_STATUS_UPDATED":
         return ProjectLogIcon;
-      case "RESOURCES_ADDED":
+      case "RESOURCES_UPDATED":
         return ResourceLogIcon;
       default:
         return null;
@@ -288,14 +290,16 @@ const ProjectLogsPage = () => {
       <div className="bckg-color-ilm-page ilm-pageb">
         <ProjectTabs
           typeOfUserSeingProject={logsAndNotes.typeOfUserSeingPage}
+          projectName={logsAndNotes.projectName}
         />
-        <Container style={{ height: "91%" }}>
+        <Container style={{ height: "89%", marginTop: "2%" }}>
           <Row>
             <Col>
-              <h1>{logsAndNotes.projectName}</h1>
-              <h5>Status: {logsAndNotes.projectStatus}</h5>
+              <h5>
+                Status: {formatStatusDropDown(logsAndNotes.projectStatus)}
+              </h5>
               {["CANCELED", "READY"].includes(logsAndNotes.projectStatus) && (
-                <Alert variant="danger">
+                <Alert variant="danger" className="standard-modal">
                   The project is {logsAndNotes.projectStatus.toLowerCase()} and
                   no notes can be added or changes made.
                 </Alert>

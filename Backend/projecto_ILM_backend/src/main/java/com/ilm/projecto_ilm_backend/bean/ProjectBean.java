@@ -1368,7 +1368,7 @@ public class ProjectBean {
     }
 
 
-    public boolean addResourcesToProject(String projectSystemName,RejectedIdsDto resourcesSuppliersIds){
+    public boolean addResourcesToProject(String projectSystemName,RejectedIdsDto resourcesSuppliersIds, String sessionId){
         ProjectEntity project = projectDao.findBySystemName(projectSystemName);
         List<ProjectResourceEntity> atualProjectResources=projectResourceDao.findResourcesById(project.getId());
 
@@ -1394,6 +1394,8 @@ public class ProjectBean {
                 projectResourceDao.persist(projectResourceEntity);
             }
         }
+
+        logBean.createResourcesAddedLog(project, userBean.getUserBySessionId(sessionId));
         return true;
     }
 

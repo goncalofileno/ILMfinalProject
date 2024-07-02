@@ -162,8 +162,8 @@ public class LogEntity implements Serializable {
                     throw new IllegalStateException("For PROJECT_STATUS_UPDATED log type: projectOldState and projectNewState must not be null and all other fields must be null.");
                 }
                 break;
-            case RESOURCES_ADDED:
-                if (resourceName == null || resourceStock == 0 || receiver != null || taskTitle != null || taskOldStatus != null || taskNewStatus != null || projectOldState != null || projectNewState != null) {
+            case RESOURCES_UPDATED:
+                if (receiver != null || taskTitle != null || taskOldStatus != null || taskNewStatus != null || projectOldState != null || projectNewState != null) {
                     throw new IllegalStateException("For RESOURCES_ADDED log type: resourceName and resourceStock must not be null and all other fields must be null.");
                 }
                 break;

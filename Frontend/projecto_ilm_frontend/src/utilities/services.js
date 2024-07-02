@@ -784,8 +784,6 @@ async function inviteUserToProject(sessionId, projectName, systemUsername) {
   }
 }
 
-
-
 async function getAllResources(
   page,
   brand,
@@ -1393,7 +1391,7 @@ async function getUserProjectCreation(
   };
 
   try {
-    console.log("RejectedUsersDto", RejectedUsersDto);
+    console.log("RejectedUsersDto", RejectedIdsDto);
     const response = await fetch(
       `${baseURL}user/userProjectCreation/${systemProjectName}?page=${currentPage}&lab=${lab}&keyword=${keyword}`,
       {
@@ -1701,14 +1699,17 @@ async function getProjectDetails(systemProjectName) {
 
 async function updateProject(projectUpdateDto, systemProjectName) {
   try {
-    const response = await fetch(`${baseURL}project/updateProject/${systemProjectName}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify(projectUpdateDto),
-    });
+    const response = await fetch(
+      `${baseURL}project/updateProject/${systemProjectName}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(projectUpdateDto),
+      }
+    );
 
     if (!response.ok) {
       const responseJson = await response.json();
