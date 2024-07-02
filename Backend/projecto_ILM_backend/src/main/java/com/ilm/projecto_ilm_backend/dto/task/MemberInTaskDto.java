@@ -10,13 +10,15 @@ public class MemberInTaskDto {
     private UserInTaskTypeENUM type;
     private UserInProjectTypeENUM typeInProject;
     private String systemName;
+    private String photo;
 
-    public MemberInTaskDto(int id, String name, UserInTaskTypeENUM type, UserInProjectTypeENUM typeInProject, String systemName) {
+    public MemberInTaskDto(int id, String name, UserInTaskTypeENUM type, UserInProjectTypeENUM typeInProject, String systemName, String photo) {
         this.id = id;
         this.name = name;
         this.type = type;
         this.typeInProject = typeInProject;
         this.systemName = systemName;
+        this.photo = photo;
     }
 
     public MemberInTaskDto() {
@@ -60,5 +62,13 @@ public class MemberInTaskDto {
 
     public void setSystemName(String systemName) {
         this.systemName = systemName;
+    }
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
     }
 }

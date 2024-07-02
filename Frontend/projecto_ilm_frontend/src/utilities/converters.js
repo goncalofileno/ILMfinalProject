@@ -19,8 +19,6 @@ function formatStatusDropDown(status) {
   return status.charAt(0) + status.slice(1).toLowerCase();
 }
 
-
-
 const formatSkill = (skill) => {
   return skill
     .toLowerCase()
@@ -28,9 +26,6 @@ const formatSkill = (skill) => {
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
 };
-
-
-
 
 function formatResourceType(type) {
   return type.charAt(0) + type.slice(1).toLowerCase();
@@ -67,6 +62,19 @@ function translateUserInProjectType(type) {
   }
 }
 
+function formatTaskStatus(status) {
+  switch (status) {
+    case "PLANNED":
+      return "Planned";
+    case "IN_PROGRESS":
+      return "In Progress";
+    case "DONE":
+      return "Done";
+    default:
+      return status.charAt(0) + status.slice(1).toLowerCase();
+  }
+}
+
 export {
   formatLab,
   formatStatus,
@@ -74,5 +82,6 @@ export {
   formatSkill,
   formatResourceType,
   formatTypeUserInProject,
-  translateUserInProjectType
+  translateUserInProjectType,
+  formatTaskStatus,
 };

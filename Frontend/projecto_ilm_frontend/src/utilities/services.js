@@ -784,8 +784,6 @@ async function inviteUserToProject(sessionId, projectName, systemUsername) {
   }
 }
 
-
-
 async function getAllResources(
   page,
   brand,
@@ -1470,7 +1468,9 @@ async function markNotificationAsClicked(sessionId, notificationIds) {
 
 async function getProjectMembersPage(sessionId, projectSystemName) {
   try {
-    const endpoint = `${baseURL}project/getProjectMembersPage?projectSystemName=${encodeURIComponent(projectSystemName)}`;
+    const endpoint = `${baseURL}project/getProjectMembersPage?projectSystemName=${encodeURIComponent(
+      projectSystemName
+    )}`;
 
     const fetchResponse = await fetch(endpoint, {
       method: "GET",
@@ -1492,9 +1492,16 @@ async function getProjectMembersPage(sessionId, projectSystemName) {
   }
 }
 
-async function removeUserFromProject(sessionId, projectSystemName, userId, reason) {
+async function removeUserFromProject(
+  sessionId,
+  projectSystemName,
+  userId,
+  reason
+) {
   try {
-    const endpoint = `${baseURL}project/removeUserFromProject?projectSystemName=${encodeURIComponent(projectSystemName)}&userId=${userId}`;
+    const endpoint = `${baseURL}project/removeUserFromProject?projectSystemName=${encodeURIComponent(
+      projectSystemName
+    )}&userId=${userId}`;
 
     const fetchResponse = await fetch(endpoint, {
       method: "POST",
@@ -1517,9 +1524,16 @@ async function removeUserFromProject(sessionId, projectSystemName, userId, reaso
   }
 }
 
-async function changeUserInProjectType(sessionId, projectSystemName, userId, newType) {
+async function changeUserInProjectType(
+  sessionId,
+  projectSystemName,
+  userId,
+  newType
+) {
   try {
-    const endpoint = `${baseURL}project/changeUserInProjectType?projectSystemName=${encodeURIComponent(projectSystemName)}&userId=${userId}&newType=${newType}`;
+    const endpoint = `${baseURL}project/changeUserInProjectType?projectSystemName=${encodeURIComponent(
+      projectSystemName
+    )}&userId=${userId}&newType=${newType}`;
 
     const fetchResponse = await fetch(endpoint, {
       method: "POST",
@@ -1541,9 +1555,17 @@ async function changeUserInProjectType(sessionId, projectSystemName, userId, new
   }
 }
 
-async function respondToApplication(sessionId, projectSystemName, userId, response, reason = "") {
+async function respondToApplication(
+  sessionId,
+  projectSystemName,
+  userId,
+  response,
+  reason = ""
+) {
   try {
-    const endpoint = `${baseURL}project/respondToApplication?projectSystemName=${encodeURIComponent(projectSystemName)}&userId=${userId}&response=${response}`;
+    const endpoint = `${baseURL}project/respondToApplication?projectSystemName=${encodeURIComponent(
+      projectSystemName
+    )}&userId=${userId}&response=${response}`;
     const fetchResponse = await fetch(endpoint, {
       method: "POST",
       headers: {
@@ -1610,14 +1632,17 @@ async function getProjectDetails(systemProjectName) {
 
 async function updateProject(projectUpdateDto, systemProjectName) {
   try {
-    const response = await fetch(`${baseURL}project/updateProject/${systemProjectName}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify(projectUpdateDto),
-    });
+    const response = await fetch(
+      `${baseURL}project/updateProject/${systemProjectName}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(projectUpdateDto),
+      }
+    );
 
     if (!response.ok) {
       const responseJson = await response.json();
@@ -1627,6 +1652,103 @@ async function updateProject(projectUpdateDto, systemProjectName) {
     return { success: true };
   } catch (error) {
     console.error("Error updating project:", error);
+    return { error: error.message };
+  }
+}
+
+const getTasksPage = async (sessionId, systemProjectName) => {
+  console.log(`Fetching tasks for project: ${systemProjectName}`);
+
+  try {
+    const response = await fetch(
+      `${baseURL}task/tasksPage?systemProjectName=${encodeURIComponent(
+        systemProjectName
+      )}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("HTTP error!");
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching tasks:", error);
+    return { error: error.message };
+  }
+};
+
+const updateTask = async (updateTaskDto) => {
+  try {
+    const response = await fetch(`${baseURL}task/updateTask`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(updateTaskDto),
+    });
+
+    if (!response.ok) {
+      const responseJson = await response.json();
+      throw new Error(responseJson.message || "An error occurred");
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error updating task:", error);
+    return { error: error.message };
+  }
+};
+
+const createTask = async (newTaskDto) => {
+  try {
+    const response = await fetch(`${baseURL}task/addTask`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(newTaskDto),
+    });
+
+    if (!response.ok) {
+      const responseJson = await response.json();
+      throw new Error(responseJson.message || "An error occurred");
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error creating task:", error);
+    return { error: error.message };
+  }
+};
+
+const deleteTask = async (updateTaskDto) => {
+  try {
+    const response = await fetch(`${baseURL}task/deleteTask`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(updateTaskDto),
+    });
+
+    if (!response.ok) {
+      const responseJson = await response.json();
+      throw new Error(responseJson.message || "An error occurred");
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error deleting task:", error);
     return { error: error.message };
   }
 }
@@ -1704,4 +1826,8 @@ export {
   removeInvitation,
   getProjectDetails,
   updateProject,
+  getTasksPage,
+  updateTask,
+  createTask,
+  deleteTask,
 };
