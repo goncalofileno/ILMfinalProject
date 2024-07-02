@@ -4,6 +4,7 @@ import {
   Row,
   Col,
   Button,
+  Form,
 } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import { Gantt, ViewMode } from "gantt-task-react";
@@ -74,7 +75,8 @@ const formatToLocalDateTime = (date) => {
 const ProjectPlanPage = () => {
   const { systemProjectName } = useParams();
   const [tasks, setTasks] = useState([]);
-  const [viewMode, setViewMode] = useState(ViewMode.Year);
+  const [viewMode, setViewMode] = useState(ViewMode.Month);
+  const [listCellWidth, setListCellWidth] = useState(""); // Novo estado para listCellWidth
   const [error, setError] = useState(null);
   const [projectName, setProjectName] = useState("");
   const [userSeingTasksType, setUserSeingTasksType] = useState("CREATOR");
@@ -331,6 +333,13 @@ const ProjectPlanPage = () => {
     }
   };
 
+  const handleViewModeChange = (e) => {
+    setViewMode(e.target.value);
+  };
+
+  const handleListCellWidthChange = () => {
+    setListCellWidth(listCellWidth === "" ? "170px" : "");
+  };
 
   const availableMembers = projectMembers.filter(
     (member) =>
@@ -361,6 +370,26 @@ const ProjectPlanPage = () => {
               <Button onClick={() => setIsAddModalVisible(true)}>
                 Add New Task
               </Button>
+              <Form.Group controlId="viewModeSelector">
+                <Form.Label>View Mode</Form.Label>
+                <Form.Control
+                  as="select"
+                  value={viewMode}
+                  onChange={handleViewModeChange}
+                >
+                  <option value={ViewMode.Day}>Day</option>
+                  <option value={ViewMode.Week}>Week</option>
+                  <option value={ViewMode.Month}>Month</option>
+                  <option value={ViewMode.Year}>Year</option>
+                </Form.Control>
+              </Form.Group>
+              <Form.Group controlId="listCellWidthToggle">
+                <Form.Check
+                  type="checkbox"
+                  label="Toggle List Cell Width"
+                  onChange={handleListCellWidthChange}
+                />
+              </Form.Group>
               {tasks.length > 0 && (
                 <Gantt
                   tasks={tasks}
@@ -371,6 +400,7 @@ const ProjectPlanPage = () => {
                   }
                   onDoubleClick={handleTaskClick}
                   onDelete={(task) => console.log("Task deleted:", task)}
+                  listCellWidth={listCellWidth}
                 />
               )}
             </Col>
