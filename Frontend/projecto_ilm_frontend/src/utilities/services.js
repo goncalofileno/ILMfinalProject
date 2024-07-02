@@ -1684,6 +1684,29 @@ const getTasksPage = async (sessionId, systemProjectName) => {
   }
 };
 
+const updateTask = async (updateTaskDto) => {
+  try {
+    const response = await fetch(`${baseURL}task/updateTask`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(updateTaskDto),
+    });
+
+    if (!response.ok) {
+      const responseJson = await response.json();
+      throw new Error(responseJson.message || "An error occurred");
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error updating task:", error);
+    return { error: error.message };
+  }
+};
+
 export {
   registerUser,
   getInterests,
@@ -1758,4 +1781,5 @@ export {
   getProjectDetails,
   updateProject,
   getTasksPage,
+  updateTask,
 };

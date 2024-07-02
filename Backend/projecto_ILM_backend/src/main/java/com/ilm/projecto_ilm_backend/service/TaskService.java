@@ -3,6 +3,7 @@ package com.ilm.projecto_ilm_backend.service;
 import com.ilm.projecto_ilm_backend.bean.TaskBean;
 import com.ilm.projecto_ilm_backend.dto.task.TaskSuggestionDto;
 import com.ilm.projecto_ilm_backend.dto.task.TasksPageDto;
+import com.ilm.projecto_ilm_backend.dto.task.UpdateTaskDto;
 import com.ilm.projecto_ilm_backend.security.exceptions.ProjectNotFoundException;
 import com.ilm.projecto_ilm_backend.security.exceptions.UserNotFoundException;
 import com.ilm.projecto_ilm_backend.security.exceptions.UserNotInProjectException;
@@ -90,6 +91,34 @@ public class TaskService {
         }
     }
 
+    @PUT
+    @Path("/updateTask")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateTask(@CookieParam("session-id") String sessionId, UpdateTaskDto updateTaskDto) {
+        logger.info("Received request to update task: " + updateTaskDto.getId());
 
+        if (databaseValidator.checkSessionId(sessionId)) {
+            try {
+                taskBean.updateTask(sessionId, updateTaskDto);
+                return Response.ok("Task updated successfully").build();
+            } catch (ProjectNotFoundException e) {
+                logger.error("Project not found for task: " + updateTaskDto.getId(), e);
+                return Response.status(Response.Status.NOT_FOUND).entity("Project not found").build();
+            } catch (UserNotFoundException e) {
+                logger.error("User not found for session id: " + sessionId, e);
+                return Response.status(Response.Status.UNAUTHORIZED).entity("User not found").build();
+            } catch (UserNotInProjectException e) {
+                logger.error("User not part of project for task: " + updateTaskDto.getId(), e);
+                return Response.status(Response.Status.FORBIDDEN).entity("User not part of project").build();
+            } catch (Exception e) {
+                logger.error("Error while updating task: " + updateTaskDto.getId(), e);
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                        .entity("An error occurred while updating the task").build();
+            }
+        } else {
+            return Response.status(Response.Status.UNAUTHORIZED).entity("Invalid session id").build();
+        }
+    }
 
 }

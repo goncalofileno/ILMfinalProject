@@ -9,6 +9,7 @@ import com.ilm.projecto_ilm_backend.dto.task.MemberInTaskDto;
 import com.ilm.projecto_ilm_backend.dto.task.TaskDto;
 import com.ilm.projecto_ilm_backend.dto.task.TaskSuggestionDto;
 import com.ilm.projecto_ilm_backend.dto.task.TasksPageDto;
+import com.ilm.projecto_ilm_backend.dto.task.UpdateTaskDto;
 import com.ilm.projecto_ilm_backend.entity.ProjectEntity;
 import com.ilm.projecto_ilm_backend.entity.TaskEntity;
 import com.ilm.projecto_ilm_backend.entity.UserEntity;
@@ -25,6 +26,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Singleton
 @Startup
@@ -258,5 +260,71 @@ public class TaskBean {
         taskDto.setFinalDate(task.getFinalDate());
         taskDto.setOutColaboration(task.getOutColaboration());
         return taskDto;
+    }
+
+    @Transactional
+    public void updateTask(String sessionId, UpdateTaskDto updateTaskDto) throws ProjectNotFoundException, UserNotFoundException, UserNotInProjectException {
+
+        // Encontrar a entidade Task
+        TaskEntity task = taskDao.findById(updateTaskDto.getId());
+        if (task == null) {
+            throw new ProjectNotFoundException("Task not found");
+        }
+
+        // Atualizar a entidade Task
+        task.setTitle(updateTaskDto.getTitle());
+        task.setDescription(updateTaskDto.getDescription());
+        task.setStatus(updateTaskDto.getStatus());
+        task.setInitialDate(updateTaskDto.getInitialDate());
+        task.setFinalDate(updateTaskDto.getFinalDate());
+        task.setOutColaboration(updateTaskDto.getOutColaboration());
+
+
+
+        // Atualizar membersOfTask
+        List<UserEntity> membersOfTask = updateTaskDto.getMemberIds().stream()
+                .map(memberId -> userDao.findById(memberId))
+                .collect(Collectors.toList());
+
+        // Remover todos os membros existentes
+        userTaskDao.deleteAllByTaskId(task.getId());
+
+        // Adicionar os novos membros
+        for (UserEntity member : membersOfTask) {
+            UserTaskEntity userTask = new UserTaskEntity();
+            userTask.setTask(task);
+            userTask.setUser(member);
+            userTask.setType(UserInTaskTypeENUM.MEMBER);
+            userTaskDao.persist(userTask);
+        }
+
+        // Atualizar creator
+        UserEntity creator = userDao.findById(updateTaskDto.getCreatorId());
+        if (creator != null) {
+            UserTaskEntity userTask = userTaskDao.findByTaskIdAndUserId(task.getId(), creator.getId());
+            userTask.setType(UserInTaskTypeENUM.CREATOR);
+            userTaskDao.merge(userTask);
+        }
+
+        // Atualizar inCharge
+        UserEntity inCharge = userDao.findById(updateTaskDto.getInChargeId());
+        if (inCharge != null) {
+            // Atualizar o tipo de usuário na tarefa atual
+            UserTaskEntity userTask = userTaskDao.findByTaskIdAndUserId(task.getId(), inCharge.getId());
+            if(userTask.getType() == UserInTaskTypeENUM.CREATOR || userTask.getType() == UserInTaskTypeENUM.CREATOR_INCHARGE) {
+                userTask.setType(UserInTaskTypeENUM.CREATOR_INCHARGE);
+            } else {
+                userTask.setType(UserInTaskTypeENUM.INCHARGE);
+            }
+        }
+
+        // Atualizar dependentTasks
+        List<TaskEntity> dependentTasks = updateTaskDto.getDependentTaskIds().stream()
+                .map(taskId -> taskDao.findById(taskId))
+                .collect(Collectors.toList());
+        task.setDependentTasks(dependentTasks);
+
+        // Persistir as alterações
+        taskDao.merge(task);
     }
 }

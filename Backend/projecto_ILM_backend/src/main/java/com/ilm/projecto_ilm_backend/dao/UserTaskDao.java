@@ -41,6 +41,15 @@ public class UserTaskDao extends AbstractDao<UserTaskEntity> {
         }
     }
 
+    public UserTaskEntity findByTaskIdAndUserId(int taskId, int userId) {
+        try {
+            return em.createNamedQuery("UserTask.findByTaskIdAndUserId", UserTaskEntity.class).setParameter("taskId", taskId)
+                    .setParameter("userId", userId).getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     public List<UserEntity> findUsersByTaskId(int taskId) {
         try {
             return em.createNamedQuery("UserTask.findUsersByTaskId", UserEntity.class).setParameter("taskId", taskId)
@@ -57,5 +66,13 @@ public class UserTaskDao extends AbstractDao<UserTaskEntity> {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public void deleteAllExceptCreatorOrCreatorInCharge(int taskId) {
+        em.createNamedQuery("UserTask.deleteAllExceptCreatorOrCreatorInCharge").setParameter("taskId", taskId).executeUpdate();
+    }
+
+    public void deleteAllByTaskId(int taskId) {
+        em.createQuery("DELETE FROM UserTaskEntity ut WHERE ut.task.id = :taskId").setParameter("taskId", taskId).executeUpdate();
     }
 }
