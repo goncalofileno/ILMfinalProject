@@ -278,6 +278,7 @@ const ProjectPlanPage = () => {
           member.systemName ===
           (task.rawTask.inCharge || taskDetails.inCharge)
       )?.id,
+        systemProjectName: systemProjectName,
     };
 
     console.log("Update Task DTO on Date Change:", updateTaskDto);

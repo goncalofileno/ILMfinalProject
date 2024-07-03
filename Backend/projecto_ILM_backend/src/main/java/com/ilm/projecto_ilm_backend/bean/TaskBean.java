@@ -355,8 +355,28 @@ public class TaskBean {
         task.setTitle(updateTaskDto.getTitle());
         task.setDescription(updateTaskDto.getDescription());
         task.setStatus(updateTaskDto.getStatus());
-        task.setInitialDate(updateTaskDto.getInitialDate());
-        task.setFinalDate(updateTaskDto.getFinalDate());
+
+        if(updateTaskDto.getInitialDate().isBefore(project.getStartDate()) && updateTaskDto.getFinalDate().isBefore(project.getStartDate())){
+            task.setInitialDate(project.getStartDate());
+            task.setFinalDate(project.getStartDate().plusDays(365));
+        }
+
+        if(updateTaskDto.getInitialDate().isBefore(project.getStartDate())) {
+            task.setInitialDate(project.getStartDate());
+        } else {
+            task.setInitialDate(updateTaskDto.getInitialDate());
+        }
+
+        if(updateTaskDto.getFinalDate().isAfter(project.getEndDate())) {
+            project.setEndDate(updateTaskDto.getFinalDate());
+            task.setFinalDate(updateTaskDto.getFinalDate());
+        } else {
+            task.setFinalDate(updateTaskDto.getFinalDate());
+        }
+
+
+
+
         task.setOutColaboration(updateTaskDto.getOutColaboration());
 
         List<UserEntity> membersOfTask = updateTaskDto.getMemberIds().stream()
