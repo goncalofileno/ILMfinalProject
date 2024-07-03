@@ -20,6 +20,8 @@ const NotificationBanner = ({ notification, onClick, onEnd }) => {
         return `<strong>${userName}</strong> applied to your project <strong>${projectName}</strong>.`;
       case "TASK":
         return `<strong>${userName}</strong> made changes to a task in the project <strong>${projectName}</strong> you are involved in.`;
+      case "TASK_ASSIGNED":
+        return `<strong>${userName}</strong> assigned you to a task in the project <strong>${projectName}</strong>.`;
       case "INVITE_REJECTED":
         return `<strong>${userName}</strong> rejected your invitation to join the project <strong>${projectName}</strong>.`;
       case "INVITE_ACCEPTED":
@@ -30,6 +32,8 @@ const NotificationBanner = ({ notification, onClick, onEnd }) => {
         return `The project <strong>${projectName}</strong> changed its status to <strong>${projectStatus}</strong>.`;
       case "PROJECT_REJECTED":
         return `The project <strong>${projectName}</strong> was rejected by <strong>${userName}</strong>.`;
+      case "PROJECT_INSERTED":
+        return `You were added to the project <strong>${projectName}</strong> by <strong>${userName}</strong>.`;
       case "REMOVED":
         return `You were removed from the project <strong>${projectName}</strong> by <strong>${userName}</strong>. Contact them for more information.`;
       case "PROJECT_MESSAGE":

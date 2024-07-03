@@ -53,7 +53,7 @@ const MailWebSocket = () => {
         if (event.data.startsWith("new_mail:") && isInboxPage) {
           console.log("Real-time mail received");
           incrementUnreadCount();
-          fetchMailsInInbox(true);  // Ensure fetching mails
+          fetchMailsInInbox(true); // Ensure fetching mails
           const senderName = event.data.split(":")[1];
           if (audioEnabled) {
             audioRef.current.play();
@@ -120,6 +120,7 @@ const MailWebSocket = () => {
         case "PROJECT_REJECTED":
         case "USER_TYPE_CHANGED":
         case "PROJECT_UPDATED":
+        case "PROJECT_INSERTED":
           navigate(`/project/${projectSystemName}`);
           break;
         case "APPLIANCE":
@@ -127,6 +128,7 @@ const MailWebSocket = () => {
           navigate(`/project/${projectSystemName}/members`);
           break;
         case "TASK":
+        case "TASK_ASSIGNED":
           navigate(`/project/${projectSystemName}/tasks`);
           break;
         case "INVITE_REJECTED":

@@ -23,7 +23,7 @@ import {
 } from "../utilities/services";
 import Cookies from "js-cookie";
 import MemberLogIcon from "../resources/icons/logs/member-log-icon.png";
-import TaskLogIcon from "../resources/icons/logs/member-log-icon.png";
+import TaskLogIcon from "../resources/icons/logs/task-log-icon.png";
 import ProjectLogIcon from "../resources/icons/logs/project-log-icon.png";
 import ResourceLogIcon from "../resources/icons/logs/resource-log-icon.png";
 import "./ProjectLogsPage.css";

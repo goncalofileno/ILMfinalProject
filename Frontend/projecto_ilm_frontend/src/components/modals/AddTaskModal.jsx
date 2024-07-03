@@ -25,7 +25,7 @@ const AddTaskModal = ({
     inCharge: currentUsername,
     membersOfTask: [],
     dependentTasks: [],
-    systemProjectName: systemProjectName, // Adicione o nome do projeto aqui
+    systemProjectName: systemProjectName,
   });
   const [isSaveEnabled, setIsSaveEnabled] = useState(false);
   const [titleError, setTitleError] = useState("");
@@ -38,7 +38,7 @@ const AddTaskModal = ({
       setNewTaskDetails((prevDetails) => ({
         ...prevDetails,
         membersOfTask: [{ ...currentUser, type: "CREATOR" }],
-        inCharge: currentUser.systemName,
+        inCharge: currentUser.systemUsername,
       }));
     }
   }, [projectMembers, currentUsername]);
@@ -82,7 +82,7 @@ const AddTaskModal = ({
 
   const handleSave = async () => {
     const inChargeMember = newTaskDetails.membersOfTask.find(
-      (member) => member.systemName === newTaskDetails.inCharge
+      (member) => member.systemUsername === newTaskDetails.inCharge
     );
 
     const newTaskDto = {
@@ -99,7 +99,7 @@ const AddTaskModal = ({
         (member) =>
           member.type === "CREATOR" || member.type === "CREATOR_INCHARGE"
       )?.id,
-      inChargeId: inChargeMember?.id, // Correctly set inChargeId
+      inChargeId: inChargeMember ? inChargeMember.id : null,
       systemProjectName: newTaskDetails.systemProjectName,
     };
 
@@ -119,10 +119,20 @@ const AddTaskModal = ({
       (member) => member.systemUsername === systemUsername
     );
     if (!member) return;
-    setNewTaskDetails((prevDetails) => ({
-      ...prevDetails,
-      membersOfTask: [...prevDetails.membersOfTask, { ...member, type: "" }],
-    }));
+    setNewTaskDetails((prevDetails) => {
+      const newMembersOfTask = [...prevDetails.membersOfTask, { ...member, type: "" }];
+      const newInCharge = newMembersOfTask.find(
+        (taskMember) => taskMember.systemUsername === prevDetails.inCharge
+      )
+        ? prevDetails.inCharge
+        : member.systemUsername;
+
+      return {
+        ...prevDetails,
+        membersOfTask: newMembersOfTask,
+        inCharge: newInCharge,
+      };
+    });
   };
 
   const handleRemoveMember = (memberId) => {
@@ -130,9 +140,16 @@ const AddTaskModal = ({
       const newMembers = prevDetails.membersOfTask.filter(
         (member) => member.id !== memberId || member.type === "CREATOR"
       );
+      const newInCharge = newMembers.find(
+        (member) => member.systemUsername === prevDetails.inCharge
+      )
+        ? prevDetails.inCharge
+        : newMembers[0]?.systemUsername || "";
+
       return {
         ...prevDetails,
         membersOfTask: newMembers,
+        inCharge: newInCharge,
       };
     });
   };
@@ -187,7 +204,7 @@ const AddTaskModal = ({
         },
       ],
       dependentTasks: [],
-      systemProjectName: newTaskDetails.systemProjectName, // Mantenha o nome do projeto ao fechar
+      systemProjectName: newTaskDetails.systemProjectName,
     });
     setIsSaveEnabled(false);
     setTitleError("");
@@ -228,23 +245,6 @@ const AddTaskModal = ({
                   value={newTaskDetails.description}
                   onChange={handleInputChange}
                 />
-              </Form.Group>
-              <Form.Group controlId="formTaskStatus">
-                <Form.Label>
-                  <strong>Status:</strong>
-                </Form.Label>
-                <Form.Control
-                  as="select"
-                  name="status"
-                  value={newTaskDetails.status}
-                  onChange={handleInputChange}
-                >
-                  <option value="PLANNED">{formatTaskStatus("PLANNED")}</option>
-                  <option value="IN_PROGRESS">
-                    {formatTaskStatus("IN_PROGRESS")}
-                  </option>
-                  <option value="DONE">{formatTaskStatus("DONE")}</option>
-                </Form.Control>
               </Form.Group>
               <Form.Group controlId="formTaskInitialDate">
                 <Form.Label>
@@ -301,7 +301,7 @@ const AddTaskModal = ({
                   onChange={handleInputChange}
                 >
                   {newTaskDetails.membersOfTask.map((member) => (
-                    <option key={member.id} value={member.systemName}>
+                    <option key={member.id} value={member.systemUsername}>
                       {member.name}
                     </option>
                   ))}
@@ -404,8 +404,6 @@ const AddTaskModal = ({
       </Modal.Footer>
     </Modal>
   );
-  
-  
 };
 
 export default AddTaskModal;

@@ -125,6 +125,10 @@ public class MailWebSocket {
         sendNotification(sessionId, notificationDto);
     }
 
+    public static void sendTaskAssignedNotification(String sessionId, NotificationDto notificationDto) {
+        sendNotification(sessionId, notificationDto);
+    }
+
     public static void sendApplianceNotification(String sessionId, NotificationDto notificationDto) {
         sendNotification(sessionId, notificationDto);
     }

@@ -227,19 +227,37 @@ public class NotificationBean {
         }
     }
 
-    public void createTaskNotification(String taskName, String projectSystemName, String userName, UserEntity receptor) {
+    public void createTaskNotification(String taskName, String projectSystemName, String systemeUsername, UserEntity receptor) {
         NotificationEntity notification = new NotificationEntity();
         notification.setType(NotificationTypeENUM.TASK);
         notification.setReadStatus(false);
         notification.setSendDate(LocalDateTime.now());
         notification.setTaskName(taskName);
         notification.setProjectSystemName(projectSystemName);
-        notification.setUserName(userName);
+        notification.setUserName(userDao.getFullNameBySystemUsername(systemeUsername));
+        notification.setSystemUserName(systemeUsername);
         notification.setReceptor(receptor);
         notification.setMessageNotificationClicked(false);
         notificationDao.persist(notification);
         if(sessionDao.findSessionIdByUserId(receptor.getId()) != null) {
             MailWebSocket.sendTaskNotification(sessionDao.findSessionIdByUserId(receptor.getId()), toDto(notification));
+        }
+    }
+
+    public void createTaskAssignedNotification(String taskName, String projectSystemName, String systemUsername, UserEntity receptor) {
+        NotificationEntity notification = new NotificationEntity();
+        notification.setType(NotificationTypeENUM.TASK_ASSIGNED);
+        notification.setReadStatus(false);
+        notification.setSendDate(LocalDateTime.now());
+        notification.setTaskName(taskName);
+        notification.setProjectSystemName(projectSystemName);
+        notification.setUserName(userDao.getFullNameBySystemUsername(systemUsername));
+        notification.setSystemUserName(systemUsername);
+        notification.setReceptor(receptor);
+        notification.setMessageNotificationClicked(false);
+        notificationDao.persist(notification);
+        if(sessionDao.findSessionIdByUserId(receptor.getId()) != null) {
+            MailWebSocket.sendTaskAssignedNotification(sessionDao.findSessionIdByUserId(receptor.getId()), toDto(notification));
         }
     }
 

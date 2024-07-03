@@ -49,6 +49,8 @@ export default function NotificationModal({ onClose, modalRef }) {
         return `<strong>${userName}</strong> applied to your project <strong>${projectName}</strong>.`;
       case "TASK":
         return `<strong>${userName}</strong> made changes to a task in the project <strong>${projectName}</strong> you are involved in.`;
+      case "TASK_ASSIGNED":
+        return `<strong>${userName}</strong> assigned you to a task in the project <strong>${projectName}</strong>.`;
       case "INVITE_REJECTED":
         return `<strong>${userName}</strong> rejected your invitation to join the project <strong>${projectName}</strong>.`;
       case "INVITE_ACCEPTED":
@@ -59,6 +61,8 @@ export default function NotificationModal({ onClose, modalRef }) {
         return `The project <strong>${projectName}</strong> changed its status to <strong>${projectStatus}</strong>.`;
       case "PROJECT_REJECTED":
         return `The project <strong>${projectName}</strong> was rejected by <strong>${userName}</strong>.`;
+        case "PROJECT_INSERTED":
+        return `You were added to the project <strong>${projectName}</strong> by <strong>${userName}</strong>.`;
       case "REMOVED":
         return `You were removed from the project <strong>${projectName}</strong> by <strong>${userName}</strong>. Contact them for more information.`;
       case "PROJECT_MESSAGE":
@@ -68,7 +72,7 @@ export default function NotificationModal({ onClose, modalRef }) {
         return `You have a new message in the project <strong>${projectName}</strong> chat from <strong>${userName}</strong>.`;
       case "USER_TYPE_CHANGED":
         return `Your user type was changed to <strong>${newUserType}</strong> by <strong>${userName}</strong> in the project <strong>${projectName}</strong>.`;
-        case "PROJECT_UPDATED":
+      case "PROJECT_UPDATED":
         return `The project details <strong>${projectName}</strong> was updated by <strong>${userName}</strong>.`;
       default:
         return "You have a new notification.";
@@ -76,7 +80,8 @@ export default function NotificationModal({ onClose, modalRef }) {
   };
 
   const handleNotificationClick = async (notification) => {
-    const { type, projectSystemName, systemUserName, id, notificationIds } = notification;
+    const { type, projectSystemName, systemUserName, id, notificationIds } =
+      notification;
     switch (type) {
       case "APPLIANCE_REJECTED":
       case "APPLIANCE_ACCEPTED":
@@ -85,6 +90,7 @@ export default function NotificationModal({ onClose, modalRef }) {
       case "PROJECT_REJECTED":
       case "USER_TYPE_CHANGED":
       case "PROJECT_UPDATED":
+      case "PROJECT_INSERTED":
         navigate(`/project/${projectSystemName}`);
         break;
       case "APPLIANCE":
@@ -92,7 +98,8 @@ export default function NotificationModal({ onClose, modalRef }) {
         navigate(`/project/${projectSystemName}/members`);
         break;
       case "TASK":
-        navigate(`/project/${projectSystemName}/tasks`);
+      case "TASK_ASSIGNED":
+        navigate(`/project/${projectSystemName}/plan`);
         break;
       case "INVITE_REJECTED":
       case "REMOVED":
