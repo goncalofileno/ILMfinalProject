@@ -74,7 +74,20 @@ import com.ilm.projecto_ilm_backend.ENUMS.ConvertersENUM.StateProjectEnumConvert
         query = "SELECT COUNT(s) > 0 FROM ProjectEntity p JOIN p.skillInProject s WHERE p.systemName = :projectSystemName AND s.name = :skillName"
 )
 @NamedQuery(name = "Project.doesProjectExist", query = "SELECT COUNT(p)>0 FROM ProjectEntity p WHERE p.name = :name")
-
+@NamedQuery(name = "Project.getProjectIds", query = "SELECT p.id FROM ProjectEntity p")
+@NamedQuery(name = "Project.getProjectsExecutionDates", query = "SELECT p.inProgressDate, p.finishedDate  FROM ProjectEntity p")
+@NamedQuery(
+        name = "Project.countProjectsPerLab",
+        query = "SELECT p.lab.local, COUNT(p) " +
+                "FROM ProjectEntity p " +
+                "GROUP BY p.lab.local"
+)
+@NamedQuery(
+        name = "Project.countProjectsByStatusAndLab",
+        query = "SELECT p.lab.local, p.status, COUNT(p) " +
+                "FROM ProjectEntity p " +
+                "GROUP BY p.lab.local, p.status"
+)
 
 public class ProjectEntity implements Serializable {
 

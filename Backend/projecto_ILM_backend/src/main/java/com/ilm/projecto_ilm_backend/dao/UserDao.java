@@ -199,5 +199,27 @@ public class UserDao extends AbstractDao<UserEntity> {
             return null;
         }
     }
+
+    public int getNumberOfUsersInApp() {
+        try {
+            return em.createNamedQuery("User.countUsersInApp", Long.class).getSingleResult().intValue();
+
+        } catch (Exception e) {
+            return -1;
+        }
+    }
+
+    public List<Object[]> getUsersPerLab() {
+        try {
+            List<Object[]> resultList = em
+                    .createNamedQuery("User.countUsersPerLab", Object[].class)
+                    .getResultList();
+
+            return resultList;
+        } catch (Exception e) {
+            e.printStackTrace(); // Handle or log the exception appropriately
+            return null;
+        }
+    }
     
 }

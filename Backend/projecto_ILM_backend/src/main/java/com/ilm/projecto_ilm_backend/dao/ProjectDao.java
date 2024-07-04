@@ -13,6 +13,8 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -299,6 +301,47 @@ public class ProjectDao extends AbstractDao<ProjectEntity>{
 
         } catch (Exception e) {
             return false;
+        }
+    }
+
+    public List<Integer> getProjectIds() {
+        try {
+            return em.createNamedQuery("Project.getProjectIds", Integer.class)
+                    .getResultList();
+
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public List<Object[]> getProjectsExecutionDates() {
+        try {
+            return em.createNamedQuery("Project.getProjectsExecutionDates", Object[].class)
+                    .getResultList();
+
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public List<Object[]> getProjectsPerLab() {
+        try {
+            List<Object[]> resultList = em
+                    .createNamedQuery("Project.countProjectsPerLab", Object[].class)
+                    .getResultList();
+
+            return resultList;
+        } catch (Exception e) {
+            e.printStackTrace(); // Handle or log the exception appropriately
+            return null;
+        }
+    }
+
+    public List<Object[]> countProjectsByStatusAndLab() {
+        try {
+            return em.createNamedQuery("Project.countProjectsByStatusAndLab", Object[].class).getResultList();
+        }catch (Exception e){
+            return null;
         }
     }
 }

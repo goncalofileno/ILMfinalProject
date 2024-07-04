@@ -40,6 +40,13 @@ import java.util.List;
                 "AND (:keyword IS NULL OR (LOWER(u.firstName) LIKE LOWER(CONCAT('%', :keyword, '%'))" +
                 " OR  LOWER(u.lastName) LIKE LOWER(CONCAT('%', :keyword, '%'))))"),
         @NamedQuery(name = "User.getUserSkills", query = "SELECT s FROM UserEntity u JOIN u.skills s WHERE u.id = :id ORDER BY CASE WHEN s.name IN :skillNames THEN 0 ELSE 1 END"),
+        @NamedQuery(name = "User.countUsersInApp", query = "SELECT COUNT(u) FROM UserEntity u WHERE u.mailConfirmed=true"),
+        @NamedQuery(
+                name = "User.countUsersPerLab",
+                query = "SELECT u.lab.local, COUNT(u) " +
+                        "FROM UserEntity u " +
+                        "GROUP BY u.lab.local"
+        )
 
 })
 

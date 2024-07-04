@@ -4,6 +4,8 @@ import TablePagination from "../paginations/TablePagination";
 import { InputGroup, Form, Button } from "react-bootstrap";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
+import PieGraphic from "../charts/PieGraphic";
+import { useCurrentPng } from "recharts-to-png";
 
 export default function ProjectsTable({
   projects,
@@ -57,6 +59,31 @@ export default function ProjectsTable({
     setKeyword("");
     setCurrentPage(1);
     setKeywordButton(!keywordButton);
+  };
+  const tasksPieData = [
+    { name: "POR FAZER", value: 400 },
+    { name: "EM PROGRESSO", value: 300 },
+    { name: "FEITO", value: 300 },
+  ];
+
+  const tasksPieColors = ["#8884d8", "#82ca9d", "#ffc658"];
+
+  const { generateImage } = useCurrentPng();
+
+  const saveChartAsPng = async () => {
+    try {
+      const png = await generateImage(
+        <PieGraphic data={tasksPieData} colors={tasksPieColors} />
+      );
+      const a = document.createElement("a");
+      a.href = png;
+      a.download = "chart.png";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error("Error saving chart as PNG:", error);
+    }
   };
   return (
     <>
@@ -243,6 +270,7 @@ export default function ProjectsTable({
               <button
                 className="submit-button"
                 id="btn-projects-statistics-table-projects"
+                onClick={() => navigate("/statistics")}
               >
                 Projects Statistics
               </button>
