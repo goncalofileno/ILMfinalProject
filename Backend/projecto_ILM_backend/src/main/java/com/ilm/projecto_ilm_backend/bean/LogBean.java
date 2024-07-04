@@ -204,6 +204,15 @@ public class LogBean {
         logDao.persist(log);
     }
 
+    public void createMemberLeftLog(ProjectEntity project, UserEntity leaver){
+        LogEntity log = new LogEntity();
+        log.setDate(LocalDateTime.now());
+        log.setType(LogTypeENUM.MEMBER_LEFT);
+        log.setAuthor(leaver);
+        log.setProject(project);
+        logDao.persist(log);
+    }
+
 
     public List<LogDto> getLogsByProjectName(String sessionId, String systemProjectName) throws Exception {
         ProjectEntity project = projectDao.findBySystemName(systemProjectName);

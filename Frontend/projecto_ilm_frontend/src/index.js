@@ -96,7 +96,8 @@ const AppWithWebSocket = () => {
           element={<ProjectCreationPage3 />}
         />
         <Route path="/editProject/:systemProjectName" element={<EditProjectPage />} />
-        <Route path="/project/:systemProjectName/plan" element={<ProjectPlanPage />} />
+        <Route path="/project/:systemProjectName/plan/:taskSystemTitle?" element={<ProjectPlanPage />} />
+
       </Routes>
     </>
   );

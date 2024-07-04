@@ -125,6 +125,7 @@ const MailWebSocket = () => {
           break;
         case "APPLIANCE":
         case "INVITE_ACCEPTED":
+        case "LEFT_PROJECT":
           navigate(`/project/${projectSystemName}/members`);
           break;
         case "TASK":

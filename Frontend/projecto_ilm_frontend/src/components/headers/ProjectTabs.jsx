@@ -1,6 +1,6 @@
 import React from "react";
-import { Nav, NavItem, NavLink } from "react-bootstrap";
-import { useNavigate, useParams, useLocation } from "react-router-dom";
+import { Nav, NavItem } from "react-bootstrap";
+import { NavLink, useNavigate, useParams, useLocation } from "react-router-dom";
 import "./ProjectTabs.css";
 
 const ProjectTabs = ({ typeOfUserSeingProject, projectName }) => {
@@ -28,10 +28,6 @@ const ProjectTabs = ({ typeOfUserSeingProject, projectName }) => {
     "GUEST",
   ];
 
-  const handleTabClick = (path) => {
-    navigate(`/project/${systemProjectName}/${path}`);
-  };
-
   const getActiveTab = () => {
     const currentPath = location.pathname.split("/").pop();
     return currentPath;
@@ -46,9 +42,8 @@ const ProjectTabs = ({ typeOfUserSeingProject, projectName }) => {
             tab.path === "info" ? (
               <NavItem key={tab.path}>
                 <NavLink
-                  href="#"
-                  className={getActiveTab() === tab.path ? "active" : ""}
-                  onClick={() => handleTabClick(tab.path)}
+                  to={`/project/${systemProjectName}/${tab.path}`}
+                  className={({ isActive }) => (isActive ? "nav-link active" : "nav-link")}
                 >
                   {tab.name}
                 </NavLink>
@@ -56,7 +51,6 @@ const ProjectTabs = ({ typeOfUserSeingProject, projectName }) => {
             ) : null
           )}
           <div className="project-name-tab-container">
-            {" "}
             <div className="project-name-tab">{projectName}</div>
           </div>
         </Nav>

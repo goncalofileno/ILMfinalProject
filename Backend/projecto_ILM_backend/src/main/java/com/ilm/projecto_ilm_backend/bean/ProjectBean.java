@@ -1435,4 +1435,44 @@ public class ProjectBean {
         return true;
     }
 
-}
+    public String leaveProject(int userId, String projectSystemName, String reason){
+        ProjectEntity project = projectDao.findBySystemName(projectSystemName);
+        UserEntity user = userDao.findById(userId);
+        UserProjectEntity userProject = userProjectDao.findByUserIdAndProjectId(userId, project.getId());
+        if (userProject == null) {
+            throw new IllegalArgumentException("User is not in the project");
+        }
+        if (userProject.getType() == UserInProjectTypeENUM.CREATOR) {
+            throw new IllegalArgumentException("Cannot leave the project if you are the creator");
+        }
+        userProjectDao.remove(userProject);
+
+        List<UserEntity> teamManagers = userProjectDao.findCreatorsAndManagersByProjectId(project.getId());
+        for (UserEntity teamManager : teamManagers) {
+            notificationBean.createLeftProjectNotification(projectSystemName, user.getSystemUsername(), teamManager);
+            String subject = "User " + user.getFullName() + " left project " + project.getName();
+            String text = "<p>Dear " + teamManager.getFullName() + ",</p>" +
+                    "<p>We regret to inform you that user <strong>" + user.getFullName() + "</strong> has left the project <strong><a href=\"http://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong>.</p>" +
+                    "<p>Reason: " + reason + "</p>" +
+                    "<p>We apologize for any inconvenience this may cause.</p>" +
+                    "<p>Best regards,<br>ILM Management Team</p>";
+            MailDto mailDto = new MailDto(
+                    subject,
+                    text,
+                    userDao.getFullNameBySystemUsername(user.getSystemUsername()),
+                    user.getEmail(),
+                    teamManager.getFullName(),
+                    teamManager.getEmail()
+            );
+            mailBean.sendMail(sessionDao.findSessionIdByUserId(user.getId()), mailDto);
+        }
+
+        logBean.createMemberLeftLog(project, user);
+
+        return "User left project successfully";
+
+    }
+
+    }
+
+

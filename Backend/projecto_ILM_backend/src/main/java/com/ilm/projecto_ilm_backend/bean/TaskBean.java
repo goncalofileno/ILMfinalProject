@@ -1,5 +1,6 @@
 package com.ilm.projecto_ilm_backend.bean;
 
+import com.ilm.projecto_ilm_backend.ENUMS.StateProjectENUM;
 import com.ilm.projecto_ilm_backend.ENUMS.TaskStatusENUM;
 import com.ilm.projecto_ilm_backend.ENUMS.UserInProjectTypeENUM;
 import com.ilm.projecto_ilm_backend.ENUMS.UserInTaskTypeENUM;
@@ -186,6 +187,7 @@ public class TaskBean {
             tasksSuggestions.add(new TaskSuggestionDto(task.getTitle(), task.getSystemTitle()));
         }
 
+
         return tasksSuggestions;
 
     }
@@ -213,7 +215,7 @@ public class TaskBean {
         projectTask.setTitle(project.getName());
         projectTask.setSystemTitle(project.getSystemName());
         projectTask.setDescription(project.getDescription());
-        projectTask.setStatus(TaskStatusENUM.PLANNED);
+        projectTask.setProjectState(project.getStatus());
         projectTask.setInitialDate(project.getStartDate());
         projectTask.setFinalDate(project.getEndDate());
 
@@ -247,12 +249,18 @@ public class TaskBean {
 
         List<ProjectMemberDto> projectMembers = projectBean.getProjectMembers(project.getId());
 
+        int projectProgress = projectBean.getProgress(project.getId());
+
+        StateProjectENUM projectState = project.getStatus();
+
         TasksPageDto tasksPageDto = new TasksPageDto();
         tasksPageDto.setProjectName(projectName);
         tasksPageDto.setProjectTask(projectTask);
         tasksPageDto.setTasks(tasksDto);
         tasksPageDto.setUserSeingTasksType(userSeingTasksType);
         tasksPageDto.setProjectMembers(projectMembers);
+        tasksPageDto.setProjectProgress(projectProgress);
+        tasksPageDto.setProjectState(projectState);
 
         return tasksPageDto;
     }

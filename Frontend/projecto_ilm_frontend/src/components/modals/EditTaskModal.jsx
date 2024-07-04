@@ -231,7 +231,7 @@ const EditTaskModal = ({
             <Button
               variant="danger"
               onClick={handleDeleteClick} // Adicione esta linha
-              style={{ marginLeft: "auto" }}
+              style={{ marginLeft: "auto", backgroundColor: "#dc3545", borderColor: "#dc3545"}}
             >
               Delete Task
             </Button>

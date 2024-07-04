@@ -216,6 +216,12 @@ const ProjectLogsPage = () => {
             <strong>{log.authorName}</strong>.
           </>
         );
+        case "MEMBER_LEFT":
+        return (
+          <>
+            The user <strong>{log.authorName}</strong> left the project.
+          </>
+        );
       default:
         return "Unknown log type.";
     }
@@ -226,6 +232,7 @@ const ProjectLogsPage = () => {
       case "MEMBER_ADDED":
       case "MEMBER_REMOVED":
       case "MEMBER_TYPE_CHANGED":
+      case "MEMBER_LEFT":
         return MemberLogIcon;
       case "TASKS_CREATED":
       case "TASKS_COMPLETED":
@@ -257,7 +264,7 @@ const ProjectLogsPage = () => {
         {before}
         {taskTitle && (
           <>
-            <Link to={`/project/${systemProjectName}/tasks/${taskTitle}`}>
+            <Link to={`/project/${systemProjectName}/plan/${taskTitle}`}>
               @{taskTitle}
             </Link>
             {after}

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Button, Form, ListGroup } from "react-bootstrap";
 import { createTask } from "../../utilities/services";
-import { formatTaskStatus } from "../../utilities/converters";
 import Cookies from "js-cookie";
 import './AddTaskModal.css';
 
@@ -179,11 +178,12 @@ const AddTaskModal = ({
       )
   );
 
+  // Filtra as tarefas disponíveis para excluir a task do tipo projeto e milestone
   const availableTasks = tasks.filter(
     (task) =>
       !newTaskDetails.dependentTasks.some(
         (depTask) => depTask.id === task.rawTask.id
-      )
+      ) && task.type !== "project" && task.type !== "milestone" // Exclui tasks do tipo projeto e milestone
   );
 
   const handleCloseModal = () => {

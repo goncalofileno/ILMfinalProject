@@ -1820,6 +1820,25 @@ const deleteTask = async (updateTaskDto) => {
   }
 }
 
+const leaveProject = async (sessionId, systemProjectName, reason) => {
+  try {
+    const response = await fetch(`${baseURL}project/leaveProject?projectSystemName=${systemProjectName}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(reason),
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error leaving project:", error);
+    return { error: "An error occurred while leaving the project." };
+  }
+};
+
+
 export {
   registerUser,
   getInterests,
@@ -1900,4 +1919,5 @@ export {
   getAllResourcesCreatingProject,
   addInitialResources,
   getProjectResources,
+  leaveProject,
 };

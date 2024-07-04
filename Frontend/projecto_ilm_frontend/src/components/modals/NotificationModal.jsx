@@ -61,7 +61,7 @@ export default function NotificationModal({ onClose, modalRef }) {
         return `The project <strong>${projectName}</strong> changed its status to <strong>${projectStatus}</strong>.`;
       case "PROJECT_REJECTED":
         return `The project <strong>${projectName}</strong> was rejected by <strong>${userName}</strong>.`;
-        case "PROJECT_INSERTED":
+      case "PROJECT_INSERTED":
         return `You were added to the project <strong>${projectName}</strong> by <strong>${userName}</strong>.`;
       case "REMOVED":
         return `You were removed from the project <strong>${projectName}</strong> by <strong>${userName}</strong>. Contact them for more information.`;
@@ -74,6 +74,8 @@ export default function NotificationModal({ onClose, modalRef }) {
         return `Your user type was changed to <strong>${newUserType}</strong> by <strong>${userName}</strong> in the project <strong>${projectName}</strong>.`;
       case "PROJECT_UPDATED":
         return `The project details <strong>${projectName}</strong> was updated by <strong>${userName}</strong>.`;
+      case "LEFT_PROJECT":
+        return `The user <strong>${userName}</strong> left the project <strong>${projectName}</strong>.`;
       default:
         return "You have a new notification.";
     }
@@ -95,6 +97,7 @@ export default function NotificationModal({ onClose, modalRef }) {
         break;
       case "APPLIANCE":
       case "INVITE_ACCEPTED":
+      case "LEFT_PROJECT":
         navigate(`/project/${projectSystemName}/members`);
         break;
       case "TASK":

@@ -374,6 +374,22 @@ public class NotificationBean {
         }
     }
 
+    public void createLeftProjectNotification(String projectSystemName, String systemUserName, UserEntity receptor){
+        NotificationEntity notification = new NotificationEntity();
+        notification.setType(NotificationTypeENUM.LEFT_PROJECT);
+        notification.setReadStatus(false);
+        notification.setSendDate(LocalDateTime.now());
+        notification.setProjectSystemName(projectSystemName);
+        notification.setUserName(userDao.getFullNameBySystemUsername(systemUserName));
+        notification.setSystemUserName(systemUserName);
+        notification.setReceptor(receptor);
+        notification.setMessageNotificationClicked(false);
+        notificationDao.persist(notification);
+        if(sessionDao.findSessionIdByUserId(receptor.getId()) != null) {
+            MailWebSocket.sendLeftProjectNotification(sessionDao.findSessionIdByUserId(receptor.getId()), toDto(notification));
+        }
+    }
+
     public String getSystemUsernameOfCreatorOfNotificationByReceptorAndType(int receptorId, NotificationTypeENUM type) {
         return notificationDao.findSystemUsernameOfCreatorByReceptorAndType(receptorId, type);
     }
