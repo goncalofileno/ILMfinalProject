@@ -1,5 +1,6 @@
 package com.ilm.projecto_ilm_backend.dto.task;
 
+import com.ilm.projecto_ilm_backend.ENUMS.StateProjectENUM;
 import com.ilm.projecto_ilm_backend.ENUMS.TaskStatusENUM;
 
 import java.time.LocalDateTime;
@@ -12,6 +13,7 @@ public class TaskDto {
     private String systemTitle;
     private String description;
     private TaskStatusENUM status;
+    private StateProjectENUM projectState;
     private LocalDateTime initialDate;
     private LocalDateTime finalDate;
     private String outColaboration;
@@ -59,6 +61,14 @@ public class TaskDto {
 
     public void setStatus(TaskStatusENUM status) {
         this.status = status;
+    }
+
+    public StateProjectENUM getProjectState() {
+        return projectState;
+    }
+
+    public void setProjectState(StateProjectENUM projectState) {
+        this.projectState = projectState;
     }
 
     public LocalDateTime getInitialDate() {

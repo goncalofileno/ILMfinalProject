@@ -1836,6 +1836,48 @@ async function getAppStatistics() {
   }
 }
 
+const leaveProject = async (sessionId, systemProjectName, reason) => {
+  try {
+    const response = await fetch(`${baseURL}project/leaveProject?projectSystemName=${systemProjectName}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(reason),
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error leaving project:", error);
+    return { error: "An error occurred while leaving the project." };
+  }
+};
+
+const validateSession = async (sessionId) => {
+  try {
+    const response = await fetch(`${baseURL}user/validateSession`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: `session-id=${sessionId}`,
+      },
+      credentials: "include",
+    });
+
+    if (response.status === 200) {
+      console.log("Session is valid");
+      return true;
+    } else {
+      console.log("Session is invalid");
+      return false;
+    }
+  } catch (error) {
+    console.error("Error validating session:", error);
+    return false;
+  }
+};
+
 export {
   registerUser,
   getInterests,
@@ -1916,5 +1958,7 @@ export {
   getAllResourcesCreatingProject,
   addInitialResources,
   getProjectResources,
+  leaveProject,
+  validateSession,
   getAppStatistics,
 };

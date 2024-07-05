@@ -1,22 +1,25 @@
+const labMappings = {
+  VILA_REAL: "Vila Real",
+};
+
 function formatLab(lab) {
-  if (lab === "VILA_REAL") return "Vila Real";
-  return lab.charAt(0) + lab.slice(1).toLowerCase();
+  return labMappings[lab] || lab.charAt(0) + lab.slice(1).toLowerCase();
 }
+
+const statusMappings = {
+  IN_PROGRESS: "IN PROGRESS",
+};
 
 function formatStatus(status) {
-  if (status === "IN_PROGRESS") {
-    status = "IN PROGRESS";
-    return status;
-  }
-  return status;
+  return statusMappings[status] || status;
 }
 
+const statusDropDownMappings = {
+  IN_PROGRESS: "In Progress",
+};
+
 function formatStatusDropDown(status) {
-  if (status === "IN_PROGRESS") {
-    status = "In Progress";
-    return status;
-  }
-  return status.charAt(0) + status.slice(1).toLowerCase();
+  return statusDropDownMappings[status] || status.charAt(0) + status.slice(1).toLowerCase();
 }
 
 const formatSkill = (skill) => {
@@ -35,44 +38,31 @@ function formatTypeUserInProject(type) {
   return type.charAt(0) + type.slice(1).toLowerCase();
 }
 
+const userInProjectTypeMappings = {
+  CREATOR: "Creator",
+  MANAGER: "Manager",
+  MEMBER: "Member",
+  MEMBER_BY_INVITATION: "Member by Invitation",
+  MEMBER_BY_APPLIANCE: "Member by Application",
+  PENDING_BY_APPLIANCE: "Pending by Application",
+  PENDING_BY_INVITATION: "Pending by Invitation",
+  EXMEMBER: "Ex-Member",
+  ADMIN: "Admin",
+  GUEST: "Guest",
+};
+
 function translateUserInProjectType(type) {
-  switch (type) {
-    case "CREATOR":
-      return "Creator";
-    case "MANAGER":
-      return "Manager";
-    case "MEMBER":
-      return "Member";
-    case "MEMBER_BY_INVITATION":
-      return "Member by Invitation";
-    case "MEMBER_BY_APPLIANCE":
-      return "Member by Application";
-    case "PENDING_BY_APPLIANCE":
-      return "Pending by Application";
-    case "PENDING_BY_INVITATION":
-      return "Pending by Invitation";
-    case "EXMEMBER":
-      return "Ex-Member";
-    case "ADMIN":
-      return "Admin";
-    case "GUEST":
-      return "Guest";
-    default:
-      return type;
-  }
+  return userInProjectTypeMappings[type] || type;
 }
 
+const taskStatusMappings = {
+  PLANNED: "Planned",
+  IN_PROGRESS: "In Progress",
+  DONE: "Done",
+};
+
 function formatTaskStatus(status) {
-  switch (status) {
-    case "PLANNED":
-      return "Planned";
-    case "IN_PROGRESS":
-      return "In Progress";
-    case "DONE":
-      return "Done";
-    default:
-      return status.charAt(0) + status.slice(1).toLowerCase();
-  }
+  return taskStatusMappings[status] || status.charAt(0) + status.slice(1).toLowerCase();
 }
 
 export {

@@ -33,6 +33,9 @@ import ProjectMembersPage from "./pages/ProjectMembersPage";
 import EditProjectPage from "./pages/EditProjectPage";
 import ProjectPlanPage from "./pages/ProjectPlanPage";
 import ProjectProfileResourcesPage from "./pages/ProjectProfileResourcesPage";
+import PrivateRoute from "./utilities/PrivateRoute";
+import PublicRoute from "./utilities/PublicRoute";  // Import the PublicRoute
+import { AuthProvider } from "./utilities/AuthContext"; // Import the AuthProvider
 import StatisticsPdfPage from "./pages/StatisticsPdfPage";
 
 const AppWithWebSocket = () => {
@@ -47,64 +50,92 @@ const AppWithWebSocket = () => {
         <ProjectChatWebSocket projectId={isProjectChat[0].split("/")[2]} />
       )}
       <Routes>
-        <Route index element={<App />} />
+        <Route path="/" element={<PublicRoute component={App} />} />
         <Route path="/register" element={<Register />} />
         <Route path="/create-profile/:token" element={<CreateProfilePage />} />
-        <Route path="/projects" element={<ProjectsPage />} />
+        <Route
+          path="/projects"
+          element={<PrivateRoute component={ProjectsPage} />}
+        />
         <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
-        <Route path="/profile/:systemUsername" element={<ProfilePage />} />
+        <Route
+          path="/profile/:systemUsername"
+          element={<PrivateRoute component={ProfilePage} />}
+        />
         <Route
           path="/profile/:systemUsername/:section"
-          element={<ProfilePage />}
+          element={<PrivateRoute component={ProfilePage} />}
         />
         <Route
           path="/project/:systemProjectName"
-          element={<Navigate to="info" />}
+          element={<PrivateRoute component={() => <Navigate to="info" />} />}
         />
         <Route
           path="/project/:systemProjectName/info"
-          element={<ProjectProfilePageInfo />}
+          element={<PrivateRoute component={ProjectProfilePageInfo} />}
         />
         <Route
           path="/project/:systemProjectName/logs"
-          element={<ProjectLogsPage />}
+          element={<PrivateRoute component={ProjectLogsPage} />}
         />
         <Route
           path="/project/:systemProjectName/chat"
-          element={<ProjectChatPage />}
+          element={<PrivateRoute component={ProjectChatPage} />}
         />
         <Route
           path="/project/:systemProjectName/resources"
-          element={<ProjectProfileResourcesPage />}
+          element={<PrivateRoute component={ProjectProfileResourcesPage} />}
         />
         <Route
           path="/project/:systemProjectName/members"
-          element={<ProjectMembersPage />}
+          element={<PrivateRoute component={ProjectMembersPage} />}
         />
-        <Route path="/editProfile" element={<EditProfilePage />} />
-        <Route path="/mail/inbox" element={<InboxMailPage />} />
-        <Route path="/mail/sent" element={<SentMailPage />} />
-        <Route path="/resources" element={<ResourcesPage />} />
-        <Route path="/myprojects" element={<MyProjectsPage />} />
-        <Route path="/create-project" element={<Navigate to="info" />} />
-        <Route path="/create-project/info" element={<ProjectCreationPage1 />} />
+        <Route
+          path="/editProfile"
+          element={<PrivateRoute component={EditProfilePage} />}
+        />
+        <Route
+          path="/mail/inbox"
+          element={<PrivateRoute component={InboxMailPage} />}
+        />
+        <Route
+          path="/mail/sent"
+          element={<PrivateRoute component={SentMailPage} />}
+        />
+        <Route
+          path="/resources"
+          element={<PrivateRoute component={ResourcesPage} />}
+        />
+        <Route
+          path="/myprojects"
+          element={<PrivateRoute component={MyProjectsPage} />}
+        />
+        <Route
+          path="/create-project"
+          element={<PrivateRoute component={() => <Navigate to="info" />} />}
+        />
+        <Route
+          path="/create-project/info"
+          element={<PrivateRoute component={ProjectCreationPage1} />}
+        />
         <Route
           path="/create-project/:systemProjectName/members"
-          element={<ProjectCreationPage2 />}
+          element={<PrivateRoute component={ProjectCreationPage2} />}
         />
         <Route
           path="/create-project/:systemProjectName/resources"
-          element={<ProjectCreationPage3 />}
+          element={<PrivateRoute component={ProjectCreationPage3} />}
         />
         <Route
           path="/editProject/:systemProjectName"
-          element={<EditProjectPage />}
+          element={<PrivateRoute component={EditProjectPage} />}
         />
         <Route
-          path="/project/:systemProjectName/plan"
-          element={<ProjectPlanPage />}
+          path="/project/:systemProjectName/plan/:taskSystemTitle?"
+          element={<PrivateRoute component={ProjectPlanPage} />}
         />
-        <Route path="statistics" element={<StatisticsPdfPage />} />
+        <Route path="statistics" element={<PrivateRoute component={StatisticsPdfPage} />} 
+        />
       </Routes>
     </>
   );
@@ -115,7 +146,9 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <Router>
-      <AppWithWebSocket />
+      <AuthProvider>
+        <AppWithWebSocket />
+      </AuthProvider>
     </Router>
   </React.StrictMode>
 );

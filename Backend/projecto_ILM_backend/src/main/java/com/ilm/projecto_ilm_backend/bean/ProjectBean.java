@@ -86,9 +86,8 @@ public class ProjectBean {
     ProjectResourceDao projectResourceDao;
 
 
-
-    private static final int NUMBER_OF_MYPROJECTS_PER_PAGE=6;
-    private static final int NUMBER_OF_PROJECTS_PER_PAGE=8;
+    private static final int NUMBER_OF_MYPROJECTS_PER_PAGE = 6;
+    private static final int NUMBER_OF_PROJECTS_PER_PAGE = 8;
     private int numberOfProjectsToCreate = 20;
     private static final int MAX_PROJECT_MEMBERS_DEFAULT = 4;
     private static final int MAX_PROJECT_MEMBERS_MAX = 30;
@@ -121,6 +120,9 @@ public class ProjectBean {
                 project.setSkillInProject(skillEntities);
 
                 projectDao.merge(project);
+
+                createFinalPresentation(userDao.findById(1), project.getSystemName());
+
             }
         }
 
@@ -149,8 +151,42 @@ public class ProjectBean {
             project.setSkillInProject(skillEntities);
 
             projectDao.merge(project);
+
+            createFinalPresentation(userDao.findById(1), project.getSystemName());
         }
     }
+
+    public void createFinalPresentation(UserEntity userResponsable, String projectSystemName) {
+
+        TaskEntity finalPresentation = new TaskEntity();
+        finalPresentation.setTitle("Final Presentation");
+        finalPresentation.setDescription("Final presentation of the project");
+        ProjectEntity project = projectDao.findBySystemName(projectSystemName);
+        finalPresentation.setInitialDate(project.getEndDate().minus(1, ChronoUnit.DAYS));
+        finalPresentation.setFinalDate(project.getEndDate());
+        finalPresentation.setProject(project);
+        finalPresentation.setStatus(TaskStatusENUM.IN_PROGRESS);
+        finalPresentation.setDeleted(false);
+        String finalPresentationSystemName = projectSystemName + "_final_presentation";
+        finalPresentation.setSystemTitle(finalPresentationSystemName);
+        taskDao.persist(finalPresentation);
+
+        createUserTaskEntityPresentator(userResponsable, finalPresentationSystemName);
+
+    }
+
+    public void createUserTaskEntityPresentator(UserEntity userResponsable, String systemTitle) {
+
+        TaskEntity finalPresentation2 = taskDao.findTaskBySystemTitle(systemTitle);
+
+        UserTaskEntity userTaskEntity = new UserTaskEntity();
+        userTaskEntity.setTask(finalPresentation2);
+        userTaskEntity.setUser(userResponsable);
+        userTaskEntity.setType(UserInTaskTypeENUM.CREATOR_INCHARGE);
+        userTaskDao.merge(userTaskEntity);
+    }
+
+
 
     public String projectSystemNameGenerator(String originalName) {
         // Convert to lower case
@@ -300,7 +336,7 @@ public class ProjectBean {
         ProjectTableInfoDto projectTableInfoDto = new ProjectTableInfoDto();
 
         projectTableInfoDto.setTableProjects(projectsTableDtos);
-        projectTableInfoDto.setMaxPageNumber(calculateMaximumPageTableProjects(projectDao.getNumberOfMyProjectsDtoInfo(lab, state, keyword, userId,typeEnum),NUMBER_OF_MYPROJECTS_PER_PAGE));
+        projectTableInfoDto.setMaxPageNumber(calculateMaximumPageTableProjects(projectDao.getNumberOfMyProjectsDtoInfo(lab, state, keyword, userId, typeEnum), NUMBER_OF_MYPROJECTS_PER_PAGE));
 
 
         return projectTableInfoDto;
@@ -820,11 +856,11 @@ public class ProjectBean {
             }
         }
 
-        if(newState == StateProjectENUM.IN_PROGRESS){
+        if (newState == StateProjectENUM.IN_PROGRESS) {
             project.setinProgressDate(LocalDateTime.now());
         }
 
-        if(newState == StateProjectENUM.FINISHED){
+        if (newState == StateProjectENUM.FINISHED) {
             project.setFinishedDate(LocalDateTime.now());
         }
 
@@ -1023,12 +1059,12 @@ public class ProjectBean {
         notificationBean.createTypeChangedNotification(projectSystemName, currentUser.getSystemUsername(), user, newType);
 
 
-
         return "User type changed successfully";
 
     }
 
 
+    @Transactional
     public boolean createProject(ProjectCreationDto projectCreationInfoDto, String sessionId) {
 
         if (projectDao.doesProjectExists(projectCreationInfoDto.getName())) return false;
@@ -1081,6 +1117,8 @@ public class ProjectBean {
         userProjectEntity.setUser(userDao.findById(sessionDao.findUserIdBySessionId(sessionId)));
         userProjectEntity.setType(UserInProjectTypeENUM.CREATOR);
         userProjectDao.persist(userProjectEntity);
+
+        createFinalPresentation(userBean.getUserBySessionId(sessionId), project.getSystemName());
 
         return true;
     }
@@ -1178,10 +1216,10 @@ public class ProjectBean {
 
             projectDao.merge(project);
 
-            List <UserEntity> teamMembers = getProjectMembersByProjectId(project.getId());
+            List<UserEntity> teamMembers = getProjectMembersByProjectId(project.getId());
 
             for (UserEntity member : teamMembers) {
-                if(member.getId() != user.getId()) {
+                if (member.getId() != user.getId()) {
                     notificationBean.createProjectUpdatedNotification(project.getSystemName(), user.getSystemUsername(), member);
                 }
             }
@@ -1195,7 +1233,6 @@ public class ProjectBean {
             return false;
         }
     }
-
 
 
     public boolean uploadProjectPicture(Map<String, String> request, String projectName) {
@@ -1367,24 +1404,24 @@ public class ProjectBean {
     }
 
 
-    public boolean addResourcesToProject(String projectSystemName,RejectedIdsDto resourcesSuppliersIds, String sessionId){
+    public boolean addResourcesToProject(String projectSystemName, RejectedIdsDto resourcesSuppliersIds, String sessionId) {
         ProjectEntity project = projectDao.findBySystemName(projectSystemName);
-        List<ProjectResourceEntity> atualProjectResources=projectResourceDao.findResourcesById(project.getId());
+        List<ProjectResourceEntity> atualProjectResources = projectResourceDao.findResourcesById(project.getId());
 
-        ArrayList<Integer> atualProjectResourcesIds=new ArrayList<>();
+        ArrayList<Integer> atualProjectResourcesIds = new ArrayList<>();
         for (ProjectResourceEntity atualProjectResource : atualProjectResources) {
             atualProjectResourcesIds.add(atualProjectResource.getId());
         }
 
-        for(Integer atualProjectResource:atualProjectResourcesIds){
-            if(!resourcesSuppliersIds.getRejectedIds().contains(atualProjectResource)){
+        for (Integer atualProjectResource : atualProjectResourcesIds) {
+            if (!resourcesSuppliersIds.getRejectedIds().contains(atualProjectResource)) {
                 projectResourceDao.remove(projectResourceDao.findById(atualProjectResource.intValue()));
             }
         }
 
-        if(project==null) return false;
+        if (project == null) return false;
         for (Integer rejectedId : resourcesSuppliersIds.getRejectedIds()) {
-            if(!atualProjectResourcesIds.contains(rejectedId)) {
+            if (!atualProjectResourcesIds.contains(rejectedId)) {
                 ResourceSupplierEntity resourceSupplierEntity = resourceSupplierDao.find(rejectedId.intValue());
                 if (resourceSupplierEntity == null) return false;
                 ProjectResourceEntity projectResourceEntity = new ProjectResourceEntity();
@@ -1398,4 +1435,44 @@ public class ProjectBean {
         return true;
     }
 
-}
+    public String leaveProject(int userId, String projectSystemName, String reason){
+        ProjectEntity project = projectDao.findBySystemName(projectSystemName);
+        UserEntity user = userDao.findById(userId);
+        UserProjectEntity userProject = userProjectDao.findByUserIdAndProjectId(userId, project.getId());
+        if (userProject == null) {
+            throw new IllegalArgumentException("User is not in the project");
+        }
+        if (userProject.getType() == UserInProjectTypeENUM.CREATOR) {
+            throw new IllegalArgumentException("Cannot leave the project if you are the creator");
+        }
+        userProjectDao.remove(userProject);
+
+        List<UserEntity> teamManagers = userProjectDao.findCreatorsAndManagersByProjectId(project.getId());
+        for (UserEntity teamManager : teamManagers) {
+            notificationBean.createLeftProjectNotification(projectSystemName, user.getSystemUsername(), teamManager);
+            String subject = "User " + user.getFullName() + " left project " + project.getName();
+            String text = "<p>Dear " + teamManager.getFullName() + ",</p>" +
+                    "<p>We regret to inform you that user <strong>" + user.getFullName() + "</strong> has left the project <strong><a href=\"http://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong>.</p>" +
+                    "<p>Reason: " + reason + "</p>" +
+                    "<p>We apologize for any inconvenience this may cause.</p>" +
+                    "<p>Best regards,<br>ILM Management Team</p>";
+            MailDto mailDto = new MailDto(
+                    subject,
+                    text,
+                    userDao.getFullNameBySystemUsername(user.getSystemUsername()),
+                    user.getEmail(),
+                    teamManager.getFullName(),
+                    teamManager.getEmail()
+            );
+            mailBean.sendMail(sessionDao.findSessionIdByUserId(user.getId()), mailDto);
+        }
+
+        logBean.createMemberLeftLog(project, user);
+
+        return "User left project successfully";
+
+    }
+
+    }
+
+

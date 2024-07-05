@@ -660,4 +660,26 @@ public class ProjectService {
         }
     }
 
+    @POST
+    @Path("/leaveProject")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response leaveProject(@CookieParam("session-id") String sessionId, @QueryParam("projectSystemName") String projectSystemName, String reason) throws UnknownHostException {
+        String clientIP = InetAddress.getLocalHost().getHostAddress();
+        logger.info("Received a request to leave project from IP address: " + clientIP);
+
+        if (databaseValidator.checkSessionId(sessionId)) {
+            try {
+                int userId = userBean.getUserBySessionId(sessionId).getId();
+                String result = projectBean.leaveProject(userId, projectSystemName, reason);
+                return Response.ok(Collections.singletonMap("message", result)).build();
+            } catch (Exception e) {
+                logger.error("An error occurred while leaving project: " + e.getMessage() + " from IP address: " + clientIP);
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(Collections.singletonMap("message", "An error occurred while leaving project")).build();
+            }
+        } else {
+            return Response.status(Response.Status.UNAUTHORIZED).entity(Collections.singletonMap("message", "Unauthorized access")).build();
+        }
+    }
+
 }

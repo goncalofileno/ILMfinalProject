@@ -313,7 +313,6 @@ public class UserService {
                     NewCookie userTypeCookie = new NewCookie("user-userType", String.valueOf(userEntity.getType()), "/", null, null, NewCookie.DEFAULT_MAX_AGE, false, false);
 
                     Map<String, Object> responseBody = new HashMap<>();
-                    responseBody.put("message", "Login successful");
                     return Response.status(Response.Status.OK)
                             .cookie(sessionCookie)
                             .cookie(systemUsernameCookie)
@@ -626,6 +625,18 @@ public class UserService {
             return Response.status(Response.Status.BAD_REQUEST).entity(Collections.singletonMap("message", e.getMessage())).build();
         }
     }
+
+    @GET
+    @Path("/validateSession")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response validateSession(@CookieParam("session-id") String sessionId) {
+        if (databaseValidator.checkSessionId(sessionId)) {
+            return Response.status(Response.Status.OK).build();
+        } else {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+    }
+
 
 }
 

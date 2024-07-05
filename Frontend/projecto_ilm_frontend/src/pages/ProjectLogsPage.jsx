@@ -23,7 +23,7 @@ import {
 } from "../utilities/services";
 import Cookies from "js-cookie";
 import MemberLogIcon from "../resources/icons/logs/member-log-icon.png";
-import TaskLogIcon from "../resources/icons/logs/member-log-icon.png";
+import TaskLogIcon from "../resources/icons/logs/task-log-icon.png";
 import ProjectLogIcon from "../resources/icons/logs/project-log-icon.png";
 import ResourceLogIcon from "../resources/icons/logs/resource-log-icon.png";
 import "./ProjectLogsPage.css";
@@ -142,106 +142,87 @@ const ProjectLogsPage = () => {
     }
   };
 
-  const renderLogMessage = (log) => {
-    switch (log.type) {
-      case "MEMBER_ADDED":
-        return (
-          <>
-            The member <strong>{log.receiver}</strong> was added to the project
-            by <strong>{log.authorName}</strong>.
-          </>
-        );
-      case "MEMBER_REMOVED":
-        return (
-          <>
-            The member <strong>{log.receiver}</strong> was removed from the
-            project.
-          </>
-        );
-      case "TASKS_CREATED":
-        return (
-          <>
-            The task <strong>{log.taskTitle}</strong> was created in the project
-            plan.
-          </>
-        );
-      case "TASKS_COMPLETED":
-        return (
-          <>
-            The task <strong>{log.taskTitle}</strong> was marked as completed.
-          </>
-        );
-      case "TASKS_IN_PROGRESS":
-        return (
-          <>
-            The task <strong>{log.taskTitle}</strong> was started.
-          </>
-        );
-      case "TASKS_DELETED":
-        return (
-          <>
-            The task <strong>{log.taskTitle}</strong> was removed from the
-            project.
-          </>
-        );
-      case "TASKS_UPDATED":
-        return (
-          <>
-            The data of the task <strong>{log.taskTitle}</strong> was updated.
-          </>
-        );
-      case "PROJECT_INFO_UPDATED":
-        return <>The project data was updated.</>;
-      case "PROJECT_STATUS_UPDATED":
-        return (
-          <>
-            The user <strong>{log.authorName}</strong> project status changed
-            from <strong>{log.projectOldState}</strong> to{" "}
-            <strong>{log.projectNewState}</strong>.
-          </>
-        );
-      case "RESOURCES_UPDATED":
-        return (
-          <>
-            The resources in the project were updated by{" "}
-            <strong>{log.authorName}</strong>.
-          </>
-        );
-      case "MEMBER_TYPE_CHANGED":
-        return (
-          <>
-            The user <strong>{log.receiver}</strong> user type was changed from{" "}
-            <strong>{log.memberOldType}</strong> to{" "}
-            <strong>{log.memberNewType}</strong> by{" "}
-            <strong>{log.authorName}</strong>.
-          </>
-        );
-      default:
-        return "Unknown log type.";
-    }
+  const logMessages = {
+    MEMBER_ADDED: (log) => (
+      <>
+        The member <strong>{log.receiver}</strong> was added to the project by <strong>{log.authorName}</strong>.
+      </>
+    ),
+    MEMBER_REMOVED: (log) => (
+      <>
+        The member <strong>{log.receiver}</strong> was removed from the project.
+      </>
+    ),
+    TASKS_CREATED: (log) => (
+      <>
+        The task <strong>{log.taskTitle}</strong> was created in the project plan.
+      </>
+    ),
+    TASKS_COMPLETED: (log) => (
+      <>
+        The task <strong>{log.taskTitle}</strong> was marked as completed.
+      </>
+    ),
+    TASKS_IN_PROGRESS: (log) => (
+      <>
+        The task <strong>{log.taskTitle}</strong> was started.
+      </>
+    ),
+    TASKS_DELETED: (log) => (
+      <>
+        The task <strong>{log.taskTitle}</strong> was removed from the project.
+      </>
+    ),
+    TASKS_UPDATED: (log) => (
+      <>
+        The data of the task <strong>{log.taskTitle}</strong> was updated.
+      </>
+    ),
+    PROJECT_INFO_UPDATED: () => <>The project data was updated.</>,
+    PROJECT_STATUS_UPDATED: (log) => (
+      <>
+        The user <strong>{log.authorName}</strong> project status changed from <strong>{log.projectOldState}</strong> to <strong>{log.projectNewState}</strong>.
+      </>
+    ),
+    RESOURCES_UPDATED: (log) => (
+      <>
+        The resources in the project were updated by <strong>{log.authorName}</strong>.
+      </>
+    ),
+    MEMBER_TYPE_CHANGED: (log) => (
+      <>
+        The user <strong>{log.receiver}</strong> user type was changed from <strong>{log.memberOldType}</strong> to <strong>{log.memberNewType}</strong> by <strong>{log.authorName}</strong>.
+      </>
+    ),
+    MEMBER_LEFT: (log) => (
+      <>
+        The user <strong>{log.authorName}</strong> left the project.
+      </>
+    ),
+    default: () => "Unknown log type."
   };
 
-  const renderLogIcon = (logType) => {
-    switch (logType) {
-      case "MEMBER_ADDED":
-      case "MEMBER_REMOVED":
-      case "MEMBER_TYPE_CHANGED":
-        return MemberLogIcon;
-      case "TASKS_CREATED":
-      case "TASKS_COMPLETED":
-      case "TASKS_IN_PROGRESS":
-      case "TASKS_DELETED":
-      case "TASKS_UPDATED":
-        return TaskLogIcon;
-      case "PROJECT_INFO_UPDATED":
-      case "PROJECT_STATUS_UPDATED":
-        return ProjectLogIcon;
-      case "RESOURCES_UPDATED":
-        return ResourceLogIcon;
-      default:
-        return null;
-    }
+  const renderLogMessage = (log) => {
+    const messageFunc = logMessages[log.type] || logMessages.default;
+    return messageFunc(log);
   };
+
+  const logIcons = {
+    MEMBER_ADDED: MemberLogIcon,
+    MEMBER_REMOVED: MemberLogIcon,
+    MEMBER_TYPE_CHANGED: MemberLogIcon,
+    MEMBER_LEFT: MemberLogIcon,
+    TASKS_CREATED: TaskLogIcon,
+    TASKS_COMPLETED: TaskLogIcon,
+    TASKS_IN_PROGRESS: TaskLogIcon,
+    TASKS_DELETED: TaskLogIcon,
+    TASKS_UPDATED: TaskLogIcon,
+    PROJECT_INFO_UPDATED: ProjectLogIcon,
+    PROJECT_STATUS_UPDATED: ProjectLogIcon,
+    RESOURCES_UPDATED: ResourceLogIcon,
+  };
+
+  const renderLogIcon = (logType) => logIcons[logType] || null;
 
   const renderNoteText = (note) => {
     const [before, task] = note.text.split("@");
@@ -257,7 +238,7 @@ const ProjectLogsPage = () => {
         {before}
         {taskTitle && (
           <>
-            <Link to={`/project/${systemProjectName}/tasks/${taskTitle}`}>
+            <Link to={`/project/${systemProjectName}/plan/${taskTitle}`}>
               @{taskTitle}
             </Link>
             {after}

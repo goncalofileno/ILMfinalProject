@@ -1,5 +1,6 @@
 package com.ilm.projecto_ilm_backend.bean;
 
+import com.ilm.projecto_ilm_backend.ENUMS.StateProjectENUM;
 import com.ilm.projecto_ilm_backend.ENUMS.TaskStatusENUM;
 import com.ilm.projecto_ilm_backend.ENUMS.UserInProjectTypeENUM;
 import com.ilm.projecto_ilm_backend.ENUMS.UserInTaskTypeENUM;
@@ -59,6 +60,11 @@ public class TaskBean {
     @Inject
     private ProjectBean projectBean;
 
+    @Inject
+    private NotificationBean notificationBean;
+
+    @Inject LogBean logBean;
+
     private int numberOfProjectsToCreate = 20;
 
     @Transactional
@@ -69,8 +75,8 @@ public class TaskBean {
             task1.setTitle("Task 1");
             task1.setSystemTitle(taskSystemNameGenerator(task1.getTitle()));
             task1.setDescription("This task aims to develop the front-end of the system.");
-            task1.setInitialDate(LocalDateTime.now().minus(4, ChronoUnit.YEARS));
-            task1.setFinalDate(LocalDateTime.now().plus(3, ChronoUnit.YEARS));
+            task1.setInitialDate(LocalDateTime.now().minus(3, ChronoUnit.MONTHS));
+            task1.setFinalDate(LocalDateTime.now().plus(3, ChronoUnit.MONTHS));
             task1.setStatus(TaskStatusENUM.PLANNED);
             task1.setProject(projectDao.findById(i));
             task1.setDeleted(false);
@@ -92,8 +98,8 @@ public class TaskBean {
             task2.setTitle("Task 2");
             task2.setSystemTitle(taskSystemNameGenerator(task2.getTitle()));
             task2.setDescription("This task aims to develop the back-end of the system.");
-            task2.setInitialDate(LocalDateTime.now().minus(3, ChronoUnit.YEARS));
-            task2.setFinalDate(LocalDateTime.now().plus(2, ChronoUnit.YEARS));
+            task2.setInitialDate(LocalDateTime.now().plus(3, ChronoUnit.MONTHS));
+            task2.setFinalDate(LocalDateTime.now().plus(6, ChronoUnit.MONTHS));
             task2.setStatus(TaskStatusENUM.IN_PROGRESS);
             task2.setProject(projectDao.findById(i));
             task2.setDeleted(false);
@@ -118,8 +124,8 @@ public class TaskBean {
             task3.setTitle("Task 3");
             task3.setSystemTitle(taskSystemNameGenerator(task3.getTitle()));
             task3.setDescription("This task aims to develop the database of the system.");
-            task3.setInitialDate(LocalDateTime.now().minus(2, ChronoUnit.YEARS));
-            task3.setFinalDate(LocalDateTime.now().plus(1, ChronoUnit.YEARS));
+            task3.setInitialDate(LocalDateTime.now().plus(6, ChronoUnit.MONTHS));
+            task3.setFinalDate(LocalDateTime.now().plus(9, ChronoUnit.MONTHS));
             task3.setStatus(TaskStatusENUM.DONE);
             task3.setProject(projectDao.findById(i));
             task3.setDeleted(false);
@@ -181,6 +187,7 @@ public class TaskBean {
             tasksSuggestions.add(new TaskSuggestionDto(task.getTitle(), task.getSystemTitle()));
         }
 
+
         return tasksSuggestions;
 
     }
@@ -208,7 +215,7 @@ public class TaskBean {
         projectTask.setTitle(project.getName());
         projectTask.setSystemTitle(project.getSystemName());
         projectTask.setDescription(project.getDescription());
-        projectTask.setStatus(TaskStatusENUM.PLANNED);
+        projectTask.setProjectState(project.getStatus());
         projectTask.setInitialDate(project.getStartDate());
         projectTask.setFinalDate(project.getEndDate());
 
@@ -242,12 +249,18 @@ public class TaskBean {
 
         List<ProjectMemberDto> projectMembers = projectBean.getProjectMembers(project.getId());
 
+        int projectProgress = projectBean.getProgress(project.getId());
+
+        StateProjectENUM projectState = project.getStatus();
+
         TasksPageDto tasksPageDto = new TasksPageDto();
         tasksPageDto.setProjectName(projectName);
         tasksPageDto.setProjectTask(projectTask);
         tasksPageDto.setTasks(tasksDto);
         tasksPageDto.setUserSeingTasksType(userSeingTasksType);
         tasksPageDto.setProjectMembers(projectMembers);
+        tasksPageDto.setProjectProgress(projectProgress);
+        tasksPageDto.setProjectState(projectState);
 
         return tasksPageDto;
     }
@@ -284,8 +297,6 @@ public class TaskBean {
             throw new UserNotInProjectException("User not part of project");
         }
 
-        List<TaskEntity> tasks = taskDao.findByProject(project.getId());
-
         TaskEntity task = new TaskEntity();
         task.setTitle(updateTaskDto.getTitle());
         task.setSystemTitle(taskSystemNameGenerator(task.getTitle()));
@@ -296,6 +307,11 @@ public class TaskBean {
         task.setOutColaboration(updateTaskDto.getOutColaboration());
         task.setProject(project);
         task.setDeleted(false);
+
+        List<TaskEntity> dependentTasks = updateTaskDto.getDependentTaskIds().stream()
+                .map(taskId -> taskDao.findById(taskId))
+                .collect(Collectors.toList());
+        task.setDependentTasks(dependentTasks);
 
         taskDao.persist(task);
 
@@ -319,6 +335,10 @@ public class TaskBean {
             }
         }
 
+        if (user.getId() != inCharge.getId()) {
+            notificationBean.createTaskAssignedNotification(updateTaskDto.getTitle(), updateTaskDto.getSystemProjectName(), user.getSystemUsername(), inCharge);
+        }
+
         List<UserEntity> membersOfTask = updateTaskDto.getMemberIds().stream()
                 .map(memberId -> userDao.findById(memberId))
                 .collect(Collectors.toList());
@@ -335,29 +355,52 @@ public class TaskBean {
             }
         }
 
-        List<TaskEntity> dependentTasks = updateTaskDto.getDependentTaskIds().stream()
-                .map(taskId -> taskDao.findById(taskId))
-                .collect(Collectors.toList());
-
-        task.setDependentTasks(dependentTasks);
+        organizeTaskDates(project, task);
 
         taskDao.merge(task);
+
+        logBean.createTasksCreatedLog(project, user, updateTaskDto.getTitle());
     }
 
     @Transactional
     public void updateTask(String sessionId, UpdateTaskDto updateTaskDto) throws ProjectNotFoundException, UserNotFoundException, UserNotInProjectException {
         TaskEntity task = taskDao.findById(updateTaskDto.getId());
+        ProjectEntity project = projectDao.findBySystemName(updateTaskDto.getSystemProjectName());
+        UserEntity user = userBean.getUserBySessionId(sessionId);
         if (task == null) {
             throw new ProjectNotFoundException("Task not found");
         }
 
-        List<TaskEntity> tasks = taskDao.findByProject(task.getProject().getId());
+        if(updateTaskDto.getStatus() == TaskStatusENUM.IN_PROGRESS && task.getStatus() == TaskStatusENUM.PLANNED){
+            logBean.createTasksInProgressLog(project, user, updateTaskDto.getTitle(), task.getStatus(), updateTaskDto.getStatus());
+        } else if (updateTaskDto.getStatus() == TaskStatusENUM.DONE && task.getStatus() == TaskStatusENUM.IN_PROGRESS){
+            logBean.createTasksCompletedLog(project, user, updateTaskDto.getTitle(), task.getStatus(), updateTaskDto.getStatus());
+        } else {
+            logBean.createTasksUpdatedLog(project, user, updateTaskDto.getTitle());
+        }
 
         task.setTitle(updateTaskDto.getTitle());
         task.setDescription(updateTaskDto.getDescription());
         task.setStatus(updateTaskDto.getStatus());
-        task.setInitialDate(updateTaskDto.getInitialDate());
-        task.setFinalDate(updateTaskDto.getFinalDate());
+
+        if(updateTaskDto.getInitialDate().isBefore(project.getStartDate()) && updateTaskDto.getFinalDate().isBefore(project.getStartDate())){
+            task.setInitialDate(project.getStartDate());
+            task.setFinalDate(project.getStartDate().plusDays(task.getDurationDays()));
+        }
+
+        if(updateTaskDto.getInitialDate().isBefore(project.getStartDate())) {
+            task.setInitialDate(project.getStartDate());
+        } else {
+            task.setInitialDate(updateTaskDto.getInitialDate());
+        }
+
+        if(updateTaskDto.getFinalDate().isAfter(project.getEndDate())) {
+            project.setEndDate(updateTaskDto.getFinalDate());
+            task.setFinalDate(updateTaskDto.getFinalDate());
+        } else {
+            task.setFinalDate(updateTaskDto.getFinalDate());
+        }
+
         task.setOutColaboration(updateTaskDto.getOutColaboration());
 
         List<UserEntity> membersOfTask = updateTaskDto.getMemberIds().stream()
@@ -391,13 +434,91 @@ public class TaskBean {
             }
         }
 
+        if(user.getId() != inCharge.getId()) {
+            notificationBean.createTaskAssignedNotification(updateTaskDto.getTitle(), updateTaskDto.getSystemProjectName(), user.getSystemUsername(), inCharge);
+        }
+
         List<TaskEntity> dependentTasks = updateTaskDto.getDependentTaskIds().stream()
                 .map(taskId -> taskDao.findById(taskId))
                 .collect(Collectors.toList());
         task.setDependentTasks(dependentTasks);
 
+        // Organizar as datas
+        organizeTaskDates(task.getProject(), task);
+
         taskDao.merge(task);
     }
+
+    private void organizeTaskDates(ProjectEntity project, TaskEntity task) {
+        LocalDateTime projectStartDate = project.getStartDate();
+        List<TaskEntity> tasks = taskDao.findByProject(project.getId());
+
+        // Ajustar as datas das tarefas dependentes
+        adjustChildTasks(task, projectStartDate, project);
+
+        // Ajustar as datas das tarefas das quais esta tarefa depende
+        adjustParentTasks(task, projectStartDate, project);
+
+        // Atualizar a data final do projeto, se necessário
+        LocalDateTime projectEndDate = tasks.stream()
+                .map(TaskEntity::getFinalDate)
+                .max(LocalDateTime::compareTo)
+                .orElse(projectStartDate);
+
+        project.setFinishedDate(projectEndDate);
+        projectDao.merge(project);
+    }
+
+    private void adjustChildTasks(TaskEntity task, LocalDateTime projectStartDate, ProjectEntity project) {
+        List<TaskEntity> childTasks = taskDao.findByDependentTask(task);
+
+        for (TaskEntity childTask : childTasks) {
+            if (task.getFinalDate().isAfter(childTask.getInitialDate().minusDays(1))) {
+                long duration = java.time.Duration.between(childTask.getInitialDate(), childTask.getFinalDate()).toDays();
+                childTask.setInitialDate(task.getFinalDate().plusDays(1));
+                childTask.setFinalDate(childTask.getInitialDate().plusDays(duration));
+
+                // Verificar se a nova data inicial não é antes da data inicial do projeto
+                if (childTask.getInitialDate().isBefore(projectStartDate)) {
+                    childTask.setInitialDate(projectStartDate);
+                    childTask.setFinalDate(projectStartDate.plusDays(duration));
+                }
+
+                // Verificar se a nova data final ultrapassa a data final do projeto
+                if (childTask.getFinalDate().isAfter(project.getFinishedDate())) {
+                    project.setEndDate(childTask.getFinalDate());
+                }
+
+                taskDao.merge(childTask);
+
+                adjustChildTasks(childTask, projectStartDate, project);
+            }
+        }
+    }
+
+    private void adjustParentTasks(TaskEntity task, LocalDateTime projectStartDate, ProjectEntity project) {
+        List<TaskEntity> parentTasks = task.getDependentTasks();
+
+        for (TaskEntity parentTask : parentTasks) {
+            if (task.getInitialDate().isBefore(parentTask.getFinalDate().plusDays(1))) {
+                long duration = java.time.Duration.between(parentTask.getInitialDate(), parentTask.getFinalDate()).toDays();
+                parentTask.setFinalDate(task.getInitialDate().minusDays(1));
+                parentTask.setInitialDate(parentTask.getFinalDate().minusDays(duration));
+
+                // Verificar se a nova data inicial não é antes da data inicial do projeto
+                if (parentTask.getInitialDate().isBefore(projectStartDate)) {
+                    parentTask.setInitialDate(projectStartDate);
+                    parentTask.setFinalDate(projectStartDate.plusDays(duration));
+                }
+
+                taskDao.merge(parentTask);
+
+                adjustParentTasks(parentTask, projectStartDate, project);
+            }
+        }
+    }
+
+
 
     public void deleteTask(String sessionId, UpdateTaskDto updateTaskDto) throws ProjectNotFoundException, UserNotFoundException, UserNotInProjectException {
         TaskEntity task = taskDao.findById(updateTaskDto.getId());
@@ -421,6 +542,8 @@ public class TaskBean {
         }
 
         task.setDeleted(true);
+
+        logBean.createTasksDeletedLog(project, user, updateTaskDto.getTitle());
 
         List<TaskEntity> tasks = taskDao.findByProject(project.getId());
 

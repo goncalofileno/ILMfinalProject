@@ -1,32 +1,29 @@
 import React, { useEffect, useState } from "react";
-import {
-  Container,
-  Row,
-  Col,
-  Button,
-} from "react-bootstrap";
-import { useParams } from "react-router-dom";
+import { Container, Row, Col, Button, Form } from "react-bootstrap";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { Gantt, ViewMode } from "gantt-task-react";
 import "gantt-task-react/dist/index.css";
 import AppNavbar from "../components/headers/AppNavbar";
 import ProjectTabs from "../components/headers/ProjectTabs";
-import { getTasksPage, updateTask, deleteTask } from "../utilities/services"; // Importe a função deleteTask
+import { getTasksPage, updateTask, deleteTask } from "../utilities/services";
 import Cookies from "js-cookie";
 import EditTaskModal from "../components/modals/EditTaskModal";
 import AddTaskModal from "../components/modals/AddTaskModal";
-import DeleteTaskModal from "../components/modals/DeleteTaskModal"; // Importe o modal de confirmação de eliminação
+import DeleteTaskModal from "../components/modals/DeleteTaskModal";
 import { formatTaskStatus } from "../utilities/converters";
 import "./ProjectPlanPage.css";
+import ProgressBar from "../components/bars/ProgressBar";
+import CustomTooltipContent from "../components/tooltips/CustomTooltipContent"; // Import the custom tooltip
 
 const parseDate = (dateString) => new Date(dateString);
 
-const transformTasksData = (projectTask, tasks) => {
+const transformTasksData = (projectTask, tasks, projectProgress) => {
   const transformedTasks = tasks
-    .filter((task) => task.initialDate && task.finalDate) // Filter tasks with valid dates
+    .filter((task) => task.initialDate && task.finalDate) // Filtra tarefas com datas válidas
     .map((task) => ({
       id: task.systemTitle,
       name: task.title,
-      type: "task",
+      type: task.systemTitle.endsWith("_final_presentation") ? "milestone" : "task", // Define tipo como milestone para a tarefa final
       start: parseDate(task.initialDate),
       end: parseDate(task.finalDate),
       progress: 0,
@@ -47,21 +44,35 @@ const transformTasksData = (projectTask, tasks) => {
     }));
 
   if (projectTask.initialDate && projectTask.finalDate) {
-    transformedTasks.push({
+    transformedTasks.unshift({
       id: projectTask.systemTitle,
       name: projectTask.title,
       type: "project",
       start: parseDate(projectTask.initialDate),
       end: parseDate(projectTask.finalDate),
-      progress: 0,
       dependencies: [],
       styles: {
         backgroundColor: "#3F51B5",
-        progressColor: "#ffbb54",
-        progressSelectedColor: "#ff9e0d",
+        progressColor: "#3F51B5",
+        progressSelectedColor: "#3F51B5",
       },
       rawTask: projectTask,
+      isDisable: true,
+      hideChildren: true,
     });
+  }
+
+  // Adiciona a tarefa final de apresentação como a última
+  const finalPresentationTask = transformedTasks.find((task) =>
+    task.id.endsWith("_final_presentation")
+  );
+  if (finalPresentationTask) {
+    transformedTasks.push(
+      transformedTasks.splice(
+        transformedTasks.indexOf(finalPresentationTask),
+        1
+      )[0]
+    );
   }
 
   return transformedTasks;
@@ -72,35 +83,48 @@ const formatToLocalDateTime = (date) => {
 };
 
 const ProjectPlanPage = () => {
-  const { systemProjectName } = useParams();
+  const { systemProjectName, taskSystemTitle } = useParams();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [tasks, setTasks] = useState([]);
-  const [viewMode, setViewMode] = useState(ViewMode.Year);
+  const [viewMode, setViewMode] = useState(ViewMode.Month);
+  const [listCellWidth, setListCellWidth] = useState("");
   const [error, setError] = useState(null);
   const [projectName, setProjectName] = useState("");
   const [userSeingTasksType, setUserSeingTasksType] = useState("CREATOR");
   const [selectedTask, setSelectedTask] = useState(null);
   const [taskDetails, setTaskDetails] = useState({});
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isAddModalVisible, setIsAddModalVisible] = useState(false); // New state for AddTaskModal
-  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false); // Novo estado para o modal de confirmação de eliminação
+  const [isAddModalVisible, setIsAddModalVisible] = useState(false);
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [isSaveEnabled, setIsSaveEnabled] = useState(false);
   const [projectMembers, setProjectMembers] = useState([]);
   const [taskTitles, setTaskTitles] = useState([]);
   const [titleError, setTitleError] = useState("");
+  const [percentage, setPercentage] = useState(0);
+  const [projectState, setProjectState] = useState("IN_PROGRESS");
 
   const fetchData = async () => {
     const sessionId = Cookies.get("session-id");
     try {
       const data = await getTasksPage(sessionId, systemProjectName);
-      const transformedTasks = transformTasksData(
-        data.projectTask,
-        data.tasks
-      );
+      console.log("Tasks data:", data);
+      const transformedTasks = transformTasksData(data.projectTask, data.tasks, data.projectProgress);
       setProjectName(data.projectName);
       setUserSeingTasksType(data.userSeingTasksType);
       setTasks(transformedTasks);
       setProjectMembers(data.projectMembers);
       setTaskTitles(data.tasks.map((task) => task.title));
+      setPercentage(data.projectProgress);
+      setProjectState(data.projectState);
+
+      // Check if a task modal should be opened based on URL
+      if (taskSystemTitle) {
+        const taskToOpen = transformedTasks.find(task => task.id === taskSystemTitle);
+        if (taskToOpen) {
+          handleTaskClick(taskToOpen);
+        }
+      }
     } catch (error) {
       console.error("Fetch error:", error);
       setError(error.message);
@@ -112,6 +136,10 @@ const ProjectPlanPage = () => {
   }, [systemProjectName]);
 
   const handleTaskClick = (task) => {
+    if (task.type === "project") return; // Prevent modal for project type
+
+    navigate(`/project/${systemProjectName}/plan/${task.id}`, { replace: true });
+
     const inChargeMember = task.rawTask.membersOfTask.find(
       (member) =>
         member.type === "INCHARGE" || member.type === "CREATOR_INCHARGE"
@@ -120,6 +148,11 @@ const ProjectPlanPage = () => {
     setTaskDetails({ ...task.rawTask, inCharge: inChargeMember || "" });
     setIsModalVisible(true);
     setIsSaveEnabled(false);
+  };
+
+  const handleCloseModal = () => {
+    navigate(`/project/${systemProjectName}/plan`, { replace: true });
+    setIsModalVisible(false);
   };
 
   const handleInputChange = (e) => {
@@ -140,12 +173,12 @@ const ProjectPlanPage = () => {
 
   const checkSaveEnabled = (details) => {
     return (
-      details.title &&
-      details.description &&
-      details.status &&
-      details.initialDate &&
-      details.finalDate &&
-      details.inCharge &&
+      details.title ||
+      details.description ||
+      details.status ||
+      details.initialDate ||
+      details.finalDate ||
+      details.inCharge ||
       !titleError
     );
   };
@@ -180,8 +213,9 @@ const ProjectPlanPage = () => {
 
     try {
       await updateTask(updateTaskDto);
-      setIsModalVisible(false);
-      fetchData(); // Re-fetch the data to update the state
+      handleCloseModal();
+      fetchData();
+      setTaskDetails({});
     } catch (error) {
       console.error("Error updating task:", error);
     }
@@ -252,13 +286,21 @@ const ProjectPlanPage = () => {
   };
 
   const handleDateChange = async (task) => {
+    const inChargeUsername = taskDetails.inCharge || task.rawTask.inCharge;
+
+    const inChargeMember = task.rawTask.membersOfTask.find(
+      (member) => member.systemUsername === inChargeUsername
+    );
+
     const updateTaskDto = {
       id: task.rawTask.id,
       title: task.rawTask.title,
       systemTitle: task.rawTask.systemTitle,
       description: task.rawTask.description,
       status: task.rawTask.status,
-      initialDate: formatToLocalDateTime(task.start.toISOString().split("T")[0]),
+      initialDate: formatToLocalDateTime(
+        task.start.toISOString().split("T")[0]
+      ),
       finalDate: formatToLocalDateTime(task.end.toISOString().split("T")[0]),
       outColaboration: task.rawTask.outColaboration || "",
       dependentTaskIds: task.rawTask.dependentTasks
@@ -271,18 +313,16 @@ const ProjectPlanPage = () => {
         (member) =>
           member.type === "CREATOR" || member.type === "CREATOR_INCHARGE"
       )?.id,
-      inChargeId: task.rawTask.membersOfTask.find(
-        (member) =>
-          member.systemName ===
-          (task.rawTask.inCharge || taskDetails.inCharge)
-      )?.id,
+      inChargeId: inChargeMember?.id || null, 
+      systemProjectName: systemProjectName,
     };
 
     console.log("Update Task DTO on Date Change:", updateTaskDto);
 
     try {
       await updateTask(updateTaskDto);
-      fetchData(); // Re-fetch the data to update the state
+      fetchData(); 
+      setTaskDetails({}); 
     } catch (error) {
       console.error("Error updating task on date change:", error);
     }
@@ -325,12 +365,20 @@ const ProjectPlanPage = () => {
     try {
       await deleteTask(deleteTaskDto);
       setIsDeleteModalVisible(false);
-      fetchData(); // Re-fetch the data to update the state
+      fetchData(); 
+      setTaskDetails({}); 
     } catch (error) {
       console.error("Error deleting task:", error);
     }
   };
 
+  const handleViewModeChange = (e) => {
+    setViewMode(e.target.value);
+  };
+
+  const handleListCellWidthChange = () => {
+    setListCellWidth(listCellWidth === "" ? "170px" : "");
+  };
 
   const availableMembers = projectMembers.filter(
     (member) =>
@@ -356,31 +404,83 @@ const ProjectPlanPage = () => {
         <Container style={{ height: "91%" }}>
           <Row>
             <Col>
-              <h1>Project Plan</h1>
-              <h2>{projectName}</h2>
-              <Button onClick={() => setIsAddModalVisible(true)}>
-                Add New Task
-              </Button>
-              {tasks.length > 0 && (
-                <Gantt
-                  tasks={tasks}
-                  viewMode={viewMode}
-                  onDateChange={handleDateChange}
-                  onProgressChange={(task) =>
-                    console.log("Task progress changed:", task)
-                  }
-                  onDoubleClick={handleTaskClick}
-                  onDelete={(task) => console.log("Task deleted:", task)}
-                />
-              )}
+              <Row>
+                <div style={{ width: "500px" }}>
+                  <Button onClick={() => setIsAddModalVisible(true)}>
+                    Add New Task
+                  </Button>
+                </div>
+                <div style={{ width: "500px" }}>
+                  <Form.Group controlId="viewModeSelector">
+                    <Form.Label>View Mode</Form.Label>
+                    <Form.Control
+                      as="select"
+                      value={viewMode}
+                      onChange={handleViewModeChange}
+                    >
+                      <option value={ViewMode.Day}>Day</option>
+                      <option value={ViewMode.Month}>Month</option>
+                      <option value={ViewMode.Year}>Year</option>
+                    </Form.Control>
+                  </Form.Group>
+                </div>
+                <div>
+                  <Form.Group controlId="listCellWidthToggle">
+                    <Form.Check
+                      type="checkbox"
+                      label="Toggle List Cell Width"
+                      onChange={handleListCellWidthChange}
+                    />
+                  </Form.Group>
+                </div>
+              </Row>
+              <Row>
+                {tasks.length > 0 && (
+                  <Gantt
+                    tasks={tasks}
+                    viewMode={viewMode}
+                    onDateChange={handleDateChange}
+                    onProgressChange={(task) =>
+                      console.log("Task progress changed:", task)
+                    }
+                    onDoubleClick={handleTaskClick}
+                    onDelete={(task) => handleDeleteClick(task)}
+                    listCellWidth={listCellWidth}
+                    columnWidth={100}
+                    TooltipContent={CustomTooltipContent} // Use custom tooltip here
+                    
+                  />
+                )}
+              </Row>
             </Col>
+          </Row>
+          <Row>
+            <div style={{ marginTop: "15px" }}>
+              <h5>Project Progress:</h5>
+            </div>
+            <div>
+              <ProgressBar percentage={percentage} status={projectState} />
+            </div>
+          </Row>
+          <Row>
+            <div style={{ marginTop: "15px" }}>
+              <h5>Legend:</h5>
+            </div>
+            <div>
+              <ul>
+                <li><span style={{ backgroundColor: "#8BC34A", padding: "2px 8px", borderRadius: "4px" }}>DONE</span> - Completed tasks</li>
+                <li><span style={{ backgroundColor: "#FFEB3B", padding: "2px 8px", borderRadius: "4px" }}>IN PROGRESS</span> - Tasks in progress</li>
+                <li><span style={{ backgroundColor: "#F44336", padding: "2px 8px", borderRadius: "4px" }}>PLANNED</span> - Planned tasks</li>
+                <li><span style={{ backgroundColor: "#3F51B5", padding: "2px 8px", borderRadius: "4px" }}>PROJECT</span> - Project</li>
+              </ul>
+            </div>
           </Row>
         </Container>
       </div>
 
       <EditTaskModal
         show={isModalVisible}
-        handleClose={() => setIsModalVisible(false)}
+        handleClose={handleCloseModal}
         taskDetails={taskDetails}
         handleInputChange={handleInputChange}
         handleSave={handleSave}

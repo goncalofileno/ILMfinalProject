@@ -31,87 +31,87 @@ export default function NotificationModal({ onClose, modalRef }) {
     });
   };
 
+  const notificationMessages = {
+    APPLIANCE_REJECTED: ({ projectName, userName }) =>
+      `Your application to <strong>${projectName}</strong> was rejected by <strong>${userName}</strong>.`,
+    APPLIANCE_ACCEPTED: ({ projectName, userName }) =>
+      `Your application to <strong>${projectName}</strong> was accepted by <strong>${userName}</strong>.`,
+    APPLIANCE: ({ projectName, userName }) =>
+      `<strong>${userName}</strong> applied to your project <strong>${projectName}</strong>.`,
+    TASK: ({ projectName, userName }) =>
+      `<strong>${userName}</strong> made changes to a task in the project <strong>${projectName}</strong> you are involved in.`,
+    TASK_ASSIGNED: ({ projectName, userName }) =>
+      `<strong>${userName}</strong> assigned you to a task in the project <strong>${projectName}</strong>.`,
+    INVITE_REJECTED: ({ projectName, userName }) =>
+      `<strong>${userName}</strong> rejected your invitation to join the project <strong>${projectName}</strong>.`,
+    INVITE_ACCEPTED: ({ projectName, userName }) =>
+      `<strong>${userName}</strong> accepted your invitation to join the project <strong>${projectName}</strong>.`,
+    INVITE: ({ projectName, userName }) =>
+      `<strong>${userName}</strong> invited you to join the project <strong>${projectName}</strong>.`,
+    PROJECT: ({ projectName, projectStatus }) =>
+      `The project <strong>${projectName}</strong> changed its status to <strong>${projectStatus}</strong>.`,
+    PROJECT_REJECTED: ({ projectName, userName }) =>
+      `The project <strong>${projectName}</strong> was rejected by <strong>${userName}</strong>.`,
+    PROJECT_INSERTED: ({ projectName, userName }) =>
+      `You were added to the project <strong>${projectName}</strong> by <strong>${userName}</strong>.`,
+    REMOVED: ({ projectName, userName }) =>
+      `You were removed from the project <strong>${projectName}</strong> by <strong>${userName}</strong>. Contact them for more information.`,
+    PROJECT_MESSAGE: ({ projectName, userName, messageCount }) =>
+      messageCount && messageCount > 1
+        ? `You have ${messageCount} new messages in the project <strong>${projectName}</strong> chat.`
+        : `You have a new message in the project <strong>${projectName}</strong> chat from <strong>${userName}</strong>.`,
+    USER_TYPE_CHANGED: ({ projectName, userName, newUserType }) =>
+      `Your user type was changed to <strong>${newUserType}</strong> by <strong>${userName}</strong> in the project <strong>${projectName}</strong>.`,
+    PROJECT_UPDATED: ({ projectName, userName }) =>
+      `The project details <strong>${projectName}</strong> was updated by <strong>${userName}</strong>.`,
+    LEFT_PROJECT: ({ projectName, userName }) =>
+      `The user <strong>${userName}</strong> left the project <strong>${projectName}</strong>.`,
+  };
+
   const getNotificationMessage = (notification) => {
-    const {
-      type,
-      projectName,
-      userName,
-      projectStatus,
-      messageCount,
-      newUserType,
-    } = notification;
-    switch (type) {
-      case "APPLIANCE_REJECTED":
-        return `Your application to <strong>${projectName}</strong> was rejected by <strong>${userName}</strong>.`;
-      case "APPLIANCE_ACCEPTED":
-        return `Your application to <strong>${projectName}</strong> was accepted by <strong>${userName}</strong>.`;
-      case "APPLIANCE":
-        return `<strong>${userName}</strong> applied to your project <strong>${projectName}</strong>.`;
-      case "TASK":
-        return `<strong>${userName}</strong> made changes to a task in the project <strong>${projectName}</strong> you are involved in.`;
-      case "INVITE_REJECTED":
-        return `<strong>${userName}</strong> rejected your invitation to join the project <strong>${projectName}</strong>.`;
-      case "INVITE_ACCEPTED":
-        return `<strong>${userName}</strong> accepted your invitation to join the project <strong>${projectName}</strong>.`;
-      case "INVITE":
-        return `<strong>${userName}</strong> invited you to join the project <strong>${projectName}</strong>.`;
-      case "PROJECT":
-        return `The project <strong>${projectName}</strong> changed its status to <strong>${projectStatus}</strong>.`;
-      case "PROJECT_REJECTED":
-        return `The project <strong>${projectName}</strong> was rejected by <strong>${userName}</strong>.`;
-      case "REMOVED":
-        return `You were removed from the project <strong>${projectName}</strong> by <strong>${userName}</strong>. Contact them for more information.`;
-      case "PROJECT_MESSAGE":
-        if (messageCount && messageCount > 1) {
-          return `You have ${messageCount} new messages in the project <strong>${projectName}</strong> chat.`;
-        }
-        return `You have a new message in the project <strong>${projectName}</strong> chat from <strong>${userName}</strong>.`;
-      case "USER_TYPE_CHANGED":
-        return `Your user type was changed to <strong>${newUserType}</strong> by <strong>${userName}</strong> in the project <strong>${projectName}</strong>.`;
-      case "PROJECT_UPDATED":
-        return `The project details <strong>${projectName}</strong> was updated by <strong>${userName}</strong>.`;
-      default:
-        return "You have a new notification.";
-    }
+    const messageFunc = notificationMessages[notification.type];
+    return messageFunc ? messageFunc(notification) : "You have a new notification.";
+  };
+
+  const notificationNavigation = {
+    APPLIANCE_REJECTED: (projectSystemName) => navigate(`/project/${projectSystemName}`),
+    APPLIANCE_ACCEPTED: (projectSystemName) => navigate(`/project/${projectSystemName}`),
+    INVITE: (projectSystemName) => navigate(`/project/${projectSystemName}`),
+    PROJECT: (projectSystemName) => navigate(`/project/${projectSystemName}`),
+    PROJECT_REJECTED: (projectSystemName) => navigate(`/project/${projectSystemName}`),
+    USER_TYPE_CHANGED: (projectSystemName) => navigate(`/project/${projectSystemName}`),
+    PROJECT_UPDATED: (projectSystemName) => navigate(`/project/${projectSystemName}`),
+    PROJECT_INSERTED: (projectSystemName) => navigate(`/project/${projectSystemName}`),
+    APPLIANCE: (projectSystemName) => navigate(`/project/${projectSystemName}/members`),
+    INVITE_ACCEPTED: (projectSystemName) => navigate(`/project/${projectSystemName}/members`),
+    LEFT_PROJECT: (projectSystemName) => navigate(`/project/${projectSystemName}/members`),
+    TASK: (projectSystemName) => navigate(`/project/${projectSystemName}/plan`),
+    TASK_ASSIGNED: (projectSystemName) => navigate(`/project/${projectSystemName}/plan`),
+    INVITE_REJECTED: (systemUserName) => navigate(`/profile/${systemUserName}`),
+    REMOVED: (systemUserName) => navigate(`/profile/${systemUserName}`),
+    PROJECT_MESSAGE: async (projectSystemName, id, notificationIds, sessionId) => {
+      navigate(`/project/${projectSystemName}/chat`);
+      if (notificationIds) {
+        await markNotificationAsClicked(sessionId, notificationIds);
+      } else {
+        await markNotificationAsClicked(sessionId, [id]);
+      }
+    },
   };
 
   const handleNotificationClick = async (notification) => {
-    const { type, projectSystemName, systemUserName, id, notificationIds } =
-      notification;
-    switch (type) {
-      case "APPLIANCE_REJECTED":
-      case "APPLIANCE_ACCEPTED":
-      case "INVITE":
-      case "PROJECT":
-      case "PROJECT_REJECTED":
-      case "USER_TYPE_CHANGED":
-      case "PROJECT_UPDATED":
-        navigate(`/project/${projectSystemName}`);
-        break;
-      case "APPLIANCE":
-      case "INVITE_ACCEPTED":
-        navigate(`/project/${projectSystemName}/members`);
-        break;
-      case "TASK":
-        navigate(`/project/${projectSystemName}/tasks`);
-        break;
-      case "INVITE_REJECTED":
-      case "REMOVED":
-        navigate(`/profile/${systemUserName}`);
-        break;
-      case "PROJECT_MESSAGE":
-        navigate(`/project/${projectSystemName}/chat`);
-        // Marcar notificação como clicada
-        const sessionId = Cookies.get("session-id");
-        // Verifique se a notificação possui um array de IDs agrupados
-        if (notificationIds) {
-          await markNotificationAsClicked(sessionId, notificationIds);
-        } else {
-          await markNotificationAsClicked(sessionId, [id]);
-        }
-        break;
-      default:
-        break;
+    const { type, projectSystemName, systemUserName, id, notificationIds } = notification;
+    const sessionId = Cookies.get("session-id");
+
+    const navigateFunc = notificationNavigation[type];
+    if (navigateFunc) {
+      if (type === "PROJECT_MESSAGE") {
+        await navigateFunc(projectSystemName, id, notificationIds, sessionId);
+      } else if (type === "INVITE_REJECTED" || type === "REMOVED") {
+        navigateFunc(systemUserName);
+      } else {
+        navigateFunc(projectSystemName);
+      }
     }
   };
 

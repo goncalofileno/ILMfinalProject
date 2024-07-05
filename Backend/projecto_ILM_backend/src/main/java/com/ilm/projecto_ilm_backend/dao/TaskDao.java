@@ -57,4 +57,15 @@ public class TaskDao extends AbstractDao<TaskEntity> {
             return null;
         }
     }
+
+    public List<TaskEntity> findByDependentTask(TaskEntity task) {
+        String query = "SELECT t FROM TaskEntity t JOIN t.dependentTasks dt WHERE dt.id = :taskId";
+        try {
+            return em.createQuery(query, TaskEntity.class).setParameter("taskId", task.getId())
+                    .getResultList();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
 }

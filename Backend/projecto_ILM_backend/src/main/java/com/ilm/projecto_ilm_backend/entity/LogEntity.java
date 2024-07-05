@@ -125,57 +125,61 @@ public class LogEntity implements Serializable {
     /**
      * Method to check the constraints before persisting or updating the entity.
      */
-    @PrePersist
-    @PreUpdate
-    private void validateLogEntry() {
-        switch (this.type) {
-            case MEMBER_REMOVED:
-            case MEMBER_ADDED:
-                if (receiver == null || taskTitle != null || taskOldStatus != null || taskNewStatus != null || resourceName != null || resourceStock != 0) {
-                    throw new IllegalStateException("For MEMBERS log type: receiver must not be null and all task/resource fields must be null.");
-                }
-                break;
-            case TASKS_CREATED:
-                if (taskTitle == null || receiver != null || taskOldStatus != null || taskNewStatus != null || resourceName != null || resourceStock != 0) {
-                    throw new IllegalStateException("For TASKS_CREATED log type: taskTitle must not be null and all other fields must be null.");
-                }
-                break;
-            case TASKS_COMPLETED:
-            case TASKS_IN_PROGRESS:
-                if (taskTitle == null || taskOldStatus == null || taskNewStatus == null || receiver != null || resourceName != null || resourceStock != 0) {
-                    throw new IllegalStateException("For TASKS_COMPLETED or TASKS_IN_PROGRESS log types: taskTitle, taskOldStatus, and taskNewStatus must not be null, and all other fields must be null.");
-                }
-                break;
-            case TASKS_DELETED:
-            case TASKS_UPDATED:
-                if (taskTitle == null || receiver != null || taskOldStatus != null || taskNewStatus != null || resourceName != null || resourceStock != 0) {
-                    throw new IllegalStateException("For TASKS_DELETED or TASKS_UPDATED log types: taskTitle must not be null and all other fields must be null.");
-                }
-                break;
-            case PROJECT_INFO_UPDATED:
-                if (receiver != null || taskTitle != null || taskOldStatus != null || taskNewStatus != null || resourceName != null || resourceStock != 0 || projectOldState != null || projectNewState != null) {
-                    throw new IllegalStateException("For PROJECT_INFO_UPDATED log type: all fields must be null.");
-                }
-                break;
-            case PROJECT_STATUS_UPDATED:
-                if (projectOldState == null || projectNewState == null || receiver != null || taskTitle != null || taskOldStatus != null || taskNewStatus != null || resourceName != null || resourceStock != 0) {
-                    throw new IllegalStateException("For PROJECT_STATUS_UPDATED log type: projectOldState and projectNewState must not be null and all other fields must be null.");
-                }
-                break;
-            case RESOURCES_UPDATED:
-                if (receiver != null || taskTitle != null || taskOldStatus != null || taskNewStatus != null || projectOldState != null || projectNewState != null) {
-                    throw new IllegalStateException("For RESOURCES_ADDED log type: resourceName and resourceStock must not be null and all other fields must be null.");
-                }
-                break;
-            case MEMBER_TYPE_CHANGED:
-                if (oldUserType == null || newUserType == null || receiver == null || taskTitle != null || taskOldStatus != null || taskNewStatus != null || resourceName != null || resourceStock != 0 || projectOldState != null || projectNewState != null) {
-                    throw new IllegalStateException("For MEMBER_TYPE_CHANGED log type: oldUserType and newUserType must not be null and all other fields must be null.");
-                }
-                break;
-            default:
-                throw new IllegalStateException("Unknown log type: " + this.type);
-        }
-    }
+//    @PrePersist
+//    @PreUpdate
+//    private void validateLogEntry() {
+//        switch (this.type) {
+//            case MEMBER_REMOVED:
+//            case MEMBER_ADDED:
+//                if (receiver == null || taskTitle != null || taskOldStatus != null || taskNewStatus != null || resourceName != null || resourceStock != 0) {
+//                    throw new IllegalStateException("For MEMBERS log type: receiver must not be null and all task/resource fields must be null.");
+//                }
+//                break;
+//            case TASKS_CREATED:
+//                if (taskTitle == null || receiver != null || taskOldStatus != null || taskNewStatus != null || resourceName != null || resourceStock != 0) {
+//                    throw new IllegalStateException("For TASKS_CREATED log type: taskTitle must not be null and all other fields must be null.");
+//                }
+//                break;
+//            case TASKS_COMPLETED:
+//            case TASKS_IN_PROGRESS:
+//                if (taskTitle == null || taskOldStatus == null || taskNewStatus == null || receiver != null || resourceName != null || resourceStock != 0) {
+//                    throw new IllegalStateException("For TASKS_COMPLETED or TASKS_IN_PROGRESS log types: taskTitle, taskOldStatus, and taskNewStatus must not be null, and all other fields must be null.");
+//                }
+//                break;
+//            case TASKS_DELETED:
+//            case TASKS_UPDATED:
+//                if (taskTitle == null || receiver != null || taskOldStatus != null || taskNewStatus != null || resourceName != null || resourceStock != 0) {
+//                    throw new IllegalStateException("For TASKS_DELETED or TASKS_UPDATED log types: taskTitle must not be null and all other fields must be null.");
+//                }
+//                break;
+//            case PROJECT_INFO_UPDATED:
+//                if (receiver != null || taskTitle != null || taskOldStatus != null || taskNewStatus != null || resourceName != null || resourceStock != 0 || projectOldState != null || projectNewState != null) {
+//                    throw new IllegalStateException("For PROJECT_INFO_UPDATED log type: all fields must be null.");
+//                }
+//                break;
+//            case PROJECT_STATUS_UPDATED:
+//                if (projectOldState == null || projectNewState == null || receiver != null || taskTitle != null || taskOldStatus != null || taskNewStatus != null || resourceName != null || resourceStock != 0) {
+//                    throw new IllegalStateException("For PROJECT_STATUS_UPDATED log type: projectOldState and projectNewState must not be null and all other fields must be null.");
+//                }
+//                break;
+//            case RESOURCES_UPDATED:
+//                if (receiver != null || taskTitle != null || taskOldStatus != null || taskNewStatus != null || projectOldState != null || projectNewState != null) {
+//                    throw new IllegalStateException("For RESOURCES_ADDED log type: resourceName and resourceStock must not be null and all other fields must be null.");
+//                }
+//                break;
+//            case MEMBER_TYPE_CHANGED:
+//                if (oldUserType == null || newUserType == null || receiver == null || taskTitle != null || taskOldStatus != null || taskNewStatus != null || resourceName != null || resourceStock != 0 || projectOldState != null || projectNewState != null) {
+//                    throw new IllegalStateException("For MEMBER_TYPE_CHANGED log type: oldUserType and newUserType must not be null and all other fields must be null.");
+//                }
+//                break;
+//            case MEMBER_LEFT:
+//                if ( receiver != null || taskTitle != null || taskOldStatus != null || taskNewStatus != null || resourceName != null || resourceStock != 0 || projectOldState != null || projectNewState != null || oldUserType != null || newUserType != null) {
+//                    throw new IllegalStateException("For MEMBER_LEFT log type: author and project must not be null and all other fields must be null.");
+//                }
+//            default:
+//                throw new IllegalStateException("Unknown log type: " + this.type);
+//        }
+//    }
 
     /**
      * Returns the unique ID of this log entry.
