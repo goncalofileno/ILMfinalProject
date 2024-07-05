@@ -5,6 +5,7 @@ import jakarta.ejb.Singleton;
 import jakarta.ejb.Startup;
 import jakarta.inject.Inject;
 import jakarta.mail.MessagingException;
+import jakarta.transaction.Transactional;
 
 import java.io.UnsupportedEncodingException;
 
@@ -55,6 +56,7 @@ public class StartupBean {
     MessageBean messageBean;
 
     @PostConstruct
+    @Transactional
     public void init() throws MessagingException, UnsupportedEncodingException {
         labBean.createDefaultLabsIfNotExistent();
         skillBean.createDefaultSkillsIfNotExistent();

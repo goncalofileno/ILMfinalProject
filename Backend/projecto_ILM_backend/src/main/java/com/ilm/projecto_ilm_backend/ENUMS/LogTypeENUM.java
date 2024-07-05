@@ -60,7 +60,9 @@ public enum LogTypeENUM {
      */
     RESOURCES_UPDATED(8),
 
-    MEMBER_TYPE_CHANGED(10);
+    MEMBER_TYPE_CHANGED(10),
+
+    MEMBER_LEFT(11);
 
     private final int intValue;
 

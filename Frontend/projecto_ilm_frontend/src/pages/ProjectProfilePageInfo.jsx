@@ -19,6 +19,7 @@ import {
   markReasonAsRead,
   respondToInvite,
   changeProjectState,
+  leaveProject
 } from "../utilities/services";
 import ProjectTabs from "../components/headers/ProjectTabs";
 import ProjectMembersTable from "../components/tables/ProjectMembersTable";
@@ -43,6 +44,8 @@ const ProjectProfilePageInfo = () => {
   const [showRejectModal, setShowRejectModal] = useState(false);
   const [reason, setReason] = useState("");
   const [showReasonModal, setShowReasonModal] = useState(false);
+  const [showLeaveModal, setShowLeaveModal] = useState(false);
+  const [leaveReason, setLeaveReason] = useState("");
   const sessionId = Cookies.get("session-id");
   const userSystemUsername = Cookies.get("user-systemUsername");
 
@@ -225,6 +228,26 @@ const ProjectProfilePageInfo = () => {
       setError("An error occurred while joining the project.");
     }
   };
+
+  const handleLeaveProject = async () => {
+    try {
+      const result = await leaveProject(sessionId, systemProjectName, leaveReason);
+      if (result.error) {
+        setError(result.error);
+        console.error("Error leaving project:", result.error);
+      } else {
+        setShowLeaveModal(false);
+        setLeaveReason("");
+        const data = await getProjectInfoPage(systemProjectName);
+        setProjectInfo(data);
+      }
+    } catch (error) {
+      console.error("Error leaving project:", error);
+      setError("An error occurred while leaving the project.");
+    }
+  };
+
+  const showLeaveProjectModal = () => setShowLeaveModal(true);
 
   if (error) {
     return <Alert variant="danger">{error}</Alert>;
@@ -552,6 +575,23 @@ const ProjectProfilePageInfo = () => {
                                 Join Project
                               </Button>
                             )}
+                          {[
+                            "MEMBER",
+                            "MEMBER_BY_APPLIANCE",
+                            "MEMBER_BY_INVITATION",
+                            "MANAGER",
+                          ].includes(projectInfo.typeOfUserSeingProject) && (
+                            <Button
+                              variant="danger"
+                              onClick={showLeaveProjectModal}
+                              style={{
+                                backgroundColor: "#dc3545",
+                                borderColor: "#dc3545",
+                              }}
+                            >
+                              Leave Project
+                            </Button>
+                          )}
                         </div>
                         <ProjectMembersTable members={projectInfo.members} />
                       </Card.Body>
@@ -675,6 +715,33 @@ const ProjectProfilePageInfo = () => {
           </Button>
           <Button variant="warning" onClick={handleRejectProject}>
             Confirm Reject
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Leave Project Modal */}
+      <Modal show={showLeaveModal} onHide={() => setShowLeaveModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Reason to leave the Project</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group controlId="leaveReason">
+              <Form.Control
+                as="textarea"
+                rows={5}
+                value={leaveReason}
+                onChange={(e) => setLeaveReason(e.target.value)}
+              />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowLeaveModal(false)}>
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={handleLeaveProject}>
+            Confirm Leave
           </Button>
         </Modal.Footer>
       </Modal>

@@ -6,6 +6,7 @@ import com.ilm.projecto_ilm_backend.dao.UserDao;
 import jakarta.ejb.EJB;
 import jakarta.inject.Inject;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.ws.rs.core.Response;
 
 @ApplicationScoped
 public class DatabaseValidator {

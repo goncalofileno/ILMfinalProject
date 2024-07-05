@@ -1,5 +1,6 @@
 package com.ilm.projecto_ilm_backend.dto.task;
 
+import com.ilm.projecto_ilm_backend.ENUMS.StateProjectENUM;
 import com.ilm.projecto_ilm_backend.ENUMS.UserInProjectTypeENUM;
 import com.ilm.projecto_ilm_backend.dto.project.ProjectMemberDto;
 
@@ -12,6 +13,8 @@ public class TasksPageDto {
     private List<TaskDto> tasks;
     private UserInProjectTypeENUM userSeingTasksType;
     private List<ProjectMemberDto> projectMembers;
+    private int projectProgress;
+    private StateProjectENUM projectState;
 
     public TasksPageDto() {
     }
@@ -54,5 +57,21 @@ public class TasksPageDto {
 
     public void setProjectMembers(List<ProjectMemberDto> projectMembers) {
         this.projectMembers = projectMembers;
+    }
+
+    public int getProjectProgress() {
+        return projectProgress;
+    }
+
+    public void setProjectProgress(int projectProgress) {
+        this.projectProgress = projectProgress;
+    }
+
+    public StateProjectENUM getProjectState() {
+        return projectState;
+    }
+
+    public void setProjectState(StateProjectENUM projectState) {
+        this.projectState = projectState;
     }
 }

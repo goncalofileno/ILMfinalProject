@@ -4,36 +4,35 @@ import { useNavigate } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
 import { useState } from "react";
 import { loginUser } from "../../utilities/services";
+import { useAuth } from "../../utilities/AuthContext";
 
 export default function LoginForm({ setShowAlert, setIsModalActive }) {
   const navigate = useNavigate();
   const isPhone = useMediaQuery({ maxWidth: 576 });
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { setIsAuthenticated } = useAuth();
 
   const handleSubmit = (e) => {
-   e.preventDefault();
-   loginUser(email, password).then((response) => {
-       if (response.status === 200) {
-         
-           if (response.data && response.data.auxiliarToken) { // Verifique se response.data está definido
-               navigate(`/create-profile/${response.data.auxiliarToken}`);
-           } else {
-               navigate("/projects");
-           }
-       } else if (response.status === 401) {
-           setShowAlert(true);
-       } else if (response.status === 404) {
-           setShowAlert(true);
-       } else {
-           setShowAlert(true);
-       }
-   }).catch((error) => {
-       console.error("Error during login process", error);
-       setShowAlert(true);
-   });
-};
+    e.preventDefault();
+    loginUser(email, password).then((response) => {
+      if (response.status === 200) {
+        // Atualizar o estado de autenticação
+        setIsAuthenticated(true);
 
+        if (response.data && response.data.auxiliarToken) {
+          navigate(`/create-profile/${response.data.auxiliarToken}`);
+        } else {
+          navigate("/projects");
+        }
+      } else {
+        setShowAlert(true);
+      }
+    }).catch((error) => {
+      console.error("Error during login process", error);
+      setShowAlert(true);
+    });
+  };
 
   return (
     <div
@@ -84,7 +83,6 @@ export default function LoginForm({ setShowAlert, setIsModalActive }) {
             </div>
             <div>or</div>
             <div className="or-line-register" id="or-right-line">
-              {" "}
               <hr />
             </div>
           </div>

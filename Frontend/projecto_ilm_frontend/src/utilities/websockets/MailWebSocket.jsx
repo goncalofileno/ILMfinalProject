@@ -53,7 +53,7 @@ const MailWebSocket = () => {
         if (event.data.startsWith("new_mail:") && isInboxPage) {
           console.log("Real-time mail received");
           incrementUnreadCount();
-          fetchMailsInInbox(true);  // Ensure fetching mails
+          fetchMailsInInbox(true); // Ensure fetching mails
           const senderName = event.data.split(":")[1];
           if (audioEnabled) {
             audioRef.current.play();
@@ -109,35 +109,31 @@ const MailWebSocket = () => {
     navigate("/"); // Redirect to login page
   };
 
+  const notificationHandlers = {
+    APPLIANCE_REJECTED: (projectSystemName) => navigate(`/project/${projectSystemName}`),
+    APPLIANCE_ACCEPTED: (projectSystemName) => navigate(`/project/${projectSystemName}`),
+    INVITE: (projectSystemName) => navigate(`/project/${projectSystemName}`),
+    PROJECT: (projectSystemName) => navigate(`/project/${projectSystemName}`),
+    PROJECT_REJECTED: (projectSystemName) => navigate(`/project/${projectSystemName}`),
+    USER_TYPE_CHANGED: (projectSystemName) => navigate(`/project/${projectSystemName}`),
+    PROJECT_UPDATED: (projectSystemName) => navigate(`/project/${projectSystemName}`),
+    PROJECT_INSERTED: (projectSystemName) => navigate(`/project/${projectSystemName}`),
+    APPLIANCE: (projectSystemName) => navigate(`/project/${projectSystemName}/members`),
+    INVITE_ACCEPTED: (projectSystemName) => navigate(`/project/${projectSystemName}/members`),
+    LEFT_PROJECT: (projectSystemName) => navigate(`/project/${projectSystemName}/members`),
+    TASK: (projectSystemName) => navigate(`/project/${projectSystemName}/tasks`),
+    TASK_ASSIGNED: (projectSystemName) => navigate(`/project/${projectSystemName}/tasks`),
+    INVITE_REJECTED: (systemUserName) => navigate(`/profile/${systemUserName}`),
+    REMOVED: (systemUserName) => navigate(`/profile/${systemUserName}`),
+    PROJECT_MESSAGE: (projectSystemName) => navigate(`/project/${projectSystemName}/chat`),
+  };
+
   const handleNotificationClick = () => {
     if (notification) {
       const { type, projectSystemName, systemUserName } = notification;
-      switch (type) {
-        case "APPLIANCE_REJECTED":
-        case "APPLIANCE_ACCEPTED":
-        case "INVITE":
-        case "PROJECT":
-        case "PROJECT_REJECTED":
-        case "USER_TYPE_CHANGED":
-        case "PROJECT_UPDATED":
-          navigate(`/project/${projectSystemName}`);
-          break;
-        case "APPLIANCE":
-        case "INVITE_ACCEPTED":
-          navigate(`/project/${projectSystemName}/members`);
-          break;
-        case "TASK":
-          navigate(`/project/${projectSystemName}/tasks`);
-          break;
-        case "INVITE_REJECTED":
-        case "REMOVED":
-          navigate(`/profile/${systemUserName}`);
-          break;
-        case "PROJECT_MESSAGE":
-          navigate(`/project/${projectSystemName}/chat`);
-          break;
-        default:
-          break;
+      const handler = notificationHandlers[type];
+      if (handler) {
+        handler(projectSystemName || systemUserName);
       }
     }
     setNotification(null);

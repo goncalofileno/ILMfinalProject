@@ -1,10 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Button, Form, ListGroup } from "react-bootstrap";
 import { createTask } from "../../utilities/services";
-import { formatTaskStatus } from "../../utilities/converters";
 import Cookies from "js-cookie";
+import './AddTaskModal.css';
 
-const AddTaskModal = ({ show, handleClose, projectMembers, fetchData, tasks, systemProjectName }) => {
+const AddTaskModal = ({
+  show,
+  handleClose,
+  projectMembers,
+  fetchData,
+  tasks,
+  systemProjectName,
+}) => {
   const currentUsername = Cookies.get("user-systemUsername");
 
   const [newTaskDetails, setNewTaskDetails] = useState({
@@ -17,18 +24,20 @@ const AddTaskModal = ({ show, handleClose, projectMembers, fetchData, tasks, sys
     inCharge: currentUsername,
     membersOfTask: [],
     dependentTasks: [],
-    systemProjectName: systemProjectName, // Adicione o nome do projeto aqui
+    systemProjectName: systemProjectName,
   });
   const [isSaveEnabled, setIsSaveEnabled] = useState(false);
   const [titleError, setTitleError] = useState("");
 
   useEffect(() => {
-    const currentUser = projectMembers.find(member => member.systemUsername === currentUsername);
+    const currentUser = projectMembers.find(
+      (member) => member.systemUsername === currentUsername
+    );
     if (currentUser) {
-      setNewTaskDetails(prevDetails => ({
+      setNewTaskDetails((prevDetails) => ({
         ...prevDetails,
         membersOfTask: [{ ...currentUser, type: "CREATOR" }],
-        inCharge: currentUser.systemName
+        inCharge: currentUser.systemUsername,
       }));
     }
   }, [projectMembers, currentUsername]);
@@ -50,6 +59,12 @@ const AddTaskModal = ({ show, handleClose, projectMembers, fetchData, tasks, sys
       }
     }
 
+    if (name === "initialDate") {
+      const finalDate = new Date(value);
+      finalDate.setDate(finalDate.getDate() + 1);
+      updatedTaskDetails.finalDate = finalDate.toISOString().split("T")[0];
+    }
+
     setNewTaskDetails(updatedTaskDetails);
     setIsSaveEnabled(checkSaveEnabled(updatedTaskDetails) && !titleError);
   };
@@ -66,7 +81,7 @@ const AddTaskModal = ({ show, handleClose, projectMembers, fetchData, tasks, sys
 
   const handleSave = async () => {
     const inChargeMember = newTaskDetails.membersOfTask.find(
-      (member) => member.systemName === newTaskDetails.inCharge
+      (member) => member.systemUsername === newTaskDetails.inCharge
     );
 
     const newTaskDto = {
@@ -80,9 +95,10 @@ const AddTaskModal = ({ show, handleClose, projectMembers, fetchData, tasks, sys
       dependentTaskIds: newTaskDetails.dependentTasks.map((task) => task.id),
       memberIds: newTaskDetails.membersOfTask.map((member) => member.id),
       creatorId: newTaskDetails.membersOfTask.find(
-        (member) => member.type === "CREATOR" || member.type === "CREATOR_INCHARGE"
+        (member) =>
+          member.type === "CREATOR" || member.type === "CREATOR_INCHARGE"
       )?.id,
-      inChargeId: inChargeMember?.id, // Correctly set inChargeId
+      inChargeId: inChargeMember ? inChargeMember.id : null,
       systemProjectName: newTaskDetails.systemProjectName,
     };
 
@@ -102,10 +118,20 @@ const AddTaskModal = ({ show, handleClose, projectMembers, fetchData, tasks, sys
       (member) => member.systemUsername === systemUsername
     );
     if (!member) return;
-    setNewTaskDetails((prevDetails) => ({
-      ...prevDetails,
-      membersOfTask: [...prevDetails.membersOfTask, { ...member, type: "" }],
-    }));
+    setNewTaskDetails((prevDetails) => {
+      const newMembersOfTask = [...prevDetails.membersOfTask, { ...member, type: "" }];
+      const newInCharge = newMembersOfTask.find(
+        (taskMember) => taskMember.systemUsername === prevDetails.inCharge
+      )
+        ? prevDetails.inCharge
+        : member.systemUsername;
+
+      return {
+        ...prevDetails,
+        membersOfTask: newMembersOfTask,
+        inCharge: newInCharge,
+      };
+    });
   };
 
   const handleRemoveMember = (memberId) => {
@@ -113,9 +139,16 @@ const AddTaskModal = ({ show, handleClose, projectMembers, fetchData, tasks, sys
       const newMembers = prevDetails.membersOfTask.filter(
         (member) => member.id !== memberId || member.type === "CREATOR"
       );
+      const newInCharge = newMembers.find(
+        (member) => member.systemUsername === prevDetails.inCharge
+      )
+        ? prevDetails.inCharge
+        : newMembers[0]?.systemUsername || "";
+
       return {
         ...prevDetails,
         membersOfTask: newMembers,
+        inCharge: newInCharge,
       };
     });
   };
@@ -145,11 +178,12 @@ const AddTaskModal = ({ show, handleClose, projectMembers, fetchData, tasks, sys
       )
   );
 
+  // Filtra as tarefas disponíveis para excluir a task do tipo projeto e milestone
   const availableTasks = tasks.filter(
     (task) =>
       !newTaskDetails.dependentTasks.some(
         (depTask) => depTask.id === task.rawTask.id
-      )
+      ) && task.type !== "project" && task.type !== "milestone" // Exclui tasks do tipo projeto e milestone
   );
 
   const handleCloseModal = () => {
@@ -161,9 +195,16 @@ const AddTaskModal = ({ show, handleClose, projectMembers, fetchData, tasks, sys
       finalDate: "",
       outColaboration: "",
       inCharge: currentUsername,
-      membersOfTask: [{ ...projectMembers.find(member => member.systemUsername === currentUsername), type: "CREATOR" }],
+      membersOfTask: [
+        {
+          ...projectMembers.find(
+            (member) => member.systemUsername === currentUsername
+          ),
+          type: "CREATOR",
+        },
+      ],
       dependentTasks: [],
-      systemProjectName: newTaskDetails.systemProjectName, // Mantenha o nome do projeto ao fechar
+      systemProjectName: newTaskDetails.systemProjectName,
     });
     setIsSaveEnabled(false);
     setTitleError("");
@@ -171,183 +212,181 @@ const AddTaskModal = ({ show, handleClose, projectMembers, fetchData, tasks, sys
   };
 
   return (
-    <Modal show={show} onHide={handleCloseModal}>
+    <Modal show={show} onHide={handleCloseModal} dialogClassName="custom-modal">
       <Modal.Header closeButton>
         <Modal.Title>Add New Task</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form>
-          <Form.Group controlId="formTaskTitle">
-            <Form.Label>
-              <strong>Title:</strong>
-            </Form.Label>
-            <Form.Control
-              type="text"
-              name="title"
-              value={newTaskDetails.title}
-              onChange={handleInputChange}
-              isInvalid={!!titleError}
-            />
-            <Form.Control.Feedback type="invalid">
-              {titleError}
-            </Form.Control.Feedback>
-          </Form.Group>
-          <Form.Group controlId="formTaskDescription">
-            <Form.Label>
-              <strong>Description:</strong>
-            </Form.Label>
-            <Form.Control
-              as="textarea"
-              name="description"
-              value={newTaskDetails.description}
-              onChange={handleInputChange}
-            />
-          </Form.Group>
-          <Form.Group controlId="formTaskStatus">
-            <Form.Label>
-              <strong>Status:</strong>
-            </Form.Label>
-            <Form.Control
-              as="select"
-              name="status"
-              value={newTaskDetails.status}
-              onChange={handleInputChange}
-            >
-              <option value="PLANNED">{formatTaskStatus("PLANNED")}</option>
-              <option value="IN_PROGRESS">
-                {formatTaskStatus("IN_PROGRESS")}
-              </option>
-              <option value="DONE">{formatTaskStatus("DONE")}</option>
-            </Form.Control>
-          </Form.Group>
-          <Form.Group controlId="formTaskInitialDate">
-            <Form.Label>
-              <strong>Initial Date:</strong>
-            </Form.Label>
-            <Form.Control
-              type="date"
-              name="initialDate"
-              value={newTaskDetails.initialDate}
-              onChange={handleInputChange}
-            />
-          </Form.Group>
-          <Form.Group controlId="formTaskFinalDate">
-            <Form.Label>
-              <strong>Final Date:</strong>
-            </Form.Label>
-            <Form.Control
-              type="date"
-              name="finalDate"
-              value={newTaskDetails.finalDate}
-              onChange={handleInputChange}
-            />
-          </Form.Group>
-          <Form.Group controlId="formTaskOutColaboration">
-            <Form.Label>
-              <strong>Out Colaboration:</strong>
-            </Form.Label>
-            <Form.Control
-              type="text"
-              name="outColaboration"
-              value={newTaskDetails.outColaboration}
-              onChange={handleInputChange}
-            />
-          </Form.Group>
-          <Form.Group controlId="formTaskInCharge">
-            <Form.Label>
-              <strong>In Charge:</strong>
-            </Form.Label>
-            <Form.Control
-              as="select"
-              name="inCharge"
-              value={newTaskDetails.inCharge}
-              onChange={handleInputChange}
-            >
-              {newTaskDetails.membersOfTask.map((member) => (
-                <option key={member.id} value={member.systemName}>
-                  {member.name}
-                </option>
-              ))}
-            </Form.Control>
-          </Form.Group>
-          <Form.Group controlId="formTaskMembers">
-            <Form.Label>
-              <strong>Members:</strong>
-            </Form.Label>
-            <ListGroup>
-              {newTaskDetails.membersOfTask.map((member) => (
-                <ListGroup.Item key={member.id}>
-                  {member.name}{" "}
-                  {(member.type === "CREATOR" ||
-                    member.type === "CREATOR_INCHARGE") &&
-                    "(Creator)"}
-                  {(member.type !== "CREATOR" &&
-                    member.type !== "CREATOR_INCHARGE") && (
-                    <Button
-                      variant="danger"
-                      size="sm"
-                      onClick={() => handleRemoveMember(member.id)}
-                      style={{
-                        fontSize: "0.6rem",
-                        marginLeft: "10px",
-                      }}
-                      disabled={member.type === "CREATOR"} // Disable remove button for creator
-                    >
-                      X
-                    </Button>
-                  )}
-                </ListGroup.Item>
-              ))}
-            </ListGroup>
-            <Form.Control
-              as="select"
-              onChange={(e) => {
-                handleAddMember(e.target.value);
-                e.target.value = ""; // Reset the selector
-              }}
-            >
-              <option value="">Add New Member</option>
-              {availableMembers.map((member) => (
-                <option key={member.id} value={member.systemUsername}>
-                  {member.name}
-                </option>
-              ))}
-            </Form.Control>
-          </Form.Group>
-          <Form.Group controlId="formTaskDependentTasks">
-            <Form.Label>
-              <strong>Dependent Tasks:</strong>
-            </Form.Label>
-            <ListGroup>
-              {newTaskDetails.dependentTasks.map((task) => (
-                <ListGroup.Item key={task.id}>
-                  {task.title}
-                  <Button
-                    variant="danger"
-                    size="sm"
-                    onClick={() => handleRemoveDependentTask(task.id)}
-                    style={{ fontSize: "0.6rem", marginLeft: "10px" }}
-                  >
-                    X
-                  </Button>
-                </ListGroup.Item>
-              ))}
-            </ListGroup>
-            <Form.Control
-              as="select"
-              onChange={(e) => {
-                handleAddDependentTask(e.target.value);
-                e.target.value = ""; // Reset the selector
-              }}
-            >
-              <option value="">Add New Dependent Task</option>
-              {availableTasks.map((task) => (
-                <option key={task.rawTask.id} value={task.rawTask.id}>
-                  {task.name}
-                </option>
-              ))}
-            </Form.Control>
-          </Form.Group>
+          <div className="row">
+            <div className="col-md-6">
+              <Form.Group controlId="formTaskTitle">
+                <Form.Label>
+                  <strong>Title:</strong>
+                </Form.Label>
+                <Form.Control
+                  type="text"
+                  name="title"
+                  value={newTaskDetails.title}
+                  onChange={handleInputChange}
+                  isInvalid={!!titleError}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {titleError}
+                </Form.Control.Feedback>
+              </Form.Group>
+              <Form.Group controlId="formTaskDescription">
+                <Form.Label>
+                  <strong>Description:</strong>
+                </Form.Label>
+                <Form.Control
+                  as="textarea"
+                  name="description"
+                  value={newTaskDetails.description}
+                  onChange={handleInputChange}
+                />
+              </Form.Group>
+              <Form.Group controlId="formTaskInitialDate">
+                <Form.Label>
+                  <strong>Initial Date:</strong>
+                </Form.Label>
+                <Form.Control
+                  type="date"
+                  name="initialDate"
+                  value={newTaskDetails.initialDate}
+                  onChange={handleInputChange}
+                />
+              </Form.Group>
+              <Form.Group controlId="formTaskFinalDate">
+                <Form.Label>
+                  <strong>Final Date:</strong>
+                </Form.Label>
+                <Form.Control
+                  type="date"
+                  name="finalDate"
+                  value={newTaskDetails.finalDate}
+                  onChange={handleInputChange}
+                  min={
+                    newTaskDetails.initialDate
+                      ? new Date(
+                          new Date(newTaskDetails.initialDate).getTime() + 86400000
+                        )
+                          .toISOString()
+                          .split("T")[0]
+                      : ""
+                  }
+                />
+              </Form.Group>
+            </div>
+            <div className="col-md-6">
+              <Form.Group controlId="formTaskOutColaboration">
+                <Form.Label>
+                  <strong>Out Colaboration:</strong>
+                </Form.Label>
+                <Form.Control
+                  type="text"
+                  name="outColaboration"
+                  value={newTaskDetails.outColaboration}
+                  onChange={handleInputChange}
+                />
+              </Form.Group>
+              <Form.Group controlId="formTaskInCharge">
+                <Form.Label>
+                  <strong>In Charge:</strong>
+                </Form.Label>
+                <Form.Control
+                  as="select"
+                  name="inCharge"
+                  value={newTaskDetails.inCharge}
+                  onChange={handleInputChange}
+                >
+                  {newTaskDetails.membersOfTask.map((member) => (
+                    <option key={member.id} value={member.systemUsername}>
+                      {member.name}
+                    </option>
+                  ))}
+                </Form.Control>
+              </Form.Group>
+              <Form.Group controlId="formTaskMembers">
+                <Form.Label>
+                  <strong>Members:</strong>
+                </Form.Label>
+                <ListGroup>
+                  {newTaskDetails.membersOfTask.map((member) => (
+                    <ListGroup.Item key={member.id}>
+                      {member.name}{" "}
+                      {(member.type === "CREATOR" ||
+                        member.type === "CREATOR_INCHARGE") &&
+                        "(Creator)"}
+                      {member.type !== "CREATOR" &&
+                        member.type !== "CREATOR_INCHARGE" && (
+                        <Button
+                          variant="danger"
+                          size="sm"
+                          onClick={() => handleRemoveMember(member.id)}
+                          style={{
+                            fontSize: "0.6rem",
+                            marginLeft: "10px",
+                          }}
+                          disabled={member.type === "CREATOR"} // Disable remove button for creator
+                        >
+                          X
+                        </Button>
+                      )}
+                    </ListGroup.Item>
+                  ))}
+                </ListGroup>
+                <Form.Control
+                  as="select"
+                  onChange={(e) => {
+                    handleAddMember(e.target.value);
+                    e.target.value = ""; // Reset the selector
+                  }}
+                >
+                  <option value="">Add New Member</option>
+                  {availableMembers.map((member) => (
+                    <option key={member.id} value={member.systemUsername}>
+                      {member.name}
+                    </option>
+                  ))}
+                </Form.Control>
+              </Form.Group>
+              <Form.Group controlId="formTaskDependentTasks">
+                <Form.Label>
+                  <strong>Dependent Tasks:</strong>
+                </Form.Label>
+                <ListGroup>
+                  {newTaskDetails.dependentTasks.map((task) => (
+                    <ListGroup.Item key={task.id}>
+                      {task.title}
+                      <Button
+                        variant="danger"
+                        size="sm"
+                        onClick={() => handleRemoveDependentTask(task.id)}
+                        style={{ fontSize: "0.6rem", marginLeft: "10px" }}
+                      >
+                        X
+                      </Button>
+                    </ListGroup.Item>
+                  ))}
+                </ListGroup>
+                <Form.Control
+                  as="select"
+                  onChange={(e) => {
+                    handleAddDependentTask(e.target.value);
+                    e.target.value = ""; // Reset the selector
+                  }}
+                >
+                  <option value="">Add New Dependent Task</option>
+                  {availableTasks.map((task) => (
+                    <option key={task.rawTask.id} value={task.rawTask.id}>
+                      {task.name}
+                    </option>
+                  ))}
+                </Form.Control>
+              </Form.Group>
+            </div>
+          </div>
         </Form>
       </Modal.Body>
       <Modal.Footer>
