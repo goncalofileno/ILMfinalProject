@@ -50,12 +50,11 @@ const transformTasksData = (projectTask, tasks, projectProgress) => {
       type: "project",
       start: parseDate(projectTask.initialDate),
       end: parseDate(projectTask.finalDate),
-      progress: projectProgress,
       dependencies: [],
       styles: {
         backgroundColor: "#3F51B5",
-        progressColor: "#ffbb54",
-        progressSelectedColor: "#ff9e0d",
+        progressColor: "#3F51B5",
+        progressSelectedColor: "#3F51B5",
       },
       rawTask: projectTask,
       isDisable: true,
@@ -445,10 +444,11 @@ const ProjectPlanPage = () => {
                       console.log("Task progress changed:", task)
                     }
                     onDoubleClick={handleTaskClick}
-                    onDelete={(task) => console.log("Task deleted:", task)}
+                    onDelete={(task) => handleDeleteClick(task)}
                     listCellWidth={listCellWidth}
                     columnWidth={100}
                     TooltipContent={CustomTooltipContent} // Use custom tooltip here
+                    
                   />
                 )}
               </Row>

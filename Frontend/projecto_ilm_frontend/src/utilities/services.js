@@ -1838,6 +1838,29 @@ const leaveProject = async (sessionId, systemProjectName, reason) => {
   }
 };
 
+const validateSession = async (sessionId) => {
+  try {
+    const response = await fetch(`${baseURL}user/validateSession`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: `session-id=${sessionId}`,
+      },
+      credentials: "include",
+    });
+
+    if (response.status === 200) {
+      console.log("Session is valid");
+      return true;
+    } else {
+      console.log("Session is invalid");
+      return false;
+    }
+  } catch (error) {
+    console.error("Error validating session:", error);
+    return false;
+  }
+};
 
 export {
   registerUser,
@@ -1920,4 +1943,5 @@ export {
   addInitialResources,
   getProjectResources,
   leaveProject,
+  validateSession,
 };
