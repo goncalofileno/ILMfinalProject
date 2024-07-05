@@ -1,0 +1,163 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2024-07-05 17:39+0100\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: pt\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/components/inputs/PasswordForm.jsx:33
+msgid "At least one lowercase letter"
+msgstr "Pelo menos um caracter minusculo"
+
+#: src/components/inputs/PasswordForm.jsx:34
+msgid "At least one number"
+msgstr "Pelo menos um digito"
+
+#: src/components/inputs/PasswordForm.jsx:36
+msgid "At least one special character (!@#$%^&*)"
+msgstr "Pelo menos um caracter especial (!@#$%^&*)"
+
+#: src/components/inputs/PasswordForm.jsx:32
+msgid "At least one uppercase letter"
+msgstr "Pelo menos um caracter maiusculo"
+
+#: src/components/forms/RegisterForm.jsx:208
+msgid "Confirm Password"
+msgstr "Confirme a Password"
+
+#: src/components/forms/RegisterForm.jsx:68
+msgid "Email is valid"
+msgstr "Email é válido"
+
+#: src/components/modals/ForgetPassModal.jsx:52
+msgid "Enter your email"
+msgstr "Insira o seu email"
+
+#: src/components/forms/RegisterForm.jsx:200
+msgid "Fair"
+msgstr "Média"
+
+#: src/components/modals/ForgetPassModal.jsx:49
+msgid "Forget Password"
+msgstr "Esqueceu a Password"
+
+#: src/components/forms/LoginForm.jsx:81
+msgid "Forgot your password"
+msgstr "Esqueceu-se da password?"
+
+#: src/components/forms/RegisterForm.jsx:201
+msgid "Good"
+msgstr "Boa"
+
+#: src/components/forms/RegisterForm.jsx:56
+#: src/pages/App.jsx:213
+msgid "Invalid data. Please try again."
+msgstr "Dados inválidos. Tente novamente."
+
+#: src/components/cards/LoginProjectsCards.jsx:16
+msgid "Login to see more details"
+msgstr "Faça login para mais detalhes"
+
+#: src/components/inputs/PasswordForm.jsx:38
+msgid "Minimum 8 characters"
+msgstr "8 caracters no mínimo"
+
+#: src/components/forms/RegisterForm.jsx:198
+msgid "None"
+msgstr "Nada"
+
+#: src/components/forms/RegisterForm.jsx:79
+msgid "Password is strong"
+msgstr "A Password é forte"
+
+#: src/components/forms/RegisterForm.jsx:82
+msgid "Password must be strong"
+msgstr "A Password deve ser forte"
+
+#: src/components/inputs/PasswordForm.jsx:30
+msgid "Password must contain:"
+msgstr "A Password deve conter:"
+
+#: src/components/forms/RegisterForm.jsx:176
+msgid "Password Strength"
+msgstr "Força da Password"
+
+#: src/components/forms/RegisterForm.jsx:92
+msgid "Passwords do not match"
+msgstr "As Passwords não coincidem"
+
+#: src/components/forms/RegisterForm.jsx:89
+msgid "Passwords match"
+msgstr "As Passwords coincidem"
+
+#: src/pages/App.jsx:245
+#: src/pages/Register.jsx:243
+msgid "Projects"
+msgstr "Projetos"
+
+#: src/components/forms/LoginForm.jsx:73
+#: src/components/forms/RegisterForm.jsx:147
+msgid "Register"
+msgstr "Registo"
+
+#: src/components/forms/RegisterForm.jsx:45
+msgid "Registered successfully. Please Verify your email."
+msgstr "Registado com sucesso. Por favor verifique o seu email."
+
+#: src/pages/App.jsx:263
+#: src/pages/Register.jsx:261
+msgid "Search for title or description"
+msgstr "Procure por titulo ou descrição"
+
+#: src/pages/App.jsx:228
+#: src/pages/Register.jsx:226
+msgid "Some of our projects"
+msgstr "Alguns dos nossos projetos"
+
+#: src/pages/App.jsx:184
+#: src/pages/Register.jsx:181
+msgid "Some of our Projects"
+msgstr "Alguns dos nossos Projetos"
+
+#: src/components/forms/RegisterForm.jsx:202
+msgid "Strong"
+msgstr "Forte"
+
+#: src/components/modals/ForgetPassModal.jsx:64
+msgid "Submit"
+msgstr "Submeter"
+
+#: src/pages/App.jsx:158
+#: src/pages/Register.jsx:156
+msgid "Take Flight"
+msgstr "Levantam Voo"
+
+#: src/components/forms/RegisterForm.jsx:71
+msgid "This email is invalid"
+msgstr "Este mail é inválido"
+
+#: src/components/forms/RegisterForm.jsx:203
+msgid "Very Strong"
+msgstr "Muito Forte"
+
+#: src/components/forms/RegisterForm.jsx:199
+msgid "Weak"
+msgstr "Fraca"
+
+#: src/pages/App.jsx:168
+#: src/pages/Register.jsx:166
+msgid "Welcome to our Innovation Lab Management app, where creativity meets collaboration and ideas turn into reality. With our app, you can manage and track your projects seamlessly, from brainstorming to implementation, ensuring every idea has the potential to flourish. Join us in driving progress and inspiring change, one innovative project at a time."
+msgstr "Bem-vindo à nossa aplicação de Gestão do Laboratório de Inovação, onde a criatividade encontra a colaboração e as ideias se tornam realidade. Com a nossa aplicação, pode gerir e acompanhar os seus projetos de forma eficiente, desde a conceção até à implementação, garantindo que cada ideia tem o potencial de florescer. Junte-se a nós na promoção do progresso e na inspiração de mudanças, um projeto inovador de cada vez."
+
+#: src/pages/App.jsx:146
+#: src/pages/Register.jsx:144
+msgid "Where Ideas"
+msgstr "Onde as Ideias"

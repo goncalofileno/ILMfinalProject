@@ -34,9 +34,10 @@ import EditProjectPage from "./pages/EditProjectPage";
 import ProjectPlanPage from "./pages/ProjectPlanPage";
 import ProjectProfileResourcesPage from "./pages/ProjectProfileResourcesPage";
 import PrivateRoute from "./utilities/PrivateRoute";
-import PublicRoute from "./utilities/PublicRoute";  // Import the PublicRoute
-import { AuthProvider } from "./utilities/AuthContext"; // Import the AuthProvider
+import PublicRoute from "./utilities/PublicRoute";
+import { AuthProvider } from "./utilities/AuthContext";
 import StatisticsPdfPage from "./pages/StatisticsPdfPage";
+import I18nLoader from "./I18nLoader";
 
 const AppWithWebSocket = () => {
   const location = useLocation();
@@ -147,7 +148,9 @@ root.render(
   <React.StrictMode>
     <Router>
       <AuthProvider>
-        <AppWithWebSocket />
+        <I18nLoader>
+          <AppWithWebSocket />
+        </I18nLoader>
       </AuthProvider>
     </Router>
   </React.StrictMode>
