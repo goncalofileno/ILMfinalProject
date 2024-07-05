@@ -1,5 +1,6 @@
 package com.ilm.projecto_ilm_backend.service;
 
+import com.ilm.projecto_ilm_backend.ENUMS.LanguageENUM;
 import com.ilm.projecto_ilm_backend.bean.UserBean;
 import com.ilm.projecto_ilm_backend.dao.SessionDao;
 import com.ilm.projecto_ilm_backend.dao.UserDao;
@@ -311,12 +312,14 @@ public class UserService {
                     NewCookie sessionCookie = new NewCookie("session-id", sessionId, "/", null, null, NewCookie.DEFAULT_MAX_AGE, false, false);
                     NewCookie systemUsernameCookie = new NewCookie("user-systemUsername", userEntity.getSystemUsername(), "/", null, null, NewCookie.DEFAULT_MAX_AGE, false, false);
                     NewCookie userTypeCookie = new NewCookie("user-userType", String.valueOf(userEntity.getType()), "/", null, null, NewCookie.DEFAULT_MAX_AGE, false, false);
+                    NewCookie languageCookie = new NewCookie("user-language", String.valueOf(userEntity.getLanguage()), "/", null, null, NewCookie.DEFAULT_MAX_AGE, false, false);
 
                     Map<String, Object> responseBody = new HashMap<>();
                     return Response.status(Response.Status.OK)
                             .cookie(sessionCookie)
                             .cookie(systemUsernameCookie)
                             .cookie(userTypeCookie)
+                            .cookie(languageCookie)
                             .entity(responseBody)
                             .build();
                 } else {
@@ -634,6 +637,29 @@ public class UserService {
             return Response.status(Response.Status.OK).build();
         } else {
             return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+    }
+
+    //Service that updates the user's to other language
+    @PATCH
+    @Path("/updateLanguage")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateLanguage(@CookieParam("session-id") String sessionId, @QueryParam("language") LanguageENUM language) {
+        try {
+            if (databaseValidator.checkSessionId(sessionId)) {
+                if (userBean.updateLanguage(sessionId, language)) {
+                    NewCookie languageCookie = new NewCookie("user-language", String.valueOf(language), "/", null, null, NewCookie.DEFAULT_MAX_AGE, false, false);
+                    return Response.status(Response.Status.OK).cookie(languageCookie).build();
+                } else {
+                    return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+                }
+            } else {
+                return Response.status(Response.Status.UNAUTHORIZED).build();
+            }
+        } catch (
+                Exception e) {
+            logger.error("Error updating language: " + e.getMessage());
+            return Response.status(Response.Status.BAD_REQUEST).entity(Collections.singletonMap("message", e.getMessage())).build();
         }
     }
 

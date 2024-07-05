@@ -4,7 +4,6 @@ import TablePagination from "../paginations/TablePagination";
 import { InputGroup, Form, Button } from "react-bootstrap";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
-import PieGraphic from "../charts/PieGraphic";
 import { useCurrentPng } from "recharts-to-png";
 import { useMediaQuery } from "react-responsive";
 

@@ -1,5 +1,6 @@
 package com.ilm.projecto_ilm_backend.entity;
 
+import com.ilm.projecto_ilm_backend.ENUMS.LanguageENUM;
 import com.ilm.projecto_ilm_backend.ENUMS.UserTypeENUM;
 import com.ilm.projecto_ilm_backend.ENUMS.ConvertersENUM.UserTypeEnumConverter;
 import jakarta.persistence.*;
@@ -185,8 +186,8 @@ public class UserEntity implements Serializable {
     @Column(name = "tutorial", nullable = false, unique = false, updatable = true)
     private boolean tutorial;
 
-
-
+    @Column(name = "language", nullable = false, unique = false, updatable = true)
+    private LanguageENUM language;
 
     /**
      * The interests of the user. This is a many-to-many relationship.
@@ -600,6 +601,14 @@ public class UserEntity implements Serializable {
      */
     public void setTutorial(boolean tutorial) {
         this.tutorial = tutorial;
+    }
+
+    public LanguageENUM getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(LanguageENUM language) {
+        this.language = language;
     }
 
     /**

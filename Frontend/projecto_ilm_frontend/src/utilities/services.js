@@ -1878,6 +1878,37 @@ const validateSession = async (sessionId) => {
   }
 };
 
+const updateLanguage = async (sessionId, language) => {
+  try {
+    const response = await fetch(`${baseURL}user/updateLanguage?language=${language}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        "Cookie": `session-id=${sessionId}`,
+      },
+      credentials: "include",
+    });
+
+    if (response.status === 200) {
+      console.log("Language updated successfully");
+      return { success: true };
+    } else if (response.status === 400) {
+      const data = await response.json();
+      console.error("Error updating language:", data.message);
+      return { error: data.message };
+    } else if (response.status === 401) {
+      console.error("Unauthorized: Invalid session");
+      return { error: "Unauthorized: Invalid session" };
+    } else {
+      console.error("Error updating language: Unknown error");
+      return { error: "Unknown error occurred" };
+    }
+  } catch (error) {
+    console.error("Error updating language:", error);
+    return { error: "An error occurred while updating the language." };
+  }
+};
+
 export {
   registerUser,
   getInterests,
@@ -1961,4 +1992,5 @@ export {
   leaveProject,
   validateSession,
   getAppStatistics,
+  updateLanguage,
 };

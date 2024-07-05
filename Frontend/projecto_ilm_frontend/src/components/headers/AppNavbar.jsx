@@ -4,12 +4,13 @@ import {
   getUserProfileImage,
   logoutUser,
   getUnreadNumber,
+  updateLanguage,
 } from "../../utilities/services";
-import Cookies from "js-cookie"; // Importando a biblioteca de cookies
+import Cookies from "js-cookie"; 
 import { useMediaQuery } from "react-responsive";
-import useMailStore from "../../stores/useMailStore"; // Importando a store zustand
-import useNotificationStore from "../../stores/useNotificationStore"; // Importando a nova store
-import NotificationModal from "../modals/NotificationModal"; // Importando o novo componente
+import useMailStore from "../../stores/useMailStore"; 
+import useNotificationStore from "../../stores/useNotificationStore";
+import NotificationModal from "../modals/NotificationModal"; 
 import "./AppNavbar.css";
 import projectsIcon from "../../resources/icons/navbar/projects-icon.png";
 import resourceIcon from "../../resources/icons/navbar/resource-icon.png";
@@ -22,11 +23,12 @@ export default function AppNavbar({ setIsAsideVisible }) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [userImage, setUserImage] = useState(userProfileIcon);
+  const [selectedLanguage, setSelectedLanguage] = useState("en"); // Default language
   const dropdownRef = useRef(null);
   const modalRef = useRef(null);
   const bellIconRef = useRef(null);
   const navigate = useNavigate();
-  const location = useLocation(); // Obter a localização atual
+  const location = useLocation();
   const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
   const { unreadCount, setUnreadCount } = useMailStore();
   const {
@@ -44,7 +46,7 @@ export default function AppNavbar({ setIsAsideVisible }) {
   const handleLogout = async () => {
     const response = await logoutUser();
     if (response.ok) {
-      navigate("/"); // Redireciona para a página de login
+      navigate("/"); 
     } else {
       console.error("Failed to logout");
     }
@@ -59,7 +61,25 @@ export default function AppNavbar({ setIsAsideVisible }) {
     }
   };
 
+  const handleLanguageChange = async (event) => {
+    const newLanguage = event.target.value;
+    setSelectedLanguage(newLanguage);
+    const sessionId = Cookies.get("session-id");
+    if (sessionId) {
+      const response = await updateLanguage(sessionId, newLanguage);
+      if (response.success) {
+        Cookies.set("user-language", newLanguage);
+        console.log("Language updated successfully");
+      } else {
+        console.error("Failed to update language:", response.error);
+      }
+    }
+  };
+
   useEffect(() => {
+    const userLanguage = Cookies.get("user-language") || "en";
+    setSelectedLanguage(userLanguage);
+
     async function fetchUserImage() {
       const imageUrl = await getUserProfileImage();
       if (imageUrl) {
@@ -163,7 +183,7 @@ export default function AppNavbar({ setIsAsideVisible }) {
                 className="hamb-btn"
                 onClick={() => setIsAsideVisible((prev) => !prev)}
               >
-                <i class="fas fa-bars fa-2x"></i>
+                <i className="fas fa-bars fa-2x"></i>
               </button>
             </div>
           </div>
@@ -208,15 +228,16 @@ export default function AppNavbar({ setIsAsideVisible }) {
           </div>
         </div>
         <div className="nav-right">
-          <select className="language-dropdown">
-            <option className="option-flag" value="en">
-              🇺🇸
+          <select
+            className="language-dropdown"
+            value={selectedLanguage}
+            onChange={handleLanguageChange}
+          >
+            <option className="option-flag" value="ENGLISH">
+              🇬🇧
             </option>
-            <option className="option-flag" value="pt">
+            <option className="option-flag" value="PORTUGUESE">
               🇵🇹
-            </option>
-            <option className="option-flag" value="es">
-              🇪🇸
             </option>
           </select>
           <div
