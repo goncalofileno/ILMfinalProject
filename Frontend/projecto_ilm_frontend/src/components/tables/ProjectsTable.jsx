@@ -6,6 +6,7 @@ import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import PieGraphic from "../charts/PieGraphic";
 import { useCurrentPng } from "recharts-to-png";
+import { useMediaQuery } from "react-responsive";
 
 export default function ProjectsTable({
   projects,
@@ -31,6 +32,7 @@ export default function ProjectsTable({
 }) {
   const NUMBER_OF_PROJECTS_PAGE = 8;
   const userType = Cookies.get("user-userType");
+  const isTablet = useMediaQuery({ query: "(max-width: 975px)" });
   const navigate = useNavigate();
   const defaultPhoto =
     "https://cdn.pixabay.com/photo/2016/03/29/08/48/project-1287781_1280.jpg";
@@ -60,31 +62,7 @@ export default function ProjectsTable({
     setCurrentPage(1);
     setKeywordButton(!keywordButton);
   };
-  const tasksPieData = [
-    { name: "POR FAZER", value: 400 },
-    { name: "EM PROGRESSO", value: 300 },
-    { name: "FEITO", value: 300 },
-  ];
 
-  const tasksPieColors = ["#8884d8", "#82ca9d", "#ffc658"];
-
-  const { generateImage } = useCurrentPng();
-
-  const saveChartAsPng = async () => {
-    try {
-      const png = await generateImage(
-        <PieGraphic data={tasksPieData} colors={tasksPieColors} />
-      );
-      const a = document.createElement("a");
-      a.href = png;
-      a.download = "chart.png";
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    } catch (error) {
-      console.error("Error saving chart as PNG:", error);
-    }
-  };
   return (
     <>
       <div className="search-table-div">
@@ -165,7 +143,7 @@ export default function ProjectsTable({
                 endDateAsc === false && <i class="fas fa-arrow-down fa-xs"></i>
               )}
             </th>
-            <th style={{ width: "15%" }}>Members</th>
+            {!isTablet && <th style={{ width: "15%" }}>Members</th>}
           </tr>
         </thead>
 
@@ -221,9 +199,11 @@ export default function ProjectsTable({
                     <td>{formatLab(project.lab)}</td>
                     <td>{project.startDate}</td>
                     <td>{project.finalDate}</td>
-                    <td>
-                      {project.numberOfMembers} / {project.maxMembers}{" "}
-                    </td>
+                    {!isTablet && (
+                      <td>
+                        {project.numberOfMembers} / {project.maxMembers}{" "}
+                      </td>
+                    )}
                   </tr>
                 )
               )
@@ -238,7 +218,7 @@ export default function ProjectsTable({
                   <td className="row-no-content"></td>
                   <td className="row-no-content"></td>
                   <td className="row-no-content"></td>
-                  <td className="row-no-content"></td>
+                  {!isTablet && <td className="row-no-content"></td>}
                 </tr>
               ))}
           </tbody>
