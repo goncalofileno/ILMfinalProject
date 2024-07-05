@@ -5,11 +5,14 @@ import AsideProjectsTable from "../components/asides/AsideProjectsTable";
 import { getTableProjects } from "../utilities/services";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useMediaQuery } from "react-responsive";
 
 const ProjectsPage = () => {
   const query = new URLSearchParams(useLocation().search);
+  const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
   const navigate = useNavigate();
   const [totalPages, setTotalPages] = useState(null);
+  const [isAsideVisible, setIsAsideVisible] = useState(false);
   const [currentPage, setCurrentPage] = useState(
     parseInt(query.get("currentPage")) || 1
   );
@@ -124,7 +127,7 @@ const ProjectsPage = () => {
 
   return (
     <>
-      <AppNavbar />
+      <AppNavbar setIsAsideVisible={setIsAsideVisible} />
       <AsideProjectsTable
         selectedLab={selectedLab}
         setSelectedLab={setSelectedLab}
@@ -141,8 +144,9 @@ const ProjectsPage = () => {
         setLabAsc={setLabAsc}
         setStartDateAsc={setStartDateAsc}
         setEndDateAsc={setEndDateAsc}
+        isVisible={isAsideVisible}
       />
-      <div className="ilm-pageb-with-aside">
+      <div className={isMobile ? "ilm-page-mobile" : "ilm-pageb-with-aside"}>
         <h1 className="page-title">
           <span className="app-slogan-1">All </span>
           <span className="app-slogan-2">Projects</span>

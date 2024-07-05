@@ -88,5 +88,7 @@ public enum WorkLocalENUM {
         }
         throw new IllegalArgumentException("Invalid integer value for WorkLocalENUM: " + intValue);
     }
+
+
 }
 

@@ -33,6 +33,7 @@ import ProjectMembersPage from "./pages/ProjectMembersPage";
 import EditProjectPage from "./pages/EditProjectPage";
 import ProjectPlanPage from "./pages/ProjectPlanPage";
 import ProjectProfileResourcesPage from "./pages/ProjectProfileResourcesPage";
+import StatisticsPdfPage from "./pages/StatisticsPdfPage";
 
 const AppWithWebSocket = () => {
   const location = useLocation();
@@ -95,8 +96,15 @@ const AppWithWebSocket = () => {
           path="/create-project/:systemProjectName/resources"
           element={<ProjectCreationPage3 />}
         />
-        <Route path="/editProject/:systemProjectName" element={<EditProjectPage />} />
-        <Route path="/project/:systemProjectName/plan" element={<ProjectPlanPage />} />
+        <Route
+          path="/editProject/:systemProjectName"
+          element={<EditProjectPage />}
+        />
+        <Route
+          path="/project/:systemProjectName/plan"
+          element={<ProjectPlanPage />}
+        />
+        <Route path="statistics" element={<StatisticsPdfPage />} />
       </Routes>
     </>
   );

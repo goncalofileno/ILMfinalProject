@@ -66,5 +66,16 @@ public class ResourceSupplierDao extends AbstractDao<ResourceSupplierEntity>{
             return false;
         }
     }
+
+
+    public List<Object[]> countResourcesPerSupplier() {
+        try {
+          return   em.createNamedQuery("ResourceSupplier.countResourcesPerSupplier", Object[].class).getResultList();
+
+        } catch (Exception e) {
+            e.printStackTrace(); // Handle or log the exception appropriately
+            return null;
+        }
+    }
 }
 

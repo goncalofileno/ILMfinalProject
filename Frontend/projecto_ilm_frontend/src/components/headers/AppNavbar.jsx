@@ -18,7 +18,7 @@ import mailIcon from "../../resources/icons/navbar/mail-icon.png";
 import bellIcon from "../../resources/icons/navbar/notification-icon.png";
 import userProfileIcon from "../../resources/avatares/Avatar padrão.jpg";
 
-export default function AppNavbar() {
+export default function AppNavbar({ setIsAsideVisible }) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [userImage, setUserImage] = useState(userProfileIcon);
@@ -120,18 +120,21 @@ export default function AppNavbar() {
     }
   };
 
-  const handleClickOutside = useCallback((event) => {
-    if (
-      (dropdownRef.current && dropdownRef.current.contains(event.target)) ||
-      (modalRef.current && modalRef.current.contains(event.target)) ||
-      (bellIconRef.current && bellIconRef.current.contains(event.target))
-    ) {
-      return;
-    }
-    setDropdownOpen(false);
-    setModalOpen(false);
-    clearNotifications();
-  }, [clearNotifications]);
+  const handleClickOutside = useCallback(
+    (event) => {
+      if (
+        (dropdownRef.current && dropdownRef.current.contains(event.target)) ||
+        (modalRef.current && modalRef.current.contains(event.target)) ||
+        (bellIconRef.current && bellIconRef.current.contains(event.target))
+      ) {
+        return;
+      }
+      setDropdownOpen(false);
+      setModalOpen(false);
+      clearNotifications();
+    },
+    [clearNotifications]
+  );
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
@@ -143,7 +146,28 @@ export default function AppNavbar() {
   return (
     <div>
       <div className="app-navbar">
-        <div className="logo" onClick={() => handleNavigation("/projects")}></div>
+        {!isMobile ? (
+          <div
+            className="logo"
+            onClick={() => handleNavigation("/projects")}
+          ></div>
+        ) : (
+          <div className="flex-logo-hamb">
+            <div
+              className="logo"
+              onClick={() => handleNavigation("/projects")}
+            ></div>
+
+            <div>
+              <button
+                className="hamb-btn"
+                onClick={() => setIsAsideVisible((prev) => !prev)}
+              >
+                <i class="fas fa-bars fa-2x"></i>
+              </button>
+            </div>
+          </div>
+        )}
         <div className="nav-icons-wrapper">
           <div className="nav-icons">
             <div
@@ -164,14 +188,20 @@ export default function AppNavbar() {
               className={getNavItemClass("/myprojects")}
               onClick={() => handleNavigation("/myprojects")}
             >
-              <div className="icon" style={getNavIconStyle("/myprojects")}></div>
+              <div
+                className="icon"
+                style={getNavIconStyle("/myprojects")}
+              ></div>
               <label>My Projects</label>
             </div>
             <div
               className={getNavItemClass("/mail/inbox")}
               onClick={() => handleNavigation("/mail/inbox")}
             >
-              <div className="icon" style={getNavIconStyle("/mail/inbox")}></div>
+              <div
+                className="icon"
+                style={getNavIconStyle("/mail/inbox")}
+              ></div>
               <label>Mail</label>
               {unreadCount > 0 && <span className="badge">{unreadCount}</span>}
             </div>
@@ -179,9 +209,15 @@ export default function AppNavbar() {
         </div>
         <div className="nav-right">
           <select className="language-dropdown">
-            <option className="option-flag" value="en">🇺🇸</option>
-            <option className="option-flag" value="pt">🇵🇹</option>
-            <option className="option-flag" value="es">🇪🇸</option>
+            <option className="option-flag" value="en">
+              🇺🇸
+            </option>
+            <option className="option-flag" value="pt">
+              🇵🇹
+            </option>
+            <option className="option-flag" value="es">
+              🇪🇸
+            </option>
           </select>
           <div
             className="icon"
@@ -195,7 +231,11 @@ export default function AppNavbar() {
               </span>
             )}
           </div>
-          <div className="user-profile" onClick={toggleDropdown} ref={dropdownRef}>
+          <div
+            className="user-profile"
+            onClick={toggleDropdown}
+            ref={dropdownRef}
+          >
             <div
               className="user-image"
               style={{ backgroundImage: `url(${userImage})` }}
@@ -231,25 +271,32 @@ export default function AppNavbar() {
               className={getNavItemClass("/myprojects")}
               onClick={() => handleNavigation("/myprojects")}
             >
-              <div className="icon" style={getNavIconStyle("/myprojects")}></div>
+              <div
+                className="icon"
+                style={getNavIconStyle("/myprojects")}
+              ></div>
               <label>My Projects</label>
             </div>
             <div
               className={getNavItemClass("/mail/inbox")}
               onClick={() => handleNavigation("/mail/inbox")}
             >
-              <div className="icon mail-icon" style={getNavIconStyle("/mail/inbox")}></div>
+              <div
+                className="icon mail-icon"
+                style={getNavIconStyle("/mail/inbox")}
+              ></div>
               <label>Mail</label>
-              {unreadCount > 0 && (
-                <span className="badge">
-                  {unreadCount}
-                </span>
-              )}
+              {unreadCount > 0 && <span className="badge">{unreadCount}</span>}
             </div>
           </div>
         </div>
       )}
-      {modalOpen && <NotificationModal onClose={() => setModalOpen(false)} modalRef={modalRef} />}
+      {modalOpen && (
+        <NotificationModal
+          onClose={() => setModalOpen(false)}
+          modalRef={modalRef}
+        />
+      )}
     </div>
   );
 }

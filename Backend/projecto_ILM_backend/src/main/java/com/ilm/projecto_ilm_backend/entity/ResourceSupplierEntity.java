@@ -11,7 +11,13 @@ import java.util.List;
 @NamedQuery(name = "ResourceSupplier.updateIsDeleted", query = "UPDATE ResourceSupplierEntity rs SET rs.isDeleted = :isDeleted WHERE rs.resource.id = :resourceId AND rs.supplier.id = :supplierId")
 @NamedQuery(name = "ResourceSupplier.doesRelationshipExist", query = "SELECT  COUNT(rs)>0 FROM ResourceSupplierEntity rs  WHERE rs.resource.id = :resourceId AND rs.supplier.id = :supplierId")
 @NamedQuery(name = "ResourceSupplier.getIsDeletedByIds", query = "SELECT  rs.isDeleted FROM ResourceSupplierEntity rs  WHERE rs.resource.id = :resourceId AND rs.supplier.id = :supplierId")
-
+@NamedQuery(
+        name = "ResourceSupplier.countResourcesPerSupplier",
+        query = "SELECT rs.supplier.name, COUNT(rs) AS resourceCount " +
+                "FROM ResourceSupplierEntity rs " +
+                "GROUP BY rs.supplier " +
+                "ORDER BY resourceCount DESC"
+)
 
 public class ResourceSupplierEntity implements Serializable {
     @Id

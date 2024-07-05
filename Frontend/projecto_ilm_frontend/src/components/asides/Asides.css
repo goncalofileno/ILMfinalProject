@@ -13,6 +13,23 @@
   margin-top: 60px;
   height: calc(100vh - 60px);
 }
+
+.aside-Mobile {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  width: 35%;
+  position: fixed;
+  left: 0%;
+  top: 0%;
+  padding: 20px;
+  padding-top: 50px;
+
+  margin-top: 60px;
+  height: calc(100vh - 60px);
+  background-color: rgba(30, 40, 82, 0.9);
+  z-index: 1000;
+}
 .aside-background {
   width: 100%;
   position: fixed;

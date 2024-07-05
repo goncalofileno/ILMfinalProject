@@ -1,0 +1,99 @@
+.flexflexlef {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.screen-display {
+  height: 100%;
+  width: 100%;
+  z-index: 1;
+  position: fixed;
+  background-color: white;
+}
+
+.pdf-page {
+  position: fixed;
+  z-index: -1;
+  top: 0;
+  left: 0;
+  width: 635px;
+  height: 900px;
+  padding: 50px;
+  padding-top: 20px;
+}
+
+.app-stats {
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+  padding-top: 35px;
+  padding-bottom: 35px;
+  background-color: rgb(223, 229, 254);
+  border-radius: 15px;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.15);
+  font-size: 16px;
+}
+
+.col-app-stats {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.app-stats span {
+  font-weight: 700;
+}
+
+.col-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 80%;
+}
+
+.row-pie-charts {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
+  background-color: rgb(223, 229, 254);
+  border-radius: 15px;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.15);
+}
+
+.pdf-title {
+  font-size: 24px;
+  font-weight: 700;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 35px;
+}
+
+.app-stats-pdf {
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+  padding-top: 35px;
+  padding-bottom: 35px;
+  background-color: rgb(247, 249, 255);
+  border-radius: 15px;
+  border: 1px solid #000;
+  font-size: 16px;
+}
+
+.app-stats-pdf span {
+  font-weight: 700;
+}
+
+.row-pdf-pie-charts {
+  margin-top: 35px;
+  height: 220px;
+  background-color: rgb(247, 249, 255);
+  border-radius: 15px;
+  padding: 10px;
+}

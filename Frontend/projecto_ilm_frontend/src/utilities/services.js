@@ -1818,6 +1818,22 @@ const deleteTask = async (updateTaskDto) => {
     console.error("Error deleting task:", error);
     return { error: error.message };
   }
+};
+
+async function getAppStatistics() {
+  try {
+    const response = await fetch(`${baseURL}statistics`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+
+    return response;
+  } catch (error) {
+    console.error("Error receiving all resources:", error);
+  }
 }
 
 export {
@@ -1900,4 +1916,5 @@ export {
   getAllResourcesCreatingProject,
   addInitialResources,
   getProjectResources,
+  getAppStatistics,
 };
