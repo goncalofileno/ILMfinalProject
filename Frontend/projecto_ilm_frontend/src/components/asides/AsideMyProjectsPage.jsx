@@ -6,6 +6,7 @@ import {
   formatTypeUserInProject,
 } from "../../utilities/converters";
 import { getProjectsFilters } from "../../utilities/services";
+import { Trans, t } from "@lingui/macro";
 
 export default function AsideMyProjectsPage({
   selectedLab,
@@ -38,7 +39,7 @@ export default function AsideMyProjectsPage({
       <div className="aside">
         <div className="div-control-form" id="first-div">
           <Form.Label className="custom-label" style={{ color: "white" }}>
-            Lab
+          <Trans>Lab</Trans>
           </Form.Label>
           <Form.Control
             as="select"
@@ -50,7 +51,7 @@ export default function AsideMyProjectsPage({
               setNavigateTableProjectsTrigger(!navigateTableProjectsTrigger);
             }}
           >
-            <option value="">All Labs</option>
+            <option value=""><Trans>All Labs</Trans></option>
             {labs.map((lab, index) => (
               <option key={index} value={lab}>
                 {formatLab(lab)}
@@ -60,7 +61,7 @@ export default function AsideMyProjectsPage({
         </div>
         <div className="div-control-form">
           <Form.Label className="custom-label" style={{ color: "white" }}>
-            Status
+          <Trans>Status</Trans>
           </Form.Label>
           <Form.Control
             as="select"
@@ -73,7 +74,7 @@ export default function AsideMyProjectsPage({
             }}
           >
             {" "}
-            <option value="">All Status</option>
+            <option value=""><Trans>All Status</Trans></option>
             {status.map((status, index) => (
               <option key={index} value={status}>
                 {formatStatusDropDown(status)}
@@ -83,7 +84,7 @@ export default function AsideMyProjectsPage({
         </div>
         <div className="div-control-form">
           <Form.Label className="custom-label" style={{ color: "white" }}>
-            Member Type
+          <Trans>Member Type</Trans>
           </Form.Label>
           <Form.Control
             as="select"
@@ -96,7 +97,7 @@ export default function AsideMyProjectsPage({
             }}
           >
             {" "}
-            <option value="">All Types</option>
+            <option value=""><Trans>All Types</Trans></option>
             {typesMember.map((typeMember, index) => (
               <option key={index} value={typeMember}>
                 {formatTypeUserInProject(typeMember)}
@@ -122,7 +123,7 @@ export default function AsideMyProjectsPage({
             setNavigateTableProjectsTrigger(!navigateTableProjectsTrigger);
           }}
         >
-          Clear Filters
+          <Trans>Clear Filters</Trans>
         </button>
       </div>
     </div>

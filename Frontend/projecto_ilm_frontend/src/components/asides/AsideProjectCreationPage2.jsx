@@ -5,6 +5,7 @@ import { formatLab } from "../../utilities/converters";
 import { useState, useEffect } from "react";
 import { getLabsWithSessionId } from "../../utilities/services";
 import userProfileIcon from "../../resources/avatares/Avatar padrão.jpg";
+import { Trans, t } from "@lingui/macro";
 
 export default function AsideProjectCreationPage2({
   selectedLab,
@@ -37,7 +38,7 @@ export default function AsideProjectCreationPage2({
       <div className="aside">
         <div className="div-control-form">
           <Form.Label className="custom-label" style={{ color: "white" }}>
-            Lab
+          <Trans>Lab</Trans>
           </Form.Label>
           <Form.Control
             as="select"
@@ -48,7 +49,7 @@ export default function AsideProjectCreationPage2({
               setGetUsersTrigger((prev) => !prev);
             }}
           >
-            <option value="">All Labs</option>
+            <option value=""><Trans>All Labs</Trans></option>
             {labs.map((lab, index) => (
               <option key={index} value={lab.local}>
                 {formatLab(lab.local)}
@@ -58,7 +59,7 @@ export default function AsideProjectCreationPage2({
         </div>
         <div className="div-control-form">
           <Form.Label className="custom-label" style={{ color: "white" }}>
-            Max Members
+          <Trans>Max Members</Trans>
           </Form.Label>
           <Form.Control
             type="text"
@@ -72,7 +73,7 @@ export default function AsideProjectCreationPage2({
           />
         </div>
         <div className="container-users-project">
-          <div className="users-in-project-label">Users in Project:</div>
+          <div className="users-in-project-label"><Trans>Users in Project</Trans>:</div>
           <div className="users-in-project-container">
             <div className="users-in-project-div">
               {usersInProject.map((user, index) => (

@@ -1,19 +1,20 @@
 import React from "react";
 import { Modal, Button } from "react-bootstrap";
+import { Trans, t } from "@lingui/macro";
 
 const DeleteTaskModal = ({ show, handleClose, handleConfirmDelete }) => {
   return (
     <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
-        <Modal.Title>Confirm Delete</Modal.Title>
+        <Modal.Title><Trans>Confirm Delete</Trans></Modal.Title>
       </Modal.Header>
-      <Modal.Body>Are you sure you want to delete this task?</Modal.Body>
+      <Modal.Body><Trans>Are you sure you want to delete this task?</Trans></Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={handleClose}>
-          Cancel
+        <Trans>Cancel</Trans>
         </Button>
         <Button variant="danger" onClick={handleConfirmDelete}>
-          Delete
+        <Trans>Delete</Trans>
         </Button>
       </Modal.Footer>
     </Modal>

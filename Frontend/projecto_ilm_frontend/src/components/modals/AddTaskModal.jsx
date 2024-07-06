@@ -3,6 +3,7 @@ import { Modal, Button, Form, ListGroup } from "react-bootstrap";
 import { createTask } from "../../utilities/services";
 import Cookies from "js-cookie";
 import './AddTaskModal.css';
+import { Trans, t } from "@lingui/macro";
 
 const AddTaskModal = ({
   show,
@@ -53,7 +54,7 @@ const AddTaskModal = ({
     if (name === "title") {
       const existingTask = tasks.find((task) => task.name === value);
       if (existingTask) {
-        setTitleError("Task title must be unique.");
+        setTitleError(t`Task title must be unique.`);
       } else {
         setTitleError("");
       }
@@ -102,12 +103,10 @@ const AddTaskModal = ({
       systemProjectName: newTaskDetails.systemProjectName,
     };
 
-    console.log("New Task DTO:", newTaskDto);
-
     try {
       await createTask(newTaskDto);
       handleCloseModal();
-      fetchData(); // Re-fetch the data to update the state
+      fetchData();
     } catch (error) {
       console.error("Error creating task:", error);
     }
@@ -214,7 +213,7 @@ const AddTaskModal = ({
   return (
     <Modal show={show} onHide={handleCloseModal} dialogClassName="custom-modal">
       <Modal.Header closeButton>
-        <Modal.Title>Add New Task</Modal.Title>
+        <Modal.Title><Trans>Add New Task</Trans></Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form>
@@ -222,7 +221,7 @@ const AddTaskModal = ({
             <div className="col-md-6">
               <Form.Group controlId="formTaskTitle">
                 <Form.Label>
-                  <strong>Title:</strong>
+                  <strong><Trans>Title</Trans>:</strong>
                 </Form.Label>
                 <Form.Control
                   type="text"
@@ -237,7 +236,7 @@ const AddTaskModal = ({
               </Form.Group>
               <Form.Group controlId="formTaskDescription">
                 <Form.Label>
-                  <strong>Description:</strong>
+                  <strong><Trans>Description</Trans>:</strong>
                 </Form.Label>
                 <Form.Control
                   as="textarea"
@@ -248,7 +247,7 @@ const AddTaskModal = ({
               </Form.Group>
               <Form.Group controlId="formTaskInitialDate">
                 <Form.Label>
-                  <strong>Initial Date:</strong>
+                  <strong><Trans>Initial Date</Trans>:</strong>
                 </Form.Label>
                 <Form.Control
                   type="date"
@@ -259,7 +258,7 @@ const AddTaskModal = ({
               </Form.Group>
               <Form.Group controlId="formTaskFinalDate">
                 <Form.Label>
-                  <strong>Final Date:</strong>
+                  <strong><Trans>Final Date</Trans>:</strong>
                 </Form.Label>
                 <Form.Control
                   type="date"
@@ -281,7 +280,7 @@ const AddTaskModal = ({
             <div className="col-md-6">
               <Form.Group controlId="formTaskOutColaboration">
                 <Form.Label>
-                  <strong>Out Colaboration:</strong>
+                  <strong><Trans>Out Colaboration</Trans>:</strong>
                 </Form.Label>
                 <Form.Control
                   type="text"
@@ -292,7 +291,7 @@ const AddTaskModal = ({
               </Form.Group>
               <Form.Group controlId="formTaskInCharge">
                 <Form.Label>
-                  <strong>In Charge:</strong>
+                  <strong><Trans>In Charge</Trans>:</strong>
                 </Form.Label>
                 <Form.Control
                   as="select"
@@ -309,7 +308,7 @@ const AddTaskModal = ({
               </Form.Group>
               <Form.Group controlId="formTaskMembers">
                 <Form.Label>
-                  <strong>Members:</strong>
+                  <strong><Trans>Members</Trans>:</strong>
                 </Form.Label>
                 <ListGroup>
                   {newTaskDetails.membersOfTask.map((member) => (
@@ -343,7 +342,7 @@ const AddTaskModal = ({
                     e.target.value = ""; // Reset the selector
                   }}
                 >
-                  <option value="">Add New Member</option>
+                  <option value=""><Trans>Add New Member</Trans></option>
                   {availableMembers.map((member) => (
                     <option key={member.id} value={member.systemUsername}>
                       {member.name}
@@ -353,7 +352,7 @@ const AddTaskModal = ({
               </Form.Group>
               <Form.Group controlId="formTaskDependentTasks">
                 <Form.Label>
-                  <strong>Dependent Tasks:</strong>
+                  <strong><Trans>Dependent Tasks</Trans>:</strong>
                 </Form.Label>
                 <ListGroup>
                   {newTaskDetails.dependentTasks.map((task) => (
@@ -377,7 +376,7 @@ const AddTaskModal = ({
                     e.target.value = ""; // Reset the selector
                   }}
                 >
-                  <option value="">Add New Dependent Task</option>
+                  <option value=""><Trans>Add New Dependent Task</Trans></option>
                   {availableTasks.map((task) => (
                     <option key={task.rawTask.id} value={task.rawTask.id}>
                       {task.name}
@@ -391,7 +390,7 @@ const AddTaskModal = ({
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={handleCloseModal}>
-          Close
+        <Trans>Close</Trans>
         </Button>
         <Button
           variant="primary"
@@ -399,7 +398,7 @@ const AddTaskModal = ({
           disabled={!isSaveEnabled}
           style={{ backgroundColor: isSaveEnabled ? "#007bff" : "#6c757d" }}
         >
-          Add New Task
+          <Trans>Add New Task</Trans>
         </Button>
       </Modal.Footer>
     </Modal>

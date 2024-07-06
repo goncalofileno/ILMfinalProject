@@ -17,6 +17,7 @@ import Cookies from "js-cookie";
 import moment from "moment";
 import { getChatPage, sendChatMessage } from "../utilities/services";
 import "./ProjectChatPage.css";
+import { Trans, t } from "@lingui/macro";
 
 const ProjectChatPage = () => {
   const { systemProjectName } = useParams();
@@ -95,7 +96,7 @@ const ProjectChatPage = () => {
             <Row>
               <Col>
                 <Alert variant="danger" className="standard-modal">
-                  The project is canceled, and the chat is disabled.
+                <Trans>The project is canceled, and the chat is disabled.</Trans>
                 </Alert>
               </Col>
             </Row>
@@ -105,7 +106,7 @@ const ProjectChatPage = () => {
             <Col md={4} style={{ height: "100%" }}>
               <Card style={{ height: "100%" }}>
                 <Card.Header>
-                  <h5>Members</h5>
+                  <h5><Trans>Members</Trans></h5>
                 </Card.Header>
                 <Card.Body
                   style={{ height: "100%" }}
@@ -135,7 +136,7 @@ const ProjectChatPage = () => {
                             <div>
                               <strong>
                                 {member.systemUsername === userSystemUsername
-                                  ? "You"
+                                  ? (t`You`)
                                   : member.name}
                               </strong>
                               <div className="text-muted">{member.type}</div>
@@ -206,7 +207,7 @@ const ProjectChatPage = () => {
                           >
                             <strong>
                               {message.systemUsername === userSystemUsername
-                                ? "You"
+                                ? (t`You`)
                                 : message.name}
                             </strong>
                             : {message.message}
@@ -250,7 +251,7 @@ const ProjectChatPage = () => {
                       type="submit"
                       disabled={projectState === "CANCELED"}
                     >
-                      Send
+                      <Trans>Send</Trans>
                     </Button>
                   </Form>
                 </Card.Footer>

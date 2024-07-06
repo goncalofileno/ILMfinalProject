@@ -1,6 +1,7 @@
 import "./MyProjectCard.css";
 import "./UserCard.css";
 import userProfileIcon from "../../resources/avatares/Avatar padrão.jpg";
+import { Trans, t } from "@lingui/macro";
 
 export default function UserCard({
   name,
@@ -78,10 +79,10 @@ export default function UserCard({
             onClick={handleAddUser}
             disabled={numberOfMembersInProject >= maxMembers - 1 ? true : false}
           >
-            Add
+            <Trans>Add</Trans>
           </button>
           <button className="secondary-button" onClick={handleRejectUser}>
-            Reject
+          <Trans>Reject</Trans>
           </button>
         </div>
       </div>

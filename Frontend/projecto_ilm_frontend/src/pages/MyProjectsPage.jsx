@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { getMyProjectsTable } from "../utilities/services";
 import { useLocation, useNavigate } from "react-router-dom";
 import { formatLab } from "../utilities/converters";
+import { Trans, t } from "@lingui/macro";
 
 export default function MyProjectsPage() {
   const query = new URLSearchParams(useLocation().search);
@@ -87,8 +88,8 @@ export default function MyProjectsPage() {
       {console.log(projects)}
       <div className="ilm-pageb-with-aside">
         <h1 className="page-title" style={{ marginBottom: "0px" }}>
-          <span className="app-slogan-1">My </span>
-          <span className="app-slogan-2">Projects</span>
+          <span className="app-slogan-1"><Trans id="o-my-projects">My</Trans> </span>
+          <span className="app-slogan-2"><Trans>Projects</Trans></span>
         </h1>
         <InputGroup
           className="mail-filters"
@@ -96,7 +97,7 @@ export default function MyProjectsPage() {
         >
           <Form.Control
             type="text"
-            placeholder="Search for project name"
+            placeholder={t`Search for project name`}
             style={{ borderRadius: "10px", cursor: "text", marginBottom: "1%" }}
             className="custom-focus"
             value={keyword}
@@ -109,7 +110,7 @@ export default function MyProjectsPage() {
             }}
             id="primary-btn-boot"
           >
-            Search
+            <Trans>Search</Trans>
           </Button>
           <Button
             variant="secondary"
@@ -119,7 +120,7 @@ export default function MyProjectsPage() {
             }}
             style={{ borderRadius: "10px" }}
           >
-            Clear Search
+            <Trans>Clear Search</Trans>
           </Button>
         </InputGroup>
         <Container fluid className="my-projects-container">

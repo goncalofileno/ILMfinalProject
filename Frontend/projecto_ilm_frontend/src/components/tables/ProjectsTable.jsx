@@ -6,6 +6,7 @@ import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import { useCurrentPng } from "recharts-to-png";
 import { useMediaQuery } from "react-responsive";
+import { Trans, t } from "@lingui/macro";
 
 export default function ProjectsTable({
   projects,
@@ -68,7 +69,7 @@ export default function ProjectsTable({
         <InputGroup className="mail-filters" style={{ width: "50%" }}>
           <Form.Control
             type="text"
-            placeholder="Search for project name"
+            placeholder={t`Search for project name`}
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
             style={{ borderRadius: "10px", cursor: "text" }}
@@ -83,7 +84,7 @@ export default function ProjectsTable({
             }}
             id="primary-btn-boot"
           >
-            Search
+            <Trans>Search</Trans>
           </Button>
           <Button
             variant="secondary"
@@ -93,7 +94,7 @@ export default function ProjectsTable({
             }}
             style={{ borderRadius: "10px" }}
           >
-            Clear Search
+            <Trans>Clear Search</Trans>
           </Button>
         </InputGroup>
       </div>
@@ -101,7 +102,9 @@ export default function ProjectsTable({
         <thead>
           <tr>
             <th colSpan="2" style={{ width: "25%" }} onClick={sortByName}>
-              <span style={{ marginRight: "10px" }}>Project</span>
+              <span style={{ marginRight: "10px" }}>
+                <Trans>Project</Trans>
+              </span>
               {nameAsc ? (
                 <i class="fas fa-arrow-up fa-xs"></i>
               ) : (
@@ -109,7 +112,9 @@ export default function ProjectsTable({
               )}
             </th>
             <th style={{ width: "15%" }} onClick={sortByStatus}>
-              <span style={{ marginRight: "10px" }}>Status</span>
+              <span style={{ marginRight: "10px" }}>
+                <Trans>Status</Trans>
+              </span>
               {statusAsc ? (
                 <i class="fas fa-arrow-up fa-xs"></i>
               ) : (
@@ -117,7 +122,9 @@ export default function ProjectsTable({
               )}
             </th>
             <th style={{ width: "15%" }} onClick={sortByLab}>
-              <span style={{ marginRight: "10px" }}>Lab</span>
+              <span style={{ marginRight: "10px" }}>
+                <Trans>Lab</Trans>
+              </span>
               {labAsc ? (
                 <i class="fas fa-arrow-up fa-xs"></i>
               ) : (
@@ -125,7 +132,9 @@ export default function ProjectsTable({
               )}
             </th>
             <th style={{ width: "15%" }} onClick={sortByStartDate}>
-              <span style={{ marginRight: "10px" }}>Start date</span>
+              <span style={{ marginRight: "10px" }}>
+                <Trans>Start date</Trans>
+              </span>
               {startDateAsc ? (
                 <i class="fas fa-arrow-up fa-xs"></i>
               ) : (
@@ -135,14 +144,20 @@ export default function ProjectsTable({
               )}
             </th>
             <th style={{ width: "15%" }} onClick={sortByEndDate}>
-              <span style={{ marginRight: "10px" }}>End date</span>
+              <span style={{ marginRight: "10px" }}>
+                <Trans>End date</Trans>
+              </span>
               {endDateAsc ? (
                 <i class="fas fa-arrow-up fa-xs"></i>
               ) : (
                 endDateAsc === false && <i class="fas fa-arrow-down fa-xs"></i>
               )}
             </th>
-            {!isTablet && <th style={{ width: "15%" }}>Members</th>}
+            {!isTablet && (
+              <th style={{ width: "15%" }}>
+                <Trans>Members</Trans>
+              </th>
+            )}
           </tr>
         </thead>
 
@@ -150,7 +165,7 @@ export default function ProjectsTable({
           <tr>
             <td colspan="7">
               <div className="no-results no-results-align">
-                No projects found matching your criteria.
+                <Trans>No projects found matching your criteria.</Trans>
               </div>
             </td>
           </tr>
@@ -231,7 +246,7 @@ export default function ProjectsTable({
               id="btn-add-project-table-projects"
               onClick={() => navigate("/create-project/info")}
             >
-              Add Project
+              <Trans>Add Project</Trans>
             </button>
           </div>
           <div className="tablePagination-div">
@@ -251,7 +266,7 @@ export default function ProjectsTable({
                 id="btn-projects-statistics-table-projects"
                 onClick={() => navigate("/statistics")}
               >
-                Projects Statistics
+                <Trans>Projects Statistics</Trans>
               </button>
             )}
           </div>

@@ -5,6 +5,7 @@ import Cookies from "js-cookie";
 import "./ProjectMembersTable.css";
 import "./Tables.css";
 import { formatTypeUserInProject } from "../../utilities/converters";
+import { Trans, t } from "@lingui/macro";
 
 const ProjectMembersTable = ({ members }) => {
   const navigate = useNavigate();
@@ -19,9 +20,9 @@ const ProjectMembersTable = ({ members }) => {
     <table style={{ height: "365px" }} className="table-users-project-table">
       <thead id="table-users-project-head">
         <tr id="table-users-project">
-          <th>Photo</th>
-          <th>Name</th>
-          <th>Type</th>
+          <th><Trans>Photo</Trans></th>
+          <th><Trans>Name</Trans></th>
+          <th><Trans>Type</Trans></th>
         </tr>
       </thead>
       <tbody id="body-table-users-project">
@@ -39,7 +40,7 @@ const ProjectMembersTable = ({ members }) => {
             </td>
             <td style={{ cursor: "pointer", color: "black" }}>
               {member.systemUsername === userSystemUsername
-                ? "You"
+                ? (t`You`)
                 : member.name}
             </td>
             <td>{formatTypeUserInProject(member.type)}</td>

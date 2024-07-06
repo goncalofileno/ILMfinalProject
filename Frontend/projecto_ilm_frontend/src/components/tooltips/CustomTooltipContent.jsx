@@ -2,6 +2,7 @@ import React from "react";
 import { Task } from "gantt-task-react";
 import styles from "./tooltip.module.css";
 import { formatTaskStatus, formatStatusDropDown } from "../../utilities/converters";
+import { Trans, t } from "@lingui/macro";
 
 const CustomTooltipContent = ({ task, fontSize, fontFamily }) => {
   const style = {
@@ -20,19 +21,19 @@ const CustomTooltipContent = ({ task, fontSize, fontFamily }) => {
     <div className={styles.tooltipDefaultContainer} style={style}>
       <b style={{ fontSize: `${parseInt(fontSize) + 6}px` }}>{task.name}</b>
       <p className={styles.tooltipDefaultContainerParagraph}>
-        <b>Description:</b> {task.rawTask.description}
+        <b><Trans>Description</Trans>:</b> {task.rawTask.description}
       </p>
       <p className={styles.tooltipDefaultContainerParagraph}>
-        <b>Status:</b> {taskStatus}
+        <b><Trans>Status</Trans>:</b> {taskStatus}
       </p>
       <p className={styles.tooltipDefaultContainerParagraph}>
-        <b>Start Date:</b> {task.start.toLocaleDateString()}
+        <b><Trans>Start Date</Trans>:</b> {task.start.toLocaleDateString()}
       </p>
       <p className={styles.tooltipDefaultContainerParagraph}>
-        <b>End Date:</b> {task.end.toLocaleDateString()}
+        <b><Trans>End Date</Trans>:</b> {task.end.toLocaleDateString()}
       </p>
       <p className={styles.tooltipDefaultContainerParagraph}>
-        <b>Duration:</b> {getDurationInDays(task.start, task.end)} day(s)
+        <b><Trans>Duration</Trans>:</b> {getDurationInDays(task.start, task.end)} <Trans>day(s)</Trans>
       </p>
     </div>
   );

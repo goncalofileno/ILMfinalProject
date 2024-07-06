@@ -6,6 +6,7 @@ import { getTableProjects } from "../utilities/services";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
+import { Trans, t } from "@lingui/macro";
 
 const ProjectsPage = () => {
   const query = new URLSearchParams(useLocation().search);
@@ -148,8 +149,8 @@ const ProjectsPage = () => {
       />
       <div className={isMobile ? "ilm-page-mobile" : "ilm-pageb-with-aside"}>
         <h1 className="page-title">
-          <span className="app-slogan-1">All </span>
-          <span className="app-slogan-2">Projects</span>
+          <span className="app-slogan-1"><Trans id="todos-os-projectos-all">All</Trans> </span>
+          <span className="app-slogan-2"><Trans>Projects</Trans></span>
         </h1>
         <div className="table-margin-top">
           <ProjectsTable

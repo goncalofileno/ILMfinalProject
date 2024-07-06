@@ -15,6 +15,7 @@ import { useParams } from "react-router-dom";
 import Cookies from "js-cookie";
 import StandardModal from "../components/modals/StandardModal";
 import { useNavigate } from "react-router-dom";
+import { Trans, t } from "@lingui/macro";
 
 export default function ProjectCreationPage3() {
   const { systemProjectName } = useParams();
@@ -133,7 +134,7 @@ export default function ProjectCreationPage3() {
       if (response.status === 200) {
         setModalType("success");
         setModalMessage(
-          "The resources have been added to the project successfully"
+          t`The resources have been added to the project successfully`
         );
         setModalActive(true);
         setTimeout(() => {
@@ -147,8 +148,8 @@ export default function ProjectCreationPage3() {
       <AppNavbar />
       <div className="ilm-pageb">
         <h1 className="page-title">
-          <span className="app-slogan-1">Project </span>
-          <span className="app-slogan-2">Resources</span>
+          <span className="app-slogan-1"><Trans>Project</Trans> </span>
+          <span className="app-slogan-2"><Trans>Resources</Trans></span>
         </h1>
         <Row className="row-container2">
           <Col sm={1}></Col>
@@ -162,7 +163,7 @@ export default function ProjectCreationPage3() {
                   <InputGroup className="gap-10px">
                     <Form.Control
                       type="text"
-                      placeholder="Search for resource"
+                      placeholder={t`Search for resource`}
                       style={{ borderRadius: "10px", cursor: "text" }}
                       className="custom-focus"
                       value={keyword}
@@ -183,7 +184,7 @@ export default function ProjectCreationPage3() {
                         setResourcesTableTrigger((prev) => !prev);
                       }}
                     >
-                      Clear
+                      <Trans>Clear</Trans>
                     </Button>
                   </InputGroup>
                 </Col>
@@ -199,7 +200,7 @@ export default function ProjectCreationPage3() {
                     }}
                   >
                     {" "}
-                    <option value="">All Brands</option>
+                    <option value=""><Trans>All Brands</Trans></option>
                     {brands.map((brand, index) => (
                       <option key={index} value={brand}>
                         {brand}
@@ -216,7 +217,7 @@ export default function ProjectCreationPage3() {
                     }}
                   >
                     {" "}
-                    <option value="">All Suppliers</option>
+                    <option value=""><Trans>All Suppliers</Trans></option>
                     {suppliers.map((supplier, index) => (
                       <option key={index} value={supplier}>
                         {supplier}
@@ -263,7 +264,7 @@ export default function ProjectCreationPage3() {
               <Row style={{ height: "17%", marginBottom: "0.5%" }}>
                 <Col sm={1}></Col>
                 <Col sm={11}>
-                  <h4 className="h4-resources-project-creat">Your Resources</h4>
+                  <h4 className="h4-resources-project-creat"><Trans>Your Resources</Trans></h4>
                 </Col>
               </Row>
               <Row style={{ height: "83%" }}>
@@ -301,7 +302,7 @@ export default function ProjectCreationPage3() {
                 setIsModalActive(true);
               }}
             >
-              Add Resource
+              <Trans>Add Resource</Trans>
             </button>
           </Col>
           <Col sm={1} className="table-resources-pagination">
@@ -319,7 +320,7 @@ export default function ProjectCreationPage3() {
               style={{ width: "100%" }}
               onClick={handleSubmit}
             >
-              Finish Project Creation
+              <Trans>Finish Project Creation</Trans>
             </button>
           </Col>
           <Col sm={1}></Col>
