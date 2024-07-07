@@ -246,4 +246,10 @@ public class UserProjectDao extends AbstractDao<UserProjectEntity>{
                 .setParameter("projectId", projectId)
                 .getSingleResult().intValue();
     }
+
+    public boolean userHasProjects(int userId) {
+        return em.createNamedQuery("UserProject.userHasProjects", Long.class)
+                .setParameter("userId", userId)
+                .getSingleResult() > 0;
+    }
 }

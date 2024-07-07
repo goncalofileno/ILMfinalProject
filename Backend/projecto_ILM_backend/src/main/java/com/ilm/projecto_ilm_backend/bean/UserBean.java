@@ -83,6 +83,9 @@ public class UserBean {
     @Inject
     ProjectBean projectBean;
 
+    @Inject
+    UserProjectDao userProjectDao;
+
 
     private static final int NUMBER_OF_USERS_PER_PAGE = 6;
     /**
@@ -780,6 +783,15 @@ public class UserBean {
             user.setLanguage(language);
             userDao.merge(user);
             return true;
+        }
+        return false;
+    }
+
+    //checks if the user have projects where its creator, manager or member
+    public boolean userHasProjects(String sessionId) {
+        UserEntity user = getUserBySessionId(sessionId);
+        if (user != null) {
+            return userProjectDao.userHasProjects(user.getId());
         }
         return false;
     }
