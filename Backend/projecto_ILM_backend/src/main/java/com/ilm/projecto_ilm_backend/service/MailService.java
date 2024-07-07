@@ -1,8 +1,10 @@
 package com.ilm.projecto_ilm_backend.service;
 
 import com.ilm.projecto_ilm_backend.bean.MailBean;
+import com.ilm.projecto_ilm_backend.bean.UserBean;
 import com.ilm.projecto_ilm_backend.dto.mail.ContactDto;
 import com.ilm.projecto_ilm_backend.dto.mail.MailDto;
+import com.ilm.projecto_ilm_backend.entity.UserEntity;
 import com.ilm.projecto_ilm_backend.validator.DatabaseValidator;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
@@ -24,6 +26,9 @@ public class MailService {
 
     @Inject
     MailBean mailBean;
+
+    @Inject
+    UserBean userBean;
 
     private static final Logger logger = LogManager.getLogger(MailService.class);
 
@@ -119,7 +124,8 @@ public class MailService {
         logger.info("Mail DTO: " + mailDto.toString());
 
         if (databaseValidator.checkSessionId(sessionId)) {
-            boolean sent = mailBean.sendMail(sessionId, mailDto);
+            UserEntity sender = userBean.getUserBySessionId(sessionId);
+            boolean sent = mailBean.sendMail(sender, mailDto);
             if (sent) {
                 return Response.ok().entity(Collections.singletonMap("message", "Mail sent successfully")).build();
             } else {

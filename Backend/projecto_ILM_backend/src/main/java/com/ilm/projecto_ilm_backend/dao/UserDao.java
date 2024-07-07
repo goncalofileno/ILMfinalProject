@@ -221,5 +221,13 @@ public class UserDao extends AbstractDao<UserEntity> {
             return null;
         }
     }
+
+    public List<UserEntity> findAllUsersExceptAdministationAndUser(UserEntity user){
+        try {
+            return em.createNamedQuery("User.findAllUsersExceptAdministationAndUser", UserEntity.class).setParameter("user", user).getResultList();
+        } catch (Exception e) {
+            return null;
+        }
+    }
     
 }

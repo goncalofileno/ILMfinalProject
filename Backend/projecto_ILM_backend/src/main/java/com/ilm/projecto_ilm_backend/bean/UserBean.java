@@ -99,6 +99,40 @@ public class UserBean {
      */
     public void createDefaultUsersIfNotExistent() throws MessagingException, UnsupportedEncodingException {
         if (userDao.findById(1) == null) {
+
+            UserEntity user = new UserEntity();
+            user.setUsername("admnistration");
+            user.setSystemUsername("admnistration");
+            user.setPassword(HashUtil.toSHA256("admnistration"));
+            user.setEmail("admnistration@iml.com");
+            user.setFirstName("Admnistration");
+            user.setLastName("ILM");
+            user.setType(UserTypeENUM.ADMIN);
+            user.setRegistrationDate(LocalDateTime.now());
+            user.setMailConfirmed(true);
+            user.setProfileCreated(true);
+            user.setPhoto("http://localhost:8080/images/users/4/profile_picture.png?t=1720364913202");
+            user.setAvatarPhoto("http://localhost:8080/images/users/4/profile_picture.png?t=1720364913202");
+            user.setThumbnailPhoto("http://localhost:8080/images/users/4/profile_picture.png?t=1720364913202");
+            LabEntity lab = new LabEntity();
+            lab = labDao.findbyLocal(WorkLocalENUM.COIMBRA);
+            List<InterestEntity> interests = interestDao.findAll();
+            user.setInterests(interests);
+            List<SkillEntity> skills = skillDao.findAll();
+            user.setSkills(skills);
+            user.setLab(lab);
+            user.setPublicProfile(false);
+            user.setDeleted(false);
+            user.setTutorial(false);
+            user.setLanguage(LanguageENUM.ENGLISH);
+
+            userDao.persist(user);
+
+
+        }
+
+        if (userDao.findById(2) == null) {
+
             UserEntity user = new UserEntity();
             user.setUsername("admin");
             user.setSystemUsername("admin");
@@ -126,9 +160,12 @@ public class UserBean {
             user.setLanguage(LanguageENUM.ENGLISH);
 
             userDao.persist(user);
+
+
         }
 
-        if (userDao.findById(2) == null) {
+        if (userDao.findById(3) == null) {
+
             UserEntity user = new UserEntity();
             user.setUsername("user");
             user.setSystemUsername("user");
@@ -158,7 +195,7 @@ public class UserBean {
             userDao.persist(user);
         }
 
-        if (userDao.findById(3) == null) {
+        if(userDao.findById(4) == null) {
             UserEntity user = new UserEntity();
             user.setUsername("guest");
             user.setPassword("guest");
@@ -173,9 +210,11 @@ public class UserBean {
             user.setTutorial(false);
             user.setPublicProfile(false);
             user.setLanguage(LanguageENUM.ENGLISH);
+
+            userDao.persist(user);
         }
 
-        for (int i = 3; i < 19; i++) {
+        for (int i = 5; i < 19; i++) {
             if (userDao.findById(i) == null) {
                 UserEntity user = new UserEntity();
                 user.setUsername("user" + i);

@@ -215,14 +215,14 @@ public class ProjectBean {
                 UserProjectEntity userProjectEntity = new UserProjectEntity();
 
                 userProjectEntity.setProject(project);
-                userProjectEntity.setUser(userDao.findById(1));
+                userProjectEntity.setUser(userDao.findById(2));
                 userProjectEntity.setType(UserInProjectTypeENUM.CREATOR);
                 userProjectDao.merge(userProjectEntity);
 
                 UserProjectEntity userProjectEntity2 = new UserProjectEntity();
 
                 userProjectEntity2.setProject(project);
-                userProjectEntity2.setUser(userDao.findById(2));
+                userProjectEntity2.setUser(userDao.findById(3));
                 userProjectEntity2.setType(UserInProjectTypeENUM.MEMBER);
                 userProjectDao.merge(userProjectEntity2);
 
@@ -232,7 +232,7 @@ public class ProjectBean {
             UserProjectEntity userProjectEntity = new UserProjectEntity();
 
             userProjectEntity.setProject(project);
-            userProjectEntity.setUser(userDao.findById(1));
+            userProjectEntity.setUser(userDao.findById(2));
             userProjectEntity.setType(UserInProjectTypeENUM.CREATOR);
             userProjectDao.merge(userProjectEntity);
         }
@@ -457,6 +457,8 @@ public class ProjectBean {
 
         userProjectDao.persist(userProjectEntity);
 
+        UserEntity admnistration = userDao.findBySystemUsername("admnistration");
+
         if (userToInvite.getLanguage() == LanguageENUM.ENGLISH) {
             String subject = "Invite to Project " + project.getName();
             String text = "<p>User " + "<strong>" + sender.getFirstName() + " " + sender.getLastName() + "</strong>" + " has invited you to join the project <strong>" + project.getName() + "</strong>.</p>" +
@@ -467,7 +469,7 @@ public class ProjectBean {
                     "<p></p>" +
                     "<p>Best regards,<br>ILM Management Team</p>";
             MailDto mailDto = new MailDto(subject, text, (sender.getFirstName() + " " + sender.getLastName()), sender.getEmail(), userToInvite.getFirstName() + " " + userToInvite.getLastName(), userToInvite.getEmail());
-            mailBean.sendMail(sessionId, mailDto);
+            mailBean.sendMail(admnistration, mailDto);
         } else if (userToInvite.getLanguage() == LanguageENUM.PORTUGUESE) {
             String subject = "Convite para o Projeto " + project.getName();
             String text = "<p>O utilizador " + "<strong>" + sender.getFirstName() + " " + sender.getLastName() + "</strong>" + " convidou-o a juntar-se ao projeto <strong>" + project.getName() + "</strong>.</p>" +
@@ -477,8 +479,8 @@ public class ProjectBean {
                     "<p>http://localhost:3000/project/" + project.getSystemName() + "</p>" +
                     "<p></p>" +
                     "<p>Com os melhores cumprimentos,<br>Equipa de Gestão ILM</p>";
-            MailDto mailDto = new MailDto(subject, text, (sender.getFirstName() + " " + sender.getLastName()), sender.getEmail(), userToInvite.getFirstName() + " " + userToInvite.getLastName(), userToInvite.getEmail());
-            mailBean.sendMail(sessionId, mailDto);
+            MailDto mailDto = new MailDto(subject, text, (admnistration.getFirstName() + " " + admnistration.getLastName()), admnistration.getEmail(), userToInvite.getFirstName() + " " + userToInvite.getLastName(), userToInvite.getEmail());
+            mailBean.sendMail(admnistration, mailDto);
         }
 
         notificationBean.createInviteNotification(project.getSystemName(), userDao.getFullNameBySystemUsername(sender.getSystemUsername()), userToInvite, sender.getSystemUsername());
@@ -675,6 +677,7 @@ public class ProjectBean {
             if (approve) {
                 notificationBean.createProjectNotification(project.getSystemName(), StateProjectENUM.APPROVED, userResponsable.getFirstName() + " " + userResponsable.getLastName(), user, userResponsable.getSystemUsername());
 
+                UserEntity admnistration = userDao.findBySystemUsername("admnistration");
                 if (user.getLanguage() == LanguageENUM.ENGLISH) {
                     String subject = "Project " + project.getName() + " Approved";
                     String text = "<p>Dear " + user.getFirstName() + " " + user.getLastName() + ",</p>" +
@@ -684,13 +687,13 @@ public class ProjectBean {
                     MailDto mailDto = new MailDto(
                             subject,
                             text,
-                            userResponsable.getFirstName() + " " + userResponsable.getLastName(),
-                            userResponsable.getEmail(),
+                            admnistration.getFirstName() + " " + admnistration.getLastName(),
+                            admnistration.getEmail(),
                             user.getFirstName() + " " + user.getLastName(),
                             user.getEmail()
                     );
 
-                    mailBean.sendMail(sessionId, mailDto);
+                    mailBean.sendMail(admnistration, mailDto);
                 } else if (user.getLanguage() == LanguageENUM.PORTUGUESE) {
                     String subject = "Projeto " + project.getName() + " Aprovado";
                     String text = "<p>Caro(a) " + user.getFirstName() + " " + user.getLastName() + ",</p>" +
@@ -700,17 +703,18 @@ public class ProjectBean {
                     MailDto mailDto = new MailDto(
                             subject,
                             text,
-                            userResponsable.getFirstName() + " " + userResponsable.getLastName(),
-                            userResponsable.getEmail(),
+                            admnistration.getFirstName() + " " + admnistration.getLastName(),
+                            admnistration.getEmail(),
                             user.getFirstName() + " " + user.getLastName(),
                             user.getEmail()
                     );
 
-                    mailBean.sendMail(sessionId, mailDto);
+                    mailBean.sendMail(admnistration, mailDto);
                 }
             } else {
                 notificationBean.createRejectProjectNotification(project.getSystemName(), StateProjectENUM.PLANNING, userResponsable.getFirstName() + " " + userResponsable.getLastName(), user, userResponsable.getSystemUsername());
 
+                UserEntity admnistration = userDao.findBySystemUsername("admnistration");
                 if (user.getLanguage() == LanguageENUM.ENGLISH) {
                     String subject = "Project " + project.getName() + " Rejected";
                     String text = "<p>Dear " + user.getFirstName() + " " + user.getLastName() + ",</p>" +
@@ -722,13 +726,13 @@ public class ProjectBean {
                     MailDto mailDto = new MailDto(
                             subject,
                             text,
-                            userResponsable.getFirstName() + " " + userResponsable.getLastName(),
-                            userResponsable.getEmail(),
+                            admnistration.getFirstName() + " " + admnistration.getLastName(),
+                            admnistration.getEmail(),
                             user.getFirstName() + " " + user.getLastName(),
                             user.getEmail()
                     );
 
-                    mailBean.sendMail(sessionId, mailDto);
+                    mailBean.sendMail(admnistration, mailDto);
                 } else if (user.getLanguage() == LanguageENUM.PORTUGUESE) {
                     String subject = "Projeto " + project.getName() + " Rejeitado";
                     String text = "<p>Caro(a) " + user.getFirstName() + " " + user.getLastName() + ",</p>" +
@@ -740,13 +744,13 @@ public class ProjectBean {
                     MailDto mailDto = new MailDto(
                             subject,
                             text,
-                            userResponsable.getFirstName() + " " + userResponsable.getLastName(),
-                            userResponsable.getEmail(),
+                            admnistration.getFirstName() + " " + admnistration.getLastName(),
+                            admnistration.getEmail(),
                             user.getFirstName() + " " + user.getLastName(),
                             user.getEmail()
                     );
 
-                    mailBean.sendMail(sessionId, mailDto);
+                    mailBean.sendMail(admnistration, mailDto);
                 }
             }
         }
@@ -815,6 +819,7 @@ public class ProjectBean {
                 notificationBean.createProjectNotification(project.getSystemName(), StateProjectENUM.CANCELED, userDao.getFullNameBySystemUsername(sender.getSystemUsername()), user, sender.getSystemUsername());
             }
 
+            UserEntity admnistration = userDao.findBySystemUsername("admnistration");
             if (user.getLanguage() == LanguageENUM.ENGLISH) {
                 String subject = "Project " + project.getName() + " Canceled";
                 String text = "<p>Dear " + user.getFirstName() + " " + user.getLastName() + ",</p>" +
@@ -826,13 +831,13 @@ public class ProjectBean {
                 MailDto mailDto = new MailDto(
                         subject,
                         text,
-                        sender.getFirstName() + " " + sender.getLastName(),
-                        sender.getEmail(),
+                        admnistration.getFirstName() + " " + admnistration.getLastName(),
+                        admnistration.getEmail(),
                         user.getFirstName() + " " + user.getLastName(),
                         user.getEmail()
                 );
 
-                mailBean.sendMail(sessionId, mailDto);
+                mailBean.sendMail(admnistration, mailDto);
             } else if (user.getLanguage() == LanguageENUM.PORTUGUESE) {
                 String subject = "Projeto " + project.getName() + " Cancelado";
                 String text = "<p>Caro(a) " + user.getFirstName() + " " + user.getLastName() + ",</p>" +
@@ -844,13 +849,13 @@ public class ProjectBean {
                 MailDto mailDto = new MailDto(
                         subject,
                         text,
-                        sender.getFirstName() + " " + sender.getLastName(),
-                        sender.getEmail(),
+                        admnistration.getFirstName() + " " + admnistration.getLastName(),
+                        admnistration.getEmail(),
                         user.getFirstName() + " " + user.getLastName(),
                         user.getEmail()
                 );
 
-                mailBean.sendMail(sessionId, mailDto);
+                mailBean.sendMail(admnistration, mailDto);
             }
         }
 
@@ -960,6 +965,7 @@ public class ProjectBean {
 
         notificationBean.createRemovedNotification(systemProjectName, currentUser.getSystemUsername(), userToRemove);
 
+        UserEntity admnistration = userDao.findBySystemUsername("admnistration");
         if (userToRemove.getLanguage() == LanguageENUM.ENGLISH) {
             String subject = "You have been removed from project " + project.getName();
             String text = "<p>Dear " + userToRemove.getFirstName() + " " + userToRemove.getLastName() + ",</p>" +
@@ -971,12 +977,12 @@ public class ProjectBean {
             MailDto mailDto = new MailDto(
                     subject,
                     text,
-                    userDao.getFullNameBySystemUsername(currentUser.getSystemUsername()),
-                    currentUser.getEmail(),
+                    userDao.getFullNameBySystemUsername(admnistration.getSystemUsername()),
+                    admnistration.getEmail(),
                     userToRemove.getFirstName() + " " + userToRemove.getLastName(),
                     userToRemove.getEmail()
             );
-            mailBean.sendMail(sessionId, mailDto);
+            mailBean.sendMail(admnistration, mailDto);
 
         } else if (userToRemove.getLanguage() == LanguageENUM.PORTUGUESE) {
             String subject = "Foi removido do projeto " + project.getName();
@@ -989,13 +995,13 @@ public class ProjectBean {
             MailDto mailDto = new MailDto(
                     subject,
                     text,
-                    userDao.getFullNameBySystemUsername(currentUser.getSystemUsername()),
-                    currentUser.getEmail(),
+                    userDao.getFullNameBySystemUsername(admnistration.getSystemUsername()),
+                    admnistration.getEmail(),
                     userToRemove.getFirstName() + " " + userToRemove.getLastName(),
                     userToRemove.getEmail()
             );
 
-            mailBean.sendMail(sessionId, mailDto);
+            mailBean.sendMail(admnistration, mailDto);
         }
         logBean.createMemberRemovedLog(project, currentUser, userToRemove.getFullName());
         return "User removed successfully";
@@ -1014,6 +1020,7 @@ public class ProjectBean {
 
         notificationBean.createApplianceAcceptedNotification(systemProjectName, currentUser.getSystemUsername(), user);
 
+        UserEntity admnistration = userDao.findBySystemUsername("admnistration");
         if(user.getLanguage() == LanguageENUM.ENGLISH) {
             String subject = "Your application to project " + project.getName() + " has been accepted";
             String text = "<p>Dear " + user.getFirstName() + " " + user.getLastName() + ",</p>" +
@@ -1024,13 +1031,13 @@ public class ProjectBean {
             MailDto mailDto = new MailDto(
                     subject,
                     text,
-                    userDao.getFullNameBySystemUsername(currentUser.getSystemUsername()),
-                    currentUser.getEmail(),
+                    userDao.getFullNameBySystemUsername(admnistration.getSystemUsername()),
+                    admnistration.getEmail(),
                     user.getFirstName() + " " + user.getLastName(),
                     user.getEmail()
             );
 
-            mailBean.sendMail(sessionId, mailDto);
+            mailBean.sendMail(admnistration, mailDto);
         } else if (user.getLanguage() == LanguageENUM.PORTUGUESE) {
             String subject = "A sua candidatura ao projeto " + project.getName() + " foi aceite";
             String text = "<p>Caro(a) " + user.getFirstName() + " " + user.getLastName() + ",</p>" +
@@ -1041,13 +1048,13 @@ public class ProjectBean {
             MailDto mailDto = new MailDto(
                     subject,
                     text,
-                    userDao.getFullNameBySystemUsername(currentUser.getSystemUsername()),
-                    currentUser.getEmail(),
+                    userDao.getFullNameBySystemUsername(admnistration.getSystemUsername()),
+                    admnistration.getEmail(),
                     user.getFirstName() + " " + user.getLastName(),
                     user.getEmail()
             );
 
-            mailBean.sendMail(sessionId, mailDto);
+            mailBean.sendMail(admnistration, mailDto);
 
         }
         logBean.createMemberAddedLog(project, currentUser, user.getFullName());
@@ -1066,6 +1073,7 @@ public class ProjectBean {
 
         notificationBean.createApplianceRejectedNotification(systemProjectName, currentUser.getSystemUsername(), user);
 
+        UserEntity admnistration = userDao.findBySystemUsername("admnistration");
         if(user.getLanguage() == LanguageENUM.ENGLISH) {
             String subject = "Your application to project " + project.getName() + " has been rejected";
             String text = "<p>Dear " + user.getFirstName() + " " + user.getLastName() + ",</p>" +
@@ -1077,13 +1085,13 @@ public class ProjectBean {
             MailDto mailDto = new MailDto(
                     subject,
                     text,
-                    userDao.getFullNameBySystemUsername(currentUser.getSystemUsername()),
-                    currentUser.getEmail(),
+                    userDao.getFullNameBySystemUsername(admnistration.getSystemUsername()),
+                    admnistration.getEmail(),
                     user.getFirstName() + " " + user.getLastName(),
                     user.getEmail()
             );
 
-            mailBean.sendMail(sessionId, mailDto);
+            mailBean.sendMail(admnistration, mailDto);
         } else if(user.getLanguage() == LanguageENUM.PORTUGUESE){
             String subject = "A sua candidatura ao projeto " + project.getName() + " foi rejeitada";
             String text = "<p>Caro(a) " + user.getFirstName() + " " + user.getLastName() + ",</p>" +
@@ -1095,13 +1103,13 @@ public class ProjectBean {
             MailDto mailDto = new MailDto(
                     subject,
                     text,
-                    userDao.getFullNameBySystemUsername(currentUser.getSystemUsername()),
-                    currentUser.getEmail(),
+                    userDao.getFullNameBySystemUsername(admnistration.getSystemUsername()),
+                    admnistration.getEmail(),
                     user.getFirstName() + " " + user.getLastName(),
                     user.getEmail()
             );
 
-            mailBean.sendMail(sessionId, mailDto);
+            mailBean.sendMail(admnistration, mailDto);
         }
 
         return "Application rejected successfully";
@@ -1466,6 +1474,7 @@ public class ProjectBean {
             userProjectEntity.setType(UserInProjectTypeENUM.MEMBER);
             userProjectDao.persist(userProjectEntity);
             notificationBean.createProjectInsertedNotification(projectSystemName, userDao.getFullNameBySystemUsername(sender.getSystemUsername()), userReceiver, sender.getSystemUsername());
+            UserEntity admnistration = userDao.findBySystemUsername("admnistration");
             if(userReceiver.getLanguage() == LanguageENUM.ENGLISH) {
                 String subject = "You have been added to project " + project.getName();
                 String text = "<p>Dear " + userReceiver.getFirstName() + " " + userReceiver.getLastName() + ",</p>" +
@@ -1475,12 +1484,12 @@ public class ProjectBean {
                 MailDto mailDto = new MailDto(
                         subject,
                         text,
-                        userDao.getFullNameBySystemUsername(sender.getSystemUsername()),
-                        sender.getEmail(),
+                        userDao.getFullNameBySystemUsername(admnistration.getSystemUsername()),
+                        admnistration.getEmail(),
                         userReceiver.getFirstName() + " " + userReceiver.getLastName(),
                         userReceiver.getEmail()
                 );
-                mailBean.sendMail(sessionDao.findSessionIdByUserId(sender.getId()), mailDto);
+                mailBean.sendMail(admnistration, mailDto);
             } else if (userReceiver.getLanguage() == LanguageENUM.PORTUGUESE) {
                 String subject = "Foi adicionado ao projeto " + project.getName();
                 String text = "<p>Caro(a) " + userReceiver.getFirstName() + " " + userReceiver.getLastName() + ",</p>" +
@@ -1490,12 +1499,12 @@ public class ProjectBean {
                 MailDto mailDto = new MailDto(
                         subject,
                         text,
-                        userDao.getFullNameBySystemUsername(sender.getSystemUsername()),
-                        sender.getEmail(),
+                        userDao.getFullNameBySystemUsername(admnistration.getSystemUsername()),
+                        admnistration.getEmail(),
                         userReceiver.getFirstName() + " " + userReceiver.getLastName(),
                         userReceiver.getEmail()
                 );
-                mailBean.sendMail(sessionDao.findSessionIdByUserId(sender.getId()), mailDto);
+                mailBean.sendMail(admnistration, mailDto);
             }
         }
 
@@ -1518,6 +1527,7 @@ public class ProjectBean {
 
         notificationDao.removeByProjectIdAndReceptorAndType(project.getSystemName(), userToRemove.getId(), NotificationTypeENUM.INVITE);
 
+        UserEntity admnistration = userDao.findBySystemUsername("admnistration");
         if(userToRemove.getLanguage() == LanguageENUM.ENGLISH) {
             String subject = "Invitation to project " + project.getName() + " removed";
             String text = "<p>Dear " + userToRemove.getFirstName() + " " + userToRemove.getLastName() + ",</p>" +
@@ -1527,13 +1537,13 @@ public class ProjectBean {
             MailDto mailDto = new MailDto(
                     subject,
                     text,
-                    userDao.getFullNameBySystemUsername(currentUser.getSystemUsername()),
-                    currentUser.getEmail(),
+                    userDao.getFullNameBySystemUsername(admnistration.getSystemUsername()),
+                    admnistration.getEmail(),
                     userToRemove.getFirstName() + " " + userToRemove.getLastName(),
                     userToRemove.getEmail()
             );
 
-            mailBean.sendMail(sessionId, mailDto);
+            mailBean.sendMail(admnistration, mailDto);
         } else if (userToRemove.getLanguage() == LanguageENUM.PORTUGUESE) {
             String subject = "Convite para o projeto " + project.getName() + " removido";
             String text = "<p>Caro(a) " + userToRemove.getFirstName() + " " + userToRemove.getLastName() + ",</p>" +
@@ -1543,13 +1553,13 @@ public class ProjectBean {
             MailDto mailDto = new MailDto(
                     subject,
                     text,
-                    userDao.getFullNameBySystemUsername(currentUser.getSystemUsername()),
-                    currentUser.getEmail(),
+                    userDao.getFullNameBySystemUsername(admnistration.getSystemUsername()),
+                    admnistration.getEmail(),
                     userToRemove.getFirstName() + " " + userToRemove.getLastName(),
                     userToRemove.getEmail()
             );
 
-            mailBean.sendMail(sessionId, mailDto);
+            mailBean.sendMail(admnistration, mailDto);
         }
 
         return "Invitation removed successfully";
@@ -1600,6 +1610,7 @@ public class ProjectBean {
         userProjectDao.remove(userProject);
 
         List<UserEntity> teamManagers = userProjectDao.findCreatorsAndManagersByProjectId(project.getId());
+        UserEntity admnistration = userDao.findBySystemUsername("admnistration");
         for (UserEntity teamManager : teamManagers) {
             notificationBean.createLeftProjectNotification(projectSystemName, user.getSystemUsername(), teamManager);
             if(teamManager.getLanguage() == LanguageENUM.ENGLISH){
@@ -1612,12 +1623,12 @@ public class ProjectBean {
             MailDto mailDto = new MailDto(
                     subject,
                     text,
-                    userDao.getFullNameBySystemUsername(user.getSystemUsername()),
-                    user.getEmail(),
+                    userDao.getFullNameBySystemUsername(admnistration.getSystemUsername()),
+                    admnistration.getEmail(),
                     teamManager.getFullName(),
                     teamManager.getEmail()
             );
-            mailBean.sendMail(sessionDao.findSessionIdByUserId(user.getId()), mailDto);
+            mailBean.sendMail(admnistration, mailDto);
         } else if(teamManager.getLanguage() == LanguageENUM.PORTUGUESE){
             String subject = "Utilizador " + user.getFullName() + " saiu do projeto " + project.getName();
             String text = "<p>Caro(a) " + teamManager.getFullName() + ",</p>" +
@@ -1628,12 +1639,12 @@ public class ProjectBean {
             MailDto mailDto = new MailDto(
                     subject,
                     text,
-                    userDao.getFullNameBySystemUsername(user.getSystemUsername()),
-                    user.getEmail(),
+                    userDao.getFullNameBySystemUsername(admnistration.getSystemUsername()),
+                    admnistration.getEmail(),
                     teamManager.getFullName(),
                     teamManager.getEmail()
             );
-            mailBean.sendMail(sessionDao.findSessionIdByUserId(user.getId()), mailDto);
+            mailBean.sendMail(admnistration, mailDto);
         }
         }
 
