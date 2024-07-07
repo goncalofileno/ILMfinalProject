@@ -16,6 +16,7 @@ import Cookies from "js-cookie";
 import { FaTrash } from "react-icons/fa";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./SentMailTable.css";
+import { Trans, t } from "@lingui/macro";
 
 const SentMailTable = () => {
   const navigate = useNavigate();
@@ -224,7 +225,7 @@ const SentMailTable = () => {
       <InputGroup className="mb-3 mail-filters">
         <Form.Control
           type="text"
-          placeholder="Search mails"
+          placeholder={t`Search mails`}
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
           style={{ borderRadius: "10px" }}
@@ -239,20 +240,20 @@ const SentMailTable = () => {
             borderRadius: "10px",
           }}
         >
-          Search
+          <Trans>Search</Trans>
         </Button>
         <Button
           variant="secondary"
           onClick={handleClearSearch}
           style={{ borderRadius: "10px" }}
         >
-          Clear Search
+          <Trans>Clear Search</Trans>
         </Button>
       </InputGroup>
 
       {mails.length === 0 ? (
         <div className="no-results">
-          No emails found matching your criteria.
+          <Trans>No emails found matching your criteria.</Trans>
         </div>
       ) : (
         <>
@@ -331,12 +332,16 @@ const SentMailTable = () => {
       {selectedMail && (
         <Modal show={true} onHide={handleCloseModal}>
           <Modal.Header closeButton>
-            <Modal.Title>Mail Details</Modal.Title>
+            <Modal.Title>
+              <Trans>Mail Details</Trans>
+            </Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form>
               <Form.Group controlId="formContact">
-                <Form.Label>To</Form.Label>
+                <Form.Label>
+                  <Trans>To</Trans>
+                </Form.Label>
                 <Form.Control
                   type="text"
                   readOnly
@@ -345,7 +350,9 @@ const SentMailTable = () => {
                 />
               </Form.Group>
               <Form.Group controlId="formSubject">
-                <Form.Label>Subject</Form.Label>
+                <Form.Label>
+                  <Trans>Subject</Trans>
+                </Form.Label>
                 <Form.Control
                   type="text"
                   readOnly
@@ -354,7 +361,9 @@ const SentMailTable = () => {
                 />
               </Form.Group>
               <Form.Group controlId="formMessage">
-                <Form.Label>Message</Form.Label>
+                <Form.Label>
+                  <Trans>Message</Trans>
+                </Form.Label>
                 <div
                   className="custom-focus"
                   style={{
@@ -371,7 +380,9 @@ const SentMailTable = () => {
                 </div>
               </Form.Group>
               <Form.Group controlId="formDate">
-                <Form.Label>Date</Form.Label>
+                <Form.Label>
+                  <Trans>Date</Trans>
+                </Form.Label>
                 <Form.Control
                   type="text"
                   readOnly
@@ -383,7 +394,7 @@ const SentMailTable = () => {
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleCloseModal}>
-              Close
+              <Trans>Close</Trans>
             </Button>
           </Modal.Footer>
         </Modal>
@@ -392,15 +403,19 @@ const SentMailTable = () => {
       {showDeleteModal && (
         <Modal show={true} onHide={handleCancelDelete}>
           <Modal.Header closeButton>
-            <Modal.Title>Confirm Delete</Modal.Title>
+            <Modal.Title>
+              <Trans>Confirm Delete</Trans>
+            </Modal.Title>
           </Modal.Header>
-          <Modal.Body>Are you sure you want to delete this mail?</Modal.Body>
+          <Modal.Body>
+            <Trans>Are you sure you want to delete this mail?</Trans>
+          </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleCancelDelete}>
-              Cancel
+              <Trans>Cancel</Trans>
             </Button>
             <Button variant="danger" onClick={handleConfirmDelete}>
-              Delete
+              <Trans>Delete</Trans>
             </Button>
           </Modal.Footer>
         </Modal>

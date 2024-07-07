@@ -13,17 +13,18 @@ import DeleteTaskModal from "../components/modals/DeleteTaskModal";
 import { formatTaskStatus } from "../utilities/converters";
 import "./ProjectPlanPage.css";
 import ProgressBar from "../components/bars/ProgressBar";
-import CustomTooltipContent from "../components/tooltips/CustomTooltipContent"; // Import the custom tooltip
+import CustomTooltipContent from "../components/tooltips/CustomTooltipContent"; 
+import { Trans, t } from "@lingui/macro";
 
 const parseDate = (dateString) => new Date(dateString);
 
 const transformTasksData = (projectTask, tasks, projectProgress) => {
   const transformedTasks = tasks
-    .filter((task) => task.initialDate && task.finalDate) // Filtra tarefas com datas válidas
+    .filter((task) => task.initialDate && task.finalDate) 
     .map((task) => ({
       id: task.systemTitle,
       name: task.title,
-      type: task.systemTitle.endsWith("_final_presentation") ? "milestone" : "task", // Define tipo como milestone para a tarefa final
+      type: task.systemTitle.endsWith("_final_presentation") ? "milestone" : "task", 
       start: parseDate(task.initialDate),
       end: parseDate(task.finalDate),
       progress: 0,
@@ -103,6 +104,8 @@ const ProjectPlanPage = () => {
   const [titleError, setTitleError] = useState("");
   const [percentage, setPercentage] = useState(0);
   const [projectState, setProjectState] = useState("IN_PROGRESS");
+  const [currentLanguage, setCurrentLanguage] = useState(Cookies.get("user-language") || "ENGLISH");
+
 
   const fetchData = async () => {
     const sessionId = Cookies.get("session-id");
@@ -133,7 +136,19 @@ const ProjectPlanPage = () => {
 
   useEffect(() => {
     fetchData();
-  }, [systemProjectName]);
+  }, [systemProjectName, currentLanguage]);
+
+  useEffect(() => {
+    const handleLanguageChange = () => {
+      setCurrentLanguage(Cookies.get("user-language") || "ENGLISH");
+    };
+
+    window.addEventListener("languageChange", handleLanguageChange);
+
+    return () => {
+      window.removeEventListener("languageChange", handleLanguageChange);
+    };
+  }, []);
 
   const handleTaskClick = (task) => {
     if (task.type === "project") return; // Prevent modal for project type
@@ -160,7 +175,7 @@ const ProjectPlanPage = () => {
     let error = "";
 
     if (name === "title" && taskTitles.includes(value)) {
-      error = "Task title must be unique.";
+      error = (t`Task title must be unique.`);
       setTitleError(error);
     } else {
       setTitleError("");
@@ -398,7 +413,7 @@ const ProjectPlanPage = () => {
 
   return (
     <>
-      <AppNavbar />
+      <AppNavbar setCurrentLanguage={setCurrentLanguage}/>
       <div className="bckg-color-ilm-page ilm-pageb">
         <ProjectTabs typeOfUserSeingProject={userSeingTasksType} />
         <Container style={{ height: "91%" }}>
@@ -407,20 +422,20 @@ const ProjectPlanPage = () => {
               <Row>
                 <div style={{ width: "500px" }}>
                   <Button onClick={() => setIsAddModalVisible(true)}>
-                    Add New Task
+                  <Trans>Add New Task</Trans>
                   </Button>
                 </div>
                 <div style={{ width: "500px" }}>
                   <Form.Group controlId="viewModeSelector">
-                    <Form.Label>View Mode</Form.Label>
+                    <Form.Label><Trans>View Mode</Trans></Form.Label>
                     <Form.Control
                       as="select"
                       value={viewMode}
                       onChange={handleViewModeChange}
                     >
-                      <option value={ViewMode.Day}>Day</option>
-                      <option value={ViewMode.Month}>Month</option>
-                      <option value={ViewMode.Year}>Year</option>
+                      <option value={ViewMode.Day}><Trans>Day</Trans></option>
+                      <option value={ViewMode.Month}><Trans>Month</Trans></option>
+                      <option value={ViewMode.Year}><Trans>Year</Trans></option>
                     </Form.Control>
                   </Form.Group>
                 </div>
@@ -428,7 +443,7 @@ const ProjectPlanPage = () => {
                   <Form.Group controlId="listCellWidthToggle">
                     <Form.Check
                       type="checkbox"
-                      label="Toggle List Cell Width"
+                      label={t`Toggle List Cell Width`}
                       onChange={handleListCellWidthChange}
                     />
                   </Form.Group>
@@ -447,8 +462,8 @@ const ProjectPlanPage = () => {
                     onDelete={(task) => handleDeleteClick(task)}
                     listCellWidth={listCellWidth}
                     columnWidth={100}
-                    TooltipContent={CustomTooltipContent} // Use custom tooltip here
-                    
+                    TooltipContent={CustomTooltipContent}
+                    locale={currentLanguage === "PORTUGUESE" ? "por" : "eng"}
                   />
                 )}
               </Row>
@@ -456,7 +471,7 @@ const ProjectPlanPage = () => {
           </Row>
           <Row>
             <div style={{ marginTop: "15px" }}>
-              <h5>Project Progress:</h5>
+              <h5><Trans>Project Progress</Trans>:</h5>
             </div>
             <div>
               <ProgressBar percentage={percentage} status={projectState} />
@@ -464,14 +479,14 @@ const ProjectPlanPage = () => {
           </Row>
           <Row>
             <div style={{ marginTop: "15px" }}>
-              <h5>Legend:</h5>
+              <h5><Trans>Legend</Trans>:</h5>
             </div>
             <div>
               <ul>
-                <li><span style={{ backgroundColor: "#8BC34A", padding: "2px 8px", borderRadius: "4px" }}>DONE</span> - Completed tasks</li>
-                <li><span style={{ backgroundColor: "#FFEB3B", padding: "2px 8px", borderRadius: "4px" }}>IN PROGRESS</span> - Tasks in progress</li>
-                <li><span style={{ backgroundColor: "#F44336", padding: "2px 8px", borderRadius: "4px" }}>PLANNED</span> - Planned tasks</li>
-                <li><span style={{ backgroundColor: "#3F51B5", padding: "2px 8px", borderRadius: "4px" }}>PROJECT</span> - Project</li>
+                <li><span style={{ backgroundColor: "#8BC34A", padding: "2px 8px", borderRadius: "4px" }}><Trans>DONE</Trans></span> - <Trans>Completed tasks</Trans></li>
+                <li><span style={{ backgroundColor: "#FFEB3B", padding: "2px 8px", borderRadius: "4px" }}><Trans>IN PROGRESS</Trans></span> - <Trans>Tasks in progress</Trans></li>
+                <li><span style={{ backgroundColor: "#F44336", padding: "2px 8px", borderRadius: "4px" }}><Trans>PLANNED</Trans></span> - <Trans>Planned tasks</Trans></li>
+                <li><span style={{ backgroundColor: "#3F51B5", padding: "2px 8px", borderRadius: "4px" }}><Trans>PROJECT</Trans></span> - <Trans>Project</Trans></li>
               </ul>
             </div>
           </Row>

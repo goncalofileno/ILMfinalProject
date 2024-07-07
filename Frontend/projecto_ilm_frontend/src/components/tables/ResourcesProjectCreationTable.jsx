@@ -2,6 +2,7 @@ import "./Tables.css";
 import { formatResourceType } from "../../utilities/converters";
 import componentIcon from "../../resources/icons/other/application-control.png";
 import Cookies from "js-cookie";
+import { Trans, t } from "@lingui/macro";
 
 export default function ResourcesProjectCreationTable({
   resources,
@@ -58,7 +59,7 @@ export default function ResourcesProjectCreationTable({
       <thead>
         <tr>
           <th style={{ width: "25%" }} onClick={sortByName}>
-            <span style={{ marginRight: "10px" }}>Name</span>
+            <span style={{ marginRight: "10px" }}><Trans>Name</Trans></span>
             {nameAsc ? (
               <i class="fas fa-arrow-up fa-xs"></i>
             ) : (
@@ -66,7 +67,7 @@ export default function ResourcesProjectCreationTable({
             )}
           </th>
           <th style={{ width: "26.5%" }} onClick={sortByType}>
-            <span style={{ marginRight: "10px" }}>Type</span>
+            <span style={{ marginRight: "10px" }}><Trans>Type</Trans></span>
             {typeAsc ? (
               <i class="fas fa-arrow-up fa-xs"></i>
             ) : (
@@ -74,7 +75,7 @@ export default function ResourcesProjectCreationTable({
             )}
           </th>
           <th style={{ width: "21%" }} onClick={sortByBrand}>
-            <span style={{ marginRight: "10px" }}>Brand</span>
+            <span style={{ marginRight: "10px" }}><Trans>Brand</Trans></span>
             {brandAsc ? (
               <i class="fas fa-arrow-up fa-xs"></i>
             ) : (
@@ -83,7 +84,7 @@ export default function ResourcesProjectCreationTable({
           </th>
           <th colSpan={2} style={{ width: "27.5%" }} onClick={sortBySupplier}>
             {" "}
-            <span style={{ marginRight: "10px" }}>Supplier</span>
+            <span style={{ marginRight: "10px" }}><Trans>Supplier</Trans></span>
             {supplierAsc ? (
               <i class="fas fa-arrow-up fa-xs"></i>
             ) : (

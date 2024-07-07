@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, Button } from "react-bootstrap";
-import "./SkillCard.css"; // Certifique-se de que o caminho esteja correto
+import "./SkillCard.css";
 
 const SkillCard = ({ skill, onRemove }) => {
   return (

@@ -3,6 +3,7 @@ import { InputGroup, Form, Button } from "react-bootstrap";
 import TablePagination from "../paginations/TablePagination";
 import componentIcon from "../../resources/icons/other/application-control.png";
 import { formatResourceType } from "../../utilities/converters";
+import { Trans, t } from "@lingui/macro";
 
 export default function ResourcesTable({
   resources,
@@ -48,21 +49,21 @@ export default function ResourcesTable({
         <InputGroup className="mail-filters" style={{ width: "50%" }}>
           <Form.Control
             type="text"
-            placeholder="Search mails"
+            placeholder={t`Search mails`}
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
             style={{ borderRadius: "10px", cursor: "text" }}
             className="custom-focus"
           />
           <Button variant="primary" onClick={handleClick} id="primary-btn-boot">
-            Search
+          <Trans>Search</Trans>
           </Button>
           <Button
             variant="secondary"
             onClick={handleClean}
             style={{ borderRadius: "10px" }}
           >
-            Clear Search
+            <Trans>Clear Search</Trans>
           </Button>
         </InputGroup>
       </div>
@@ -71,7 +72,7 @@ export default function ResourcesTable({
           <tr>
             <th onClick={sortByName} style={{ width: "25%" }}>
               {" "}
-              <span style={{ marginRight: "10px" }}>Name</span>
+              <span style={{ marginRight: "10px" }}><Trans>Name</Trans></span>
               {nameAsc ? (
                 <i class="fas fa-arrow-up fa-xs"></i>
               ) : (
@@ -80,7 +81,7 @@ export default function ResourcesTable({
             </th>
             <th onClick={sortByType} style={{ width: "25%" }}>
               {" "}
-              <span style={{ marginRight: "10px" }}>Type</span>
+              <span style={{ marginRight: "10px" }}><Trans>Type</Trans></span>
               {typeAsc ? (
                 <i class="fas fa-arrow-up fa-xs"></i>
               ) : (
@@ -89,7 +90,7 @@ export default function ResourcesTable({
             </th>
             <th onClick={sortByBrand} style={{ width: "25%" }}>
               {" "}
-              <span style={{ marginRight: "10px" }}>Brand</span>
+              <span style={{ marginRight: "10px" }}><Trans>Brand</Trans></span>
               {brandAsc ? (
                 <i class="fas fa-arrow-up fa-xs"></i>
               ) : (
@@ -98,7 +99,7 @@ export default function ResourcesTable({
             </th>
             <th onClick={sortBySupplier} style={{ width: "25%" }}>
               {" "}
-              <span style={{ marginRight: "10px" }}>Supplier</span>
+              <span style={{ marginRight: "10px" }}><Trans>Supplier</Trans></span>
               {supplierAsc ? (
                 <i class="fas fa-arrow-up fa-xs"></i>
               ) : (
@@ -111,7 +112,7 @@ export default function ResourcesTable({
           <tr>
             <td colspan="4">
               <div className="no-results no-results-align">
-                No resources found matching your criteria.
+              <Trans>No resources found matching your criteria.</Trans>
               </div>
             </td>
           </tr>
@@ -170,7 +171,7 @@ export default function ResourcesTable({
               id="btn-add-project-table-projects"
               onClick={() => setIsModalActive(true)}
             >
-              Add Resource
+              <Trans>Add Resource</Trans>
             </button>
           </div>
           <div className="tablePagination-div">

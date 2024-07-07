@@ -18,6 +18,8 @@ import myProjectsIcon from "../../resources/icons/navbar/my-projects-icon.png";
 import mailIcon from "../../resources/icons/navbar/mail-icon.png";
 import bellIcon from "../../resources/icons/navbar/notification-icon.png";
 import userProfileIcon from "../../resources/avatares/Avatar padrão.jpg";
+import { Trans, t } from "@lingui/macro";
+import { useLanguage } from "../../I18nLoader";
 
 export default function AppNavbar({ setIsAsideVisible }) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -38,6 +40,7 @@ export default function AppNavbar({ setIsAsideVisible }) {
     fetchNotifications,
     clearNotifications,
   } = useNotificationStore();
+  const { language, changeLanguage } = useLanguage();
 
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
@@ -74,6 +77,7 @@ export default function AppNavbar({ setIsAsideVisible }) {
         console.error("Failed to update language:", response.error);
       }
     }
+    changeLanguage(newLanguage);
   };
 
   useEffect(() => {
@@ -195,14 +199,14 @@ export default function AppNavbar({ setIsAsideVisible }) {
               onClick={() => handleNavigation("/projects")}
             >
               <div className="icon" style={getNavIconStyle("/projects")}></div>
-              <label>Projects</label>
+              <label><Trans>Projects</Trans></label>
             </div>
             <div
               className={getNavItemClass("/resources")}
               onClick={() => handleNavigation("/resources")}
             >
               <div className="icon" style={getNavIconStyle("/resources")}></div>
-              <label>Resources</label>
+              <label><Trans>Resources</Trans></label>
             </div>
             <div
               className={getNavItemClass("/myprojects")}
@@ -212,7 +216,7 @@ export default function AppNavbar({ setIsAsideVisible }) {
                 className="icon"
                 style={getNavIconStyle("/myprojects")}
               ></div>
-              <label>My Projects</label>
+              <label><Trans>My Projects</Trans></label>
             </div>
             <div
               className={getNavItemClass("/mail/inbox")}
@@ -222,7 +226,7 @@ export default function AppNavbar({ setIsAsideVisible }) {
                 className="icon"
                 style={getNavIconStyle("/mail/inbox")}
               ></div>
-              <label>Mail</label>
+              <label>Email</label>
               {unreadCount > 0 && <span className="badge">{unreadCount}</span>}
             </div>
           </div>
@@ -263,8 +267,8 @@ export default function AppNavbar({ setIsAsideVisible }) {
             ></div>
             {dropdownOpen && (
               <div className={`dropdown-content ${dropdownOpen ? "show" : ""}`}>
-                <div onClick={handleMyProfile}>👤 My Profile</div>
-                <div onClick={handleLogout}>⛔️ Logout</div>
+                <div onClick={handleMyProfile}>👤 <Trans>My Profile</Trans></div>
+                <div onClick={handleLogout}>⛔️ <Trans>Logout</Trans></div>
               </div>
             )}
           </div>
@@ -279,14 +283,14 @@ export default function AppNavbar({ setIsAsideVisible }) {
               onClick={() => handleNavigation("/projects")}
             >
               <div className="icon" style={getNavIconStyle("/projects")}></div>
-              <label>Projects</label>
+              <label><Trans>Projects</Trans></label>
             </div>
             <div
               className={getNavItemClass("/resources")}
               onClick={() => handleNavigation("/resources")}
             >
               <div className="icon" style={getNavIconStyle("/resources")}></div>
-              <label>Resources</label>
+              <label><Trans>Resources</Trans></label>
             </div>
             <div
               className={getNavItemClass("/myprojects")}
@@ -296,7 +300,7 @@ export default function AppNavbar({ setIsAsideVisible }) {
                 className="icon"
                 style={getNavIconStyle("/myprojects")}
               ></div>
-              <label>My Projects</label>
+              <label><Trans>My Projects</Trans></label>
             </div>
             <div
               className={getNavItemClass("/mail/inbox")}
@@ -306,7 +310,7 @@ export default function AppNavbar({ setIsAsideVisible }) {
                 className="icon mail-icon"
                 style={getNavIconStyle("/mail/inbox")}
               ></div>
-              <label>Mail</label>
+              <label>Email</label>
               {unreadCount > 0 && <span className="badge">{unreadCount}</span>}
             </div>
           </div>

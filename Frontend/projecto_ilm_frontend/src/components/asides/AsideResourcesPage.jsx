@@ -4,6 +4,7 @@ import { Form } from "react-bootstrap";
 import { getResourcesFilters } from "../../utilities/services";
 import { useEffect, useState } from "react";
 import { formatResourceType } from "../../utilities/converters";
+import { Trans, t } from "@lingui/macro";
 
 export default function AsideResourcesPage({
   brand,
@@ -57,7 +58,7 @@ export default function AsideResourcesPage({
       <div className="aside">
         <div className="div-control-form" id="first-div">
           <Form.Label className="custom-label" style={{ color: "white" }}>
-            Type
+          <Trans>Type</Trans>
           </Form.Label>
           <Form.Control
             as="select"
@@ -66,7 +67,7 @@ export default function AsideResourcesPage({
             onChange={handleTypeChange}
           >
             {" "}
-            <option value="">All Types</option>
+            <option value=""><Trans>All Types</Trans></option>
             {types.map((type, index) => (
               <option key={index} value={type}>
                 {formatResourceType(type)}
@@ -76,7 +77,7 @@ export default function AsideResourcesPage({
         </div>
         <div className="div-control-form">
           <Form.Label className="custom-label" style={{ color: "white" }}>
-            Brand
+          <Trans>Brand</Trans>
           </Form.Label>
           <Form.Control
             as="select"
@@ -84,7 +85,7 @@ export default function AsideResourcesPage({
             value={brand}
             onChange={handleBrandChange}
           >
-            <option value="">All Brands</option>
+            <option value=""><Trans>All Brands</Trans></option>
             {brands.map((brand, index) => (
               <option key={index} value={brand}>
                 {brand}
@@ -94,7 +95,7 @@ export default function AsideResourcesPage({
         </div>
         <div className="div-control-form">
           <Form.Label className="custom-label" style={{ color: "white" }}>
-            Supplier
+          <Trans>Supplier</Trans>
           </Form.Label>
           <Form.Control
             as="select"
@@ -103,7 +104,7 @@ export default function AsideResourcesPage({
             onChange={handleSupplierChange}
           >
             {" "}
-            <option value="">All Suppliers</option>
+            <option value=""><Trans>All Suppliers</Trans></option>
             {suppliers.map((supplier, index) => (
               <option key={index} value={supplier}>
                 {supplier}
@@ -132,7 +133,7 @@ export default function AsideResourcesPage({
             setNavigateTableResourcesTrigger((prev) => !prev);
           }}
         >
-          Clear Filters
+          <Trans>Clear Filters</Trans>
         </button>
       </div>
     </div>

@@ -20,19 +20,21 @@ import {
 } from "react-bootstrap";
 import Cookies from "js-cookie";
 import { CSSTransition } from "react-transition-group";
-import "./ProfilePage.css"; // Certifique-se de criar e incluir este arquivo CSS.
-import "./AlertAnimation.css"; // Certifique-se de criar e incluir este arquivo CSS.
+import "./ProfilePage.css";
+import "./AlertAnimation.css";
 import ComposeMailModal from "../components/modals/ComposeMailModal";
-import InviteProjectModal from "../components/modals/InviteProjectModal.jsx"; // Importe o componente InviteProjectModal
+import InviteProjectModal from "../components/modals/InviteProjectModal.jsx";
+import { Trans, t } from "@lingui/macro";
+import { formatProjectState, formatTypeUserInProject } from "../utilities/converters.js";
 
 const UserProfile = () => {
   const { systemUsername, section } = useParams();
   const [profile, setProfile] = useState(null);
   const [error, setError] = useState(null);
   const [isPrivate, setIsPrivate] = useState(false);
-  const [showComposeModal, setShowComposeModal] = useState(false); // Estado para visibilidade do modal de email
-  const [showInviteModal, setShowInviteModal] = useState(false); // Estado para visibilidade do modal de convite
-  const [preFilledContact, setPreFilledContact] = useState(""); // Estado para contato pré-preenchido
+  const [showComposeModal, setShowComposeModal] = useState(false);
+  const [showInviteModal, setShowInviteModal] = useState(false);
+  const [preFilledContact, setPreFilledContact] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [showAlert, setShowAlert] = useState(false);
   const [unreadNotificationsCount, setUnreadNotificationsCount] = useState(0);
@@ -59,12 +61,12 @@ const UserProfile = () => {
           setIsPrivate(false);
         }
       } else if (profileData.status === 401) {
-        setError("Unauthorized: Invalid session.");
+        setError(t`Unauthorized: Invalid session.`);
       } else if (profileData.status === 404) {
-        setError("User not found.");
+        setError(t`User not found.`);
       }
     } catch (err) {
-      setError("An error occurred while fetching the profile.");
+      setError(t`An error occurred while fetching the profile.`);
     }
   };
 
@@ -122,7 +124,11 @@ const UserProfile = () => {
   }
 
   if (!profile) {
-    return <div>Loading...</div>;
+    return (
+      <div>
+        <Trans>Loading...</Trans>
+      </div>
+    );
   }
 
   const handleEditProfile = () => {
@@ -148,12 +154,12 @@ const UserProfile = () => {
       const result = await respondToInvite(sessionId, projectName, response);
       if (!result.error) {
         if (response) {
-          setSuccessMessage(`You now belong to the project: ${projectName}.`);
+          setSuccessMessage(t`You now belong to the project: ${projectName}.`);
           fetchProfile();
           navigate(`/profile/${systemUsername}/projects`);
         } else {
           setSuccessMessage(
-            `The invite for the project: ${projectName} was successfully rejected.`
+            t`The invite for the project: ${projectName} was successfully rejected.`
           );
           fetchProfile();
           setPendingProjectToReject(null);
@@ -162,7 +168,7 @@ const UserProfile = () => {
         setError(result.error);
       }
     } catch (err) {
-      setError("An error occurred while responding to the invite.");
+      setError(t`An error occurred while responding to the invite.`);
     }
   };
 
@@ -251,11 +257,17 @@ const UserProfile = () => {
                           {profile.username}
                         </Card.Subtitle>
                         <Card.Text>
-                          <strong>Location:</strong> {profile.location}
+                          <strong>
+                            <Trans>Location</Trans>:
+                          </strong>{" "}
+                          {profile.location}
                         </Card.Text>
                         {!isPrivate && profile.bio && (
                           <Card.Text>
-                            <strong>Bio:</strong> {profile.bio}
+                            <strong>
+                              <Trans>Bio</Trans>:
+                            </strong>{" "}
+                            {profile.bio}
                           </Card.Text>
                         )}
                         {loggedInUsername === systemUsername ? (
@@ -265,7 +277,7 @@ const UserProfile = () => {
                             className="submit-button"
                             style={{ padding: "10px 20px" }}
                           >
-                            Edit Profile
+                            <Trans>Edit Profile</Trans>
                           </Button>
                         ) : (
                           <div className="button-group">
@@ -275,7 +287,7 @@ const UserProfile = () => {
                               style={{ padding: "10px 20px" }}
                               onClick={handleSendMessage}
                             >
-                              Send Email
+                              <Trans>Send Email</Trans>
                             </Button>
                             <Button
                               variant="secondary"
@@ -283,7 +295,7 @@ const UserProfile = () => {
                               style={{ padding: "10px 20px" }}
                               onClick={handleInvite}
                             >
-                              Invite to Project
+                              <Trans>Invite to Project</Trans>
                             </Button>
                           </div>
                         )}
@@ -292,7 +304,7 @@ const UserProfile = () => {
                     <Col md="6" style={{ height: "100%" }}>
                       {isPrivate ? (
                         <Alert variant="info" style={{ textAlign: "center" }}>
-                          This profile is private.
+                          <Trans>This profile is private.</Trans>
                         </Alert>
                       ) : (
                         <Tab.Container
@@ -311,7 +323,7 @@ const UserProfile = () => {
                             {loggedInUsername === systemUsername && (
                               <Nav.Item>
                                 <Nav.Link eventKey="applications">
-                                  Applications
+                                  <Trans>Applications</Trans>
                                 </Nav.Link>
                               </Nav.Item>
                             )}
@@ -320,7 +332,7 @@ const UserProfile = () => {
                             </Nav.Item>
                             <Nav.Item>
                               <Nav.Link eventKey="interests">
-                                Interests
+                                <Trans>Interests</Trans>
                               </Nav.Link>
                             </Nav.Item>
                           </Nav>
@@ -345,28 +357,34 @@ const UserProfile = () => {
                                           id="column-div-project"
                                           className="mb-1"
                                         >
-                                          <strong>Project Name:</strong>
+                                          <strong>
+                                            <Trans>Project Name</Trans>:
+                                          </strong>
                                           {project.name}
                                         </p>
                                         <p
                                           id="column-div-project"
                                           className="mb-1"
                                         >
-                                          <strong>Type Member:</strong>{" "}
-                                          {project.typeMember}
+                                          <strong>
+                                            <Trans>Type Member</Trans>:
+                                          </strong>{" "}
+                                          {formatTypeUserInProject(project.typeMember)}
                                         </p>
                                         <p
                                           id="column-div-project"
                                           className="mb-1"
                                         >
-                                          <strong>Status:</strong>{" "}
-                                          {project.status}
+                                          <strong>
+                                            <Trans>Status</Trans>:
+                                          </strong>{" "}
+                                          {formatProjectState(project.status)}
                                         </p>
                                       </div>
                                     ))
                                   ) : (
                                     <p className="centered-message">
-                                      No projects available.
+                                      <Trans>No projects available.</Trans>
                                     </p>
                                   )}
                                 </Card.Body>
@@ -388,11 +406,15 @@ const UserProfile = () => {
                                         >
                                           <div>
                                             <p className="mb-1">
-                                              <strong>Project Name:</strong>{" "}
+                                              <strong>
+                                                <Trans>Project Name</Trans>:
+                                              </strong>{" "}
                                               {project.name}
                                             </p>
                                             <p className="mb-1">
-                                              <strong>Status:</strong>{" "}
+                                              <strong>
+                                                <Trans>Status</Trans>:
+                                              </strong>{" "}
                                               {project.status}
                                             </p>
                                           </div>
@@ -407,7 +429,7 @@ const UserProfile = () => {
                                                   )
                                                 }
                                               >
-                                                Reject
+                                                <Trans>Reject</Trans>
                                               </Button>
                                               <Button
                                                 variant="success"
@@ -418,7 +440,7 @@ const UserProfile = () => {
                                                   )
                                                 }
                                               >
-                                                Accept
+                                                <Trans>Accept</Trans>
                                               </Button>
                                             </div>
                                           )}
@@ -426,7 +448,9 @@ const UserProfile = () => {
                                       ))
                                     ) : (
                                       <p className="centered-message">
-                                        No applications available.
+                                        <Trans>
+                                          No applications available.
+                                        </Trans>
                                       </p>
                                     )}
                                   </Card.Body>
@@ -463,7 +487,7 @@ const UserProfile = () => {
                                     ) : (
                                       <Col>
                                         <p className="centered-message">
-                                          No skills available.
+                                          <Trans>No skills available.</Trans>
                                         </p>
                                       </Col>
                                     )}
@@ -493,7 +517,7 @@ const UserProfile = () => {
                                     ) : (
                                       <Col>
                                         <p className="centered-message">
-                                          No interests available.
+                                          <Trans>No interests available.</Trans>
                                         </p>
                                       </Col>
                                     )}
@@ -524,15 +548,19 @@ const UserProfile = () => {
       />
       <Modal show={showConfirmModal} onHide={handleCloseConfirmModal}>
         <Modal.Header closeButton>
-          <Modal.Title>Confirm Rejection</Modal.Title>
+          <Modal.Title>
+            <Trans>Confirm Rejection</Trans>
+          </Modal.Title>
         </Modal.Header>
-        <Modal.Body>Are you sure you want to reject this invite?</Modal.Body>
+        <Modal.Body>
+          <Trans>Are you sure you want to reject this invite?</Trans>
+        </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCloseConfirmModal}>
-            Cancel
+            <Trans>Cancel</Trans>
           </Button>
           <Button variant="danger" onClick={handleConfirmReject}>
-            Reject
+            <Trans>Reject</Trans>
           </Button>
         </Modal.Footer>
       </Modal>

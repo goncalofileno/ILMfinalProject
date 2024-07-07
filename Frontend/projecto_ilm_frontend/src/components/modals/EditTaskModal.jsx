@@ -2,6 +2,7 @@ import React from "react";
 import { Modal, Button, Form, ListGroup } from "react-bootstrap";
 import { formatTaskStatus } from "../../utilities/converters";
 import './AddTaskModal.css';
+import { Trans, t } from "@lingui/macro";
 
 const EditTaskModal = ({
   show,
@@ -22,7 +23,7 @@ const EditTaskModal = ({
     return (
         <Modal show={show} onHide={handleClose} dialogClassName="custom-modal">
           <Modal.Header closeButton>
-            <Modal.Title>Edit Task</Modal.Title>
+            <Modal.Title><Trans>Edit Task</Trans></Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form>
@@ -30,7 +31,7 @@ const EditTaskModal = ({
                 <div className="col-md-6">
                   <Form.Group controlId="formTaskTitle">
                     <Form.Label>
-                      <strong>Title:</strong>
+                      <strong><Trans>Title</Trans>:</strong>
                     </Form.Label>
                     <Form.Control
                       type="text"
@@ -45,7 +46,7 @@ const EditTaskModal = ({
                   </Form.Group>
                   <Form.Group controlId="formTaskDescription">
                     <Form.Label>
-                      <strong>Description:</strong>
+                      <strong><Trans>Description</Trans>:</strong>
                     </Form.Label>
                     <Form.Control
                       as="textarea"
@@ -56,7 +57,7 @@ const EditTaskModal = ({
                   </Form.Group>
                   <Form.Group controlId="formTaskStatus">
                     <Form.Label>
-                      <strong>Status:</strong>
+                      <strong><Trans>Status</Trans>:</strong>
                     </Form.Label>
                     <Form.Control
                       as="select"
@@ -73,7 +74,7 @@ const EditTaskModal = ({
                   </Form.Group>
                   <Form.Group controlId="formTaskInitialDate">
                     <Form.Label>
-                      <strong>Initial Date:</strong>
+                      <strong><Trans>Initial Date</Trans>:</strong>
                     </Form.Label>
                     <Form.Control
                       type="date"
@@ -88,7 +89,7 @@ const EditTaskModal = ({
                   </Form.Group>
                   <Form.Group controlId="formTaskFinalDate">
                     <Form.Label>
-                      <strong>Final Date:</strong>
+                      <strong><Trans>Final Date</Trans>:</strong>
                     </Form.Label>
                     <Form.Control
                       type="date"
@@ -114,7 +115,7 @@ const EditTaskModal = ({
                 <div className="col-md-6">
                   <Form.Group controlId="formTaskOutColaboration">
                     <Form.Label>
-                      <strong>Out Colaboration:</strong>
+                      <strong><Trans>Out Colaboration</Trans>:</strong>
                     </Form.Label>
                     <Form.Control
                       type="text"
@@ -125,7 +126,7 @@ const EditTaskModal = ({
                   </Form.Group>
                   <Form.Group controlId="formTaskInCharge">
                     <Form.Label>
-                      <strong>In Charge:</strong>
+                      <strong><Trans>In Charge</Trans>:</strong>
                     </Form.Label>
                     <Form.Control
                       as="select"
@@ -142,7 +143,7 @@ const EditTaskModal = ({
                   </Form.Group>
                   <Form.Group controlId="formTaskMembers">
                     <Form.Label>
-                      <strong>Members:</strong>
+                      <strong><Trans>Members</Trans>:</strong>
                     </Form.Label>
                     <ListGroup>
                       {taskDetails.membersOfTask &&
@@ -176,7 +177,7 @@ const EditTaskModal = ({
                         e.target.value = ""; // Reset the selector
                       }}
                     >
-                      <option value="">Add New Member</option>
+                      <option value=""><Trans>Add New Member</Trans></option>
                       {availableMembers.map((member) => (
                         <option key={member.id} value={member.systemUsername}>
                           {member.name}
@@ -186,7 +187,7 @@ const EditTaskModal = ({
                   </Form.Group>
                   <Form.Group controlId="formTaskDependentTasks">
                     <Form.Label>
-                      <strong>Dependent Tasks:</strong>
+                      <strong><Trans>Dependent Tasks</Trans>:</strong>
                     </Form.Label>
                     <ListGroup>
                       {taskDetails.dependentTasks &&
@@ -211,7 +212,7 @@ const EditTaskModal = ({
                         e.target.value = ""; // Reset the selector
                       }}
                     >
-                      <option value="">Add New Dependent Task</option>
+                      <option value=""><Trans>Add New Dependent Task</Trans></option>
                       {availableTasks.map((task) => (
                         <option key={task.rawTask.id} value={task.rawTask.id}>
                           {task.name}
@@ -225,7 +226,7 @@ const EditTaskModal = ({
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>
-              Close
+            <Trans>Close</Trans>
             </Button>
       
             <Button
@@ -233,7 +234,7 @@ const EditTaskModal = ({
               onClick={handleDeleteClick} // Adicione esta linha
               style={{ marginLeft: "auto", backgroundColor: "#dc3545", borderColor: "#dc3545"}}
             >
-              Delete Task
+              <Trans>Delete Task</Trans>
             </Button>
             <Button
               variant="primary"
@@ -241,7 +242,7 @@ const EditTaskModal = ({
               disabled={!isSaveEnabled}
               style={{ backgroundColor: isSaveEnabled ? "#007bff" : "#6c757d" }}
             >
-              Save changes
+              <Trans>Save changes</Trans>
             </Button>
           </Modal.Footer>
         </Modal>

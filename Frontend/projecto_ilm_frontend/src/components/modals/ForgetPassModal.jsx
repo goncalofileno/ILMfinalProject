@@ -6,6 +6,7 @@ import { checkEmail, forgetPassword } from "../../utilities/services";
 import alertStore from "../../stores/alertStore";
 import { Trans, t } from "@lingui/macro";
 
+
 export default function ForgetPassModal({ isModalActive, setIsModalActive }) {
    const [email, setEmail] = useState("");
    const [warningType, setWarningType] = useState("");
@@ -16,7 +17,7 @@ export default function ForgetPassModal({ isModalActive, setIsModalActive }) {
       checkEmail(email).then((response) => {
          if (response.status !== 409) {
             setWarningType("incorrect");
-            setWarningTxt("Email not found");
+            setWarningTxt(t`Email not found`);
          } else {
             setWarningTxt("");
          }
@@ -29,11 +30,11 @@ export default function ForgetPassModal({ isModalActive, setIsModalActive }) {
          if (response.status === 200) {
             setIsModalActive(false);
             setVisibility("visible");
-            setMessage("Password reset email sent");
+            setMessage(t`Password reset email sent`);
             setType("success");
          } else {
             setVisibility("visible");
-            setMessage("Error sending password reset email");
+            setMessage(t`Error sending password reset email`);
             setType("danger");
          }
       });

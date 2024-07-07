@@ -17,6 +17,7 @@ import { useNavigate } from "react-router-dom";
 import AddResourceModal from "../components/modals/AddResourceModal";
 import StandardModal from "../components/modals/StandardModal";
 import { Alert } from "react-bootstrap";
+import { Trans, t } from "@lingui/macro";
 
 export default function ProjectProfileResourcesPage() {
   const { systemProjectName } = useParams();
@@ -198,7 +199,7 @@ export default function ProjectProfileResourcesPage() {
     addInitialResources(systemProjectName, rejectedIdsDto).then((response) => {
       if (response.status === 200) {
         setModalType("success");
-        setModalMessage("The resources have been saved successfully!");
+        setModalMessage(t`The resources have been saved successfully!`);
         setModalActive(true);
       }
     });
@@ -219,7 +220,7 @@ export default function ProjectProfileResourcesPage() {
               <Row>
                 <Col>
                   <Alert variant="danger" className="standard-modal">
-                    The project is canceled, and the chat is disabled.
+                  <Trans>The project is canceled, and the chat is disabled.</Trans>
                   </Alert>
                 </Col>
               </Row>
@@ -236,7 +237,7 @@ export default function ProjectProfileResourcesPage() {
                   <InputGroup className="gap-10px">
                     <Form.Control
                       type="text"
-                      placeholder="Search for resource"
+                      placeholder={t`Search for resources`}
                       style={{ borderRadius: "10px", cursor: "text" }}
                       className="custom-focus"
                       value={keyword}
@@ -257,7 +258,7 @@ export default function ProjectProfileResourcesPage() {
                         setResourcesTableTrigger((prev) => !prev);
                       }}
                     >
-                      Clear
+                      <Trans>Clear</Trans>
                     </Button>
                   </InputGroup>
                 </Col>
@@ -273,7 +274,7 @@ export default function ProjectProfileResourcesPage() {
                     }}
                   >
                     {" "}
-                    <option value="">All Brands</option>
+                    <option value=""><Trans>All Brands</Trans></option>
                     {brands.map((brand, index) => (
                       <option key={index} value={brand}>
                         {brand}
@@ -290,7 +291,7 @@ export default function ProjectProfileResourcesPage() {
                     }}
                   >
                     {" "}
-                    <option value="">All Suppliers</option>
+                    <option value=""><Trans>All Suppliers</Trans></option>
                     {suppliers.map((supplier, index) => (
                       <option key={index} value={supplier}>
                         {supplier}
@@ -338,7 +339,7 @@ export default function ProjectProfileResourcesPage() {
               <Row style={{ height: "17%", marginBottom: "0.5%" }}>
                 <Col sm={1}></Col>
                 <Col sm={11}>
-                  <h4 className="h4-resources-project-creat">Your Resources</h4>
+                  <h4 className="h4-resources-project-creat"><Trans>Your Resources</Trans></h4>
                 </Col>
               </Row>
               <Row style={{ height: "83%" }}>
@@ -377,7 +378,7 @@ export default function ProjectProfileResourcesPage() {
                 setIsModalActive(true);
               }}
             >
-              Add Resource
+              <Trans>Add Resource</Trans>
             </button>
           </Col>
           <Col sm={1} className="table-resources-pagination">
@@ -395,7 +396,7 @@ export default function ProjectProfileResourcesPage() {
               style={{ width: "100%" }}
               onClick={handleSubmit}
             >
-              Save Resources
+              <Trans>Save Resources</Trans>
             </button>
           </Col>
           <Col sm={1}></Col>

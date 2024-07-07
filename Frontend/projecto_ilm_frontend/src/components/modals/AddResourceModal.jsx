@@ -11,6 +11,7 @@ import {
   editResource,
 } from "../../utilities/services";
 import { formatResourceType } from "../../utilities/converters";
+import { Trans, t } from "@lingui/macro";
 
 export default function AddResourceModal({
   isModalActive,
@@ -121,7 +122,7 @@ export default function AddResourceModal({
         ).then((response) => {
           if (response.ok) {
             setModalType("success");
-            setModalErrorText("Resource created successfully.");
+            setModalErrorText(t`Resource created successfully.`);
             setModalErrorVisible(true);
             setTimeout(() => {
               window.location.reload();
@@ -130,7 +131,7 @@ export default function AddResourceModal({
               }, 500);
             }, 1000);
           } else if (response.status === 400) {
-            setModalErrorText("This resource already exists.");
+            setModalErrorText(t`This resource already exists.`);
             setModalErrorVisible(true);
             setModalType("danger");
           }
@@ -151,7 +152,7 @@ export default function AddResourceModal({
         ).then((response) => {
           if (response.ok) {
             setModalType("success");
-            setModalErrorText("Resource edited successfully.");
+            setModalErrorText(t`Resource edited successfully.`);
             setModalErrorVisible(true);
             console.log("3");
             if (resource === null || resource === undefined) {
@@ -180,14 +181,14 @@ export default function AddResourceModal({
               }, 1500);
             }
           } else if (response.status === 400) {
-            setModalErrorText("This resource already exists.");
+            setModalErrorText(t`This resource already exists.`);
             setModalErrorVisible(true);
             setModalType("danger");
           }
         });
       }
     } else {
-      setModalErrorText("Please fill in all required fields.");
+      setModalErrorText(t`Please fill in all required fields.`);
       setModalErrorVisible(true);
       setModalType("danger");
     }
@@ -233,8 +234,8 @@ export default function AddResourceModal({
               >
                 <h3 className="modal-title">
                   {resourceSupplier === null
-                    ? "Resource Creation"
-                    : "Resource Edition"}
+                    ? (t`Resource Creation`)
+                    : (t`Resource Edition`)}
                   {}
                 </h3>
                 {modalErrorVisible && (
@@ -254,7 +255,7 @@ export default function AddResourceModal({
                 <div className="modal-row">
                   <div style={{ width: "45%" }}>
                     <AutoCompleteForm
-                      label="Name"
+                      label={t`Name`}
                       suggestions={namesSuggestions}
                       value={name}
                       setValue={setName}
@@ -262,7 +263,9 @@ export default function AddResourceModal({
                   </div>
 
                   <div style={{ width: "45%" }}>
-                    <Form.Label className="custom-label">Type</Form.Label>
+                    <Form.Label className="custom-label">
+                      <Trans>Type</Trans>
+                    </Form.Label>
                     <Form.Control
                       as="select"
                       className="custom-focus"
@@ -270,7 +273,9 @@ export default function AddResourceModal({
                       onChange={(e) => setType(e.target.value)}
                     >
                       {" "}
-                      <option value="">Select Type</option>
+                      <option value="">
+                        <Trans>Select Type</Trans>
+                      </option>
                       {typesSuggestions.map((type, index) => (
                         <option key={index} value={type}>
                           {formatResourceType(type)}
@@ -282,7 +287,7 @@ export default function AddResourceModal({
                 <div className="modal-row">
                   <div style={{ width: "45%" }}>
                     <AutoCompleteForm
-                      label="Brand"
+                      label={t`Brand`}
                       suggestions={brandsSuggestions}
                       value={brand}
                       setValue={setBrand}
@@ -290,7 +295,7 @@ export default function AddResourceModal({
                   </div>
                   <div style={{ width: "45%" }}>
                     <InputForm
-                      label="Serial Number"
+                      label={t`Serial Number`}
                       type="text"
                       value={serialNumber}
                       setValue={setSerialNumber}
@@ -301,7 +306,7 @@ export default function AddResourceModal({
                   {" "}
                   <div style={{ width: "45%" }}>
                     <AutoCompleteForm
-                      label="Supplier"
+                      label={t`Supplier`}
                       suggestions={suppliersSuggestions}
                       value={supplier}
                       setValue={setSupplier}
@@ -311,7 +316,7 @@ export default function AddResourceModal({
                   </div>
                   <div style={{ width: "45%" }}>
                     <InputForm
-                      label="Supplier Contact"
+                      label={t`Supplier Contact`}
                       type="text"
                       value={supplierContact}
                       setValue={setSupplierContact}
@@ -320,7 +325,9 @@ export default function AddResourceModal({
                   </div>
                 </div>
                 <Form.Group controlId="formDescription">
-                  <Form.Label className="custom-label">Description</Form.Label>
+                  <Form.Label className="custom-label">
+                    <Trans>Description</Trans>
+                  </Form.Label>
                   <Form.Control
                     as="textarea"
                     rows={3}
@@ -331,7 +338,9 @@ export default function AddResourceModal({
                   />
                 </Form.Group>
                 <Form.Group controlId="formObservations">
-                  <Form.Label className="custom-label">Observations</Form.Label>
+                  <Form.Label className="custom-label">
+                    <Trans>Observations</Trans>
+                  </Form.Label>
                   <Form.Control
                     as="textarea"
                     rows={3}
@@ -347,14 +356,14 @@ export default function AddResourceModal({
                     id="cancel-resource-btn"
                     onClick={handleCancel}
                   >
-                    Cancel
+                    <Trans>Cancel</Trans>
                   </button>
                   <button
                     type="submit"
                     className="submit-button"
                     id="create-resource-btn"
                   >
-                    {resourceSupplier === null ? "Create" : "Save"}
+                    {resourceSupplier === null ? (t`Create`) : (t`Save`)}
                   </button>
                 </div>
               </div>

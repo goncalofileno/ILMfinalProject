@@ -29,6 +29,7 @@ import ResourceLogIcon from "../resources/icons/logs/resource-log-icon.png";
 import "./ProjectLogsPage.css";
 import { formatStatusDropDown } from "../utilities/converters";
 import StandardModal from "../components/modals/StandardModal";
+import { Trans, t } from "@lingui/macro";
 
 const ProjectLogsPage = () => {
   const { systemProjectName } = useParams();
@@ -78,8 +79,8 @@ const ProjectLogsPage = () => {
       text: newNoteText,
       date: new Date().toISOString(),
       done: false,
-      authorName: "Current User", // You may want to replace this with the actual user's name
-      authorPhoto: "https://www.example.com/photo.png", // Replace with actual user's photo URL
+      authorName: "Current User", 
+      authorPhoto: "https://www.example.com/photo.png",
       taskSystemName: selectedTask ? selectedTask.systemTitle : null,
     };
     await createNote(sessionId, noteDto, systemProjectName);
@@ -142,7 +143,7 @@ const ProjectLogsPage = () => {
     }
   };
 
-  const logMessages = {
+  const logMessagesEn = {
     MEMBER_ADDED: (log) => (
       <>
         The member <strong>{log.receiver}</strong> was added to the project by <strong>{log.authorName}</strong>.
@@ -202,9 +203,71 @@ const ProjectLogsPage = () => {
     default: () => "Unknown log type."
   };
 
+  const logMessagesPt = {
+    MEMBER_ADDED: (log) => (
+      <>
+        O membro <strong>{log.receiver}</strong> foi adicionado ao projeto por <strong>{log.authorName}</strong>.
+      </>
+    ),
+    MEMBER_REMOVED: (log) => (
+      <>
+        O membro <strong>{log.receiver}</strong> foi removido do projeto.
+      </>
+    ),
+    TASKS_CREATED: (log) => (
+      <>
+        A tarefa <strong>{log.taskTitle}</strong> foi criada no plano do projeto.
+      </>
+    ),
+    TASKS_COMPLETED: (log) => (
+      <>
+        A tarefa <strong>{log.taskTitle}</strong> foi marcada como concluída.
+      </>
+    ),
+    TASKS_IN_PROGRESS: (log) => (
+      <>
+        A tarefa <strong>{log.taskTitle}</strong> foi iniciada.
+      </>
+    ),
+    TASKS_DELETED: (log) => (
+      <>
+        A tarefa <strong>{log.taskTitle}</strong> foi removida do projeto.
+      </>
+    ),
+    TASKS_UPDATED: (log) => (
+      <>
+        Os dados da tarefa <strong>{log.taskTitle}</strong> foram atualizados.
+      </>
+    ),
+    PROJECT_INFO_UPDATED: () => <>Os dados do projeto foram atualizados.</>,
+    PROJECT_STATUS_UPDATED: (log) => (
+      <>
+        O estado do projeto do utilizador <strong>{log.authorName}</strong> mudou de <strong>{log.projectOldState}</strong> para <strong>{log.projectNewState}</strong>.
+      </>
+    ),
+    RESOURCES_UPDATED: (log) => (
+      <>
+        Os recursos no projeto foram atualizados por <strong>{log.authorName}</strong>.
+      </>
+    ),
+    MEMBER_TYPE_CHANGED: (log) => (
+      <>
+        O tipo de utilizador do membro <strong>{log.receiver}</strong> foi alterado de <strong>{log.memberOldType}</strong> para <strong>{log.memberNewType}</strong> por <strong>{log.authorName}</strong>.
+      </>
+    ),
+    MEMBER_LEFT: (log) => (
+      <>
+        O utilizador <strong>{log.authorName}</strong> deixou o projeto.
+      </>
+    ),
+    default: () => "Tipo de log desconhecido."
+  };
+
   const renderLogMessage = (log) => {
-    const messageFunc = logMessages[log.type] || logMessages.default;
-    return messageFunc(log);
+    const userLanguage = Cookies.get("user-language") || "en";
+    const messageFunc =
+      userLanguage === "pt" ? logMessagesPt[log.type] : logMessagesEn[log.type];
+    return messageFunc ? messageFunc(log) : userLanguage === "pt" ? logMessagesPt.default() : logMessagesEn.default();
   };
 
   const logIcons = {
@@ -249,11 +312,11 @@ const ProjectLogsPage = () => {
   };
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return <div><Trans>Error</Trans>: {error}</div>;
   }
 
   if (!logsAndNotes) {
-    return <div>Loading...</div>;
+    return <div><Trans>Loading...</Trans></div>;
   }
 
   // Ordenar logs por data, mais recentes primeiro
@@ -281,8 +344,8 @@ const ProjectLogsPage = () => {
               </h5>
               {["CANCELED", "READY"].includes(logsAndNotes.projectStatus) && (
                 <Alert variant="danger" className="standard-modal">
-                  The project is {logsAndNotes.projectStatus.toLowerCase()} and
-                  no notes can be added or changes made.
+                  <Trans>The project is {logsAndNotes.projectStatus.toLowerCase()} and
+                  no notes can be added or changes made.</Trans>
                 </Alert>
               )}
             </Col>
@@ -291,7 +354,7 @@ const ProjectLogsPage = () => {
             <Col md={6} style={{ height: "100%" }}>
               <Card style={{ height: "100%" }}>
                 <Card.Header>
-                  <h4>Logs</h4>
+                  <h4><Trans>Logs</Trans></h4>
                 </Card.Header>
                 <Card.Body className="logs-list">
                   <ListGroup variant="flush">
@@ -339,7 +402,7 @@ const ProjectLogsPage = () => {
                 >
                   <Row style={{ height: "100%" }}>
                     <Col sm={9} style={{ height: "100%" }}>
-                      <h4>Notes</h4>
+                      <h4><Trans>Notes</Trans></h4>
                       <div
                         style={{
                           height: "95%",
@@ -398,7 +461,7 @@ const ProjectLogsPage = () => {
                           logsAndNotes.projectStatus
                         )}
                       >
-                        Add Note
+                        <Trans>Add Note</Trans>
                       </Button>
                     </Col>
                   </Row>
@@ -414,18 +477,18 @@ const ProjectLogsPage = () => {
         onHide={() => setShowCreateNoteModal(false)}
       >
         <Modal.Header closeButton>
-          <Modal.Title>Create Note</Modal.Title>
+          <Modal.Title><Trans>Create Note</Trans></Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form.Group>
-            <Form.Label>Note</Form.Label>
+            <Form.Label><Trans>Note</Trans></Form.Label>
             <Form.Control
               as="textarea"
               rows={3}
               value={newNoteText}
               onChange={handleNoteTextChange}
               onKeyDown={handleKeyDown}
-              placeholder="Type your note here. Use @ to mention a task."
+              placeholder={t`Type your note here. Use @ to mention a task.`}
             />
             {filteredSuggestions.length > 0 && (
               <ListGroup className="mt-2" ref={suggestionsRef}>
@@ -448,7 +511,7 @@ const ProjectLogsPage = () => {
             variant="secondary"
             onClick={() => setShowCreateNoteModal(false)}
           >
-            Cancel
+            <Trans>Cancel</Trans>
           </Button>
           <Button
             style={{
@@ -460,7 +523,7 @@ const ProjectLogsPage = () => {
               logsAndNotes.projectStatus
             )}
           >
-            Create Note
+            <Trans>Create Note</Trans>
           </Button>
         </Modal.Footer>
       </Modal>

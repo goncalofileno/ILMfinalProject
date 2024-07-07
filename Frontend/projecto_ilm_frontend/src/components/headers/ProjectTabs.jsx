@@ -2,6 +2,7 @@ import React from "react";
 import { Nav, NavItem } from "react-bootstrap";
 import { NavLink, useNavigate, useParams, useLocation } from "react-router-dom";
 import "./ProjectTabs.css";
+import { Trans, t } from "@lingui/macro";
 
 const ProjectTabs = ({ typeOfUserSeingProject, projectName }) => {
   const { systemProjectName } = useParams();
@@ -9,11 +10,11 @@ const ProjectTabs = ({ typeOfUserSeingProject, projectName }) => {
   const location = useLocation();
 
   const tabs = [
-    { name: "Info", path: "info" },
-    { name: "Plan", path: "plan" },
-    { name: "Logs", path: "logs" },
-    { name: "Resources", path: "resources" },
-    { name: "Chat", path: "chat" },
+    { name: (t`Info`), path: "info" },
+    { name: (t`Plan`), path: "plan" },
+    { name: (t`Logs`), path: "logs" },
+    { name: (t`Resources`), path: "resources" },
+    { name: (t`Chat`), path: "chat" },
   ];
 
   // Add the 'Members' tab only if the user is 'CREATOR' or 'MANAGER'

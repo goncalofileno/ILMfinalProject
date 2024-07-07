@@ -16,6 +16,7 @@ import { formatLab } from "../utilities/converters";
 import defaultPhoto from "../resources/avatares/defaultProjectAvatar.jpg";
 import StandardModal from "../components/modals/StandardModal";
 import { useNavigate, useParams } from "react-router-dom";
+import { Trans, t } from "@lingui/macro";
 
 export default function EditProjectPage() {
   const [selectedInterests, setSelectedInterests] = useState([]);
@@ -110,7 +111,7 @@ export default function EditProjectPage() {
           if (response.success) {
             if (selectedFile !== null) {
               uploadProjectPhoto(selectedFile, projectName).then(() => {
-                setModalMessage("Project updated successfully");
+                setModalMessage(t`Project updated successfully`);
                 setModalType("success");
                 setModalActive(true);
 
@@ -119,7 +120,7 @@ export default function EditProjectPage() {
                 }, 1200);
               });
             } else {
-              setModalMessage("Project updated successfully");
+              setModalMessage(t`Project updated successfully`);
               setModalType("success");
               setModalActive(true);
               setTimeout(() => {
@@ -127,18 +128,18 @@ export default function EditProjectPage() {
               }, 1200);
             }
           } else {
-            setModalMessage("Error while updating project");
+            setModalMessage(t`Error while updating project`);
             setModalType("danger");
             setModalActive(true);
           }
         });
       } else {
-        setModalMessage("End date must be after start date");
+        setModalMessage(t`End date must be after start date`);
         setModalType("danger");
         setModalActive(true);
       }
     } else {
-      setModalMessage("Please fill all the fields");
+      setModalMessage(t`Please fill all the fields`);
       setModalType("danger");
       setModalActive(true);
     }
@@ -159,16 +160,16 @@ export default function EditProjectPage() {
       checkProjectName(projectName).then((response) => {
         if (response.status === 200) {
           setWarningType("success");
-          setWarningTxt("Project name available");
+          setWarningTxt(t`Project name available`);
         } else if (response.status === 409) {
           setWarningType("incorrect");
-          setWarningTxt("Project name already exists");
+          setWarningTxt(t`Project name already exists`);
         } else if (response.status === 400) {
           setWarningType("incorrect");
           if (projectName.length < 3)
-            setWarningTxt("Name has to be at least 3 characters long");
+            setWarningTxt(t`Name has to be at least 3 characters long`);
           else if (projectName.length > 35)
-            setWarningTxt("Name has to be at most 35 characters long");
+            setWarningTxt(t`Name has to be at most 35 characters long`);
           else setWarningTxt("Invalid project name");
         }
       });
@@ -179,7 +180,7 @@ export default function EditProjectPage() {
   };
 
   const getNextDay = (date) => {
-    if (!date) return ""; // Return empty string if date is not defined
+    if (!date) return ""; 
     const nextDay = new Date(date);
     nextDay.setDate(nextDay.getDate() + 1);
     return nextDay.toISOString().split("T")[0];
@@ -196,13 +197,13 @@ export default function EditProjectPage() {
       ></StandardModal>
       <div className="ilm-pageb">
         <h1 className="page-title">
-          <span className="app-slogan-1">Edit </span>
-          <span className="app-slogan-2">Project</span>
+          <span className="app-slogan-1"><Trans>Edit</Trans> </span>
+          <span className="app-slogan-2"><Trans>Project</Trans></span>
         </h1>
         <Row className="project-creation-page">
           <Col sm={5} className="col-project-creation">
             <div className="div-half-col" style={{ height: "50%" }}>
-              <label className="custom-label">Project Image</label>
+              <label className="custom-label"><Trans>Project Image</Trans></label>
               <div className="div-img-project">
                 {preview ? (
                   <Image
@@ -232,7 +233,7 @@ export default function EditProjectPage() {
             </div>
             <div className="div-half-col ">
               <label htmlFor="motivation" className="custom-label">
-                Motivation
+              <Trans>Motivation</Trans>
               </label>
               <textarea
                 name="motivation"
@@ -260,7 +261,7 @@ export default function EditProjectPage() {
               <Col sm={2}>
                 <div className="lab-drop-down-div">
                   <label htmlFor="lab-drop-down" className="custom-label">
-                    Laboratory
+                  <Trans>Laboratory</Trans>
                   </label>
                   <Form.Control
                     as="select"
@@ -279,7 +280,7 @@ export default function EditProjectPage() {
               <Col sm={2}>
                 <div className="lab-drop-down-div">
                   <label htmlFor="lab-drop-down" className="custom-label">
-                    Start Date
+                  <Trans>Start Date</Trans>
                   </label>
                   <input
                     type="date"
@@ -292,7 +293,7 @@ export default function EditProjectPage() {
               <Col sm={2}>
                 <div className="lab-drop-down-div">
                   <label htmlFor="lab-drop-down" className="custom-label">
-                    End Date
+                  <Trans>End Date</Trans>
                   </label>
                   <input
                     type="date"
@@ -307,7 +308,7 @@ export default function EditProjectPage() {
             <Row style={{ width: "100%", height: "32%" }}>
               <div className="display-column">
                 <label htmlFor="description" className="custom-label">
-                  Description
+                <Trans>Description</Trans>
                 </label>
                 <textarea
                   name="description"
@@ -328,7 +329,7 @@ export default function EditProjectPage() {
             >
               <Col sm={6} style={{ width: "45%" }}>
                 <InterestSelector
-                  label="Keywords:"
+                  label={t`Keywords:`}
                   selectedInterests={selectedInterests}
                   setSelectedInterests={(interests) => {
                     setSelectedInterests(interests);
@@ -357,7 +358,7 @@ export default function EditProjectPage() {
                 style={{ width: "20%" }}
                 onClick={() => navigate(`/project/${systemProjectName}/info`)}
               >
-                Cancel
+                <Trans>Cancel</Trans>
               </button>
               <button
                 className="submit-button"
@@ -365,7 +366,7 @@ export default function EditProjectPage() {
                 onClick={handleClick}
                 disabled={!isFormModified} // Enable button only if the form is modified
               >
-                Update Project
+                <Trans>Update Project</Trans>
               </button>
             </div>
           </Col>

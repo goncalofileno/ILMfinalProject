@@ -15,6 +15,7 @@ import { formatLab } from "../utilities/converters";
 import defaultPhoto from "../resources/avatares/defaultProjectAvatar.jpg";
 import StandardModal from "../components/modals/StandardModal";
 import { useNavigate } from "react-router-dom";
+import { Trans, t } from "@lingui/macro";
 
 export default function ProjectCreationPage1() {
   const [selectedInterests, setSelectedInterests] = useState([]);
@@ -77,7 +78,7 @@ export default function ProjectCreationPage1() {
               response.json().then((data) => {
                 if (selectedFile !== null) {
                   uploadProjectPhoto(selectedFile, projectName).then(() => {
-                    setModalMessage("Project created successfully");
+                    setModalMessage(t`Project created successfully`);
                     setModalType("success");
                     setModalActive(true);
 
@@ -86,7 +87,7 @@ export default function ProjectCreationPage1() {
                     }, 1200);
                   });
                 } else {
-                  setModalMessage("Project created successfully");
+                  setModalMessage(t`Project created successfully`);
                   setModalType("success");
                   setModalActive(true);
                   setTimeout(() => {
@@ -95,23 +96,23 @@ export default function ProjectCreationPage1() {
                 }
               });
             } else {
-              setModalMessage("Error while creating project");
+              setModalMessage(t`Error while creating project`);
               setModalType("danger");
               setModalActive(true);
             }
           });
         } else {
-          setModalMessage("Start date must be after today's date");
+          setModalMessage(t`Start date must be after today's date`);
           setModalType("danger");
           setModalActive(true);
         }
       } else {
-        setModalMessage("End date must be after start date");
+        setModalMessage(t`End date must be after start date`);
         setModalType("danger");
         setModalActive(true);
       }
     } else {
-      setModalMessage("Please fill all the fields");
+      setModalMessage(t`Please fill all the fields`);
       setModalType("danger");
       setModalActive(true);
     }
@@ -122,10 +123,10 @@ export default function ProjectCreationPage1() {
     setSelectedFile(file);
     if (file) {
       if (!file.type.includes("jpeg") && !file.type.includes("png")) {
-        setModalMessage("Please select a .jpg or .png file.");
+        setModalMessage(t`Please select a .jpg or .png file.`);
         setModalType("danger");
         setModalActive(true);
-        e.target.value = ""; // Reset the input field to clear the invalid selection
+        e.target.value = "";
         return;
       }
       const previewUrl = URL.createObjectURL(file);
@@ -138,17 +139,17 @@ export default function ProjectCreationPage1() {
       checkProjectName(projectName).then((response) => {
         if (response.status === 200) {
           setWarningType("success");
-          setWarningTxt("Project name available");
+          setWarningTxt(t`Project name available`);
         } else if (response.status === 409) {
           setWarningType("incorrect");
-          setWarningTxt("Project name already exists");
+          setWarningTxt(t`Project name already exists`);
         } else if (response.status === 400) {
           setWarningType("incorrect");
           if (projectName.length < 3)
-            setWarningTxt("Name has to be at least 3 characters long");
+            setWarningTxt(t`Name has to be at least 3 characters long`);
           else if (projectName.length > 35)
-            setWarningTxt("Name has to be at most 35 characters long");
-          else setWarningTxt("Invalid project name");
+            setWarningTxt(t`Name has to be at most 35 characters long`);
+          else setWarningTxt(t`Invalid project name`);
         }
       });
     } else {
@@ -167,13 +168,17 @@ export default function ProjectCreationPage1() {
       ></StandardModal>
       <div className="ilm-pageb" style={{ paddingTop: "15px" }}>
         <h1 className="page-title">
-          <span className="app-slogan-1">Project </span>
-          <span className="app-slogan-2">Creation</span>
+          <Trans>
+            <span className="app-slogan-1">Project </span>
+            <span className="app-slogan-2">Creation</span>
+          </Trans>
         </h1>
         <Row className="project-creation-page">
           <Col sm={5} className="col-project-creation">
             <div className="div-half-col" style={{ height: "50%" }}>
-              <label className="custom-label">Project Image</label>
+              <label className="custom-label">
+                <Trans>Project Image</Trans>
+              </label>
               <div className="div-img-project">
                 {preview ? (
                   <Image
@@ -204,7 +209,7 @@ export default function ProjectCreationPage1() {
             </div>
             <div className="div-half-col ">
               <label htmlFor="motivation" className="custom-label">
-                Motivation
+                <Trans>Motivation</Trans>
               </label>
               <textarea
                 name="motivation"
@@ -219,7 +224,7 @@ export default function ProjectCreationPage1() {
             <Row className="row-display">
               <Col sm={5}>
                 <InputForm
-                  label="Project Name"
+                  label={t`Project Name`}
                   value={projectName}
                   setValue={setProjectName}
                   warningType={warningType}
@@ -231,7 +236,7 @@ export default function ProjectCreationPage1() {
               <Col sm={2}>
                 <div className="lab-drop-down-div">
                   <label htmlFor="lab-drop-down" className="custom-label">
-                    Laboratory
+                    <Trans>Laboratory</Trans>
                   </label>
                   <Form.Control
                     as="select"
@@ -250,7 +255,7 @@ export default function ProjectCreationPage1() {
               <Col sm={2}>
                 <div className="lab-drop-down-div">
                   <label htmlFor="lab-drop-down" className="custom-label">
-                    Start Date
+                    <Trans>Start Date</Trans>
                   </label>
                   <input
                     type="date"
@@ -263,7 +268,7 @@ export default function ProjectCreationPage1() {
               <Col sm={2}>
                 <div className="lab-drop-down-div">
                   <label htmlFor="lab-drop-down" className="custom-label">
-                    End Date
+                    <Trans>End Date</Trans>
                   </label>
                   <input
                     type="date"
@@ -277,7 +282,7 @@ export default function ProjectCreationPage1() {
             <Row style={{ width: "100%", height: "32%" }}>
               <div className="display-column">
                 <label htmlFor="description" className="custom-label">
-                  Description
+                  <Trans>Description</Trans>
                 </label>
                 <textarea
                   name="description"
@@ -298,7 +303,7 @@ export default function ProjectCreationPage1() {
             >
               <Col sm={6} style={{ width: "45%" }}>
                 <InterestSelector
-                  label="Keywords:"
+                  label={t`Keywords:`}
                   selectedInterests={selectedInterests}
                   setSelectedInterests={setSelectedInterests}
                 ></InterestSelector>
@@ -321,7 +326,7 @@ export default function ProjectCreationPage1() {
                 style={{ width: "20%" }}
                 onClick={() => navigate("/projects")}
               >
-                Cancel
+                <Trans>Cancel</Trans>
               </button>
               <button
                 className="submit-button"
@@ -339,7 +344,7 @@ export default function ProjectCreationPage1() {
                     : true
                 }
               >
-                Create Project
+                <Trans>Create Project</Trans>
               </button>
             </div>
           </Col>

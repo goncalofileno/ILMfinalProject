@@ -5,6 +5,7 @@ import ComposeIcon from "../../resources/icons/asides/mailAside/compose-icon.png
 import InboxIcon from "../../resources/icons/asides/mailAside/inbox-icon.png";
 import SentIcon from "../../resources/icons/asides/mailAside/sent-icon.png";
 import "./AsideMailActions.css";
+import { Trans, t } from "@lingui/macro";
 
 const AsideMailActions = () => {
   const navigate = useNavigate();
@@ -48,7 +49,7 @@ const AsideMailActions = () => {
           onClick={handleShowComposeModal}
         >
           <div className="icon" style={getNavIconStyle("compose")}></div>
-          <label>Compose New Mail</label>
+          <label><Trans>Compose New Mail</Trans></label>
         </div>
         <div
           className={getNavItemClass("/mail/inbox")}
@@ -58,7 +59,7 @@ const AsideMailActions = () => {
           }}
         >
           <div className="icon" style={getNavIconStyle("/mail/inbox")}></div>
-          <label>Inbox</label>
+          <label><Trans>Inbox</Trans></label>
         </div>
         <div
           className={getNavItemClass("/mail/sent")}
@@ -68,7 +69,7 @@ const AsideMailActions = () => {
           }}
         >
           <div className="icon" style={getNavIconStyle("/mail/sent")}></div>
-          <label>Sent Mails</label>
+          <label><Trans>Sent Mails</Trans></label>
         </div>
       </div>
       <ComposeMailModal show={showComposeModal} handleClose={handleCloseComposeModal} />

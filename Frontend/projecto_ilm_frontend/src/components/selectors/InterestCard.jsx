@@ -1,6 +1,7 @@
 import React from "react";
 import { Card, Button } from "react-bootstrap";
-import "./InterestCard.css"; // Ensure the path is correct
+import "./InterestCard.css"; 
+import { Trans, t } from "@lingui/macro";
 
 const InterestCard = ({ interest, onRemove }) => {
   return (

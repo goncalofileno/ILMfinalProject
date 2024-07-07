@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { getAllResources } from "../utilities/services";
 import { useLocation, useNavigate } from "react-router-dom";
 import AddResourceModal from "../components/modals/AddResourceModal";
+import { Trans, t } from "@lingui/macro";
 
 export default function ResourcesPage() {
   const query = new URLSearchParams(useLocation().search);
@@ -130,8 +131,8 @@ export default function ResourcesPage() {
       />
       <div className="ilm-pageb-with-aside">
         <h1 className="page-title">
-          <span className="app-slogan-1">All </span>
-          <span className="app-slogan-2">Resources</span>
+          <span className="app-slogan-1"><Trans id="todos-os-recursos-all">All</Trans> </span>
+          <span className="app-slogan-2"><Trans>Resources</Trans></span>
         </h1>
         <div className="table-margin-top">
           <ResourcesTable
