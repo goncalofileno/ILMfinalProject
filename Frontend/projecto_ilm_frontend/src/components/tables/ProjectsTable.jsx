@@ -189,13 +189,17 @@ export default function ProjectsTable({
                         paddingRight: "15px",
                       }}
                     >
-                      <img
-                        src={
-                          project.photo !== null ? project.photo : defaultPhoto
-                        }
-                        alt="project_img"
+                      <div
                         className="project-img-table"
-                      />
+                        style={{
+                          backgroundImage:
+                            project.photo == null
+                              ? `url(${defaultPhoto})`
+                              : `url(${project.photo})`,
+                          backgroundSize: "cover",
+                          backgroundPosition: "center",
+                        }}
+                      ></div>
                     </td>
                     <td
                       style={{
