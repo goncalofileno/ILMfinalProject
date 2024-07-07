@@ -25,6 +25,7 @@ import "./AlertAnimation.css";
 import ComposeMailModal from "../components/modals/ComposeMailModal";
 import InviteProjectModal from "../components/modals/InviteProjectModal.jsx";
 import { Trans, t } from "@lingui/macro";
+import { formatProjectState, formatTypeUserInProject } from "../utilities/converters.js";
 
 const UserProfile = () => {
   const { systemUsername, section } = useParams();
@@ -368,7 +369,7 @@ const UserProfile = () => {
                                           <strong>
                                             <Trans>Type Member</Trans>:
                                           </strong>{" "}
-                                          {project.typeMember}
+                                          {formatTypeUserInProject(project.typeMember)}
                                         </p>
                                         <p
                                           id="column-div-project"
@@ -377,7 +378,7 @@ const UserProfile = () => {
                                           <strong>
                                             <Trans>Status</Trans>:
                                           </strong>{" "}
-                                          {project.status}
+                                          {formatProjectState(project.status)}
                                         </p>
                                       </div>
                                     ))

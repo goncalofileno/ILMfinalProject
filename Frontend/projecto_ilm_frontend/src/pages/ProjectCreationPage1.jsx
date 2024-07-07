@@ -168,13 +168,17 @@ export default function ProjectCreationPage1() {
       ></StandardModal>
       <div className="ilm-pageb" style={{ paddingTop: "15px" }}>
         <h1 className="page-title">
-          <span className="app-slogan-1"><Trans>Project</Trans> </span>
-          <span className="app-slogan-2"><Trans>Creation</Trans></span>
+          <Trans>
+            <span className="app-slogan-1">Project </span>
+            <span className="app-slogan-2">Creation</span>
+          </Trans>
         </h1>
         <Row className="project-creation-page">
           <Col sm={5} className="col-project-creation">
             <div className="div-half-col" style={{ height: "50%" }}>
-              <label className="custom-label"><Trans>Project Image</Trans></label>
+              <label className="custom-label">
+                <Trans>Project Image</Trans>
+              </label>
               <div className="div-img-project">
                 {preview ? (
                   <Image
@@ -205,7 +209,7 @@ export default function ProjectCreationPage1() {
             </div>
             <div className="div-half-col ">
               <label htmlFor="motivation" className="custom-label">
-              <Trans>Motivation</Trans>
+                <Trans>Motivation</Trans>
               </label>
               <textarea
                 name="motivation"
@@ -232,7 +236,7 @@ export default function ProjectCreationPage1() {
               <Col sm={2}>
                 <div className="lab-drop-down-div">
                   <label htmlFor="lab-drop-down" className="custom-label">
-                  <Trans>Laboratory</Trans>
+                    <Trans>Laboratory</Trans>
                   </label>
                   <Form.Control
                     as="select"
@@ -251,7 +255,7 @@ export default function ProjectCreationPage1() {
               <Col sm={2}>
                 <div className="lab-drop-down-div">
                   <label htmlFor="lab-drop-down" className="custom-label">
-                  <Trans>Start Date</Trans>
+                    <Trans>Start Date</Trans>
                   </label>
                   <input
                     type="date"
@@ -264,7 +268,7 @@ export default function ProjectCreationPage1() {
               <Col sm={2}>
                 <div className="lab-drop-down-div">
                   <label htmlFor="lab-drop-down" className="custom-label">
-                  <Trans>End Date</Trans>
+                    <Trans>End Date</Trans>
                   </label>
                   <input
                     type="date"
@@ -278,7 +282,7 @@ export default function ProjectCreationPage1() {
             <Row style={{ width: "100%", height: "32%" }}>
               <div className="display-column">
                 <label htmlFor="description" className="custom-label">
-                <Trans>Description</Trans>
+                  <Trans>Description</Trans>
                 </label>
                 <textarea
                   name="description"

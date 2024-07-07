@@ -2,6 +2,7 @@ import "./MyProjectCard.css";
 import ProgressBar from "../bars/ProgressBar";
 import { useNavigate } from "react-router-dom";
 import { Trans, t } from "@lingui/macro";
+import { formatTypeUserInProject, formatTypeUserInProjectInMaiusculas } from "../../utilities/converters";
 
 export default function MyProjectCard({
   name,
@@ -55,7 +56,7 @@ export default function MyProjectCard({
                 </div>
               </div>
               <div className="my-projects-banner-content">
-                <div className="my-projects-banner-word">{typeMember}</div>
+                <div className="my-projects-banner-word">{formatTypeUserInProjectInMaiusculas(typeMember)}</div>
               </div>
             </div>
             <div className="my-projects-footer">

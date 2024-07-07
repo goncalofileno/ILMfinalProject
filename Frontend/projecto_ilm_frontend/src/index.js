@@ -37,7 +37,7 @@ import PrivateRoute from "./utilities/PrivateRoute";
 import PublicRoute from "./utilities/PublicRoute";
 import { AuthProvider } from "./utilities/AuthContext";
 import StatisticsPdfPage from "./pages/StatisticsPdfPage";
-import I18nLoader from "./I18nLoader";
+import I18nLoader, { useLanguage } from "./I18nLoader";
 
 const AppWithWebSocket = () => {
   const location = useLocation();
@@ -135,7 +135,9 @@ const AppWithWebSocket = () => {
           path="/project/:systemProjectName/plan/:taskSystemTitle?"
           element={<PrivateRoute component={ProjectPlanPage} />}
         />
-        <Route path="statistics" element={<PrivateRoute component={StatisticsPdfPage} />} 
+        <Route
+          path="/statistics"
+          element={<PrivateRoute component={StatisticsPdfPage} />}
         />
       </Routes>
     </>

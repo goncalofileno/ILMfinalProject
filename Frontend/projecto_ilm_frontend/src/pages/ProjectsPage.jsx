@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
 import { Trans, t } from "@lingui/macro";
+import Cookies from "js-cookie";
 
 const ProjectsPage = () => {
   const query = new URLSearchParams(useLocation().search);
@@ -38,6 +39,7 @@ const ProjectsPage = () => {
   const [keywordButton, setKeywordButton] = useState(false);
   const [navigateTableProjectsTrigger, setNavigateTableProjectsTrigger] =
     useState(false);
+    const [currentLanguage, setCurrentLanguage] = useState(Cookies.get("user-language") || "ENGLISH");
 
   const sortByName = () => {
     if (statusAsc !== "") setStatusAsc("");
@@ -124,11 +126,11 @@ const ProjectsPage = () => {
     const queryParams = new URLSearchParams(queryParamsObj).toString();
 
     navigate(`/projects?${queryParams}`);
-  }, [navigateTableProjectsTrigger]);
+  }, [navigateTableProjectsTrigger, currentLanguage]);
 
   return (
     <>
-      <AppNavbar setIsAsideVisible={setIsAsideVisible} />
+      <AppNavbar setIsAsideVisible={setIsAsideVisible} setCurrentLanguage={setCurrentLanguage}/>
       <AsideProjectsTable
         selectedLab={selectedLab}
         setSelectedLab={setSelectedLab}

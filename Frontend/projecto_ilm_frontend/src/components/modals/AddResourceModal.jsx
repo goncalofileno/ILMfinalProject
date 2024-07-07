@@ -234,8 +234,8 @@ export default function AddResourceModal({
               >
                 <h3 className="modal-title">
                   {resourceSupplier === null
-                    ? "Resource Creation"
-                    : "Resource Edition"}
+                    ? (t`Resource Creation`)
+                    : (t`Resource Edition`)}
                   {}
                 </h3>
                 {modalErrorVisible && (

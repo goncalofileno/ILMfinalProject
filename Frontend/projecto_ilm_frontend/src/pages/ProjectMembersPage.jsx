@@ -55,9 +55,9 @@ const ProjectMembersPage = () => {
   const [maxPageNumber, setMaxPageNumber] = useState(1);
   const [navigateTableTrigger, setNavigateTableTrigger] = useState(false);
   const NUMBER_OF_MEMBERS_PAGE = 5;
-
   const sessionId = Cookies.get("session-id");
   const userSystemUsername = Cookies.get("user-systemUsername");
+  const [currentLanguage, setCurrentLanguage] = useState(Cookies.get("user-language") || "ENGLISH");
 
   useEffect(() => {
     const fetchProjectData = async () => {
@@ -81,7 +81,7 @@ const ProjectMembersPage = () => {
 
     fetchProjectData();
     fetchLabs();
-  }, [systemProjectName, sessionId]);
+  }, [systemProjectName, sessionId, currentLanguage]);
 
   const handleRoleChange = async (member, newType) => {
     setSelectedMemberType((prev) => ({
@@ -312,7 +312,7 @@ const ProjectMembersPage = () => {
 
   return (
     <>
-      <AppNavbar />
+      <AppNavbar setCurrentLanguage={setCurrentLanguage}/>
       <div className="ilm-pageb-noheight">
         <ProjectTabs
           typeOfUserSeingProject={projectData.userSeingProject}
@@ -398,7 +398,7 @@ const ProjectMembersPage = () => {
                                 : member.name}
                             </td>
                             <td className="align-middle">
-                              {typeLabels[member.type]}
+                              {formatTypeUserInProject(member.type)}
                               {member.type !== "CREATOR" && (
                                 <Form.Select
                                   value={
@@ -515,7 +515,7 @@ const ProjectMembersPage = () => {
                                   : member.name}
                               </td>
                               <td className="align-middle">
-                                {typeLabels[member.type]}
+                                {formatTypeUserInProject(member.type)}
                               </td>
                               <td
                                 className="align-middle"
@@ -734,6 +734,7 @@ const ProjectMembersPage = () => {
                                   e.stopPropagation();
                                   handleInvite(user.systemUsername);
                                 }}
+                                style={{ backgroundColor: "rgb(30, 40, 82)", borderColor: "rgb(30, 40, 82)"}}
                               >
                                 <Trans>Invite</Trans>
                               </Button>

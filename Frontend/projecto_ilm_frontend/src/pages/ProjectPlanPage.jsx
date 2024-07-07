@@ -104,6 +104,8 @@ const ProjectPlanPage = () => {
   const [titleError, setTitleError] = useState("");
   const [percentage, setPercentage] = useState(0);
   const [projectState, setProjectState] = useState("IN_PROGRESS");
+  const [currentLanguage, setCurrentLanguage] = useState(Cookies.get("user-language") || "ENGLISH");
+
 
   const fetchData = async () => {
     const sessionId = Cookies.get("session-id");
@@ -134,7 +136,19 @@ const ProjectPlanPage = () => {
 
   useEffect(() => {
     fetchData();
-  }, [systemProjectName]);
+  }, [systemProjectName, currentLanguage]);
+
+  useEffect(() => {
+    const handleLanguageChange = () => {
+      setCurrentLanguage(Cookies.get("user-language") || "ENGLISH");
+    };
+
+    window.addEventListener("languageChange", handleLanguageChange);
+
+    return () => {
+      window.removeEventListener("languageChange", handleLanguageChange);
+    };
+  }, []);
 
   const handleTaskClick = (task) => {
     if (task.type === "project") return; // Prevent modal for project type
@@ -399,7 +413,7 @@ const ProjectPlanPage = () => {
 
   return (
     <>
-      <AppNavbar />
+      <AppNavbar setCurrentLanguage={setCurrentLanguage}/>
       <div className="bckg-color-ilm-page ilm-pageb">
         <ProjectTabs typeOfUserSeingProject={userSeingTasksType} />
         <Container style={{ height: "91%" }}>
@@ -429,7 +443,7 @@ const ProjectPlanPage = () => {
                   <Form.Group controlId="listCellWidthToggle">
                     <Form.Check
                       type="checkbox"
-                      label="Toggle List Cell Width"
+                      label={t`Toggle List Cell Width`}
                       onChange={handleListCellWidthChange}
                     />
                   </Form.Group>
@@ -448,8 +462,8 @@ const ProjectPlanPage = () => {
                     onDelete={(task) => handleDeleteClick(task)}
                     listCellWidth={listCellWidth}
                     columnWidth={100}
-                    TooltipContent={CustomTooltipContent} // Use custom tooltip here
-                    
+                    TooltipContent={CustomTooltipContent}
+                    locale={currentLanguage === "PORTUGUESE" ? "por" : "eng"}
                   />
                 )}
               </Row>
@@ -469,10 +483,10 @@ const ProjectPlanPage = () => {
             </div>
             <div>
               <ul>
-                <li><span style={{ backgroundColor: "#8BC34A", padding: "2px 8px", borderRadius: "4px" }}>DONE</span> - <Trans>Completed tasks</Trans></li>
-                <li><span style={{ backgroundColor: "#FFEB3B", padding: "2px 8px", borderRadius: "4px" }}>IN PROGRESS</span> - <Trans>Tasks in progress</Trans></li>
-                <li><span style={{ backgroundColor: "#F44336", padding: "2px 8px", borderRadius: "4px" }}>PLANNED</span> - <Trans>Planned tasks</Trans></li>
-                <li><span style={{ backgroundColor: "#3F51B5", padding: "2px 8px", borderRadius: "4px" }}>PROJECT</span> - <Trans>Project</Trans></li>
+                <li><span style={{ backgroundColor: "#8BC34A", padding: "2px 8px", borderRadius: "4px" }}><Trans>DONE</Trans></span> - <Trans>Completed tasks</Trans></li>
+                <li><span style={{ backgroundColor: "#FFEB3B", padding: "2px 8px", borderRadius: "4px" }}><Trans>IN PROGRESS</Trans></span> - <Trans>Tasks in progress</Trans></li>
+                <li><span style={{ backgroundColor: "#F44336", padding: "2px 8px", borderRadius: "4px" }}><Trans>PLANNED</Trans></span> - <Trans>Planned tasks</Trans></li>
+                <li><span style={{ backgroundColor: "#3F51B5", padding: "2px 8px", borderRadius: "4px" }}><Trans>PROJECT</Trans></span> - <Trans>Project</Trans></li>
               </ul>
             </div>
           </Row>

@@ -8,6 +8,7 @@ import { getMyProjectsTable } from "../utilities/services";
 import { useLocation, useNavigate } from "react-router-dom";
 import { formatLab } from "../utilities/converters";
 import { Trans, t } from "@lingui/macro";
+import Cookies from "js-cookie";
 
 export default function MyProjectsPage() {
   const query = new URLSearchParams(useLocation().search);
@@ -30,6 +31,7 @@ export default function MyProjectsPage() {
   const [keyword, setKeyword] = useState(query.get("search_query") || "");
   const [navigateTableProjectsTrigger, setNavigateTableProjectsTrigger] =
     useState(false);
+    const[currentLanguage, setCurrentLanguage] = useState(Cookies.get("user-language") || "ENGLISH");
 
   useEffect(() => {
     getMyProjectsTable(
@@ -58,7 +60,7 @@ export default function MyProjectsPage() {
     const queryParams = new URLSearchParams(queryParamsObj).toString();
 
     navigate(`/myprojects?${queryParams}`);
-  }, [navigateTableProjectsTrigger]);
+  }, [navigateTableProjectsTrigger, currentLanguage]);
 
   const handlePreviousClick = () => {
     setCurrentPage(currentPage - 1);
@@ -71,7 +73,7 @@ export default function MyProjectsPage() {
   };
   return (
     <>
-      <AppNavbar />
+      <AppNavbar setCurrentLanguage={setCurrentLanguage}/>
       <AsideMyProjectsPage
         selectedLab={selectedLab}
         setSelectedLab={setSelectedLab}

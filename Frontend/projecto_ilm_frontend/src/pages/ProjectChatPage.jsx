@@ -18,6 +18,13 @@ import moment from "moment";
 import { getChatPage, sendChatMessage } from "../utilities/services";
 import "./ProjectChatPage.css";
 import { Trans, t } from "@lingui/macro";
+import { i18n } from "@lingui/core";
+import { formatProjectState, formatTypeUserInProject } from "../utilities/converters";
+
+const setLanguageFromCookies = () => {
+  const language = Cookies.get("user-language") || "en";
+  i18n.activate(language);
+};
 
 const ProjectChatPage = () => {
   const { systemProjectName } = useParams();
@@ -31,8 +38,10 @@ const ProjectChatPage = () => {
     useState("");
   const chatBodyRef = useRef(null);
   const userSystemUsername = Cookies.get("user-systemUsername");
+  const [currentLanguage, setCurrentLanguage] = useState(Cookies.get("user-language") || "ENGLISH");
 
   useEffect(() => {
+    setLanguageFromCookies();
     const fetchChatPage = async () => {
       const sessionId = Cookies.get("session-id");
       const response = await getChatPage(sessionId, systemProjectName);
@@ -49,7 +58,7 @@ const ProjectChatPage = () => {
     };
 
     fetchChatPage();
-  }, [systemProjectName, setMessages]);
+  }, [systemProjectName, setMessages, currentLanguage]);
 
   useEffect(() => {
     if (chatBodyRef.current) {
@@ -72,7 +81,7 @@ const ProjectChatPage = () => {
     if (now.diff(messageDate, "days") < 1) {
       return messageDate.fromNow();
     } else {
-      return messageDate.format("HH:mm DD MMM YYYY");
+      return messageDate.format(i18n._(t`HH:mm DD MMM YYYY`));
     }
   };
 
@@ -84,7 +93,7 @@ const ProjectChatPage = () => {
 
   return (
     <>
-      <AppNavbar />
+      <AppNavbar setCurrentLanguage={setCurrentLanguage}/>
       <ProjectChatWebSocket projectId={systemProjectName} />
       <div className="ilm-pageb">
         <ProjectTabs
@@ -96,7 +105,7 @@ const ProjectChatPage = () => {
             <Row>
               <Col>
                 <Alert variant="danger" className="standard-modal">
-                <Trans>The project is canceled, and the chat is disabled.</Trans>
+                  <Trans>The project is canceled, and the chat is disabled.</Trans>
                 </Alert>
               </Col>
             </Row>
@@ -139,7 +148,7 @@ const ProjectChatPage = () => {
                                   ? (t`You`)
                                   : member.name}
                               </strong>
-                              <div className="text-muted">{member.type}</div>
+                              <div className="text-muted">{formatTypeUserInProject(member.type)}</div>
                             </div>
                           </Col>
                           <Col md="auto" className="d-flex align-items-center">
@@ -158,8 +167,8 @@ const ProjectChatPage = () => {
                               }`}
                             >
                               {isOnline(member.systemUsername)
-                                ? "Online"
-                                : "Offline"}
+                                ? (t`Online`)
+                                : (t`Offline`)}
                             </span>
                           </Col>
                         </Row>
@@ -172,7 +181,7 @@ const ProjectChatPage = () => {
             <Col md={8} style={{ height: "100%" }}>
               <Card style={{ height: "100%" }}>
                 <Card.Header>
-                  <h5>Chat</h5>
+                  <h5><Trans>Chat</Trans></h5>
                 </Card.Header>
                 <Card.Body
                   style={{ height: "85%", overflowY: "auto" }}
@@ -235,7 +244,7 @@ const ProjectChatPage = () => {
                         rows={1}
                         value={messageContent}
                         onChange={(e) => setMessageContent(e.target.value)}
-                        placeholder="Type a message..."
+                        placeholder={i18n._(t`Type a message...`)}
                         className="message-input"
                         disabled={projectState === "CANCELED"}
                       />

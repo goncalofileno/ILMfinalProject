@@ -6,6 +6,7 @@ import NotificationIcon from "../../resources/icons/other/notification.jpg";
 import Cookies from "js-cookie";
 import { markNotificationAsClicked } from "../../utilities/services";
 import { Trans, t } from "@lingui/macro";
+import { formatProjectState } from "../../utilities/converters";
 
 export default function NotificationModal({ onClose, modalRef }) {
   const { notifications, loadMoreNotifications, hasMoreNotifications } =
@@ -50,7 +51,7 @@ export default function NotificationModal({ onClose, modalRef }) {
     INVITE: ({ projectName, userName }) =>
       `<strong>${userName}</strong> invited you to join the project <strong>${projectName}</strong>.`,
     PROJECT: ({ projectName, projectStatus }) =>
-      `The project <strong>${projectName}</strong> changed its status to <strong>${projectStatus}</strong>.`,
+      `The project <strong>${projectName}</strong> changed its status to <strong>${formatProjectState(projectStatus)}</strong>.`,
     PROJECT_REJECTED: ({ projectName, userName }) =>
       `The project <strong>${projectName}</strong> was rejected by <strong>${userName}</strong>.`,
     PROJECT_INSERTED: ({ projectName, userName }) =>
@@ -87,7 +88,7 @@ export default function NotificationModal({ onClose, modalRef }) {
     INVITE: ({ projectName, userName }) =>
       `<strong>${userName}</strong> convidou-o para se juntar ao projeto <strong>${projectName}</strong>.`,
     PROJECT: ({ projectName, projectStatus }) =>
-      `O projeto <strong>${projectName}</strong> mudou o seu estado para <strong>${projectStatus}</strong>.`,
+      `O projeto <strong>${projectName}</strong> mudou o seu estado para <strong>${formatProjectState(projectStatus)}</strong>.`,
     PROJECT_REJECTED: ({ projectName, userName }) =>
       `O projeto <strong>${projectName}</strong> foi rejeitado por <strong>${userName}</strong>.`,
     PROJECT_INSERTED: ({ projectName, userName }) =>

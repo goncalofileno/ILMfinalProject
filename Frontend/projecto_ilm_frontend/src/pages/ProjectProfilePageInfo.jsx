@@ -34,6 +34,7 @@ import {
 import "./ProjectProfilePageInfo.css";
 import Cookies from "js-cookie";
 import { Trans, t } from "@lingui/macro";
+import { formatProjectState, formatTypeUserInProject } from "../utilities/converters";
 
 const ProjectProfilePageInfo = () => {
   const { systemProjectName } = useParams();
@@ -49,6 +50,7 @@ const ProjectProfilePageInfo = () => {
   const [leaveReason, setLeaveReason] = useState("");
   const sessionId = Cookies.get("session-id");
   const userSystemUsername = Cookies.get("user-systemUsername");
+  const [currentLanguage, setCurrentLanguage] = useState(Cookies.get("user-language") || "ENGLISH");
 
   useEffect(() => {
     const fetchProjectInfo = async () => {
@@ -77,7 +79,7 @@ const ProjectProfilePageInfo = () => {
       }
     };
     fetchProjectInfo();
-  }, [systemProjectName]);
+  }, [systemProjectName, currentLanguage]);
 
   const handleStateChange = (event) => {
     const newState = event.target.value;
@@ -422,7 +424,7 @@ const ProjectProfilePageInfo = () => {
 
   return (
     <>
-      <AppNavbar />
+      <AppNavbar setCurrentLanguage={setCurrentLanguage}/>
       <div className="ilm-pageb-noheight">
         <ProjectTabs
           typeOfUserSeingProject={projectInfo.typeOfUserSeingProject}
@@ -529,7 +531,7 @@ const ProjectProfilePageInfo = () => {
                               {projectInfo.statesToChange.map(
                                 (state, index) => (
                                   <option key={index} value={state}>
-                                    {formatStatusDropDown(state)}
+                                    {formatProjectState(state)}
                                   </option>
                                 )
                               )}
