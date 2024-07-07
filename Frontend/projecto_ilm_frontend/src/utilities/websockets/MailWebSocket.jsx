@@ -125,7 +125,7 @@ const MailWebSocket = () => {
     TASK_ASSIGNED: (projectSystemName) => navigate(`/project/${projectSystemName}/tasks`),
     INVITE_REJECTED: (systemUserName) => navigate(`/profile/${systemUserName}`),
     REMOVED: (systemUserName) => navigate(`/profile/${systemUserName}`),
-    PROJECT_MESSAGE: (projectSystemName) => navigate(`/project/${projectSystemName}/chat`),
+    PROJECT_MESSAGE: (projectSystemName) => navigate(`/project/${projectSystemName}/chat`),    
   };
 
   const handleNotificationClick = () => {

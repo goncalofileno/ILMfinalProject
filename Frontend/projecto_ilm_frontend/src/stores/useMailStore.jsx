@@ -11,10 +11,11 @@ const useMailStore = create((set) => ({
   incrementUnreadCount: () => set((state) => ({ unreadCount: state.unreadCount + 1 })),
   setReceivedMails: (mails) => set({ receivedMails: mails }),
   setTotalMails: (total) => set({ totalMails: total }),
-  fetchMailsInInbox: async (unread = false) => {
+  fetchMailsInInbox: async () => {
     const sessionId = Cookies.get("session-id");
     if (sessionId) {
-      const result = await getReceivedMessages(sessionId, 1, 8, unread);
+
+      const result = await getReceivedMessages(sessionId, 1, 8);
       const { mails, totalMails } = result;
       mails.sort((a, b) => new Date(b.date) - new Date(a.date));
       set({ receivedMails: mails, totalMails: totalMails });
