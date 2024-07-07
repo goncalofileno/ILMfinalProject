@@ -13,18 +13,19 @@ import DeleteTaskModal from "../components/modals/DeleteTaskModal";
 import { formatTaskStatus } from "../utilities/converters";
 import "./ProjectPlanPage.css";
 import ProgressBar from "../components/bars/ProgressBar";
-import CustomTooltipContent from "../components/tooltips/CustomTooltipContent"; 
-import { Trans, t } from "@lingui/macro";
+import CustomTooltipContent from "../components/tooltips/CustomTooltipContent"; // Import the custom tooltip
 
 const parseDate = (dateString) => new Date(dateString);
 
 const transformTasksData = (projectTask, tasks, projectProgress) => {
   const transformedTasks = tasks
-    .filter((task) => task.initialDate && task.finalDate) 
+    .filter((task) => task.initialDate && task.finalDate) // Filtra tarefas com datas válidas
     .map((task) => ({
       id: task.systemTitle,
       name: task.title,
-      type: task.systemTitle.endsWith("_final_presentation") ? "milestone" : "task", 
+      type: task.systemTitle.endsWith("_final_presentation")
+        ? "milestone"
+        : "task", // Define tipo como milestone para a tarefa final
       start: parseDate(task.initialDate),
       end: parseDate(task.finalDate),
       progress: 0,
@@ -104,15 +105,17 @@ const ProjectPlanPage = () => {
   const [titleError, setTitleError] = useState("");
   const [percentage, setPercentage] = useState(0);
   const [projectState, setProjectState] = useState("IN_PROGRESS");
-  const [currentLanguage, setCurrentLanguage] = useState(Cookies.get("user-language") || "ENGLISH");
-
 
   const fetchData = async () => {
     const sessionId = Cookies.get("session-id");
     try {
       const data = await getTasksPage(sessionId, systemProjectName);
       console.log("Tasks data:", data);
-      const transformedTasks = transformTasksData(data.projectTask, data.tasks, data.projectProgress);
+      const transformedTasks = transformTasksData(
+        data.projectTask,
+        data.tasks,
+        data.projectProgress
+      );
       setProjectName(data.projectName);
       setUserSeingTasksType(data.userSeingTasksType);
       setTasks(transformedTasks);
@@ -123,7 +126,9 @@ const ProjectPlanPage = () => {
 
       // Check if a task modal should be opened based on URL
       if (taskSystemTitle) {
-        const taskToOpen = transformedTasks.find(task => task.id === taskSystemTitle);
+        const taskToOpen = transformedTasks.find(
+          (task) => task.id === taskSystemTitle
+        );
         if (taskToOpen) {
           handleTaskClick(taskToOpen);
         }
@@ -136,24 +141,14 @@ const ProjectPlanPage = () => {
 
   useEffect(() => {
     fetchData();
-  }, [systemProjectName, currentLanguage]);
-
-  useEffect(() => {
-    const handleLanguageChange = () => {
-      setCurrentLanguage(Cookies.get("user-language") || "ENGLISH");
-    };
-
-    window.addEventListener("languageChange", handleLanguageChange);
-
-    return () => {
-      window.removeEventListener("languageChange", handleLanguageChange);
-    };
-  }, []);
+  }, [systemProjectName]);
 
   const handleTaskClick = (task) => {
     if (task.type === "project") return; // Prevent modal for project type
 
-    navigate(`/project/${systemProjectName}/plan/${task.id}`, { replace: true });
+    navigate(`/project/${systemProjectName}/plan/${task.id}`, {
+      replace: true,
+    });
 
     const inChargeMember = task.rawTask.membersOfTask.find(
       (member) =>
@@ -175,7 +170,7 @@ const ProjectPlanPage = () => {
     let error = "";
 
     if (name === "title" && taskTitles.includes(value)) {
-      error = (t`Task title must be unique.`);
+      error = "Task title must be unique.";
       setTitleError(error);
     } else {
       setTitleError("");
@@ -228,8 +223,12 @@ const ProjectPlanPage = () => {
 
     try {
       await updateTask(updateTaskDto);
+
       handleCloseModal();
+      taskSystemTitle = null;
+
       fetchData();
+
       setTaskDetails({});
     } catch (error) {
       console.error("Error updating task:", error);
@@ -328,7 +327,7 @@ const ProjectPlanPage = () => {
         (member) =>
           member.type === "CREATOR" || member.type === "CREATOR_INCHARGE"
       )?.id,
-      inChargeId: inChargeMember?.id || null, 
+      inChargeId: inChargeMember?.id || null,
       systemProjectName: systemProjectName,
     };
 
@@ -336,8 +335,8 @@ const ProjectPlanPage = () => {
 
     try {
       await updateTask(updateTaskDto);
-      fetchData(); 
-      setTaskDetails({}); 
+      fetchData();
+      setTaskDetails({});
     } catch (error) {
       console.error("Error updating task on date change:", error);
     }
@@ -380,8 +379,8 @@ const ProjectPlanPage = () => {
     try {
       await deleteTask(deleteTaskDto);
       setIsDeleteModalVisible(false);
-      fetchData(); 
-      setTaskDetails({}); 
+      fetchData();
+      setTaskDetails({});
     } catch (error) {
       console.error("Error deleting task:", error);
     }
@@ -413,7 +412,7 @@ const ProjectPlanPage = () => {
 
   return (
     <>
-      <AppNavbar setCurrentLanguage={setCurrentLanguage}/>
+      <AppNavbar />
       <div className="bckg-color-ilm-page ilm-pageb">
         <ProjectTabs typeOfUserSeingProject={userSeingTasksType} />
         <Container style={{ height: "91%" }}>
@@ -422,20 +421,20 @@ const ProjectPlanPage = () => {
               <Row>
                 <div style={{ width: "500px" }}>
                   <Button onClick={() => setIsAddModalVisible(true)}>
-                  <Trans>Add New Task</Trans>
+                    Add New Task
                   </Button>
                 </div>
                 <div style={{ width: "500px" }}>
                   <Form.Group controlId="viewModeSelector">
-                    <Form.Label><Trans>View Mode</Trans></Form.Label>
+                    <Form.Label>View Mode</Form.Label>
                     <Form.Control
                       as="select"
                       value={viewMode}
                       onChange={handleViewModeChange}
                     >
-                      <option value={ViewMode.Day}><Trans>Day</Trans></option>
-                      <option value={ViewMode.Month}><Trans>Month</Trans></option>
-                      <option value={ViewMode.Year}><Trans>Year</Trans></option>
+                      <option value={ViewMode.Day}>Day</option>
+                      <option value={ViewMode.Month}>Month</option>
+                      <option value={ViewMode.Year}>Year</option>
                     </Form.Control>
                   </Form.Group>
                 </div>
@@ -443,7 +442,7 @@ const ProjectPlanPage = () => {
                   <Form.Group controlId="listCellWidthToggle">
                     <Form.Check
                       type="checkbox"
-                      label={t`Toggle List Cell Width`}
+                      label="Toggle List Cell Width"
                       onChange={handleListCellWidthChange}
                     />
                   </Form.Group>
@@ -462,8 +461,7 @@ const ProjectPlanPage = () => {
                     onDelete={(task) => handleDeleteClick(task)}
                     listCellWidth={listCellWidth}
                     columnWidth={100}
-                    TooltipContent={CustomTooltipContent}
-                    locale={currentLanguage === "PORTUGUESE" ? "por" : "eng"}
+                    TooltipContent={CustomTooltipContent} // Use custom tooltip here
                   />
                 )}
               </Row>
@@ -471,7 +469,7 @@ const ProjectPlanPage = () => {
           </Row>
           <Row>
             <div style={{ marginTop: "15px" }}>
-              <h5><Trans>Project Progress</Trans>:</h5>
+              <h5>Project Progress:</h5>
             </div>
             <div>
               <ProgressBar percentage={percentage} status={projectState} />
@@ -479,14 +477,58 @@ const ProjectPlanPage = () => {
           </Row>
           <Row>
             <div style={{ marginTop: "15px" }}>
-              <h5><Trans>Legend</Trans>:</h5>
+              <h5>Legend:</h5>
             </div>
             <div>
               <ul>
-                <li><span style={{ backgroundColor: "#8BC34A", padding: "2px 8px", borderRadius: "4px" }}><Trans>DONE</Trans></span> - <Trans>Completed tasks</Trans></li>
-                <li><span style={{ backgroundColor: "#FFEB3B", padding: "2px 8px", borderRadius: "4px" }}><Trans>IN PROGRESS</Trans></span> - <Trans>Tasks in progress</Trans></li>
-                <li><span style={{ backgroundColor: "#F44336", padding: "2px 8px", borderRadius: "4px" }}><Trans>PLANNED</Trans></span> - <Trans>Planned tasks</Trans></li>
-                <li><span style={{ backgroundColor: "#3F51B5", padding: "2px 8px", borderRadius: "4px" }}><Trans>PROJECT</Trans></span> - <Trans>Project</Trans></li>
+                <li>
+                  <span
+                    style={{
+                      backgroundColor: "#8BC34A",
+                      padding: "2px 8px",
+                      borderRadius: "4px",
+                    }}
+                  >
+                    DONE
+                  </span>{" "}
+                  - Completed tasks
+                </li>
+                <li>
+                  <span
+                    style={{
+                      backgroundColor: "#FFEB3B",
+                      padding: "2px 8px",
+                      borderRadius: "4px",
+                    }}
+                  >
+                    IN PROGRESS
+                  </span>{" "}
+                  - Tasks in progress
+                </li>
+                <li>
+                  <span
+                    style={{
+                      backgroundColor: "#F44336",
+                      padding: "2px 8px",
+                      borderRadius: "4px",
+                    }}
+                  >
+                    PLANNED
+                  </span>{" "}
+                  - Planned tasks
+                </li>
+                <li>
+                  <span
+                    style={{
+                      backgroundColor: "#3F51B5",
+                      padding: "2px 8px",
+                      borderRadius: "4px",
+                    }}
+                  >
+                    PROJECT
+                  </span>{" "}
+                  - Project
+                </li>
               </ul>
             </div>
           </Row>
