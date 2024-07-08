@@ -26,6 +26,7 @@ import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -448,32 +449,57 @@ public class TaskBean {
 
         taskDao.merge(task);
     }
-
     private void organizeTaskDates(ProjectEntity project, TaskEntity task) {
         LocalDateTime projectStartDate = project.getStartDate();
         List<TaskEntity> tasks = taskDao.findByProject(project.getId());
 
-        // Ajustar as datas das tarefas dependentes
-        adjustChildTasks(task, projectStartDate, project);
+        // Ajustar datas de todas as tarefas como antes
+        if (task != null) {
+            adjustChildTasks(task, projectStartDate, project);
+            adjustParentTasks(task, projectStartDate, project);
+        }
 
-        // Ajustar as datas das tarefas das quais esta tarefa depende
-        adjustParentTasks(task, projectStartDate, project);
+        // Encontrar a tarefa de apresentação final
+        TaskEntity finalPresentationTask = getFinalPresentationTask(project);
+        if (finalPresentationTask != null) {
+            // Identificar a penúltima tarefa
+            TaskEntity penultimateTask = tasks.stream()
+                    .filter(t -> !t.getSystemTitle().equals(finalPresentationTask.getSystemTitle()))
+                    .max(Comparator.comparing(TaskEntity::getFinalDate))
+                    .orElse(null);
 
-        // Atualizar a data final do projeto, se necessário
-        LocalDateTime projectEndDate = tasks.stream()
-                .map(TaskEntity::getFinalDate)
-                .max(LocalDateTime::compareTo)
-                .orElse(projectStartDate);
+            if (penultimateTask != null) {
+                // Configurar a tarefa de apresentação final para ser dependente da penúltima tarefa
+                finalPresentationTask.setInitialDate(penultimateTask.getFinalDate().plusDays(1));
+                finalPresentationTask.setFinalDate(finalPresentationTask.getInitialDate().plusDays(1)); // Supondo duração de 1 dia
 
-        project.setFinishedDate(projectEndDate);
+                List<TaskEntity> dependencies = new ArrayList<>();
+                dependencies.add(penultimateTask);
+                finalPresentationTask.setDependentTasks(dependencies);
+
+                taskDao.merge(finalPresentationTask);
+            }
+
+            // Atualizar a data final do projeto para a data final da apresentação final
+            project.setEndDate(finalPresentationTask.getFinalDate());
+        } else {
+            // Se nenhuma tarefa de apresentação final for encontrada, seguir a lógica original
+            LocalDateTime projectEndDate = tasks.stream()
+                    .map(TaskEntity::getFinalDate)
+                    .max(LocalDateTime::compareTo)
+                    .orElse(projectStartDate);
+
+            project.setEndDate(projectEndDate);
+        }
         projectDao.merge(project);
     }
+
 
     private void adjustChildTasks(TaskEntity task, LocalDateTime projectStartDate, ProjectEntity project) {
         List<TaskEntity> childTasks = taskDao.findByDependentTask(task);
 
         for (TaskEntity childTask : childTasks) {
-            if (task.getFinalDate().isAfter(childTask.getInitialDate().minusDays(1))) {
+            if (childTask != null && task.getFinalDate() != null && task.getFinalDate().isAfter(childTask.getInitialDate().minusDays(1))) {
                 long duration = java.time.Duration.between(childTask.getInitialDate(), childTask.getFinalDate()).toDays();
                 childTask.setInitialDate(task.getFinalDate().plusDays(1));
                 childTask.setFinalDate(childTask.getInitialDate().plusDays(duration));
@@ -485,7 +511,7 @@ public class TaskBean {
                 }
 
                 // Verificar se a nova data final ultrapassa a data final do projeto
-                if (childTask.getFinalDate().isAfter(project.getFinishedDate())) {
+                if (childTask.getFinalDate().isAfter(project.getEndDate())) {
                     project.setEndDate(childTask.getFinalDate());
                 }
 
@@ -500,7 +526,7 @@ public class TaskBean {
         List<TaskEntity> parentTasks = task.getDependentTasks();
 
         for (TaskEntity parentTask : parentTasks) {
-            if (task.getInitialDate().isBefore(parentTask.getFinalDate().plusDays(1))) {
+            if (parentTask != null && task.getInitialDate() != null && task.getInitialDate().isBefore(parentTask.getFinalDate().plusDays(1))) {
                 long duration = java.time.Duration.between(parentTask.getInitialDate(), parentTask.getFinalDate()).toDays();
                 parentTask.setFinalDate(task.getInitialDate().minusDays(1));
                 parentTask.setInitialDate(parentTask.getFinalDate().minusDays(duration));
@@ -518,8 +544,7 @@ public class TaskBean {
         }
     }
 
-
-
+    @Transactional
     public void deleteTask(String sessionId, UpdateTaskDto updateTaskDto) throws ProjectNotFoundException, UserNotFoundException, UserNotInProjectException {
         TaskEntity task = taskDao.findById(updateTaskDto.getId());
         UserEntity user = userBean.getUserBySessionId(sessionId);
@@ -547,9 +572,9 @@ public class TaskBean {
 
         List<TaskEntity> tasks = taskDao.findByProject(project.getId());
 
-        for(TaskEntity taskWithDependent : tasks) {
+        for (TaskEntity taskWithDependent : tasks) {
             List<TaskEntity> dependentTasks = taskWithDependent.getDependentTasks();
-            if(dependentTasks.contains(task)) {
+            if (dependentTasks != null && dependentTasks.contains(task)) {
                 dependentTasks.remove(task);
                 taskWithDependent.setDependentTasks(dependentTasks);
                 taskDao.merge(taskWithDependent);
@@ -557,6 +582,14 @@ public class TaskBean {
         }
 
         taskDao.merge(task);
+
+        organizeTaskDates(project, null);
+    }
+
+
+    private TaskEntity getFinalPresentationTask(ProjectEntity project) {
+        String finalPresentationSystemName = project.getSystemName() + "_final_presentation";
+        return taskDao.findBySystemTiltle(finalPresentationSystemName);
     }
 
     @Transactional

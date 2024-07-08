@@ -39,6 +39,11 @@ const labMappingsPt = {
 
 const statusMappingsPt = {
   IN_PROGRESS: "EM PROGRESSO",
+  PLANNING: "EM PLANEAMENTO",
+  FINISHED: "CONCLUÍDO",
+  CANCELED: "CANCELADO",
+  READY: "PRONTO",
+  APPROVED: "APROVADO",
 };
 
 const statusDropDownMappingsPt = {

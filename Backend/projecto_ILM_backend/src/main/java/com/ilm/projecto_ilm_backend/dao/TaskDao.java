@@ -68,4 +68,24 @@ public class TaskDao extends AbstractDao<TaskEntity> {
         }
     }
 
+    public TaskEntity findTaskBySystemTitleAndProject(String systemTitle, int projectId) {
+        try {
+            return em.createNamedQuery("Task.findBySystemTitleAndProject", TaskEntity.class)
+                    .setParameter("systemTitle", systemTitle)
+                    .setParameter("projectId", projectId)
+                    .getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public TaskEntity findBySystemTiltle(String systemTitle) {
+        try {
+            return em.createNamedQuery("Task.findBySystemTitle", TaskEntity.class).setParameter("systemTitle", systemTitle)
+                    .getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
 }

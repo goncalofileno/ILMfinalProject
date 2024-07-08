@@ -32,6 +32,7 @@ const StatisticsPdf = () => {
   const [supplierWithMostResources, setSupplierWithMostResources] = useState(null);
   const [resourcesNumberSupplier, setResourcesNumberSupplier] = useState([]);
   const [projectStatusNumberPerLab, setProjectStatusNumberPerLab] = useState([]);
+  const [currentLanguage, setCurrentLanguage] = useState(Cookies.get("user-language") || "ENGLISH");
 
   useEffect(() => {
     getAppStatistics().then((response) => {
@@ -75,7 +76,7 @@ const StatisticsPdf = () => {
         setProjectStatusNumberPerLab(transformedProjectStatusNumberPerLab);
       });
     });
-  }, []);
+  }, [currentLanguage]);
 
   const pieRef = useRef();
 
@@ -228,7 +229,7 @@ const StatisticsPdf = () => {
 
   return (
     <div>
-      <AppNavbar />
+      <AppNavbar setCurrentLanguage={setCurrentLanguage}/>
 
       {/* Screen display */}
       <div className="screen-display">

@@ -18,7 +18,8 @@ import java.util.List;
         @NamedQuery(name = "Task.findById", query = "SELECT t FROM TaskEntity t WHERE t.id = :id"),
         @NamedQuery(name = "Task.findAll", query = "SELECT t FROM TaskEntity t"),
         @NamedQuery(name = "Task.findByProject", query = "SELECT t FROM TaskEntity t WHERE t.project.id = :id AND t.isDeleted = false"),
-        @NamedQuery(name = "Task.findBySystemTitle", query = "SELECT t FROM TaskEntity t WHERE t.systemTitle = :systemTitle")
+        @NamedQuery(name = "Task.findBySystemTitle", query = "SELECT t FROM TaskEntity t WHERE t.systemTitle = :systemTitle"),
+        @NamedQuery(name = "Task.findBySystemTitleAndProject", query = "SELECT t FROM TaskEntity t WHERE t.systemTitle = :systemTitle AND t.project.id = :projectId"),
 })
 public class TaskEntity implements Serializable {
 

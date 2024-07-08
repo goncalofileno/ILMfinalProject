@@ -537,6 +537,12 @@ public class ProjectBean {
                     userProjectDao.remove(userProjectEntity);
                 }
             }
+            List <NotificationEntity> notifications = notificationDao.findByProjectSystemName(project.getSystemName());
+            for (NotificationEntity notification : notifications) {
+                if (notification.getType() == NotificationTypeENUM.INVITE) {
+                    notificationDao.remove(notification);
+                }
+            }
         }
 
         return "Invite accepted successfully";

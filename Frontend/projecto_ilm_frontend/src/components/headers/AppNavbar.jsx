@@ -6,11 +6,11 @@ import {
   getUnreadNumber,
   updateLanguage,
 } from "../../utilities/services";
-import Cookies from "js-cookie"; 
+import Cookies from "js-cookie";
 import { useMediaQuery } from "react-responsive";
-import useMailStore from "../../stores/useMailStore"; 
+import useMailStore from "../../stores/useMailStore";
 import useNotificationStore from "../../stores/useNotificationStore";
-import NotificationModal from "../modals/NotificationModal"; 
+import NotificationModal from "../modals/NotificationModal";
 import "./AppNavbar.css";
 import projectsIcon from "../../resources/icons/navbar/projects-icon.png";
 import resourceIcon from "../../resources/icons/navbar/resource-icon.png";
@@ -18,15 +18,16 @@ import myProjectsIcon from "../../resources/icons/navbar/my-projects-icon.png";
 import mailIcon from "../../resources/icons/navbar/mail-icon.png";
 import bellIcon from "../../resources/icons/navbar/notification-icon.png";
 import userProfileIcon from "../../resources/avatares/Avatar padrão.jpg";
+import portugalFlag from "../../resources/icons/navbar/portugal.png";
+import ukFlag from "../../resources/icons/navbar/united-kingdom.png";
 import { Trans, t } from "@lingui/macro";
 import { useLanguage } from "../../I18nLoader";
-
 
 export default function AppNavbar({ setIsAsideVisible, setCurrentLanguage }) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [userImage, setUserImage] = useState(userProfileIcon);
-  const [selectedLanguage, setSelectedLanguage] = useState("en"); // Default language
+  const [selectedLanguage, setSelectedLanguage] = useState("ENGLISH");
   const dropdownRef = useRef(null);
   const modalRef = useRef(null);
   const bellIconRef = useRef(null);
@@ -44,14 +45,16 @@ export default function AppNavbar({ setIsAsideVisible, setCurrentLanguage }) {
   const { language, changeLanguage } = useLanguage();
 
   const toggleDropdown = () => {
-    setDropdownOpen(!dropdownOpen);
+    if (modalOpen) {
+      setModalOpen(false);
+    }
+    setDropdownOpen((prev) => !prev);
   };
-
 
   const handleLogout = async () => {
     const response = await logoutUser();
     if (response.ok) {
-      navigate("/"); 
+      navigate("/");
     } else {
       navigate("/");
     }
@@ -81,6 +84,7 @@ export default function AppNavbar({ setIsAsideVisible, setCurrentLanguage }) {
       }
     }
     changeLanguage(newLanguage);
+    if (setCurrentLanguage) setCurrentLanguage(newLanguage);
   };
 
   useEffect(() => {
@@ -137,6 +141,9 @@ export default function AppNavbar({ setIsAsideVisible, setCurrentLanguage }) {
   };
 
   const handleBellClick = async () => {
+    if (dropdownOpen) {
+      setDropdownOpen(false);
+    }
     if (modalOpen) {
       setModalOpen(false);
       clearNotifications();
@@ -202,14 +209,18 @@ export default function AppNavbar({ setIsAsideVisible, setCurrentLanguage }) {
               onClick={() => handleNavigation("/projects")}
             >
               <div className="icon" style={getNavIconStyle("/projects")}></div>
-              <label><Trans>Projects</Trans></label>
+              <label>
+                <Trans>Projects</Trans>
+              </label>
             </div>
             <div
               className={getNavItemClass("/resources")}
               onClick={() => handleNavigation("/resources")}
             >
               <div className="icon" style={getNavIconStyle("/resources")}></div>
-              <label><Trans>Resources</Trans></label>
+              <label>
+                <Trans>Resources</Trans>
+              </label>
             </div>
             <div
               className={getNavItemClass("/myprojects")}
@@ -219,7 +230,9 @@ export default function AppNavbar({ setIsAsideVisible, setCurrentLanguage }) {
                 className="icon"
                 style={getNavIconStyle("/myprojects")}
               ></div>
-              <label><Trans>My Projects</Trans></label>
+              <label>
+                <Trans>My Projects</Trans>
+              </label>
             </div>
             <div
               className={getNavItemClass("/mail/inbox")}
@@ -270,8 +283,12 @@ export default function AppNavbar({ setIsAsideVisible, setCurrentLanguage }) {
             ></div>
             {dropdownOpen && (
               <div className={`dropdown-content ${dropdownOpen ? "show" : ""}`}>
-                <div onClick={handleMyProfile}>👤 <Trans>My Profile</Trans></div>
-                <div onClick={handleLogout}>⛔️ <Trans>Logout</Trans></div>
+                <div onClick={handleMyProfile}>
+                  👤 <Trans>My Profile</Trans>
+                </div>
+                <div onClick={handleLogout}>
+                  ⛔️ <Trans>Logout</Trans>
+                </div>
               </div>
             )}
           </div>
@@ -286,14 +303,18 @@ export default function AppNavbar({ setIsAsideVisible, setCurrentLanguage }) {
               onClick={() => handleNavigation("/projects")}
             >
               <div className="icon" style={getNavIconStyle("/projects")}></div>
-              <label><Trans>Projects</Trans></label>
+              <label>
+                <Trans>Projects</Trans>
+              </label>
             </div>
             <div
               className={getNavItemClass("/resources")}
               onClick={() => handleNavigation("/resources")}
             >
               <div className="icon" style={getNavIconStyle("/resources")}></div>
-              <label><Trans>Resources</Trans></label>
+              <label>
+                <Trans>Resources</Trans>
+              </label>
             </div>
             <div
               className={getNavItemClass("/myprojects")}
@@ -303,7 +324,9 @@ export default function AppNavbar({ setIsAsideVisible, setCurrentLanguage }) {
                 className="icon"
                 style={getNavIconStyle("/myprojects")}
               ></div>
-              <label><Trans>My Projects</Trans></label>
+              <label>
+                <Trans>My Projects</Trans>
+              </label>
             </div>
             <div
               className={getNavItemClass("/mail/inbox")}
