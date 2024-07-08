@@ -106,7 +106,7 @@
 
 @media (max-width: 490px) {
   .max-width-40 {
-    max-width: 80px; /* Define uma largura máxima para a célula */
+    max-width: 170px; /* Define uma largura máxima para a célula */
   }
   .mail-cell {
     font-size: 13px;

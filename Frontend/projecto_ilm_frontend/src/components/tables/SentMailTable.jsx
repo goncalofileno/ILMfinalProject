@@ -231,28 +231,32 @@ const SentMailTable = () => {
           placeholder={t`Search mails`}
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
-          style={{ borderRadius: "10px", width: isMobile ? "100%" : "50%" }}
+          style={{
+            borderRadius: "10px",
+            width: isMobile ? "100%" : "50%",
+            cursor: "text",
+          }}
           className="custom-focus"
         />
         <div className="flex-btn-row-mail-table">
-        <Button
-          variant="primary"
-          onClick={() => updateURL({ search: searchInput, page: 1 })}
-          style={{
-            backgroundColor: "#f39c12",
-            borderColor: "#f39c12",
-            borderRadius: "10px",
-          }}
-        >
-          <Trans>Search</Trans>
-        </Button>
-        <Button
-          variant="secondary"
-          onClick={handleClearSearch}
-          style={{ borderRadius: "10px" }}
-        >
-          <Trans>Clear Search</Trans>
-        </Button>
+          <Button
+            variant="primary"
+            onClick={() => updateURL({ search: searchInput, page: 1 })}
+            style={{
+              backgroundColor: "#f39c12",
+              borderColor: "#f39c12",
+              borderRadius: "10px",
+            }}
+          >
+            <Trans>Search</Trans>
+          </Button>
+          <Button
+            variant="secondary"
+            onClick={handleClearSearch}
+            style={{ borderRadius: "10px" }}
+          >
+            <Trans>Clear Search</Trans>
+          </Button>
         </div>
       </InputGroup>
 
