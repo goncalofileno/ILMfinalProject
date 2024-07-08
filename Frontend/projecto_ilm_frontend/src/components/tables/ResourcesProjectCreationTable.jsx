@@ -3,6 +3,7 @@ import { formatResourceType } from "../../utilities/converters";
 import componentIcon from "../../resources/icons/other/application-control.png";
 import Cookies from "js-cookie";
 import { Trans, t } from "@lingui/macro";
+import { useMediaQuery } from "react-responsive";
 
 export default function ResourcesProjectCreationTable({
   resources,
@@ -22,6 +23,7 @@ export default function ResourcesProjectCreationTable({
   setResourcesTableTrigger,
   setSelectedResource,
 }) {
+  const isTablet = useMediaQuery({ query: "(max-width: 1000px)" });
   const NUMBER_OF_RESOURCES_PAGE = 8;
 
   const handleRowClick = (id, supplier) => {
@@ -66,14 +68,16 @@ export default function ResourcesProjectCreationTable({
               nameAsc === false && <i class="fas fa-arrow-down fa-xs"></i>
             )}
           </th>
-          <th style={{ width: "26.5%" }} onClick={sortByType}>
+          {!isTablet && (
+            <th style={{ width: "26.5%" }} onClick={sortByType}>
             <span style={{ marginRight: "10px" }}><Trans>Type</Trans></span>
-            {typeAsc ? (
-              <i class="fas fa-arrow-up fa-xs"></i>
-            ) : (
-              typeAsc === false && <i class="fas fa-arrow-down fa-xs"></i>
-            )}
-          </th>
+              {typeAsc ? (
+                <i class="fas fa-arrow-up fa-xs"></i>
+              ) : (
+                typeAsc === false && <i class="fas fa-arrow-down fa-xs"></i>
+              )}
+            </th>
+          )}
           <th style={{ width: "21%" }} onClick={sortByBrand}>
             <span style={{ marginRight: "10px" }}><Trans>Brand</Trans></span>
             {brandAsc ? (
@@ -100,27 +104,29 @@ export default function ResourcesProjectCreationTable({
             onClick={() => handleRowClick(resource.id, resource.supplier)}
           >
             <td>{resource.name}</td>
-            <td>
-              {formatResourceType(resource.type)}
+            {!isTablet && (
+              <td>
+                {formatResourceType(resource.type)}
 
-              {resource.type === "COMPONENT" ? (
-                <i
-                  style={{ marginLeft: "12px" }}
-                  className="fas fa-cogs fa-lg"
-                ></i>
-              ) : (
-                resource.type === "RESOURCE" && (
-                  <img
-                    style={{
-                      marginLeft: "12px",
-                      height: "22px",
-                      width: "25px",
-                    }}
-                    src={componentIcon}
-                  ></img>
-                )
-              )}
-            </td>
+                {resource.type === "COMPONENT" ? (
+                  <i
+                    style={{ marginLeft: "12px" }}
+                    className="fas fa-cogs fa-lg"
+                  ></i>
+                ) : (
+                  resource.type === "RESOURCE" && (
+                    <img
+                      style={{
+                        marginLeft: "12px",
+                        height: "22px",
+                        width: "25px",
+                      }}
+                      src={componentIcon}
+                    ></img>
+                  )
+                )}
+              </td>
+            )}
             <td>{resource.brand}</td>
             <td>{resource.supplier}</td>
             <td className="last-column-table-resources">
@@ -138,6 +144,7 @@ export default function ResourcesProjectCreationTable({
                     event
                   );
                 }}
+                style={{ visibility: isTablet && "visible" }}
               >
                 <i class="fas fa-plus"></i>
               </button>
@@ -149,7 +156,7 @@ export default function ResourcesProjectCreationTable({
           .map((index) => (
             <tr key={index + resources.length}>
               <td></td>
-              <td></td>
+              {!isTablet && <td></td>}
               <td></td>
               <td></td>
               <td></td>

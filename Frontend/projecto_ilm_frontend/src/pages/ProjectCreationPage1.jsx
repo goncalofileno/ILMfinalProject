@@ -16,6 +16,7 @@ import defaultPhoto from "../resources/avatares/defaultProjectAvatar.jpg";
 import StandardModal from "../components/modals/StandardModal";
 import { useNavigate } from "react-router-dom";
 import { Trans, t } from "@lingui/macro";
+import { useMediaQuery } from "react-responsive";
 
 export default function ProjectCreationPage1() {
   const [selectedInterests, setSelectedInterests] = useState([]);
@@ -34,6 +35,7 @@ export default function ProjectCreationPage1() {
   const [modalMessage, setModalMessage] = useState("");
   const [warningType, setWarningType] = useState("");
   const [warningTxt, setWarningTxt] = useState("");
+  const isTablet = useMediaQuery({ query: "(max-width: 991px)" });
 
   const navigate = useNavigate();
 
@@ -179,7 +181,10 @@ export default function ProjectCreationPage1() {
         modalActive={modalActive}
         setModalActive={setModalActive}
       ></StandardModal>
-      <div className="ilm-pageb" style={{ paddingTop: "15px" }}>
+      <div
+        className={!isTablet ? "ilm-pageb" : "ilm-page-mobile"}
+        style={{ paddingTop: "15px" }}
+      >
         <h1 className="page-title">
           <Trans>
             <span className="app-slogan-1">Project </span>
@@ -187,54 +192,8 @@ export default function ProjectCreationPage1() {
           </Trans>
         </h1>
         <Row className="project-creation-page">
-          <Col sm={5} className="col-project-creation">
-            <div className="div-half-col" style={{ height: "50%" }}>
-              <label className="custom-label">
-                <Trans>Project Image</Trans>
-              </label>
-              <div className="div-img-project">
-                {preview ? (
-                  <Image
-                    src={preview}
-                    className="project-creation-image"
-                    fluid
-                  />
-                ) : (
-                  <Image
-                    src={defaultPhoto}
-                    className="project-creation-image"
-                    fluid
-                  />
-                )}
-                <Form.Group controlId="formFileUpload">
-                  <Form.Control
-                    type="file"
-                    onChange={handleFileChange}
-                    className="custom-focus"
-                    style={{
-                      borderTopLeftRadius: "0",
-                      borderTopRightRadius: "0",
-                    }}
-                    accept=".jpg, .jpeg, .png"
-                  />
-                </Form.Group>
-              </div>
-            </div>
-            <div className="div-half-col ">
-              <label htmlFor="motivation" className="custom-label">
-                <Trans>Motivation</Trans>
-              </label>
-              <textarea
-                name="motivation"
-                id="motivation"
-                className="text-area-project-creation"
-                value={motivation}
-                onChange={(e) => setMotivation(e.target.value)}
-              ></textarea>
-            </div>
-          </Col>
-          <Col sm={7} className="col-project-creation">
-            <Row className="row-display">
+          {isTablet && (
+            <Row className="row-display" style={{ marginTop: "30px" }}>
               <Col sm={5}>
                 <InputForm
                   label={t`Project Name`}
@@ -296,8 +255,129 @@ export default function ProjectCreationPage1() {
                 </div>
               </Col>
             </Row>
-            <Row style={{ width: "100%", height: "32%" }}>
-              <div className="display-column">
+          )}
+          <Col lg={5} className="col-project-creation">
+            <div
+              className="div-half-col"
+              style={{ height: "50%", marginBottom: isTablet && "30px" }}
+            >
+              <label className="custom-label">Project Image</label>
+              <div className="div-img-project">
+                {preview ? (
+                  <Image
+                    src={preview}
+                    className="project-creation-image"
+                    fluid
+                  />
+                ) : (
+                  <Image
+                    src={defaultPhoto}
+                    className="project-creation-image"
+                    fluid
+                  />
+                )}
+                <Form.Group controlId="formFileUpload">
+                  <Form.Control
+                    type="file"
+                    onChange={handleFileChange}
+                    className="custom-focus"
+                    style={{
+                      borderTopLeftRadius: "0",
+                      borderTopRightRadius: "0",
+                    }}
+                    accept=".jpg, .jpeg, .png"
+                  />
+                </Form.Group>
+              </div>
+            </div>
+            <div
+              className="div-half-col"
+              style={{ marginBottom: isTablet && "30px" }}
+            >
+              <label htmlFor="motivation" className="custom-label">
+                Motivation
+              </label>
+              <textarea
+                name="motivation"
+                id="motivation"
+                className="text-area-project-creation"
+                value={motivation}
+                onChange={(e) => setMotivation(e.target.value)}
+              ></textarea>
+            </div>
+          </Col>
+          <Col lg={7} className="col-project-creation">
+            {!isTablet && (
+              <Row className="row-display">
+                <Col sm={5}>
+                  <InputForm
+                    label="Project Name"
+                    value={projectName}
+                    setValue={setProjectName}
+                    warningType={warningType}
+                    warningTxt={warningTxt}
+                    handleOnBlur={handleOnBlur}
+                    onBlurActive={true}
+                  ></InputForm>
+                </Col>
+                <Col sm={2}>
+                  <div className="lab-drop-down-div">
+                    <label htmlFor="lab-drop-down" className="custom-label">
+                      Laboratory
+                    </label>
+                    <Form.Control
+                      as="select"
+                      className="custom-focus"
+                      value={selectedLab}
+                      onChange={(e) => setSelectedLab(e.target.value)}
+                    >
+                      {labs.map((lab) => (
+                        <option key={lab.local} value={lab.local}>
+                          {formatLab(lab.local)}
+                        </option>
+                      ))}
+                    </Form.Control>
+                  </div>
+                </Col>
+                <Col sm={2}>
+                  <div className="lab-drop-down-div">
+                    <label htmlFor="lab-drop-down" className="custom-label">
+                      Start Date
+                    </label>
+                    <input
+                      type="date"
+                      className="date-input"
+                      value={startDate}
+                      onChange={(e) => setStartDate(e.target.value)}
+                    ></input>
+                  </div>
+                </Col>
+                <Col sm={2}>
+                  <div className="lab-drop-down-div">
+                    <label htmlFor="lab-drop-down" className="custom-label">
+                      End Date
+                    </label>
+                    <input
+                      type="date"
+                      className="date-input"
+                      value={endDate}
+                      onChange={(e) => setEndDate(e.target.value)}
+                    ></input>
+                  </div>
+                </Col>
+              </Row>
+            )}
+            <Row
+              style={{
+                width: "100%",
+                height: "32%",
+                marginBottom: isTablet && "30px",
+              }}
+            >
+              <div
+                className="display-column"
+                style={{ width: isTablet && "100%" }}
+              >
                 <label htmlFor="description" className="custom-label">
                   <Trans>Description</Trans>
                 </label>
@@ -315,7 +395,8 @@ export default function ProjectCreationPage1() {
                 display: "flex",
                 flexDirection: "row",
                 width: "100%",
-                gap: "6%",
+                gap: !isTablet ? "6%" : "10%",
+                marginBottom: isTablet && "30px",
               }}
             >
               <Col sm={6} style={{ width: "45%" }}>

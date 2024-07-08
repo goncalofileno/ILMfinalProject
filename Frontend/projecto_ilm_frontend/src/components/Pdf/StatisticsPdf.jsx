@@ -1,5 +1,14 @@
-import React, { useRef, useState, useEffect } from "react";
-import { Page, View, Document, StyleSheet, Text, Image } from "@react-pdf/renderer";
+import {
+  Page,
+  View,
+  Document,
+  StyleSheet,
+  Text,
+  Image,
+} from "@react-pdf/renderer";
+import { useRef } from "react";
+import pdfIcon from "../../resources/icons/other/pdf.png";
+import { useState, useEffect } from "react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import Cookies from "js-cookie";
@@ -8,6 +17,7 @@ import "./StatisticsPdf.css";
 import { Chart } from "react-google-charts";
 import { Row, Col } from "react-bootstrap";
 import { getAppStatistics } from "../../utilities/services";
+import { useMediaQuery } from "react-responsive";
 import { Trans, t } from "@lingui/macro";
 
 // Create styles
@@ -31,8 +41,11 @@ const StatisticsPdf = () => {
   const [averageExecutionProjectTime, setAverageExecutionProjectTime] = useState(0);
   const [supplierWithMostResources, setSupplierWithMostResources] = useState(null);
   const [resourcesNumberSupplier, setResourcesNumberSupplier] = useState([]);
-  const [projectStatusNumberPerLab, setProjectStatusNumberPerLab] = useState([]);
   const [currentLanguage, setCurrentLanguage] = useState(Cookies.get("user-language") || "ENGLISH");
+  const [projectStatusNumberPerLab, setProjectStatusNumberPerLab] = useState(
+    []
+  );
+  const isTablet = useMediaQuery({ query: "(max-width: 1199px)" });
 
   useEffect(() => {
     getAppStatistics().then((response) => {
@@ -232,17 +245,23 @@ const StatisticsPdf = () => {
       <AppNavbar setCurrentLanguage={setCurrentLanguage}/>
 
       {/* Screen display */}
-      <div className="screen-display">
-        <div className="ilm-pageb" style={{ paddingTop: "20px" }}>
+      <div
+        className="screen-display"
+        style={{ height: isTablet && "unset", position: isTablet && "unset" }}
+      >
+        <div
+          className={!isTablet ? "ilm-pageb" : "ilm-pageb-noheight"}
+          style={{ paddingTop: "20px" }}
+        >
           <h1 className="page-title">
             <span className="app-slogan-1">ILM </span>
             <span className="app-slogan-2"><Trans>Statistics</Trans></span>
           </h1>
           <Row style={{ height: "3%" }}></Row>
-          <Row style={{ height: "42%" }}>
+          <Row style={{ height: !isTablet && "42%", width: "100%" }}>
             <Col sm={1}></Col>
 
-            <Col sm={7}>
+            <Col sm={12} xl={7} style={{ height: "100%" }}>
               <Row style={{ height: "100%" }} className="row-pie-charts">
                 <Col sm={5} style={{ height: "100%" }}>
                   <Chart
@@ -253,7 +272,7 @@ const StatisticsPdf = () => {
                     height={"100%"}
                   />
                 </Col>
-                <Col sm={5} style={{ height: "100%" }}>
+                <Col sm={12} xl={5} style={{ height: "100%" }}>
                   {" "}
                   <Chart
                     chartType="PieChart"
@@ -265,7 +284,7 @@ const StatisticsPdf = () => {
                 </Col>
               </Row>
             </Col>
-            <Col sm={3} className="col-app-stats">
+            <Col xl={3} className="col-app-stats">
               <div className="app-stats">
                 <div>
                 <Trans>Total users</Trans>: <span>{totalUsers}</span>
@@ -290,9 +309,9 @@ const StatisticsPdf = () => {
             <Col sm={1}></Col>
           </Row>
           <Row style={{ height: "3%" }}></Row>
-          <Row style={{ height: "40%" }}>
+          <Row style={{ height: !isTablet && "40%", width: "100%" }}>
             <Col sm={1}></Col>
-            <Col sm={7} className="row-pie-charts">
+            <Col sm={12} xl={7} className="row-pie-charts">
               <Chart
                 chartType="BarChart"
                 width="100%"
@@ -301,14 +320,27 @@ const StatisticsPdf = () => {
                 options={optionsProjectStatus}
               />
             </Col>
-            <Col sm={3} className="col-button">
+            <Col sm={12} xl={3} className="col-button">
               {" "}
               <button
                 onClick={exportToPDF}
                 className="submit-button"
-                style={{ paddingLeft: "35px", paddingRight: "35px" }}
+                style={{
+                  paddingLeft: "35px",
+                  paddingRight: "35px",
+                  display: "flex",
+                  alignItems: "center",
+                }}
               >
                 <Trans>Export to PDF</Trans>
+                <img
+                  src={pdfIcon}
+                  style={{
+                    height: "30px",
+                    aspectRatio: "1/1",
+                    marginLeft: "10px",
+                  }}
+                />
               </button>
             </Col>
             <Col sm={1}></Col>

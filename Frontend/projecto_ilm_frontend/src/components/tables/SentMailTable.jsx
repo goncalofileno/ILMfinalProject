@@ -17,6 +17,8 @@ import { FaTrash } from "react-icons/fa";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./SentMailTable.css";
 import { Trans, t } from "@lingui/macro";
+import "./MailTable.css";
+import { useMediaQuery } from "react-responsive";
 
 const SentMailTable = () => {
   const navigate = useNavigate();
@@ -33,7 +35,8 @@ const SentMailTable = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [mailToDelete, setMailToDelete] = useState(null);
   const [hoveredMailId, setHoveredMailId] = useState(null);
-
+  const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
+  const NUMBER_OF_MAILS_PER_PAGE = 8;
   useEffect(() => {
     const query = new URLSearchParams(location.search);
     const page = query.get("page") || 1;
@@ -228,9 +231,10 @@ const SentMailTable = () => {
           placeholder={t`Search mails`}
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
-          style={{ borderRadius: "10px" }}
+          style={{ borderRadius: "10px", width: isMobile ? "100%" : "50%" }}
           className="custom-focus"
         />
+        <div className="flex-btn-row-mail-table">
         <Button
           variant="primary"
           onClick={() => updateURL({ search: searchInput, page: 1 })}
@@ -249,6 +253,7 @@ const SentMailTable = () => {
         >
           <Trans>Clear Search</Trans>
         </Button>
+        </div>
       </InputGroup>
 
       {mails.length === 0 ? (
@@ -289,18 +294,40 @@ const SentMailTable = () => {
                       {mail.text.slice(0, 30)}...
                     </span>
                   </td>
-                  <td className="mail-cell centered-cell max-width-15">
-                    {hoveredMailId === mail.id ? (
-                      <FaTrash
-                        onClick={(event) => handleDeleteClick(mail, event)}
-                        className="trash-icon"
-                      />
-                    ) : (
-                      formatDate(mail.date)
-                    )}
-                  </td>
+                  {!isMobile && (
+                    <td className="mail-cell centered-cell max-width-15">
+                      {hoveredMailId === mail.id ? (
+                        <FaTrash
+                          onClick={(event) => handleDeleteClick(mail, event)}
+                          className="trash-icon"
+                        />
+                      ) : (
+                        formatDate(mail.date)
+                      )}
+                    </td>
+                  )}
                 </tr>
               ))}
+              {Array(NUMBER_OF_MAILS_PER_PAGE - mails.length)
+                .fill()
+                .map((index) => (
+                  <tr key={index + mails.length}>
+                    <td
+                      className="row-no-content"
+                      style={{ borderBottom: "1px solid #ddd" }}
+                    ></td>
+                    <td
+                      className="row-no-content"
+                      style={{ borderBottom: "1px solid #ddd" }}
+                    ></td>
+                    {!isMobile && (
+                      <td
+                        className="row-no-content"
+                        style={{ borderBottom: "1px solid #ddd" }}
+                      ></td>
+                    )}
+                  </tr>
+                ))}
             </tbody>
           </table>
           <div className="pagination-container">

@@ -30,6 +30,7 @@ import "./ProjectLogsPage.css";
 import { formatStatusDropDown } from "../utilities/converters";
 import StandardModal from "../components/modals/StandardModal";
 import { Trans, t } from "@lingui/macro";
+import { useMediaQuery } from "react-responsive";
 
 const ProjectLogsPage = () => {
   const { systemProjectName } = useParams();
@@ -43,7 +44,11 @@ const ProjectLogsPage = () => {
   const [selectedTask, setSelectedTask] = useState(null);
   const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(0);
   const suggestionsRef = useRef(null);
-  const [currentLanguage, setCurrentLanguage] = useState(Cookies.get("user-language") || "ENGLISH");
+  const [currentLanguage, setCurrentLanguage] = useState(
+    Cookies.get("user-language") || "ENGLISH"
+  );
+  const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
+  const isTablet = useMediaQuery({ query: "(max-width: 1024px)" });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -80,7 +85,7 @@ const ProjectLogsPage = () => {
       text: newNoteText,
       date: new Date().toISOString(),
       done: false,
-      authorName: "Current User", 
+      authorName: "Current User",
       authorPhoto: "https://www.example.com/photo.png",
       taskSystemName: selectedTask ? selectedTask.systemTitle : null,
     };
@@ -147,7 +152,8 @@ const ProjectLogsPage = () => {
   const logMessagesEn = {
     MEMBER_ADDED: (log) => (
       <>
-        The member <strong>{log.receiver}</strong> was added to the project by <strong>{log.authorName}</strong>.
+        The member <strong>{log.receiver}</strong> was added to the project by{" "}
+        <strong>{log.authorName}</strong>.
       </>
     ),
     MEMBER_REMOVED: (log) => (
@@ -157,7 +163,8 @@ const ProjectLogsPage = () => {
     ),
     TASKS_CREATED: (log) => (
       <>
-        The task <strong>{log.taskTitle}</strong> was created in the project plan.
+        The task <strong>{log.taskTitle}</strong> was created in the project
+        plan.
       </>
     ),
     TASKS_COMPLETED: (log) => (
@@ -183,17 +190,23 @@ const ProjectLogsPage = () => {
     PROJECT_INFO_UPDATED: () => <>The project data was updated.</>,
     PROJECT_STATUS_UPDATED: (log) => (
       <>
-        The user <strong>{log.authorName}</strong> project status changed from <strong>{log.projectOldState}</strong> to <strong>{log.projectNewState}</strong>.
+        The user <strong>{log.authorName}</strong> project status changed from{" "}
+        <strong>{log.projectOldState}</strong> to{" "}
+        <strong>{log.projectNewState}</strong>.
       </>
     ),
     RESOURCES_UPDATED: (log) => (
       <>
-        The resources in the project were updated by <strong>{log.authorName}</strong>.
+        The resources in the project were updated by{" "}
+        <strong>{log.authorName}</strong>.
       </>
     ),
     MEMBER_TYPE_CHANGED: (log) => (
       <>
-        The user <strong>{log.receiver}</strong> user type was changed from <strong>{log.memberOldType}</strong> to <strong>{log.memberNewType}</strong> by <strong>{log.authorName}</strong>.
+        The user <strong>{log.receiver}</strong> user type was changed from{" "}
+        <strong>{log.memberOldType}</strong> to{" "}
+        <strong>{log.memberNewType}</strong> by{" "}
+        <strong>{log.authorName}</strong>.
       </>
     ),
     MEMBER_LEFT: (log) => (
@@ -201,13 +214,14 @@ const ProjectLogsPage = () => {
         The user <strong>{log.authorName}</strong> left the project.
       </>
     ),
-    default: () => "Unknown log type."
+    default: () => "Unknown log type.",
   };
 
   const logMessagesPt = {
     MEMBER_ADDED: (log) => (
       <>
-        O membro <strong>{log.receiver}</strong> foi adicionado ao projeto por <strong>{log.authorName}</strong>.
+        O membro <strong>{log.receiver}</strong> foi adicionado ao projeto por{" "}
+        <strong>{log.authorName}</strong>.
       </>
     ),
     MEMBER_REMOVED: (log) => (
@@ -217,7 +231,8 @@ const ProjectLogsPage = () => {
     ),
     TASKS_CREATED: (log) => (
       <>
-        A tarefa <strong>{log.taskTitle}</strong> foi criada no plano do projeto.
+        A tarefa <strong>{log.taskTitle}</strong> foi criada no plano do
+        projeto.
       </>
     ),
     TASKS_COMPLETED: (log) => (
@@ -243,17 +258,23 @@ const ProjectLogsPage = () => {
     PROJECT_INFO_UPDATED: () => <>Os dados do projeto foram atualizados.</>,
     PROJECT_STATUS_UPDATED: (log) => (
       <>
-        O estado do projeto do utilizador <strong>{log.authorName}</strong> mudou de <strong>{log.projectOldState}</strong> para <strong>{log.projectNewState}</strong>.
+        O estado do projeto do utilizador <strong>{log.authorName}</strong>{" "}
+        mudou de <strong>{log.projectOldState}</strong> para{" "}
+        <strong>{log.projectNewState}</strong>.
       </>
     ),
     RESOURCES_UPDATED: (log) => (
       <>
-        Os recursos no projeto foram atualizados por <strong>{log.authorName}</strong>.
+        Os recursos no projeto foram atualizados por{" "}
+        <strong>{log.authorName}</strong>.
       </>
     ),
     MEMBER_TYPE_CHANGED: (log) => (
       <>
-        O tipo de utilizador do membro <strong>{log.receiver}</strong> foi alterado de <strong>{log.memberOldType}</strong> para <strong>{log.memberNewType}</strong> por <strong>{log.authorName}</strong>.
+        O tipo de utilizador do membro <strong>{log.receiver}</strong> foi
+        alterado de <strong>{log.memberOldType}</strong> para{" "}
+        <strong>{log.memberNewType}</strong> por{" "}
+        <strong>{log.authorName}</strong>.
       </>
     ),
     MEMBER_LEFT: (log) => (
@@ -261,14 +282,20 @@ const ProjectLogsPage = () => {
         O utilizador <strong>{log.authorName}</strong> deixou o projeto.
       </>
     ),
-    default: () => "Tipo de log desconhecido."
+    default: () => "Tipo de log desconhecido.",
   };
 
   const renderLogMessage = (log) => {
     const userLanguage = Cookies.get("user-language") || "ENGLISH";
     const messageFunc =
-      userLanguage === "PORTUGUESE" ? logMessagesPt[log.type] : logMessagesEn[log.type];
-    return messageFunc ? messageFunc(log) : userLanguage === "PORTUGUESE" ? logMessagesPt.default() : logMessagesEn.default();
+      userLanguage === "PORTUGUESE"
+        ? logMessagesPt[log.type]
+        : logMessagesEn[log.type];
+    return messageFunc
+      ? messageFunc(log)
+      : userLanguage === "PORTUGUESE"
+      ? logMessagesPt.default()
+      : logMessagesEn.default();
   };
 
   const logIcons = {
@@ -313,11 +340,19 @@ const ProjectLogsPage = () => {
   };
 
   if (error) {
-    return <div><Trans>Error</Trans>: {error}</div>;
+    return (
+      <div>
+        <Trans>Error</Trans>: {error}
+      </div>
+    );
   }
 
   if (!logsAndNotes) {
-    return <div><Trans>Loading...</Trans></div>;
+    return (
+      <div>
+        <Trans>Loading...</Trans>
+      </div>
+    );
   }
 
   // Ordenar logs por data, mais recentes primeiro
@@ -331,13 +366,24 @@ const ProjectLogsPage = () => {
 
   return (
     <>
-      <AppNavbar setCurrentLanguage={setCurrentLanguage}/>
-      <div className="bckg-color-ilm-page ilm-pageb">
+      <AppNavbar setCurrentLanguage={setCurrentLanguage} />
+      <div
+        className={
+          !isMobile ? "bckg-color-ilm-page ilm-pageb" : "ilm-page-mobile"
+        }
+      >
         <ProjectTabs
           typeOfUserSeingProject={logsAndNotes.typeOfUserSeingPage}
           projectName={logsAndNotes.projectName}
         />
-        <Container style={{ height: "89%", marginTop: "2%" }}>
+        <Container
+          id="container-project-logs-page"
+          style={{
+            height: !isMobile ? "89%" : "140vh",
+            marginTop: "1%",
+            paddingRight: "0",
+          }}
+        >
           <Row>
             <Col>
               <h5>
@@ -345,17 +391,25 @@ const ProjectLogsPage = () => {
               </h5>
               {["CANCELED", "READY"].includes(logsAndNotes.projectStatus) && (
                 <Alert variant="danger" className="standard-modal">
-                  <Trans>The project is {logsAndNotes.projectStatus.toLowerCase()} and
-                  no notes can be added or changes made.</Trans>
+                  <Trans>
+                    The project is {logsAndNotes.projectStatus.toLowerCase()}{" "}
+                    and no notes can be added or changes made.
+                  </Trans>
                 </Alert>
               )}
             </Col>
           </Row>
-          <Row style={{ height: "80%" }}>
-            <Col md={6} style={{ height: "100%" }}>
+          <Row style={{ height: !isMobile ? "80%" : "400px" }}>
+            <Col
+              sm={12}
+              md={6}
+              style={{ height: "100%", marginBottom: isMobile && "40px" }}
+            >
               <Card style={{ height: "100%" }}>
                 <Card.Header>
-                  <h4><Trans>Logs</Trans></h4>
+                  <h4>
+                    <Trans>Logs</Trans>
+                  </h4>
                 </Card.Header>
                 <Card.Body className="logs-list">
                   <ListGroup variant="flush">
@@ -388,7 +442,7 @@ const ProjectLogsPage = () => {
                 </Card.Body>
               </Card>
             </Col>
-            <Col md={6} style={{ height: "100%" }}>
+            <Col sm={12} md={6} style={{ height: "100%" }}>
               <Row style={{ height: "100%" }}>
                 <div
                   style={{
@@ -402,8 +456,10 @@ const ProjectLogsPage = () => {
                   }}
                 >
                   <Row style={{ height: "100%" }}>
-                    <Col sm={9} style={{ height: "100%" }}>
-                      <h4><Trans>Notes</Trans></h4>
+                    <Col xs={9} sm={9} style={{ height: "100%" }}>
+                      <h4>
+                        <Trans>Notes</Trans>
+                      </h4>
                       <div
                         style={{
                           height: "95%",
@@ -442,6 +498,7 @@ const ProjectLogsPage = () => {
                       </div>
                     </Col>
                     <Col
+                      xs={3}
                       sm={3}
                       style={{
                         display: "flex",
@@ -451,19 +508,21 @@ const ProjectLogsPage = () => {
                       }}
                     >
                       {" "}
-                      <Button
-                        style={{
-                          backgroundColor: "#f39c12",
-                          borderColor: "#f39c12",
-                          width: "100%",
-                        }}
-                        onClick={() => setShowCreateNoteModal(true)}
-                        disabled={["CANCELED", "READY"].includes(
-                          logsAndNotes.projectStatus
-                        )}
-                      >
-                        <Trans>Add Note</Trans>
-                      </Button>
+                      <div id="add-note-button-div">
+                        <Button
+                          style={{
+                            backgroundColor: "#f39c12",
+                            borderColor: "#f39c12",
+                            width: "100%",
+                          }}
+                          onClick={() => setShowCreateNoteModal(true)}
+                          disabled={["CANCELED", "READY"].includes(
+                            logsAndNotes.projectStatus
+                          )}
+                        >
+                          Add {!isTablet && "Note"}
+                        </Button>
+                      </div>
                     </Col>
                   </Row>
                 </div>
@@ -478,11 +537,15 @@ const ProjectLogsPage = () => {
         onHide={() => setShowCreateNoteModal(false)}
       >
         <Modal.Header closeButton>
-          <Modal.Title><Trans>Create Note</Trans></Modal.Title>
+          <Modal.Title>
+            <Trans>Create Note</Trans>
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form.Group>
-            <Form.Label><Trans>Note</Trans></Form.Label>
+            <Form.Label>
+              <Trans>Note</Trans>
+            </Form.Label>
             <Form.Control
               as="textarea"
               rows={3}

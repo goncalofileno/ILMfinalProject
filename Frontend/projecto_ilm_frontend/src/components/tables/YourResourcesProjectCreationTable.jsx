@@ -3,6 +3,7 @@ import { formatResourceType } from "../../utilities/converters";
 import componentIcon from "../../resources/icons/other/application-control.png";
 import Cookies from "js-cookie";
 import { Trans, t } from "@lingui/macro";
+import { useMediaQuery } from "react-responsive";
 
 export default function YourResourcesProjectCreationTable({
   resources,
@@ -14,6 +15,7 @@ export default function YourResourcesProjectCreationTable({
   setSelectedResource,
   setSelectedResources,
 }) {
+  const isTablet = useMediaQuery({ query: "(max-width: 1000px)" });
   const NUMBER_OF_RESOURCES_PAGE = 8;
 
   const handleRowClick = (id, supplier, resource) => {
@@ -37,11 +39,11 @@ export default function YourResourcesProjectCreationTable({
     <table className="table-resources-proj-creation your-resources-table">
       <thead>
         <tr>
-          <th style={{ width: "25%" }}><Trans>Name</Trans></th>
-          <th style={{ width: "26.5%" }}><Trans>Type</Trans></th>
-          <th style={{ width: "21%" }}><Trans>Brand</Trans></th>
-          <th colSpan={2} style={{ width: "27.5%" }}>
-          <Trans>Supplier</Trans>
+          <th style={{ width: !isTablet ? "25%" : "35%" }}><Trans>Name</Trans></th>
+          {!isTablet && <th style={{ width: "26.5%" }}><Trans>Type</Trans></th>}
+          <th style={{ width: !isTablet ? "21%" : "31%" }}><Trans>Brand</Trans></th>
+          <th colSpan={2} style={{ width: !isTablet ? "27.5%" : "34%" }}>
+            <Trans>Supplier</Trans>
           </th>
         </tr>
       </thead>
@@ -57,34 +59,43 @@ export default function YourResourcesProjectCreationTable({
               handleRowClick(resource.id, resource.supplier, resource)
             }
           >
-            <td style={{ width: "25%" }}>{resource.name}</td>
-            <td style={{ width: "26.5%" }}>
-              {" "}
-              {formatResourceType(resource.type)}
-              {resource.type === "COMPONENT" ? (
-                <i
-                  style={{ marginLeft: "12px" }}
-                  className="fas fa-cogs fa-lg"
-                ></i>
-              ) : (
-                resource.type === "RESOURCE" && (
-                  <img
-                    style={{
-                      marginLeft: "12px",
-                      height: "22px",
-                      width: "25px",
-                    }}
-                    src={componentIcon}
-                  ></img>
-                )
-              )}
+            <td style={{ width: !isTablet ? "25%" : "35%" }}>
+              {resource.name}
             </td>
-            <td style={{ width: "21%" }}>{resource.brand}</td>
-            <td style={{ width: "22.5%" }}>{resource.supplier}</td>
-            <td className="last-column-table-resources" style={{ width: "5%" }}>
+            {!isTablet && (
+              <td style={{ width: "26.5%" }}>
+                {" "}
+                {formatResourceType(resource.type)}
+                {resource.type === "COMPONENT" ? (
+                  <i
+                    style={{ marginLeft: "12px" }}
+                    className="fas fa-cogs fa-lg"
+                  ></i>
+                ) : (
+                  resource.type === "RESOURCE" && (
+                    <img
+                      style={{
+                        marginLeft: "12px",
+                        height: "22px",
+                        width: "25px",
+                      }}
+                      src={componentIcon}
+                    ></img>
+                  )
+                )}
+              </td>
+            )}
+            <td style={{ width: !isTablet ? "21%" : "31%" }}>
+              {resource.brand}
+            </td>
+            <td style={{ width: !isTablet ? "21.5%" : "28%" }}>
+              {resource.supplier}
+            </td>
+            <td className="last-column-table-resources" style={{ width: "6%" }}>
               <button
                 className="remove-button"
                 onClick={(e) => removeResource(e, resource.resourceSupplierId)}
+                style={{ visibility: isTablet && "visible" }}
               >
                 <i class="fas fa-minus"></i>
               </button>
@@ -97,7 +108,8 @@ export default function YourResourcesProjectCreationTable({
             .map((index) => (
               <tr key={index + resources.length}>
                 <td></td>
-                <td></td>
+                {!isTablet && <td></td>}
+
                 <td></td>
                 <td></td>
                 <td></td>

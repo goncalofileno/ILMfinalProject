@@ -4,6 +4,7 @@ import TablePagination from "../paginations/TablePagination";
 import componentIcon from "../../resources/icons/other/application-control.png";
 import { formatResourceType } from "../../utilities/converters";
 import { Trans, t } from "@lingui/macro";
+import { useMediaQuery } from "react-responsive";
 
 export default function ResourcesTable({
   resources,
@@ -26,6 +27,8 @@ export default function ResourcesTable({
   setResourceId,
 }) {
   const NUMBER_OF_RESOURCES_PAGE = 8;
+  const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
+  const isTablet = useMediaQuery({ query: "(max-width: 1024px)" });
 
   const handleClick = (e) => {
     setCurrentPage(1);
@@ -46,25 +49,43 @@ export default function ResourcesTable({
   return (
     <>
       <div className="search-table-div">
-        <InputGroup className="mail-filters" style={{ width: "50%" }}>
-          <Form.Control
-            type="text"
-            placeholder={t`Search mails`}
-            value={keyword}
-            onChange={(e) => setKeyword(e.target.value)}
-            style={{ borderRadius: "10px", cursor: "text" }}
-            className="custom-focus"
-          />
-          <Button variant="primary" onClick={handleClick} id="primary-btn-boot">
-          <Trans>Search</Trans>
-          </Button>
-          <Button
-            variant="secondary"
-            onClick={handleClean}
-            style={{ borderRadius: "10px" }}
-          >
-            <Trans>Clear Search</Trans>
-          </Button>
+        <InputGroup
+          className={isMobile && "projects-filters-input"}
+          style={{ width: isMobile ? "100%" : "50%" }}
+        >
+          {isMobile && (
+            <button
+              className="submit-button"
+              id="btn-add-project-table-projects"
+              onClick={() => setIsModalActive(true)}
+            >
+              Add Resource
+            </button>
+          )}
+          <div className="projects-filters">
+            <Form.Control
+              type="text"
+              placeholder={t`Search mails`}
+              value={keyword}
+              onChange={(e) => setKeyword(e.target.value)}
+              style={{ borderRadius: "10px", cursor: "text" }}
+              className="custom-focus"
+            />
+            <Button
+              variant="primary"
+              onClick={handleClick}
+              id="primary-btn-boot"
+            >
+              <Trans>Search</Trans>
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={handleClean}
+              style={{ borderRadius: "10px", width: "200px" }}
+            >
+              Clear {!isTablet && "Search"}
+            </Button>
+          </div>
         </InputGroup>
       </div>
       <table className="centered-table">
@@ -72,25 +93,33 @@ export default function ResourcesTable({
           <tr>
             <th onClick={sortByName} style={{ width: "25%" }}>
               {" "}
-              <span style={{ marginRight: "10px" }}><Trans>Name</Trans></span>
+              <span style={{ marginRight: "10px" }}>
+                <Trans>Name</Trans>
+              </span>
               {nameAsc ? (
                 <i class="fas fa-arrow-up fa-xs"></i>
               ) : (
                 nameAsc === false && <i class="fas fa-arrow-down fa-xs"></i>
               )}
             </th>
-            <th onClick={sortByType} style={{ width: "25%" }}>
-              {" "}
-              <span style={{ marginRight: "10px" }}><Trans>Type</Trans></span>
-              {typeAsc ? (
-                <i class="fas fa-arrow-up fa-xs"></i>
-              ) : (
-                typeAsc === false && <i class="fas fa-arrow-down fa-xs"></i>
-              )}
-            </th>
+            {!isMobile && (
+              <th onClick={sortByType} style={{ width: "25%" }}>
+                {" "}
+                <span style={{ marginRight: "10px" }}>
+                  <Trans>Type</Trans>
+                </span>
+                {typeAsc ? (
+                  <i class="fas fa-arrow-up fa-xs"></i>
+                ) : (
+                  typeAsc === false && <i class="fas fa-arrow-down fa-xs"></i>
+                )}
+              </th>
+            )}
             <th onClick={sortByBrand} style={{ width: "25%" }}>
               {" "}
-              <span style={{ marginRight: "10px" }}><Trans>Brand</Trans></span>
+              <span style={{ marginRight: "10px" }}>
+                <Trans>Brand</Trans>
+              </span>
               {brandAsc ? (
                 <i class="fas fa-arrow-up fa-xs"></i>
               ) : (
@@ -99,7 +128,9 @@ export default function ResourcesTable({
             </th>
             <th onClick={sortBySupplier} style={{ width: "25%" }}>
               {" "}
-              <span style={{ marginRight: "10px" }}><Trans>Supplier</Trans></span>
+              <span style={{ marginRight: "10px" }}>
+                <Trans>Supplier</Trans>
+              </span>
               {supplierAsc ? (
                 <i class="fas fa-arrow-up fa-xs"></i>
               ) : (
@@ -112,7 +143,7 @@ export default function ResourcesTable({
           <tr>
             <td colspan="4">
               <div className="no-results no-results-align">
-              <Trans>No resources found matching your criteria.</Trans>
+                <Trans>No resources found matching your criteria.</Trans>
               </div>
             </td>
           </tr>
@@ -125,27 +156,29 @@ export default function ResourcesTable({
                 onClick={() => handleRowClick(resource.id, resource.supplier)}
               >
                 <td style={{ fontWeight: "bold" }}>{resource.name}</td>
-                <td>
-                  {formatResourceType(resource.type)}
+                {!isMobile && (
+                  <td>
+                    {formatResourceType(resource.type)}
 
-                  {resource.type === "COMPONENT" ? (
-                    <i
-                      style={{ marginLeft: "12px" }}
-                      className="fas fa-cogs fa-lg"
-                    ></i>
-                  ) : (
-                    resource.type === "RESOURCE" && (
-                      <img
-                        style={{
-                          marginLeft: "12px",
-                          height: "22px",
-                          width: "25px",
-                        }}
-                        src={componentIcon}
-                      ></img>
-                    )
-                  )}
-                </td>
+                    {resource.type === "COMPONENT" ? (
+                      <i
+                        style={{ marginLeft: "12px" }}
+                        className="fas fa-cogs fa-lg"
+                      ></i>
+                    ) : (
+                      resource.type === "RESOURCE" && (
+                        <img
+                          style={{
+                            marginLeft: "12px",
+                            height: "22px",
+                            width: "25px",
+                          }}
+                          src={componentIcon}
+                        ></img>
+                      )
+                    )}
+                  </td>
+                )}
                 <td>{resource.brand}</td>
                 <td>{resource.supplier}</td>
               </tr>
@@ -155,7 +188,7 @@ export default function ResourcesTable({
               .map((index) => (
                 <tr key={index + resources.length}>
                   <td className="row-no-content"></td>
-                  <td className="row-no-content"></td>
+                  {!isMobile && <td className="row-no-content"></td>}
                   <td className="row-no-content"></td>
                   <td className="row-no-content"></td>
                 </tr>
@@ -166,13 +199,15 @@ export default function ResourcesTable({
       <div id="align-div-buttons">
         <div id="flex-row-table-projects">
           <div className="row-btns-table-projects-1">
-            <button
-              className="submit-button"
-              id="btn-add-project-table-projects"
-              onClick={() => setIsModalActive(true)}
-            >
-              <Trans>Add Resource</Trans>
-            </button>
+            {!isMobile && (
+              <button
+                className="submit-button"
+                id="btn-add-project-table-projects"
+                onClick={() => setIsModalActive(true)}
+              >
+                <Trans>Add Resource</Trans>
+              </button>
+            )}
           </div>
           <div className="tablePagination-div">
             {resources.length > 0 && (

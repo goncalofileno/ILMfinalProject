@@ -23,7 +23,7 @@ import ukFlag from "../../resources/icons/navbar/united-kingdom.png";
 import { Trans, t } from "@lingui/macro";
 import { useLanguage } from "../../I18nLoader";
 
-export default function AppNavbar({ setIsAsideVisible, setCurrentLanguage }) {
+export default function AppNavbar({ setIsAsideVisible, pageWithAside, setCurrentLanguage }) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [userImage, setUserImage] = useState(userProfileIcon);
@@ -180,27 +180,29 @@ export default function AppNavbar({ setIsAsideVisible, setCurrentLanguage }) {
   return (
     <div>
       <div className="app-navbar">
-        {!isMobile ? (
+        {!isMobile || !pageWithAside ? (
           <div
             className="logo"
             onClick={() => handleNavigation("/projects")}
           ></div>
         ) : (
-          <div className="flex-logo-hamb">
-            <div
-              className="logo"
-              onClick={() => handleNavigation("/projects")}
-            ></div>
+          pageWithAside && (
+            <div className="flex-logo-hamb">
+              <div
+                className="logo"
+                onClick={() => handleNavigation("/projects")}
+              ></div>
 
-            <div>
-              <button
-                className="hamb-btn"
-                onClick={() => setIsAsideVisible((prev) => !prev)}
-              >
-                <i className="fas fa-bars fa-2x"></i>
-              </button>
+              <div>
+                <button
+                  className="hamb-btn"
+                  onClick={() => setIsAsideVisible((prev) => !prev)}
+                >
+                  <i class="fas fa-bars fa-2x"></i>
+                </button>
+              </div>
             </div>
-          </div>
+          )
         )}
         <div className="nav-icons-wrapper">
           <div className="nav-icons">
@@ -319,12 +321,13 @@ export default function AppNavbar({ setIsAsideVisible, setCurrentLanguage }) {
             <div
               className={getNavItemClass("/myprojects")}
               onClick={() => handleNavigation("/myprojects")}
+              id="my-projects-nav-item"
             >
               <div
                 className="icon"
                 style={getNavIconStyle("/myprojects")}
               ></div>
-              <label>
+              <label style={{ width: "65px", textAlign: "center" }}>
                 <Trans>My Projects</Trans>
               </label>
             </div>

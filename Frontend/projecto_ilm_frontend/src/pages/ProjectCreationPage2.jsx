@@ -6,6 +6,7 @@ import { getUserProjectCreation, addMembers } from "../utilities/services";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import StandardModal from "../components/modals/StandardModal";
+import { useMediaQuery } from "react-responsive";
 import { useNavigate } from "react-router-dom";
 import { Trans, t } from "@lingui/macro";
 
@@ -23,6 +24,10 @@ export default function ProjectCreationPage2() {
   const [modalType, setModalType] = useState("warning");
   const [modalMessage, setModalMessage] = useState("");
   const [modalActive, setModalActive] = useState(false);
+  const [isAsideVisible, setIsAsideVisible] = useState(false);
+  const isMobileAuxiliar = useMediaQuery({ query: "(max-width: 330px)" });
+  const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
+  const isTablet = useMediaQuery({ query: "(max-width: 991px)" });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -94,7 +99,7 @@ export default function ProjectCreationPage2() {
 
   return (
     <>
-      <AppNavbar />
+      <AppNavbar setIsAsideVisible={setIsAsideVisible} pageWithAside={true} />
       <StandardModal
         modalType={modalType}
         message={modalMessage}
@@ -111,8 +116,13 @@ export default function ProjectCreationPage2() {
         setGetUsersTrigger={setGetUsersTrigger}
         maxMembers={maxMembers}
         setMaxMembers={setMaxMembers}
+        isVisible={isAsideVisible}
       />
-      <div className="ilm-pageb-with-aside">
+      <div
+        className={isMobile ? "ilm-page-mobile" : "ilm-pageb-with-aside"}
+        onClick={() => isAsideVisible && setIsAsideVisible((prev) => !prev)}
+        style={{ height: isTablet && "unset" }}
+      >
         <h1 className="page-title">
           <span className="app-slogan-1">Project </span>
           <span className="app-slogan-2">Members</span>
@@ -128,30 +138,41 @@ export default function ProjectCreationPage2() {
           <Form.Control
             type="text"
             placeholder={t`Search for user`}
-            style={{ borderRadius: "10px", cursor: "text" }}
+            style={{
+              borderRadius: "10px",
+              cursor: "text",
+              width: isMobile && "100%",
+            }}
             className="custom-focus"
             value={keyword}
             onChange={(e) => {
               setKeyword(e.target.value);
             }}
           />
-          <Button
-            variant="primary"
-            id="primary-btn-boot"
-            onClick={() => setGetUsersTrigger((prev) => !prev)}
-          >
-            <Trans>Search</Trans>
-          </Button>
-          <Button
-            variant="secondary"
-            style={{ borderRadius: "10px" }}
-            onClick={handleClearSearch}
-          >
-            <Trans>Clear Search</Trans>
-          </Button>
+          <div className="flex-btn-row-mail-table">
+            <Button
+              variant="primary"
+              id="primary-btn-boot"
+              onClick={() => setGetUsersTrigger((prev) => !prev)}
+            >
+              <Trans>Search</Trans>
+            </Button>
+            <Button
+              variant="secondary"
+              style={{ borderRadius: "10px" }}
+              onClick={handleClearSearch}
+            >
+              <Trans>Clear Search</Trans>
+            </Button>
+          </div>
         </InputGroup>
         <Row className="row-container">
-          <Col className="height-100 arrow-cols" sm={1}>
+          <Col
+            className="height-100 arrow-cols"
+            xs={1}
+            sm={1}
+            style={{ height: isTablet && "550px" }}
+          >
             {" "}
             {currentPage > 1 && (
               <button className="btn-arrow" onClick={handlePreviousClick}>
@@ -159,55 +180,110 @@ export default function ProjectCreationPage2() {
               </button>
             )}
           </Col>
-          <Col className="height-100" sm={10}>
-            <Row className="height-45">
-              {users !== null &&
-                users.slice(0, 3).map((user) => {
-                  return (
-                    <Col className="height-100" sm={4}>
-                      <UserCard
-                        name={user.name}
-                        lab={user.lab}
-                        img={user.photo}
-                        id={user.id}
-                        skills={user.skills}
-                        systemUsername={user.systemUsername}
-                        usersInProject={usersInProject}
-                        setUsersInProject={setUsersInProject}
-                        rejectedUsers={rejectedUsers}
-                        setRejectedUsers={setRejectedUsers}
-                        setGetUsersTrigger={setGetUsersTrigger}
-                        maxMembers={maxMembers}
-                        numberOfMembersInProject={usersInProject.length}
-                      ></UserCard>
-                    </Col>
-                  );
-                })}
+          <Col className="height-100" xs={10} sm={10}>
+            <Row
+              className="height-45"
+              style={{ marginBottom: isTablet && "10px" }}
+            >
+              {users !== null && !isTablet
+                ? users.slice(0, 3).map((user) => {
+                    return (
+                      <Col className="height-100" lg={4}>
+                        <UserCard
+                          name={user.name}
+                          lab={user.lab}
+                          img={user.photo}
+                          id={user.id}
+                          skills={user.skills}
+                          systemUsername={user.systemUsername}
+                          usersInProject={usersInProject}
+                          setUsersInProject={setUsersInProject}
+                          rejectedUsers={rejectedUsers}
+                          setRejectedUsers={setRejectedUsers}
+                          setGetUsersTrigger={setGetUsersTrigger}
+                          maxMembers={maxMembers}
+                          numberOfMembersInProject={usersInProject.length}
+                        ></UserCard>
+                      </Col>
+                    );
+                  })
+                : users.slice(0, 4).map((user) => {
+                    return (
+                      <Col
+                        className="height-100"
+                        sm={6}
+                        lg={4}
+                        style={{ marginBottom: isTablet && "30px" }}
+                      >
+                        <UserCard
+                          name={user.name}
+                          lab={user.lab}
+                          img={user.photo}
+                          id={user.id}
+                          skills={user.skills}
+                          systemUsername={user.systemUsername}
+                          usersInProject={usersInProject}
+                          setUsersInProject={setUsersInProject}
+                          rejectedUsers={rejectedUsers}
+                          setRejectedUsers={setRejectedUsers}
+                          setGetUsersTrigger={setGetUsersTrigger}
+                          maxMembers={maxMembers}
+                          numberOfMembersInProject={usersInProject.length}
+                        ></UserCard>
+                      </Col>
+                    );
+                  })}
             </Row>
             <Row style={{ height: "3%" }}></Row>
             <Row className="height-45">
-              {users !== null &&
-                users.slice(3, 6).map((user) => {
-                  return (
-                    <Col className="height-100" sm={4}>
-                      <UserCard
-                        name={user.name}
-                        lab={user.lab}
-                        img={user.photo}
-                        id={user.id}
-                        skills={user.skills}
-                        systemUsername={user.systemUsername}
-                        usersInProject={usersInProject}
-                        setUsersInProject={setUsersInProject}
-                        rejectedUsers={rejectedUsers}
-                        setRejectedUsers={setRejectedUsers}
-                        setGetUsersTrigger={setGetUsersTrigger}
-                        maxMembers={maxMembers}
-                        numberOfMembersInProject={usersInProject.length}
-                      ></UserCard>
-                    </Col>
-                  );
-                })}
+              {users !== null && !isTablet
+                ? users.slice(3, 6).map((user) => {
+                    return (
+                      <Col className="height-100" sm={6} lg={4}>
+                        <UserCard
+                          name={user.name}
+                          lab={user.lab}
+                          img={user.photo}
+                          id={user.id}
+                          skills={user.skills}
+                          systemUsername={user.systemUsername}
+                          usersInProject={usersInProject}
+                          setUsersInProject={setUsersInProject}
+                          rejectedUsers={rejectedUsers}
+                          setRejectedUsers={setRejectedUsers}
+                          setGetUsersTrigger={setGetUsersTrigger}
+                          maxMembers={maxMembers}
+                          numberOfMembersInProject={usersInProject.length}
+                        ></UserCard>
+                      </Col>
+                    );
+                  })
+                : users.slice(4, 6).map((user) => {
+                    return (
+                      <Col
+                        className="height-100"
+                        sm={6}
+                        lg={4}
+                        style={{ marginBottom: isTablet && "30px" }}
+                      >
+                        <UserCard
+                          name={user.name}
+                          lab={user.lab}
+                          img={user.photo}
+                          id={user.id}
+                          skills={user.skills}
+                          systemUsername={user.systemUsername}
+                          usersInProject={usersInProject}
+                          setUsersInProject={setUsersInProject}
+                          rejectedUsers={rejectedUsers}
+                          setRejectedUsers={setRejectedUsers}
+                          setGetUsersTrigger={setGetUsersTrigger}
+                          maxMembers={maxMembers}
+                          numberOfMembersInProject={usersInProject.length}
+                        ></UserCard>
+                      </Col>
+                    );
+                  })}
             </Row>
 
             <Row className="last-row-submit">
@@ -221,11 +297,18 @@ export default function ProjectCreationPage2() {
               </button>
             </Row>
           </Col>
-          <Col className="height-100 arrow-cols" sm={1}>
+          <Col
+            className="height-100 arrow-cols"
+            xs={1}
+            sm={1}
+            style={{
+              height: isTablet && "550px",
+            }}
+          >
             {" "}
             {currentPage < totalPages && (
               <button className="btn-arrow" onClick={handleNextClick}>
-                <i className="fas fa-chevron-right fa-3x "></i>
+                <i className="fas fa-chevron-right fa-3x"></i>
               </button>
             )}
           </Col>

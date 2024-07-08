@@ -76,6 +76,11 @@
   flex-wrap: wrap;
 }
 
+.skills-td-users {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
 .skills-td-users::-webkit-scrollbar {
   width: 7px;
   height: 6px; /* Espessura da barra de rolagem */

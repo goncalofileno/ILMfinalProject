@@ -15,6 +15,7 @@ import {
 } from "../utilities/services";
 import AddResourceModal from "../components/modals/AddResourceModal";
 import StandardModal from "../components/modals/StandardModal";
+import { useMediaQuery } from "react-responsive";
 import { Trans, t } from "@lingui/macro";
 
 export default function ProjectProfileResourcesPage() {
@@ -47,6 +48,7 @@ export default function ProjectProfileResourcesPage() {
   const [userInProjectType, setUserInProjectType] = useState("");
   const [projectName, setProjectName] = useState("");
   const [projectState, setProjectState] = useState("");
+  const isTablet = useMediaQuery({ query: "(max-width: 991px)" });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -198,12 +200,19 @@ export default function ProjectProfileResourcesPage() {
     });
   };
 
-  const isProjectInactive = projectState === "CANCELED" || projectState === "READY";
+  const isProjectInactive =
+    projectState === "CANCELED" || projectState === "READY";
 
   return (
     <>
       <AppNavbar />
-      <div className="bckg-color-ilm-page ilm-pageb">
+
+      <div
+        className={
+          isTablet ? "ilm-page-mobile" : "bckg-color-ilm-page ilm-pageb"
+        }
+        style={{ paddingBottom: isTablet && "150px" }}
+      >
         <ProjectTabs
           typeOfUserSeingProject={userInProjectType}
           projectName={projectName}
@@ -215,20 +224,23 @@ export default function ProjectProfileResourcesPage() {
               <Row>
                 <Col>
                   <Alert variant="danger" className="standard-modal">
-                    <Trans>The project is {projectState.toLowerCase()}, and you can't change the resources in the project.</Trans>
+                    <Trans>
+                      The project is {projectState.toLowerCase()}, and you can't
+                      change the resources in the project.
+                    </Trans>
                   </Alert>
                 </Col>
               </Row>
             </>
           )}
-          <Col sm={1}></Col>
-          <Col sm={5}>
-            <Row style={{ height: "100%" }}>
+          <Col xs={1} sm={1}></Col>
+          <Col xs={11} sm={11} lg={5} style={{ height: isTablet && "650px" }}>
+            <Row style={{ height: !isTablet ? "100%" : "85%" }}>
               <Row
                 style={{ height: "17%", marginBottom: "0.5%" }}
                 className="justify-align-content"
               >
-                <Col sm={8}>
+                <Col xs={8} sm={8}>
                   <InputGroup className="gap-10px">
                     <Form.Control
                       type="text"
@@ -260,7 +272,7 @@ export default function ProjectProfileResourcesPage() {
                     </Button>
                   </InputGroup>
                 </Col>
-                <Col sm={3}>
+                <Col xs={3} sm={3}>
                   <Form.Control
                     as="select"
                     className="custom-focus"
@@ -297,10 +309,10 @@ export default function ProjectProfileResourcesPage() {
                     ))}
                   </Form.Control>
                 </Col>
-                <Col s={1}></Col>
+                <Col xs={1} sm={1}></Col>
               </Row>
-              <Row style={{ height: "83%" }}>
-                <Col sm={11}>
+              <Row style={{ height: !isTablet ? "83%" : "75%" }}>
+                <Col xs={11} sm={11}>
                   <ResourcesProjectCreationTable
                     resources={resources}
                     sortByBrand={sortByBrand}
@@ -322,24 +334,75 @@ export default function ProjectProfileResourcesPage() {
                     disabled={isProjectInactive}
                   />
                 </Col>
-                <Col sm={1}></Col>
+                <Col xs={1} sm={1}></Col>
               </Row>
             </Row>
+            {isTablet && (
+              <Row
+                className="last-row-resources-creation"
+                style={{ marginTop: "0px" }}
+              >
+                <Col xs={1} sm={1}></Col>
+                <Col xs={2} sm={2}>
+                  {" "}
+                  <button
+                    className="submit-button"
+                    id="btn-add-project-table-projects"
+                    onClick={() => {
+                      setIsModalActive(true);
+                    }}
+                  >
+                    Add Resource
+                  </button>
+                </Col>
+                <Col xs={6} sm={5} md={4}></Col>
+                <Col xs={1} sm={1} className="table-resources-pagination">
+                  <TablePagination
+                    totalPages={totalPages}
+                    currentPage={currentPage}
+                    setCurrentPage={setCurrentPage}
+                    setNavigateTableTrigger={setResourcesTableTrigger}
+                  ></TablePagination>
+                </Col>
+                <Col xs={2} sm={3} md={4}></Col>
+              </Row>
+            )}
           </Col>
 
-          <Col sm={5} style={{ maxHeight: "100%", height: "100%" }}>
+          <Col
+            xs={11}
+            sm={11}
+            lg={5}
+            style={{
+              maxHeight: "100%",
+
+              height: isTablet ? "600px" : "100%",
+            }}
+          >
             <Row style={{ height: "100%" }}>
-              <Row style={{ height: "17%", marginBottom: "0.5%" }}>
-                <Col sm={1}></Col>
-                <Col sm={11}>
+              <Row
+                style={{
+                  height: !isTablet ? "17%" : "10%",
+                  marginBottom: !isTablet ? "0.5%" : "0px",
+                }}
+              >
+                <Col xs={1} sm={1}></Col>
+                <Col xs={11} sm={11}>
                   <h4 className="h4-resources-project-creat">
                     <Trans>Your Resources</Trans>
                   </h4>
                 </Col>
               </Row>
               <Row style={{ height: "83%" }}>
-                <Col sm={1}></Col>
-                <Col sm={11} style={{ maxHeight: "100%", height: "100%" }}>
+                <Col xs={1} sm={1}></Col>
+                <Col
+                  xs={11}
+                  sm={11}
+                  style={{
+                    maxHeight: "100%",
+                    height: "100%",
+                  }}
+                >
                   <YourResourcesProjectCreationTable
                     resources={yourResources}
                     setResources={setYourResources}
@@ -354,44 +417,61 @@ export default function ProjectProfileResourcesPage() {
                 </Col>
               </Row>
             </Row>
+            {isTablet && (
+              <Row className="last-row-resources-creation">
+                <Col xs={1} sm={1}></Col>
+                <Col xs={3} sm={3}></Col>
+                <Col xs={4} sm={4}>
+                  <button
+                    className="submit-button"
+                    style={{ width: "100%" }}
+                    onClick={handleSubmit}
+                  >
+                    Save Resources
+                  </button>
+                </Col>
+                <Col xs={1} sm={1}></Col>
+              </Row>
+            )}
           </Col>
-          <Col sm={1}></Col>
+          <Col xs={1} sm={1}></Col>
         </Row>
-        <Row className="last-row-resources-creation">
-          <Col sm={1}></Col>
-          <Col sm={2}>
-            <Button
-              className="submit-button"
-              id="btn-add-project-table-projects"
-              onClick={() => {
-                setIsModalActive(true);
-              }}
-              disabled={isProjectInactive}
-            >
-              <Trans>Add Resource</Trans>
-            </Button>
-          </Col>
-          <Col sm={1} className="table-resources-pagination">
-            <TablePagination
-              totalPages={totalPages}
-              currentPage={currentPage}
-              setCurrentPage={setCurrentPage}
-              setNavigateTableTrigger={setResourcesTableTrigger}
-            />
-          </Col>
-          <Col sm={3}></Col>
-          <Col sm={4}>
-            <Button
-              className="submit-button"
-              style={{ width: "100%" }}
-              onClick={handleSubmit}
-              disabled={isProjectInactive}
-            >
-              <Trans>Save Resources</Trans>
-            </Button>
-          </Col>
-          <Col sm={1}></Col>
-        </Row>
+        {!isTablet && (
+          <Row className="last-row-resources-creation">
+            <Col xs={1} sm={1}></Col>
+            <Col xs={2} sm={2}>
+              {" "}
+              <button
+                className="submit-button"
+                id="btn-add-project-table-projects"
+                onClick={() => {
+                  setIsModalActive(true);
+                }}
+              >
+                <Trans>Add Resource</Trans>
+              </button>
+            </Col>
+            <Col xs={1} sm={1} className="table-resources-pagination">
+              <TablePagination
+                totalPages={totalPages}
+                currentPage={currentPage}
+                setCurrentPage={setCurrentPage}
+                setNavigateTableTrigger={setResourcesTableTrigger}
+              ></TablePagination>
+            </Col>
+            <Col xs={3} sm={3}></Col>
+            <Col xs={4} sm={4}>
+              <button
+                className="submit-button"
+                style={{ width: "100%" }}
+                onClick={handleSubmit}
+              >
+                <Trans>Save Resources</Trans>
+              </button>
+            </Col>
+            <Col xs={1} sm={1}></Col>
+          </Row>
+        )}
       </div>
       <AddResourceModal
         isModalActive={isModalActive}

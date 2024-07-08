@@ -47,7 +47,7 @@ export default function UserCard({
   };
 
   return (
-    <div style={{ height: "100%" }}>
+    <div style={{ height: "100%", display: "flex", justifyContent: "center" }}>
       <div className="my-project-card user-card" style={{ height: "100%" }}>
         <div
           className="my-projects-banner user-card-banner"

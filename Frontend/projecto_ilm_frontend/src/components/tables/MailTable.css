@@ -104,6 +104,15 @@
   max-width: 40px; /* Define uma largura máxima para a célula */
 }
 
+@media (max-width: 490px) {
+  .max-width-40 {
+    max-width: 80px; /* Define uma largura máxima para a célula */
+  }
+  .mail-cell {
+    font-size: 13px;
+  }
+}
+
 .max-width-15 {
   max-width: 15px; /* Define uma largura máxima para a célula */
 }
@@ -118,10 +127,33 @@
 
 .mail-filters {
   display: flex;
-  justify-content: space-between;
+  gap: 10px;
   align-items: center;
   margin-bottom: 10px;
   gap: 10px;
+  justify-content: center;
+  flex-direction: row;
+}
+
+#div-container-search-email {
+  width: 70%;
+}
+
+@media (max-width: 740px) {
+  .mail-filters {
+    flex-direction: column;
+  }
+  #div-container-search-email {
+    width: 100%;
+  }
+}
+
+.flex-btn-row-mail-table {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-direction: row;
+  justify-content: center;
 }
 
 .pagination-container {

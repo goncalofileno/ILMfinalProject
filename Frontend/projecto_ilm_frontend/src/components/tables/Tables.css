@@ -107,6 +107,7 @@ td {
 #btn-projects-statistics-table-projects {
   padding-left: 20px;
   padding-right: 20px;
+  border-radius: 15px;
 }
 
 #align-div-buttons {
@@ -117,7 +118,7 @@ td {
 }
 
 .row-no-content {
-  height: 34.8px;
+  height: 12.5%;
 }
 
 #width-div-resources-page {
@@ -262,4 +263,30 @@ td {
 
 .remove-button:hover {
   background-color: #c20000;
+}
+
+.projects-filters {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  gap: 10px;
+  width: 100%;
+}
+
+.projects-filters-input {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 10px;
+  gap: 10px;
+  width: 100%;
+}
+
+.flex-row-button-filters {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex-direction: row;
 }

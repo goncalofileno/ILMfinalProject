@@ -14,6 +14,7 @@ import DOMPurify from "dompurify";
 import { useNavigate, useLocation } from "react-router-dom";
 import useMailStore from "../../stores/useMailStore";
 import { Trans, t } from "@lingui/macro";
+import { useMediaQuery } from "react-responsive";
 
 const MailTable = () => {
   const navigate = useNavigate();
@@ -24,7 +25,7 @@ const MailTable = () => {
     fetchMailsInInbox,
     setReceivedMails,
     setTotalMails,
-    decrementUnreadCount
+    decrementUnreadCount,
   } = useMailStore();
   const [loading, setLoading] = useState(true);
   const [selectedMail, setSelectedMail] = useState(null);
@@ -40,6 +41,8 @@ const MailTable = () => {
   const [preFilledContact, setPreFilledContact] = useState("");
   const [preFilledSubject, setPreFilledSubject] = useState("");
   const [isSearching, setIsSearching] = useState(false);
+  const isMobile = useMediaQuery({ query: "(max-width: 660px)" });
+  const NUMBER_OF_MAILS_PAGE = 8;
 
   useEffect(() => {
     const query = new URLSearchParams(location.search);
@@ -263,44 +266,53 @@ const MailTable = () => {
   };
 
   if (loading) {
-    return <div><Trans>Loading...</Trans></div>;
+    return (
+      <div>
+        <Trans>Loading...</Trans>
+      </div>
+    );
   }
 
   return (
     <div>
       <InputGroup className="mail-filters">
-        <Form.Check
-          type="switch"
-          id="unread-only-switch"
-          label={t`Unread only`}
-          checked={unreadOnly}
-          onChange={handleUnreadOnlyChange}
-          className="custom-switch2"
-        />
-        <Form.Control
-          type="text"
-          placeholder={t`Search mails`}
-          value={searchInput}
-          onChange={(e) => setSearchInput(e.target.value)}
-          style={{ borderRadius: "10px", cursor: "text" }}
-          className="custom-focus"
-        />
-        <Button
-          variant="primary"
-          onClick={() =>
-            updateURL({ search: searchInput, page: 1, unread: unreadOnly })
-          }
-          id="primary-btn-boot"
+        <div
+          className="flex-btn-row-mail-table"
+          id="div-container-search-email"
         >
-          <Trans>Search</Trans>
-        </Button>
-        <Button
-          variant="secondary"
-          onClick={handleClearSearch}
-          style={{ borderRadius: "10px" }}
-        >
-          <Trans>Clear Search</Trans>
-        </Button>
+          <Form.Check
+            type="switch"
+            id="unread-only-switch"
+            label={t`Unread only`}
+            checked={unreadOnly}
+            onChange={handleUnreadOnlyChange}
+            className="custom-switch2"
+          />
+          <Form.Control
+            type="text"
+            placeholder={t`Search mails`}
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            style={{ borderRadius: "10px", cursor: "text" }}
+            className="custom-focus"
+          />
+          <Button
+            variant="primary"
+            onClick={() =>
+              updateURL({ search: searchInput, page: 1, unread: unreadOnly })
+            }
+            id="primary-btn-boot"
+          >
+            <Trans>Search</Trans>
+          </Button>
+          <Button
+            variant="secondary"
+            onClick={handleClearSearch}
+            style={{ borderRadius: "10px" }}
+          >
+            <Trans>Clear Search</Trans>
+          </Button>
+        </div>
       </InputGroup>
 
       {receivedMails.length === 0 ? (
@@ -341,18 +353,29 @@ const MailTable = () => {
                       ...
                     </span>
                   </td>
-                  <td className="mail-cell centered-cell max-width-15">
-                    {hoveredMailId === mail.id ? (
-                      <FaTrash
-                        onClick={(event) => handleDeleteClick(mail, event)}
-                        className="trash-icon"
-                      />
-                    ) : (
-                      formatDate(mail.date)
-                    )}
-                  </td>
+                  {!isMobile && (
+                    <td className="mail-cell centered-cell max-width-15">
+                      {hoveredMailId === mail.id ? (
+                        <FaTrash
+                          onClick={(event) => handleDeleteClick(mail, event)}
+                          className="trash-icon"
+                        />
+                      ) : (
+                        formatDate(mail.date)
+                      )}
+                    </td>
+                  )}
                 </tr>
               ))}
+              {Array(NUMBER_OF_MAILS_PAGE - receivedMails.length)
+                .fill()
+                .map((index) => (
+                  <tr key={index + receivedMails.length}>
+                    <td className="row-no-content"></td>
+                    <td className="row-no-content"></td>
+                    {!isMobile && <td className="row-no-content"></td>}
+                  </tr>
+                ))}
             </tbody>
           </table>
           <div className="pagination-container">
@@ -384,12 +407,16 @@ const MailTable = () => {
       {selectedMail && (
         <Modal show={true} onHide={handleCloseModal}>
           <Modal.Header closeButton>
-            <Modal.Title><Trans>Mail Details</Trans></Modal.Title>
+            <Modal.Title>
+              <Trans>Mail Details</Trans>
+            </Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form>
               <Form.Group controlId="formContact">
-                <Form.Label><Trans>From</Trans></Form.Label>
+                <Form.Label>
+                  <Trans>From</Trans>
+                </Form.Label>
                 <Form.Control
                   type="text"
                   readOnly
@@ -398,7 +425,9 @@ const MailTable = () => {
                 />
               </Form.Group>
               <Form.Group controlId="formSubject">
-                <Form.Label><Trans>Subject</Trans></Form.Label>
+                <Form.Label>
+                  <Trans>Subject</Trans>
+                </Form.Label>
                 <Form.Control
                   type="text"
                   readOnly
@@ -407,7 +436,9 @@ const MailTable = () => {
                 />
               </Form.Group>
               <Form.Group controlId="formMessage">
-                <Form.Label><Trans>Message</Trans></Form.Label>
+                <Form.Label>
+                  <Trans>Message</Trans>
+                </Form.Label>
                 <div
                   className="custom-focus"
                   style={{
@@ -425,7 +456,9 @@ const MailTable = () => {
                 />
               </Form.Group>
               <Form.Group controlId="formDate">
-                <Form.Label><Trans>Date</Trans></Form.Label>
+                <Form.Label>
+                  <Trans>Date</Trans>
+                </Form.Label>
                 <Form.Control
                   type="text"
                   readOnly
@@ -437,7 +470,7 @@ const MailTable = () => {
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleCloseModal}>
-            <Trans>Close</Trans>
+              <Trans>Close</Trans>
             </Button>
             <Button
               variant="primary"
@@ -453,15 +486,19 @@ const MailTable = () => {
       {showDeleteModal && (
         <Modal show={true} onHide={handleCancelDelete}>
           <Modal.Header closeButton>
-            <Modal.Title><Trans>Confirm Delete</Trans></Modal.Title>
+            <Modal.Title>
+              <Trans>Confirm Delete</Trans>
+            </Modal.Title>
           </Modal.Header>
-          <Modal.Body><Trans>Are you sure you want to delete this mail?</Trans></Modal.Body>
+          <Modal.Body>
+            <Trans>Are you sure you want to delete this mail?</Trans>
+          </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleCancelDelete}>
-            <Trans>Cancel</Trans>
+              <Trans>Cancel</Trans>
             </Button>
             <Button variant="danger" onClick={handleConfirmDelete}>
-            <Trans>Delete</Trans>
+              <Trans>Delete</Trans>
             </Button>
           </Modal.Footer>
         </Modal>

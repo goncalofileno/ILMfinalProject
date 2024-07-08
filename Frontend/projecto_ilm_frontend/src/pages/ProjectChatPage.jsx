@@ -20,6 +20,7 @@ import "./ProjectChatPage.css";
 import { Trans, t } from "@lingui/macro";
 import { i18n } from "@lingui/core";
 import { formatProjectState, formatTypeUserInProject } from "../utilities/converters";
+import { useMediaQuery } from "react-responsive";
 
 const setLanguageFromCookies = () => {
   const language = Cookies.get("user-language") || "en";
@@ -38,6 +39,8 @@ const ProjectChatPage = () => {
     useState("");
   const chatBodyRef = useRef(null);
   const userSystemUsername = Cookies.get("user-systemUsername");
+  const isTablet = useMediaQuery({ query: "(max-width: 991px)" });
+  const isPhone = useMediaQuery({ query: "(max-width: 767px)" });
   const [currentLanguage, setCurrentLanguage] = useState(Cookies.get("user-language") || "ENGLISH");
 
   useEffect(() => {
@@ -95,7 +98,8 @@ const ProjectChatPage = () => {
     <>
       <AppNavbar setCurrentLanguage={setCurrentLanguage}/>
       <ProjectChatWebSocket projectId={systemProjectName} />
-      <div className="ilm-pageb">
+
+      <div className={isTablet ? "ilm-page-mobile" : "ilm-pageb"}>
         <ProjectTabs
           typeOfUserSeingProject={typeOfUserSeingTheProject}
           projectName={projectName}
@@ -111,74 +115,8 @@ const ProjectChatPage = () => {
             </Row>
           )}
 
-          <Row style={{ height: "100%" }}>
-            <Col md={4} style={{ height: "100%" }}>
-              <Card style={{ height: "100%" }}>
-                <Card.Header>
-                  <h5><Trans>Members</Trans></h5>
-                </Card.Header>
-                <Card.Body
-                  style={{ height: "100%" }}
-                  id="list-user-project-profile"
-                >
-                  <ul className="list-group list-group-flush">
-                    {projectMembers.map((member) => (
-                      <li
-                        className="list-group-item"
-                        key={member.systemUsername}
-                        onClick={() =>
-                          navigate(`/profile/${member.systemUsername}`)
-                        }
-                        style={{ cursor: "pointer" }}
-                      >
-                        <Row>
-                          <Col md="auto">
-                            <img
-                              src={member.profilePicture}
-                              alt={member.name}
-                              width={30}
-                              height={30}
-                              className="mr-3 rounded-circle"
-                            />
-                          </Col>
-                          <Col>
-                            <div>
-                              <strong>
-                                {member.systemUsername === userSystemUsername
-                                  ? (t`You`)
-                                  : member.name}
-                              </strong>
-                              <div className="text-muted">{formatTypeUserInProject(member.type)}</div>
-                            </div>
-                          </Col>
-                          <Col md="auto" className="d-flex align-items-center">
-                            <div
-                              className={`status-indicator ${
-                                isOnline(member.systemUsername)
-                                  ? "online"
-                                  : "offline"
-                              }`}
-                            />
-                            <span
-                              className={`status-label ${
-                                isOnline(member.systemUsername)
-                                  ? "online-label"
-                                  : "offline-label"
-                              }`}
-                            >
-                              {isOnline(member.systemUsername)
-                                ? (t`Online`)
-                                : (t`Offline`)}
-                            </span>
-                          </Col>
-                        </Row>
-                      </li>
-                    ))}
-                  </ul>
-                </Card.Body>
-              </Card>
-            </Col>
-            <Col md={8} style={{ height: "100%" }}>
+          <Row style={{ height: !isTablet && "100%" }}>
+            <Col md={8} style={{ height: !isTablet ? "100%" : "70vh" }}>
               <Card style={{ height: "100%" }}>
                 <Card.Header>
                   <h5><Trans>Chat</Trans></h5>
@@ -264,6 +202,88 @@ const ProjectChatPage = () => {
                     </Button>
                   </Form>
                 </Card.Footer>
+              </Card>
+            </Col>
+            <Col
+              md={4}
+              style={{
+                height: !isTablet ? "100%" : "70vh",
+                marginTop: isPhone && "40px",
+              }}
+            >
+              <Card style={{ height: "100%" }}>
+                <Card.Header>
+                  <h5><Trans>Members</Trans></h5>
+                </Card.Header>
+                <Card.Body
+                  style={{
+                    height: "100%",
+                    paddingLeft: "0px",
+                    paddingRight: "0px",
+                  }}
+                  id="list-user-project-profile"
+                >
+                  <ul className="list-group list-group-flush">
+                    {projectMembers.map((member) => (
+                      <li
+                        className="list-group-item"
+                        key={member.systemUsername}
+                        onClick={() =>
+                          navigate(`/profile/${member.systemUsername}`)
+                        }
+                        style={{ cursor: "pointer" }}
+                      >
+                        <Row>
+                          <Col xs={2} sm={2}>
+                            <img
+                              src={member.profilePicture}
+                              alt={member.name}
+                              width={30}
+                              height={30}
+                              className="mr-3 rounded-circle"
+                            />
+                          </Col>
+                          <Col xs={6} sm={6} lg={5}>
+                            <div style={{ fontSize: "14px" }}>
+                              <strong>
+                                {member.systemUsername === userSystemUsername
+                                  ? "You"
+                                  : member.name}
+                              </strong>
+                              <div className="text-muted">{member.type}</div>
+                            </div>
+                          </Col>
+                          <Col
+                            xs={4}
+                            sm={4}
+                            lg={5}
+                            className="d-flex align-items-center"
+                            style={{ flexDirection: "row" }}
+                          >
+                            <div
+                              className={`status-indicator ${
+                                isOnline(member.systemUsername)
+                                  ? "online"
+                                  : "offline"
+                              }`}
+                            />
+                            <span
+                              className={`status-label ${
+                                isOnline(member.systemUsername)
+                                  ? "online-label"
+                                  : "offline-label"
+                              }`}
+                            >
+                              {isOnline(member.systemUsername)
+                                ? "Online"
+                                : "Offline"}
+                            </span>
+                          </Col>
+                        </Row>
+                      </li>
+                    ))}
+                  </ul>
+                </Card.Body>
               </Card>
             </Col>
           </Row>

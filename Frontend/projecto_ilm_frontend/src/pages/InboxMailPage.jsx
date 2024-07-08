@@ -3,13 +3,20 @@ import AppNavbar from "../components/headers/AppNavbar";
 import MailTable from "../components/tables/MailTable"; 
 import AsideMailActions from "../components/asides/AsideMailActions"; 
 import { Trans, t } from "@lingui/macro";
+import { useMediaQuery } from "react-responsive";
+import { useState } from "react";
 
 const InboxMailPage = () => {
-   return (
-      <>
-         <AppNavbar />
-         <AsideMailActions />
-         <div className="ilm-pageb-with-aside">
+  const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
+  const [isAsideVisible, setIsAsideVisible] = useState(false);
+  return (
+    <>
+      <AppNavbar setIsAsideVisible={setIsAsideVisible} pageWithAside={true} />
+      <AsideMailActions isVisible={isAsideVisible} />
+      <div
+        className={isMobile ? "ilm-page-mobile" : "ilm-pageb-with-aside"}
+        onClick={() => isAsideVisible && setIsAsideVisible((prev) => !prev)}
+      >
             <h1 className="page-title">
                <span className="app-slogan-1"><Trans id="you-caixa-de-entrada">Your</Trans> </span>
                <span className="app-slogan-2"><Trans id="inbox-caixa-de-entrada">Inbox</Trans></span>
@@ -23,4 +30,3 @@ const InboxMailPage = () => {
 };
 
 export default InboxMailPage;
-
