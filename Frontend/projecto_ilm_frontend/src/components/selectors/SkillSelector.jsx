@@ -11,9 +11,10 @@ import {
 } from "react-bootstrap";
 import { getSkills } from "../../utilities/services";
 import { useParams } from "react-router-dom";
-import SkillCard from "./SkillCard"; // Importação do novo componente SkillCard
-import "./SkillSelector.css"; // Certifique-se de que o caminho está correto
+import SkillCard from "./SkillCard"; 
+import "./SkillSelector.css";
 import { formatSkill } from "../../utilities/converters";
+import { Trans, t } from "@lingui/macro";
 
 const SkillSelector = ({ selectedSkills, setSelectedSkills }) => {
   const [allSkills, setAllSkills] = useState([]);
@@ -105,7 +106,7 @@ const SkillSelector = ({ selectedSkills, setSelectedSkills }) => {
         id: Math.random(),
         name: newSkillName,
         type: newSkillType,
-      }; // Format the input skill
+      }; 
       setSelectedSkills([...selectedSkills, newSkill]);
       setInput("");
       setSuggestions([]);
@@ -124,11 +125,11 @@ const SkillSelector = ({ selectedSkills, setSelectedSkills }) => {
   return (
     <Container>
       <Form.Group controlId="formSkills">
-        <Form.Label style={{ fontWeight: "500" }}>Skills:</Form.Label>
+        <Form.Label style={{ fontWeight: "500" }}><Trans>Skills</Trans>:</Form.Label>
         <InputGroup className="mb-3">
           <Form.Control
             type="text"
-            placeholder="Add a skill"
+            placeholder={t`Add a skill`}
             value={input}
             onChange={handleInputChange}
             onKeyDown={handleKeyDown}
@@ -142,7 +143,7 @@ const SkillSelector = ({ selectedSkills, setSelectedSkills }) => {
               borderColor: "#f39c12",
             }}
           >
-            Add
+            <Trans>Add</Trans>
           </Button>
         </InputGroup>
         {suggestions.length > 0 && (
@@ -167,7 +168,7 @@ const SkillSelector = ({ selectedSkills, setSelectedSkills }) => {
       <div className="fixed-container">
         <Row>
           {selectedSkills.length === 0 ? (
-            <Col>No skills added yet.</Col>
+            <Col><Trans>No skills added yet.</Trans></Col>
           ) : (
             selectedSkills.map((skill) => (
               <Col key={skill.id} md="auto">
@@ -179,31 +180,31 @@ const SkillSelector = ({ selectedSkills, setSelectedSkills }) => {
       </div>
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>
         <Modal.Header closeButton>
-          <Modal.Title>Select Skill Type for {newSkillName}</Modal.Title>
+          <Modal.Title><Trans>Select Skill Type for</Trans> {newSkillName}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form.Group>
-            <Form.Label>Skill Type</Form.Label>
+            <Form.Label><Trans>Skill Type</Trans></Form.Label>
             <Form.Control
               as="select"
               value={newSkillType}
               onChange={(e) => setNewSkillType(e.target.value)}
               className="custom-focus"
             >
-              <option value="">Select a type</option>
-              <option value="KNOWLEDGE">Knowledge</option>
-              <option value="SOFTWARE">Software</option>
-              <option value="HARDWARE">Hardware</option>
-              <option value="TOOLS">Tools</option>
+              <option value=""><Trans>Select a type</Trans></option>
+              <option value="KNOWLEDGE"><Trans>Knowledge</Trans></option>
+              <option value="SOFTWARE"><Trans>Software</Trans></option>
+              <option value="HARDWARE"><Trans>Hardware</Trans></option>
+              <option value="TOOLS"><Trans>Tools</Trans></option>
             </Form.Control>
           </Form.Group>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowModal(false)}>
-            Cancel
+          <Trans>Cancel</Trans>
           </Button>
           <Button variant="primary" onClick={handleSaveNewSkill}>
-            Save
+          <Trans>Save</Trans>
           </Button>
         </Modal.Footer>
       </Modal>

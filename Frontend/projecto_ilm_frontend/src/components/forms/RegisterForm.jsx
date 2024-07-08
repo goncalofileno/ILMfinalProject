@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { registerUser, checkEmail } from "../../utilities/services";
 import PasswordForm from "../inputs/PasswordForm";
+import { Trans, t } from "@lingui/macro";
 
 export default function RegisterForm({
   setShowAlert,
@@ -41,7 +42,7 @@ export default function RegisterForm({
         if (response.status === 201) {
           setRegisterMessageType("success");
           setRegisterMessage(
-            "Registered successfully. Please Verify your email."
+            t`Registered successfully. Please Verify your email.`
           );
           setShowAlert(true);
           setTimeout(() => {
@@ -52,7 +53,7 @@ export default function RegisterForm({
       });
     } else {
       setRegisterMessageType("danger");
-      setRegisterMessage("Invalid data. Please try again.");
+      setRegisterMessage(t`Invalid data. Please try again.`);
       setShowAlert(true);
       setTimeout(() => {
         setShowAlert(false);
@@ -64,10 +65,10 @@ export default function RegisterForm({
     checkEmail(email).then((response) => {
       if (response.status == 200) {
         setWarningTypeEmail("success");
-        setWarningTxtEmail("Email is valid");
+        setWarningTxtEmail(t`Email is valid`);
       } else if (response.status == 409 || response.status == 400) {
         setWarningTypeEmail("incorrect");
-        setWarningTxtEmail("This email is invalid");
+        setWarningTxtEmail(t`This email is invalid`);
       }
     });
   };
@@ -75,20 +76,20 @@ export default function RegisterForm({
   const handleOnBlurPassword = () => {
     if (strength >= 4) {
       setWarningTypePassword("success");
-      setWarningTxtPassword("Password is strong");
+      setWarningTxtPassword(t`Password is strong`);
     } else {
       setWarningTypePassword("incorrect");
-      setWarningTxtPassword("Password must be strong");
+      setWarningTxtPassword(t`Password must be strong`);
     }
   };
 
   const handleOnBlurConfirmPassword = () => {
     if (password === confirmPassword) {
       setWarningTypeConfirmPassword("success");
-      setWarningTxtConfirmPassword("Passwords match");
+      setWarningTxtConfirmPassword(t`Passwords match`);
     } else {
       setWarningTypeConfirmPassword("incorrect");
-      setWarningTxtConfirmPassword("Passwords do not match");
+      setWarningTxtConfirmPassword(t`Passwords do not match`);
     }
   };
 
@@ -143,7 +144,7 @@ export default function RegisterForm({
       <form className="ilm-form login-register-form">
         <div className="form-content">
           <div className="form-title" id="register-form-title">
-            Register
+            <Trans>Register</Trans>
           </div>
           <div className="register-inputs">
             <InputForm
@@ -171,7 +172,9 @@ export default function RegisterForm({
                 onBlurActive={true}
               ></PasswordForm>
               <div id="pass-strength">
-                <div>Password Strength</div>
+                <div>
+                  <Trans>Password Strength</Trans>
+                </div>
                 <meter max="5" value={strength}></meter>
               </div>
               <div id="pass-strength-string">
@@ -192,17 +195,17 @@ export default function RegisterForm({
                         : strength === 5 && "green",
                   }}
                 >
-                  {strength === 0 && "None"}
-                  {strength === 1 && "Weak"}
-                  {strength === 2 && "Fair"}
-                  {strength === 3 && "Good"}
-                  {strength === 4 && "Strong"}
-                  {strength === 5 && "Very Strong"}
+                  {strength === 0 && t`None`}
+                  {strength === 1 && t`Weak`}
+                  {strength === 2 && t`Fair`}
+                  {strength === 3 && t`Good`}
+                  {strength === 4 && t`Strong`}
+                  {strength === 5 && t`Very Strong`}
                 </div>
               </div>
             </div>
             <InputForm
-              label="Confirm Password"
+              label={t`Confirm Password`}
               type="password"
               value={confirmPassword}
               setValue={setConfirmPassword}
@@ -230,22 +233,6 @@ export default function RegisterForm({
                 Register
               </button>
             </div>
-          </div>
-        </div>
-        <div id="line-or-div">
-          <div className="or-line-register" id="or-left-line">
-            <hr />
-          </div>
-          <div>or</div>
-          <div className="or-line-register" id="or-right-line">
-            {" "}
-            <hr />
-          </div>
-        </div>
-        <div id="sign-up-with">
-          <div>Sign up with:</div>
-          <div id="sign-up-with-icons">
-            <i className="fab fa-google fa-lg"></i>
           </div>
         </div>
       </form>

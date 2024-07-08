@@ -4,12 +4,13 @@ import {
   getUserProfileImage,
   logoutUser,
   getUnreadNumber,
+  updateLanguage,
 } from "../../utilities/services";
-import Cookies from "js-cookie"; // Importando a biblioteca de cookies
+import Cookies from "js-cookie";
 import { useMediaQuery } from "react-responsive";
-import useMailStore from "../../stores/useMailStore"; // Importando a store zustand
-import useNotificationStore from "../../stores/useNotificationStore"; // Importando a nova store
-import NotificationModal from "../modals/NotificationModal"; // Importando o novo componente
+import useMailStore from "../../stores/useMailStore";
+import useNotificationStore from "../../stores/useNotificationStore";
+import NotificationModal from "../modals/NotificationModal";
 import "./AppNavbar.css";
 import projectsIcon from "../../resources/icons/navbar/projects-icon.png";
 import resourceIcon from "../../resources/icons/navbar/resource-icon.png";
@@ -17,16 +18,21 @@ import myProjectsIcon from "../../resources/icons/navbar/my-projects-icon.png";
 import mailIcon from "../../resources/icons/navbar/mail-icon.png";
 import bellIcon from "../../resources/icons/navbar/notification-icon.png";
 import userProfileIcon from "../../resources/avatares/Avatar padrão.jpg";
+import portugalFlag from "../../resources/icons/navbar/portugal.png";
+import ukFlag from "../../resources/icons/navbar/united-kingdom.png";
+import { Trans, t } from "@lingui/macro";
+import { useLanguage } from "../../I18nLoader";
 
-export default function AppNavbar({ setIsAsideVisible, pageWithAside }) {
+export default function AppNavbar({ setIsAsideVisible, pageWithAside, setCurrentLanguage }) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [userImage, setUserImage] = useState(userProfileIcon);
+  const [selectedLanguage, setSelectedLanguage] = useState("ENGLISH");
   const dropdownRef = useRef(null);
   const modalRef = useRef(null);
   const bellIconRef = useRef(null);
   const navigate = useNavigate();
-  const location = useLocation(); // Obter a localização atual
+  const location = useLocation();
   const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
   const { unreadCount, setUnreadCount } = useMailStore();
   const {
@@ -36,17 +42,21 @@ export default function AppNavbar({ setIsAsideVisible, pageWithAside }) {
     fetchNotifications,
     clearNotifications,
   } = useNotificationStore();
+  const { language, changeLanguage } = useLanguage();
 
   const toggleDropdown = () => {
-    setDropdownOpen(!dropdownOpen);
+    if (modalOpen) {
+      setModalOpen(false);
+    }
+    setDropdownOpen((prev) => !prev);
   };
 
   const handleLogout = async () => {
     const response = await logoutUser();
     if (response.ok) {
-      navigate("/"); // Redireciona para a página de login
+      navigate("/");
     } else {
-      console.error("Failed to logout");
+      navigate("/");
     }
   };
 
@@ -59,7 +69,28 @@ export default function AppNavbar({ setIsAsideVisible, pageWithAside }) {
     }
   };
 
+  const handleLanguageChange = async (event) => {
+    const newLanguage = event.target.value;
+    setSelectedLanguage(newLanguage);
+    const sessionId = Cookies.get("session-id");
+    if (sessionId) {
+      const response = await updateLanguage(sessionId, newLanguage);
+      if (response.success) {
+        Cookies.set("user-language", newLanguage);
+        setCurrentLanguage(newLanguage);
+        console.log("Language updated successfully");
+      } else {
+        console.error("Failed to update language:", response.error);
+      }
+    }
+    changeLanguage(newLanguage);
+    if (setCurrentLanguage) setCurrentLanguage(newLanguage);
+  };
+
   useEffect(() => {
+    const userLanguage = Cookies.get("user-language") || "en";
+    setSelectedLanguage(userLanguage);
+
     async function fetchUserImage() {
       const imageUrl = await getUserProfileImage();
       if (imageUrl) {
@@ -110,6 +141,9 @@ export default function AppNavbar({ setIsAsideVisible, pageWithAside }) {
   };
 
   const handleBellClick = async () => {
+    if (dropdownOpen) {
+      setDropdownOpen(false);
+    }
     if (modalOpen) {
       setModalOpen(false);
       clearNotifications();
@@ -177,14 +211,18 @@ export default function AppNavbar({ setIsAsideVisible, pageWithAside }) {
               onClick={() => handleNavigation("/projects")}
             >
               <div className="icon" style={getNavIconStyle("/projects")}></div>
-              <label>Projects</label>
+              <label>
+                <Trans>Projects</Trans>
+              </label>
             </div>
             <div
               className={getNavItemClass("/resources")}
               onClick={() => handleNavigation("/resources")}
             >
               <div className="icon" style={getNavIconStyle("/resources")}></div>
-              <label>Resources</label>
+              <label>
+                <Trans>Resources</Trans>
+              </label>
             </div>
             <div
               className={getNavItemClass("/myprojects")}
@@ -194,7 +232,9 @@ export default function AppNavbar({ setIsAsideVisible, pageWithAside }) {
                 className="icon"
                 style={getNavIconStyle("/myprojects")}
               ></div>
-              <label>My Projects</label>
+              <label>
+                <Trans>My Projects</Trans>
+              </label>
             </div>
             <div
               className={getNavItemClass("/mail/inbox")}
@@ -204,21 +244,22 @@ export default function AppNavbar({ setIsAsideVisible, pageWithAside }) {
                 className="icon"
                 style={getNavIconStyle("/mail/inbox")}
               ></div>
-              <label>Mail</label>
+              <label>Email</label>
               {unreadCount > 0 && <span className="badge">{unreadCount}</span>}
             </div>
           </div>
         </div>
         <div className="nav-right">
-          <select className="language-dropdown">
-            <option className="option-flag" value="en">
-              🇺🇸
+          <select
+            className="language-dropdown"
+            value={selectedLanguage}
+            onChange={handleLanguageChange}
+          >
+            <option className="option-flag" value="ENGLISH">
+              🇬🇧
             </option>
-            <option className="option-flag" value="pt">
+            <option className="option-flag" value="PORTUGUESE">
               🇵🇹
-            </option>
-            <option className="option-flag" value="es">
-              🇪🇸
             </option>
           </select>
           <div
@@ -244,8 +285,12 @@ export default function AppNavbar({ setIsAsideVisible, pageWithAside }) {
             ></div>
             {dropdownOpen && (
               <div className={`dropdown-content ${dropdownOpen ? "show" : ""}`}>
-                <div onClick={handleMyProfile}>👤 My Profile</div>
-                <div onClick={handleLogout}>⛔️ Logout</div>
+                <div onClick={handleMyProfile}>
+                  👤 <Trans>My Profile</Trans>
+                </div>
+                <div onClick={handleLogout}>
+                  ⛔️ <Trans>Logout</Trans>
+                </div>
               </div>
             )}
           </div>
@@ -260,14 +305,18 @@ export default function AppNavbar({ setIsAsideVisible, pageWithAside }) {
               onClick={() => handleNavigation("/projects")}
             >
               <div className="icon" style={getNavIconStyle("/projects")}></div>
-              <label>Projects</label>
+              <label>
+                <Trans>Projects</Trans>
+              </label>
             </div>
             <div
               className={getNavItemClass("/resources")}
               onClick={() => handleNavigation("/resources")}
             >
               <div className="icon" style={getNavIconStyle("/resources")}></div>
-              <label>Resources</label>
+              <label>
+                <Trans>Resources</Trans>
+              </label>
             </div>
             <div
               className={getNavItemClass("/myprojects")}
@@ -279,7 +328,7 @@ export default function AppNavbar({ setIsAsideVisible, pageWithAside }) {
                 style={getNavIconStyle("/myprojects")}
               ></div>
               <label style={{ width: "65px", textAlign: "center" }}>
-                My Projects
+                <Trans>My Projects</Trans>
               </label>
             </div>
             <div
@@ -290,7 +339,7 @@ export default function AppNavbar({ setIsAsideVisible, pageWithAside }) {
                 className="icon mail-icon"
                 style={getNavIconStyle("/mail/inbox")}
               ></div>
-              <label>Mail</label>
+              <label>Email</label>
               {unreadCount > 0 && <span className="badge">{unreadCount}</span>}
             </div>
           </div>

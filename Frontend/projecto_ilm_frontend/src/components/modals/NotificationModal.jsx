@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import NotificationIcon from "../../resources/icons/other/notification.jpg";
 import Cookies from "js-cookie";
 import { markNotificationAsClicked } from "../../utilities/services";
+import { Trans, t } from "@lingui/macro";
+import { formatProjectState } from "../../utilities/converters";
 
 export default function NotificationModal({ onClose, modalRef }) {
   const { notifications, loadMoreNotifications, hasMoreNotifications } =
@@ -31,7 +33,7 @@ export default function NotificationModal({ onClose, modalRef }) {
     });
   };
 
-  const notificationMessages = {
+  const notificationMessagesEn = {
     APPLIANCE_REJECTED: ({ projectName, userName }) =>
       `Your application to <strong>${projectName}</strong> was rejected by <strong>${userName}</strong>.`,
     APPLIANCE_ACCEPTED: ({ projectName, userName }) =>
@@ -49,7 +51,7 @@ export default function NotificationModal({ onClose, modalRef }) {
     INVITE: ({ projectName, userName }) =>
       `<strong>${userName}</strong> invited you to join the project <strong>${projectName}</strong>.`,
     PROJECT: ({ projectName, projectStatus }) =>
-      `The project <strong>${projectName}</strong> changed its status to <strong>${projectStatus}</strong>.`,
+      `The project <strong>${projectName}</strong> changed its status to <strong>${formatProjectState(projectStatus)}</strong>.`,
     PROJECT_REJECTED: ({ projectName, userName }) =>
       `The project <strong>${projectName}</strong> was rejected by <strong>${userName}</strong>.`,
     PROJECT_INSERTED: ({ projectName, userName }) =>
@@ -68,9 +70,53 @@ export default function NotificationModal({ onClose, modalRef }) {
       `The user <strong>${userName}</strong> left the project <strong>${projectName}</strong>.`,
   };
 
+  const notificationMessagesPt = {
+    APPLIANCE_REJECTED: ({ projectName, userName }) =>
+      `A sua candidatura ao projeto <strong>${projectName}</strong> foi rejeitada por <strong>${userName}</strong>.`,
+    APPLIANCE_ACCEPTED: ({ projectName, userName }) =>
+      `A sua candidatura ao projeto <strong>${projectName}</strong> foi aceite por <strong>${userName}</strong>.`,
+    APPLIANCE: ({ projectName, userName }) =>
+      `<strong>${userName}</strong> candidatou-se ao seu projeto <strong>${projectName}</strong>.`,
+    TASK: ({ projectName, userName }) =>
+      `<strong>${userName}</strong> fez alterações numa tarefa no projeto <strong>${projectName}</strong> em que você está envolvido.`,
+    TASK_ASSIGNED: ({ projectName, userName }) =>
+      `<strong>${userName}</strong> atribuiu-lhe uma tarefa no projeto <strong>${projectName}</strong>.`,
+    INVITE_REJECTED: ({ projectName, userName }) =>
+      `<strong>${userName}</strong> rejeitou o seu convite para se juntar ao projeto <strong>${projectName}</strong>.`,
+    INVITE_ACCEPTED: ({ projectName, userName }) =>
+      `<strong>${userName}</strong> aceitou o seu convite para se juntar ao projeto <strong>${projectName}</strong>.`,
+    INVITE: ({ projectName, userName }) =>
+      `<strong>${userName}</strong> convidou-o para se juntar ao projeto <strong>${projectName}</strong>.`,
+    PROJECT: ({ projectName, projectStatus }) =>
+      `O projeto <strong>${projectName}</strong> mudou o seu estado para <strong>${formatProjectState(projectStatus)}</strong>.`,
+    PROJECT_REJECTED: ({ projectName, userName }) =>
+      `O projeto <strong>${projectName}</strong> foi rejeitado por <strong>${userName}</strong>.`,
+    PROJECT_INSERTED: ({ projectName, userName }) =>
+      `Foi adicionado ao projeto <strong>${projectName}</strong> por <strong>${userName}</strong>.`,
+    REMOVED: ({ projectName, userName }) =>
+      `Foi removido do projeto <strong>${projectName}</strong> por <strong>${userName}</strong>. Contacte-os para mais informações.`,
+    PROJECT_MESSAGE: ({ projectName, userName, messageCount }) =>
+      messageCount && messageCount > 1
+        ? `Você tem ${messageCount} novas mensagens no chat do projeto <strong>${projectName}</strong>.`
+        : `Você tem uma nova mensagem no chat do projeto <strong>${projectName}</strong> de <strong>${userName}</strong>.`,
+    USER_TYPE_CHANGED: ({ projectName, userName, newUserType }) =>
+      `O seu tipo de utilizador foi alterado para <strong>${newUserType}</strong> por <strong>${userName}</strong> no projeto <strong>${projectName}</strong>.`,
+    PROJECT_UPDATED: ({ projectName, userName }) =>
+      `Os detalhes do projeto <strong>${projectName}</strong> foram atualizados por <strong>${userName}</strong>.`,
+    LEFT_PROJECT: ({ projectName, userName }) =>
+      `O utilizador <strong>${userName}</strong> saiu do projeto <strong>${projectName}</strong>.`,
+  };
+
   const getNotificationMessage = (notification) => {
-    const messageFunc = notificationMessages[notification.type];
-    return messageFunc ? messageFunc(notification) : "You have a new notification.";
+    const userLanguage = Cookies.get("user-language") || "ENGLISH";
+    const messages =
+      userLanguage === "PORTUGUESE" ? notificationMessagesPt : notificationMessagesEn;
+    const messageFunc = messages[notification.type];
+    return messageFunc
+      ? messageFunc(notification)
+      : userLanguage === "PORTUGUESE"
+      ? "Você tem uma nova notificação."
+      : "You have a new notification.";
   };
 
   const notificationNavigation = {
@@ -142,7 +188,7 @@ export default function NotificationModal({ onClose, modalRef }) {
     <div className="notification-modal" ref={modalRef}>
       <div className="notification-modal-content">
         {groupedNotifications.length === 0 ? (
-          <div className="no-notifications">No notifications to show</div>
+          <div className="no-notifications"><Trans>No notifications to show</Trans></div>
         ) : (
           groupedNotifications.map((notification) => (
             <div
@@ -173,9 +219,9 @@ export default function NotificationModal({ onClose, modalRef }) {
       {groupedNotifications.length > 0 && (
         <div className="notification-modal-footer">
           {hasMoreNotifications ? (
-            <button onClick={loadMoreNotifications}>Load More</button>
+            <button onClick={loadMoreNotifications}><Trans>Load More</Trans></button>
           ) : (
-            <p>No more notifications</p>
+            <p><Trans>No more notifications</Trans></p>
           )}
         </div>
       )}

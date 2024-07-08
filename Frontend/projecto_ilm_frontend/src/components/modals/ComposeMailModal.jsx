@@ -3,6 +3,7 @@ import { Modal, Button, Form, Alert, ListGroup, InputGroup } from "react-bootstr
 import { sendMail, getContacts } from "../../utilities/services";
 import Cookies from "js-cookie";
 import "./ComposeMailModal.css";
+import { Trans, t } from "@lingui/macro";
 
 const ComposeMailModal = ({ show, handleClose, preFilledContact, preFilledSubject }) => {
   const [contacts, setContacts] = useState([]);
@@ -81,7 +82,7 @@ const ComposeMailModal = ({ show, handleClose, preFilledContact, preFilledSubjec
   const handleSendMail = async () => {
     if (!selectedContact || !subject || !message) {
       setSuccess("");
-      setError("Please fill in all fields.");
+      setError(t`Please fill in all fields.`);
       return;
     }
 
@@ -93,7 +94,7 @@ const ComposeMailModal = ({ show, handleClose, preFilledContact, preFilledSubjec
 
     if (!contact) {
       setSuccess("");
-      setError("Contact does not exist.");
+      setError(t`Contact does not exist.`);
       return;
     }
 
@@ -107,19 +108,19 @@ const ComposeMailModal = ({ show, handleClose, preFilledContact, preFilledSubjec
 
       if (response.ok) {
         setError("");
-        setSuccess("Mail sent successfully.");
+        setSuccess(t`Mail sent successfully.`);
         setTimeout(() => {
           handleClose();
           resetFields();
         }, 2000);
       } else {
         setSuccess("");
-        setError("Failed to send mail.");
+        setError(t`Failed to send mail.`);
       }
     } catch (error) {
       console.error("Failed to send mail:", error);
       setSuccess("");
-      setError("Failed to send mail.");
+      setError(t`Failed to send mail.`);
     }
   };
 
@@ -140,18 +141,18 @@ const ComposeMailModal = ({ show, handleClose, preFilledContact, preFilledSubjec
   return (
     <Modal show={show} onHide={handleModalClose} size="lg">
       <Modal.Header closeButton>
-        <Modal.Title>Compose New Mail</Modal.Title>
+        <Modal.Title><Trans>Compose New Mail</Trans></Modal.Title>
       </Modal.Header>
       <Modal.Body>
         {error && <Alert variant="danger">{error}</Alert>}
         {success && <Alert variant="success">{success}</Alert>}
         <Form>
           <Form.Group controlId="formContact">
-            <Form.Label>Contact</Form.Label>
+            <Form.Label><Trans>Contact</Trans></Form.Label>
             <InputGroup className="mb-3">
               <Form.Control
                 type="text"
-                placeholder="Enter contact name or email"
+                placeholder={t`Enter contact name or email`}
                 value={selectedContact}
                 onChange={handleContactChange}
                 onKeyDown={handleKeyDown}
@@ -175,21 +176,21 @@ const ComposeMailModal = ({ show, handleClose, preFilledContact, preFilledSubjec
             )}
           </Form.Group>
           <Form.Group controlId="formSubject">
-            <Form.Label>Subject</Form.Label>
+            <Form.Label><Trans>Subject</Trans></Form.Label>
             <Form.Control
               type="text"
-              placeholder="Enter subject"
+              placeholder={t`Enter subject`}
               value={subject}
               onChange={(e) => setSubject(e.target.value)}
               className="custom-focus"
             />
           </Form.Group>
           <Form.Group controlId="formMessage">
-            <Form.Label>Message</Form.Label>
+            <Form.Label><Trans>Message</Trans></Form.Label>
             <Form.Control
               as="textarea"
               rows={8}
-              placeholder="Enter your message"
+              placeholder={t`Enter your message`}
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               className="custom-focus"
@@ -199,14 +200,14 @@ const ComposeMailModal = ({ show, handleClose, preFilledContact, preFilledSubjec
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={handleModalClose}>
-          Cancel
+        <Trans>Cancel</Trans>
         </Button>
         <Button
           variant="primary"
           onClick={handleSendMail}
           style={{ backgroundColor: "#f39c12", borderColor: "#f39c12" }}
         >
-          Send
+          <Trans>Send</Trans>
         </Button>
       </Modal.Footer>
     </Modal>

@@ -21,7 +21,7 @@ public class SessionCleanupService {
     @Inject
     private SessionDao sessionDao;
 
-    @Schedule(hour = "*", minute = "*/5", persistent = false)
+    @Schedule(hour = "*", minute = "*/2", persistent = false)
     public void cleanUpExpiredSessions() {
         logger.info("Cleaning up expired sessions...");
         List<SessionEntity> expiredSessions = sessionDao.findExpiredSessions(LocalDateTime.now());

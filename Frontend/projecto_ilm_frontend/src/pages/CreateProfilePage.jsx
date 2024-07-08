@@ -24,6 +24,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import InputForm from "../components/inputs/InputForm";
 import LoginHeader from "../components/headers/LoginHeader";
 import { formatLab } from "../utilities/converters";
+import { Trans, t } from "@lingui/macro";
 
 const CreateProfilePage = () => {
   const [username, setUsername] = useState("");
@@ -127,9 +128,9 @@ const CreateProfilePage = () => {
 
   const validateForm = () => {
     const errors = {};
-    if (!firstName) errors.firstName = "First Name is required.";
-    if (!lastName) errors.lastName = "Last Name is required.";
-    if (!office) errors.office = "Office is required.";
+    if (!firstName) errors.firstName = (t`First Name is required.`);
+    if (!lastName) errors.lastName = (t`Last Name is required.`);
+    if (!office) errors.office = (t`Office is required.`);
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -176,7 +177,7 @@ const CreateProfilePage = () => {
           } else {
             const uploadErrorData = await uploadResponse.json();
             console.error("Error uploading profile picture:", uploadErrorData);
-            setFileUploadError("Error uploading profile picture");
+            setFileUploadError(t`Error uploading profile picture`);
           }
         } else {
           // Chama a função de login com token
@@ -190,11 +191,11 @@ const CreateProfilePage = () => {
       } else {
         const errorData = await response.json();
         console.error("Error creating profile:", errorData);
-        setFileUploadError("Error creating profile");
+        setFileUploadError(t`Error creating profile`);
       }
     } catch (error) {
       console.error("Error creating profile", error);
-      setFileUploadError("Error creating profile");
+      setFileUploadError(t`Error creating profile`);
     } finally {
       setLoading(false);
     }
@@ -206,12 +207,12 @@ const CreateProfilePage = () => {
       <Container className="ilm-form" style={{ marginTop: "80px" }}>
         {showConfirmationAlert && (
           <Alert variant="success" className="text-center">
-            Your account has been successfully confirmed!
+            <Trans>Your account has been successfully confirmed!</Trans>
           </Alert>
         )}
         <Row className="justify-content-md-center mt-4">
           <Col md="10">
-            <h2 className="text-center mb-4">Create Profile</h2>
+            <h2 className="text-center mb-4"><Trans>Create Profile</Trans></h2>
             <Form onSubmit={handleSubmit}>
               <Row>
                 <Col md={6}>
@@ -225,7 +226,7 @@ const CreateProfilePage = () => {
                     />
                   )}
                   <Form.Group controlId="formFileUpload" className="mb-3">
-                    <Form.Label className="custom-label">Photo</Form.Label>
+                    <Form.Label className="custom-label"><Trans>Photo</Trans></Form.Label>
                     <Form.Control
                       type="file"
                       onChange={handleFileChange}
@@ -239,7 +240,7 @@ const CreateProfilePage = () => {
                   </Form.Group>
 
                   <Form.Group controlId="formBio" className="mb-3">
-                    <Form.Label className="custom-label">Bio</Form.Label>
+                    <Form.Label className="custom-label"><Trans>Bio</Trans></Form.Label>
                     <Form.Control
                       as="textarea"
                       rows={3}
@@ -255,7 +256,7 @@ const CreateProfilePage = () => {
                   <InputForm
                     label={
                       <>
-                        First Name <span className="text-danger">*</span>
+                        <Trans>First Name</Trans> <span className="text-danger">*</span>
                       </>
                     }
                     type="text"
@@ -270,7 +271,7 @@ const CreateProfilePage = () => {
                   <InputForm
                     label={
                       <>
-                        Last Name <span className="text-danger">*</span>
+                        <Trans>Last Name</Trans> <span className="text-danger">*</span>
                       </>
                     }
                     type="text"
@@ -283,7 +284,7 @@ const CreateProfilePage = () => {
                   />
 
                   <InputForm
-                    label="Username"
+                    label={t`Username`}
                     type="text"
                     value={username}
                     setValue={setUsername}
@@ -302,11 +303,11 @@ const CreateProfilePage = () => {
                     handleOnBlur={checkUsernameAvailability}
                     onBlurActive={true}
                   />
-                  {loading && <div>Checking...</div>}
+                  {loading && <div><Trans>Checking...</Trans></div>}
 
                   <Form.Group controlId="formOffice" className="mb-3">
                     <Form.Label className="custom-label">
-                      Office <span className="text-danger">*</span>
+                    <Trans>Office</Trans> <span className="text-danger">*</span>
                     </Form.Label>
                     <Form.Control
                       as="select"
@@ -315,7 +316,7 @@ const CreateProfilePage = () => {
                       isInvalid={!!formErrors.office}
                       className="custom-focus"
                     >
-                      <option value="">Select Office</option>
+                      <option value=""><Trans>Select Office</Trans></option>
                       {labs.map((lab, index) => (
                         <option key={index} value={lab.local}>
                           {lab.local}
@@ -331,7 +332,7 @@ const CreateProfilePage = () => {
                     className="mb-3 custom-switch"
                   >
                     <Form.Label className="custom-label">
-                      Public Profile
+                    <Trans>Public Profile</Trans>
                     </Form.Label>
                     <Form.Check
                       type="switch"
@@ -345,7 +346,7 @@ const CreateProfilePage = () => {
               <Row className="mt-4">
                 <Col md={6}>
                   <InterestSelector
-                    label="Interests:"
+                    label={t`Interests:`}
                     selectedInterests={selectedInterests}
                     setSelectedInterests={setSelectedInterests}
                   />
@@ -369,7 +370,7 @@ const CreateProfilePage = () => {
                         borderColor: "#f39c12",
                       }}
                     >
-                      Next
+                      <Trans>Next</Trans>
                     </Button>
                   )}
                 </Col>

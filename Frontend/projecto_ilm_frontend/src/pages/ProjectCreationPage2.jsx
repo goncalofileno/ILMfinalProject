@@ -8,6 +8,7 @@ import { useParams } from "react-router-dom";
 import StandardModal from "../components/modals/StandardModal";
 import { useMediaQuery } from "react-responsive";
 import { useNavigate } from "react-router-dom";
+import { Trans, t } from "@lingui/macro";
 
 export default function ProjectCreationPage2() {
   const [users, setUsers] = useState([]);
@@ -73,7 +74,7 @@ export default function ProjectCreationPage2() {
             if (response.status === 200) {
               setModalType("success");
               setModalMessage(
-                "The members have been added to the project successfully"
+                t`The members have been added to the project successfully`
               );
               setModalActive(true);
               setTimeout(() => {
@@ -84,13 +85,13 @@ export default function ProjectCreationPage2() {
         );
       } else {
         setModalType("danger");
-        setModalMessage("You have exceeded the maximum number of members");
+        setModalMessage(t`You have exceeded the maximum number of members`);
         setModalActive(true);
       }
     } else {
       setModalType("danger");
       setModalMessage(
-        "Please select a maximum number of members value smaller or equal to 30"
+        t`Please select a maximum number of members value smaller or equal to 30`
       );
       setModalActive(true);
     }
@@ -136,7 +137,7 @@ export default function ProjectCreationPage2() {
         >
           <Form.Control
             type="text"
-            placeholder="Search for user"
+            placeholder={t`Search for user`}
             style={{
               borderRadius: "10px",
               cursor: "text",
@@ -149,20 +150,20 @@ export default function ProjectCreationPage2() {
             }}
           />
           <div className="flex-btn-row-mail-table">
-            <Button
-              variant="primary"
-              id="primary-btn-boot"
-              onClick={() => setGetUsersTrigger((prev) => !prev)}
-            >
-              Search
-            </Button>
-            <Button
-              variant="secondary"
-              style={{ borderRadius: "10px" }}
-              onClick={handleClearSearch}
-            >
-              Clear Search
-            </Button>
+          <Button
+            variant="primary"
+            id="primary-btn-boot"
+            onClick={() => setGetUsersTrigger((prev) => !prev)}
+          >
+            <Trans>Search</Trans>
+          </Button>
+          <Button
+            variant="secondary"
+            style={{ borderRadius: "10px" }}
+            onClick={handleClearSearch}
+          >
+            <Trans>Clear Search</Trans>
+          </Button>
           </div>
         </InputGroup>
         <Row className="row-container">
@@ -292,7 +293,7 @@ export default function ProjectCreationPage2() {
                 style={{ width: "54%" }}
                 onClick={handleSubmit}
               >
-                Next page
+                <Trans>Next step</Trans>
               </button>
             </Row>
           </Col>

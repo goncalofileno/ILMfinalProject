@@ -9,6 +9,7 @@ import { useMediaQuery } from "react-responsive";
 import ForgetPassModal from "../components/modals/ForgetPassModal";
 import alertStore from "../stores/alertStore";
 import { getHomeProjects } from "../utilities/services";
+import { Trans, t } from "@lingui/macro";
 
 function App() {
   const navigate = useNavigate();
@@ -140,7 +141,7 @@ function App() {
                         marginBottom: isPhone && "0px",
                       }}
                     >
-                      Where Ideas
+                      <Trans>Where Ideas</Trans>
                     </h1>
                   </Col>
                   <Col xl={6} lg={12} md={6} sm={6}>
@@ -152,7 +153,7 @@ function App() {
                         marginBottom: isPhone && "0px",
                       }}
                     >
-                      Take Flight
+                      <Trans>Take Flight</Trans>
                     </h1>
                   </Col>
                 </Row>
@@ -162,13 +163,13 @@ function App() {
                   <Col>
                     {" "}
                     <div className="ilm-description">
-                      Welcome to our Innovation Lab Management app, where
+                    <Trans>Welcome to our Innovation Lab Management app, where
                       creativity meets collaboration and ideas turn into
                       reality. With our app, you can manage and track your
                       projects seamlessly, from brainstorming to implementation,
                       ensuring every idea has the potential to flourish. Join us
                       in driving progress and inspiring change, one innovative
-                      project at a time.
+                      project at a time.</Trans>
                     </div>
                     {!isSmallTablet && !isPhone ? (
                       <div className="div-project-button">
@@ -177,7 +178,7 @@ function App() {
                           id="projects-button"
                           onClick={scrollToContent}
                         >
-                          Some of our Projects
+                          <Trans>Some of our Projects</Trans>
                         </button>
                       </div>
                     ) : (
@@ -222,7 +223,7 @@ function App() {
                       id="projects-button"
                       onClick={scrollToContent}
                     >
-                      Some of our projects
+                      <Trans>Some of our projects</Trans>
                     </button>
                   </div>
                 </Col>
@@ -239,7 +240,7 @@ function App() {
             <Row>
               <Col xs={1} sm={1}></Col>
               <Col xs={10} sm={3}>
-                <h1 className="ilm-general-subTitle">Projects</h1>
+                <h1 className="ilm-general-subTitle"><Trans>Projects</Trans></h1>
               </Col>
               {(isSmallTablet || isPhone) && <Col xs={1} sm={1}></Col>}
 
@@ -257,7 +258,7 @@ function App() {
                   type="text"
                   style={{ width: !isPhone ? "50%" : "74%" }}
                   className="ilm-search"
-                  placeholder="Search for title or description"
+                  placeholder={t`Search for title or description`}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />

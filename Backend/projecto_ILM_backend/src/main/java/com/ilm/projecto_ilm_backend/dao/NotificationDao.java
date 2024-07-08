@@ -128,4 +128,10 @@ public class NotificationDao extends AbstractDao<NotificationEntity> {
                 .setParameter("type", type)
                 .executeUpdate();
     }
+
+    public List<NotificationEntity> findByProjectSystemName(String projectSystemName) {
+        return em.createNamedQuery("NotificationEntity.findByProjectSystemName", NotificationEntity.class)
+                .setParameter("projectSystemName", projectSystemName)
+                .getResultList();
+    }
 }

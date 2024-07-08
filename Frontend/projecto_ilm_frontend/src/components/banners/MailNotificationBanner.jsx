@@ -4,7 +4,7 @@ import "./MailNotificationBanner.css";
 
 const MailNotificationBanner = ({ message, onClick, onEnd }) => {
   useEffect(() => {
-    const timer = setTimeout(onEnd, 3000); // Chama onEnd após 3 segundos
+    const timer = setTimeout(onEnd, 3000);
 
     return () => clearTimeout(timer);
   }, [message, onEnd]);

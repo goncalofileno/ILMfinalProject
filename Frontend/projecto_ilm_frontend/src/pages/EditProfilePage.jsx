@@ -19,16 +19,17 @@ import {
   uploadProfilePictureWithSession,
   getUserEditProfile,
   changeUserPassword,
-  updatePassword, // Certifique-se de importar a função updatePassword
+  updatePassword,
 } from "../utilities/services";
 import { useNavigate } from "react-router-dom";
 import InputForm from "../components/inputs/InputForm";
 import AppNavbar from "../components/headers/AppNavbar";
 import PasswordForm from "../components/inputs/PasswordForm";
 import Cookies from "js-cookie";
-import "../components/modals/Modals.css"; // Adicione o CSS necessário
-import "./ResetPasswordPage.css"; // Adicione o CSS necessário
+import "../components/modals/Modals.css";
+import "./ResetPasswordPage.css";
 import { formatLab } from "../utilities/converters";
+import { Trans, t } from "@lingui/macro";
 
 const EditProfilePage = () => {
   const [username, setUsername] = useState("");
@@ -51,8 +52,7 @@ const EditProfilePage = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
-  const [passwordSuccess, setPasswordSuccess] = useState(""); // Novo estado para sucesso
-  const [strength, setStrength] = useState(0);
+  const [passwordSuccess, setPasswordSuccess] = useState("");
   const [conditionsMet, setConditionsMet] = useState({
     upper: false,
     lower: false,
@@ -69,6 +69,7 @@ const EditProfilePage = () => {
   const navigate = useNavigate();
   const systemUsername = Cookies.get("user-systemUsername");
   const [showTolltip, setShowTooltip] = useState(false);
+  const [strength, setStrength] = useState(0);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -149,9 +150,9 @@ const EditProfilePage = () => {
 
   const validateForm = () => {
     const errors = {};
-    if (!firstName) errors.firstName = "First Name is required.";
-    if (!lastName) errors.lastName = "Last Name is required.";
-    if (!office) errors.office = "Office is required.";
+    if (!firstName) errors.firstName = t`First Name is required.`;
+    if (!lastName) errors.lastName = t`Last Name is required.`;
+    if (!office) errors.office = t`Office is required.`;
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -191,7 +192,7 @@ const EditProfilePage = () => {
           } else {
             const uploadErrorData = await uploadResponse.json();
             console.error("Error uploading profile picture:", uploadErrorData);
-            setFileUploadError("Error uploading profile picture");
+            setFileUploadError(t`Error uploading profile picture`);
           }
         } else {
           navigate(`/profile/${systemUsername}`);
@@ -199,11 +200,11 @@ const EditProfilePage = () => {
       } else {
         const errorData = await response.json();
         console.error("Error updating profile:", errorData);
-        setFileUploadError("Error updating profile");
+        setFileUploadError(t`Error updating profile`);
       }
     } catch (error) {
       console.error("Error updating profile", error);
-      setFileUploadError("Error updating profile");
+      setFileUploadError(t`Error updating profile`);
     } finally {
       setLoading(false);
     }
@@ -244,30 +245,28 @@ const EditProfilePage = () => {
   };
 
   const handleOnBlurPassword = () => {
-    // Redefinir avisos
     setPasswordError("");
     setPasswordSuccess("");
 
     if (strength >= 4) {
       setWarningTypePassword("success");
-      setWarningTxtPassword("Password is strong");
+      setWarningTxtPassword(t`Password is strong`);
     } else {
       setWarningTypePassword("incorrect");
-      setWarningTxtPassword("Password must be strong");
+      setWarningTxtPassword(t`Password must be strong`);
     }
   };
 
   const handleOnBlurConfirmPassword = () => {
-    // Redefinir avisos
     setPasswordError("");
     setPasswordSuccess("");
 
     if (newPassword === confirmNewPassword) {
       setWarningTypeConfirmPassword("success");
-      setWarningTxtConfirmPassword("Passwords match");
+      setWarningTxtConfirmPassword(t`Passwords match`);
     } else {
       setWarningTypeConfirmPassword("incorrect");
-      setWarningTxtConfirmPassword("Passwords do not match");
+      setWarningTxtConfirmPassword(t`Passwords do not match`);
     }
   };
 
@@ -277,12 +276,12 @@ const EditProfilePage = () => {
     setPasswordSuccess("");
 
     if (newPassword !== confirmNewPassword) {
-      setPasswordError("New passwords do not match.");
+      setPasswordError(t`New passwords do not match.`);
       return;
     }
 
     if (strength < 4) {
-      setPasswordError("Password is not strong enough.");
+      setPasswordError(t`Password is not strong enough.`);
       return;
     }
 
@@ -292,18 +291,18 @@ const EditProfilePage = () => {
         confirmNewPassword
       );
       if (response.ok) {
-        setPasswordSuccess("Password updated successfully.");
+        setPasswordSuccess(t`Password updated successfully.`);
         setTimeout(() => {
           setShowModal(false);
           resetModalFields();
         }, 3000); // Fecha o modal após 3 segundos
       } else {
         const errorData = await response.json();
-        setPasswordError(errorData.message || "Error changing password.");
+        setPasswordError(errorData.message || t`Error changing password.`);
       }
     } catch (error) {
       console.error("Error changing password:", error);
-      setPasswordError(error.message || "Error changing password.");
+      setPasswordError(error.message || t`Error changing password.`);
     }
   };
 
@@ -312,7 +311,7 @@ const EditProfilePage = () => {
     setNewPassword("");
     setConfirmNewPassword("");
     setPasswordError("");
-    setPasswordSuccess(""); // Reseta a mensagem de sucesso
+    setPasswordSuccess("");
     setStrength(0);
     setConditionsMet({
       upper: false,
@@ -333,13 +332,17 @@ const EditProfilePage = () => {
       <Container className="ilm-form" style={{ marginTop: "80px" }}>
         <Row className="justify-content-md-center mt-4">
           <Col md="10">
-            <h2 className="text-center mb-4">Edit Profile</h2>
+            <h2 className="text-center mb-4">
+              <Trans>Edit Profile</Trans>
+            </h2>
             <Form onSubmit={handleSubmit}>
               <Row>
                 <Col md={6}>
                   <Image src={preview} className="profile-image mb-3" fluid />
                   <Form.Group controlId="formFileUpload" className="mb-3">
-                    <Form.Label className="custom-label">Photo</Form.Label>
+                    <Form.Label className="custom-label">
+                      <Trans>Photo</Trans>
+                    </Form.Label>
                     <Form.Control
                       type="file"
                       onChange={handleFileChange}
@@ -353,7 +356,9 @@ const EditProfilePage = () => {
                   </Form.Group>
 
                   <Form.Group controlId="formBio" className="mb-3">
-                    <Form.Label className="custom-label">Bio</Form.Label>
+                    <Form.Label className="custom-label">
+                      <Trans>Bio</Trans>
+                    </Form.Label>
                     <Form.Control
                       as="textarea"
                       rows={3}
@@ -369,7 +374,8 @@ const EditProfilePage = () => {
                   <InputForm
                     label={
                       <>
-                        First Name <span className="text-danger">*</span>
+                        <Trans>First Name</Trans>{" "}
+                        <span className="text-danger">*</span>
                       </>
                     }
                     type="text"
@@ -384,7 +390,8 @@ const EditProfilePage = () => {
                   <InputForm
                     label={
                       <>
-                        Last Name <span className="text-danger">*</span>
+                        <Trans>Last Name</Trans>{" "}
+                        <span className="text-danger">*</span>
                       </>
                     }
                     type="text"
@@ -397,7 +404,7 @@ const EditProfilePage = () => {
                   />
 
                   <InputForm
-                    label="Username"
+                    label={t`Username`}
                     type="text"
                     value={username}
                     setValue={setUsername}
@@ -416,11 +423,16 @@ const EditProfilePage = () => {
                     handleOnBlur={checkUsernameAvailability}
                     onBlurActive={true}
                   />
-                  {loading && <div>Checking...</div>}
+                  {loading && (
+                    <div>
+                      <Trans>Checking...</Trans>
+                    </div>
+                  )}
 
                   <Form.Group controlId="formOffice" className="mb-3">
                     <Form.Label className="custom-label">
-                      Office <span className="text-danger">*</span>
+                      <Trans>Office</Trans>{" "}
+                      <span className="text-danger">*</span>
                     </Form.Label>
                     <Form.Control
                       as="select"
@@ -429,7 +441,9 @@ const EditProfilePage = () => {
                       isInvalid={!!formErrors.office}
                       className="custom-focus"
                     >
-                      <option value="">Select Office</option>
+                      <option value="">
+                        <Trans>Select Office</Trans>
+                      </option>
                       {labs.map((lab, index) => (
                         <option key={index} value={lab.local}>
                           {lab.local}
@@ -445,7 +459,7 @@ const EditProfilePage = () => {
                     className="mb-3 custom-switch"
                   >
                     <Form.Label className="custom-label">
-                      Public Profile
+                      <Trans>Public Profile</Trans>
                     </Form.Label>
                     <Form.Check
                       type="switch"
@@ -462,7 +476,7 @@ const EditProfilePage = () => {
                         borderColor: "#f39c12",
                       }}
                     >
-                      Change Password
+                      <Trans>Change Password</Trans>
                     </Button>
                   </Form.Group>
                 </Col>
@@ -471,7 +485,7 @@ const EditProfilePage = () => {
               <Row className="mt-4">
                 <Col md={6}>
                   <InterestSelector
-                    label="Interests:"
+                    label={t`Interests:`}
                     selectedInterests={selectedInterests}
                     setSelectedInterests={setSelectedInterests}
                   />
@@ -491,7 +505,7 @@ const EditProfilePage = () => {
                     onClick={handleCancel}
                     style={{ marginRight: "10px" }}
                   >
-                    Cancel
+                    <Trans>Cancel</Trans>
                   </Button>
                   <Button
                     variant="primary"
@@ -501,7 +515,7 @@ const EditProfilePage = () => {
                       borderColor: "#f39c12",
                     }}
                   >
-                    Save
+                    <Trans>Save</Trans>
                   </Button>
                 </Col>
               </Row>
@@ -519,7 +533,9 @@ const EditProfilePage = () => {
         }}
       >
         <Modal.Header closeButton>
-          <Modal.Title>Change Password</Modal.Title>
+          <Modal.Title>
+            <Trans>Change Password</Trans>
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {passwordError && (
@@ -534,7 +550,7 @@ const EditProfilePage = () => {
           )}
           <Form>
             <PasswordForm
-              label="Current Password"
+              label={t`Current Password`}
               type="password"
               value={currentPassword}
               setValue={(e) => setCurrentPassword(e.target.value)}
@@ -547,7 +563,7 @@ const EditProfilePage = () => {
               onBlurActive={false}
             />
             <PasswordForm
-              label="New Password"
+              label={t`New Password`}
               type="password"
               value={newPassword}
               setValue={(e) => {
@@ -566,7 +582,9 @@ const EditProfilePage = () => {
             />
             <div id="div-password-container">
               <div id="pass-strength">
-                <div>Password Strength</div>
+                <div>
+                  <Trans>Password Strength</Trans>
+                </div>
                 <meter max="5" value={strength}></meter>
               </div>
               <div id="pass-strength-string">
@@ -587,17 +605,17 @@ const EditProfilePage = () => {
                         : strength === 5 && "green",
                   }}
                 >
-                  {strength === 0 && "None"}
-                  {strength === 1 && "Weak"}
-                  {strength === 2 && "Fair"}
-                  {strength === 3 && "Good"}
-                  {strength === 4 && "Strong"}
-                  {strength === 5 && "Very Strong"}
+                  {strength === 0 && (t`None`)}
+                  {strength === 1 && (t`Weak`)}
+                  {strength === 2 && (t`Fair`)}
+                  {strength === 3 && (t`Good`)}
+                  {strength === 4 && (t`Strong`)}
+                  {strength === 5 && (t`Very Strong`)}
                 </div>
               </div>
             </div>
             <InputForm
-              label="Confirm New Password"
+              label={t`Confirm New Password`}
               type="password"
               value={confirmNewPassword}
               setValue={setConfirmNewPassword}
@@ -616,7 +634,7 @@ const EditProfilePage = () => {
               resetModalFields();
             }}
           >
-            Cancel
+            <Trans>Cancel</Trans>
           </Button>
           <Button
             variant="primary"
@@ -626,7 +644,7 @@ const EditProfilePage = () => {
               borderColor: "#f39c12",
             }}
           >
-            Change Password
+            <Trans>Change Password</Trans>
           </Button>
         </Modal.Footer>
       </Modal>

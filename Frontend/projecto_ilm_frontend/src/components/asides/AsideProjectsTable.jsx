@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { getLabsWithSessionId, getAllStatus } from "../../utilities/services";
 import { formatLab, formatStatusDropDown } from "../../utilities/converters";
 import { useMediaQuery } from "react-responsive";
+import { Trans, t } from "@lingui/macro";
 
 export default function AsideProjectsTable({
   selectedLab,
@@ -48,7 +49,7 @@ export default function AsideProjectsTable({
           <div className={!isMobile ? "aside" : "aside-Mobile"}>
             <div className="div-control-form" id="first-div">
               <Form.Label className="custom-label" style={{ color: "white" }}>
-                Lab
+              <Trans>Lab</Trans>
               </Form.Label>
               <Form.Control
                 as="select"
@@ -62,7 +63,7 @@ export default function AsideProjectsTable({
                   );
                 }}
               >
-                <option value="">All Labs</option>
+                <option value=""><Trans>All Labs</Trans></option>
                 {labs.map((lab, index) => (
                   <option key={index} value={lab.local}>
                     {formatLab(lab.local)}
@@ -72,7 +73,7 @@ export default function AsideProjectsTable({
             </div>
             <div className="div-control-form">
               <Form.Label className="custom-label" style={{ color: "white" }}>
-                Status
+              <Trans>Status</Trans>
               </Form.Label>
               <Form.Control
                 as="select"
@@ -87,7 +88,7 @@ export default function AsideProjectsTable({
                 }}
               >
                 {" "}
-                <option value="">All Status</option>
+                <option value=""><Trans>All Status</Trans></option>
                 {status.map((status, index) => (
                   <option key={index} value={status}>
                     {formatStatusDropDown(status)}
@@ -101,7 +102,7 @@ export default function AsideProjectsTable({
                 id="label-slots"
                 style={{ color: "white" }}
               >
-                Slots Available
+                <Trans>Slots Available</Trans>
               </Form.Label>
               <Form.Check
                 type="switch"
@@ -116,7 +117,7 @@ export default function AsideProjectsTable({
               />
             </div>
             <div className="table-label-color">
-              <div id="your-projects-color">Your Projects</div>
+              <div id="your-projects-color"><Trans>Your Projects</Trans></div>
             </div>
             <button
               className="terciary-button"
@@ -140,7 +141,7 @@ export default function AsideProjectsTable({
                 setNavigateTableProjectsTrigger(!navigateTableProjectsTrigger);
               }}
             >
-              Clear Filters
+              <Trans>Clear Filters</Trans>
             </button>
           </div>
         </div>

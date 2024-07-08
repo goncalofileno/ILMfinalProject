@@ -223,3 +223,15 @@
   border: none;
   color: white;
 }
+
+.flag-icon {
+  width: 20px;
+  height: 15px;
+  margin-right: 5px;
+}
+
+.option-flag {
+  display: flex;
+  align-items: center;
+}
+

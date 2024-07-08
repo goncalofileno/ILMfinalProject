@@ -4,7 +4,9 @@ import TablePagination from "../paginations/TablePagination";
 import { InputGroup, Form, Button } from "react-bootstrap";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
+import { useCurrentPng } from "recharts-to-png";
 import { useMediaQuery } from "react-responsive";
+import { Trans, t } from "@lingui/macro";
 
 export default function ProjectsTable({
   projects,
@@ -130,7 +132,9 @@ export default function ProjectsTable({
         <thead>
           <tr>
             <th colSpan="2" style={{ width: "25%" }} onClick={sortByName}>
-              <span style={{ marginRight: "10px" }}>Project</span>
+              <span style={{ marginRight: "10px" }}>
+                <Trans>Project</Trans>
+              </span>
               {nameAsc ? (
                 <i class="fas fa-arrow-up fa-xs"></i>
               ) : (
@@ -138,7 +142,9 @@ export default function ProjectsTable({
               )}
             </th>
             <th style={{ width: "15%" }} onClick={sortByStatus}>
-              <span style={{ marginRight: "10px" }}>Status</span>
+              <span style={{ marginRight: "10px" }}>
+                <Trans>Status</Trans>
+              </span>
               {statusAsc ? (
                 <i class="fas fa-arrow-up fa-xs"></i>
               ) : (
@@ -146,7 +152,9 @@ export default function ProjectsTable({
               )}
             </th>
             <th style={{ width: "15%" }} onClick={sortByLab}>
-              <span style={{ marginRight: "10px" }}>Lab</span>
+              <span style={{ marginRight: "10px" }}>
+                <Trans>Lab</Trans>
+              </span>
               {labAsc ? (
                 <i class="fas fa-arrow-up fa-xs"></i>
               ) : (
@@ -185,7 +193,7 @@ export default function ProjectsTable({
           <tr>
             <td colspan="7">
               <div className="no-results no-results-align">
-                No projects found matching your criteria.
+                <Trans>No projects found matching your criteria.</Trans>
               </div>
             </td>
           </tr>
@@ -209,13 +217,17 @@ export default function ProjectsTable({
                         paddingRight: "15px",
                       }}
                     >
-                      <img
-                        src={
-                          project.photo !== null ? project.photo : defaultPhoto
-                        }
-                        alt="project_img"
+                      <div
                         className="project-img-table"
-                      />
+                        style={{
+                          backgroundImage:
+                            project.photo == null
+                              ? `url(${defaultPhoto})`
+                              : `url(${project.photo})`,
+                          backgroundSize: "cover",
+                          backgroundPosition: "center",
+                        }}
+                      ></div>
                     </td>
                     <td
                       style={{

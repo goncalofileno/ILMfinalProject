@@ -6,6 +6,7 @@ import "../components/modals/Modals.css";
 import InputForm from "../components/inputs/InputForm";
 import { resetPassword } from "../utilities/services";
 import { useNavigate, useParams } from "react-router-dom";
+import { Trans, t } from "@lingui/macro";
 
 export default function ResetPasswordPage() {
    const { token } = useParams();
@@ -29,10 +30,10 @@ export default function ResetPasswordPage() {
    const handleOnBlurPassword = () => {
       if (strength >= 4) {
          setWarningTypePassword("success");
-         setWarningTxtPassword("Password is strong");
+         setWarningTxtPassword(t`Password is strong`);
       } else {
          setWarningTypePassword("incorrect");
-         setWarningTxtPassword("Password must be strong");
+         setWarningTxtPassword(t`Password must be strong`);
       }
    };
    const updatePassword = (e) => {
@@ -71,10 +72,10 @@ export default function ResetPasswordPage() {
    const handleOnBlurConfirmPassword = () => {
       if (password === confirmPassword) {
          setWarningTypeConfirmPassword("success");
-         setWarningTxtConfirmPassword("Passwords match");
+         setWarningTxtConfirmPassword(t`Passwords match`);
       } else {
          setWarningTypeConfirmPassword("incorrect");
-         setWarningTxtConfirmPassword("Passwords do not match");
+         setWarningTxtConfirmPassword(t`Passwords do not match`);
       }
    };
 
@@ -95,7 +96,7 @@ export default function ResetPasswordPage() {
          <div className="ilm-page" id="reset-pass-page">
             <form className="ilm-form" id="reset-pass-form" onSubmit={handleSubmit}>
                <div className="modal-content">
-                  <h3 className="modal-title">Reset Password</h3>
+                  <h3 className="modal-title"><Trans>Reset Password</Trans></h3>
                   <div className="modal-body">
                      <div id="div-password">
                         <PasswordForm
@@ -113,7 +114,7 @@ export default function ResetPasswordPage() {
                         ></PasswordForm>
                         <div id="div-password-container">
                            <div id="pass-strength">
-                              <div>Password Strength</div>
+                              <div><Trans>Password Strength</Trans></div>
                               <meter max="5" value={strength}></meter>
                            </div>
                            <div id="pass-strength-string">
@@ -134,17 +135,17 @@ export default function ResetPasswordPage() {
                                           : strength === 5 && "green",
                                  }}
                               >
-                                 {strength === 0 && "None"}
-                                 {strength === 1 && "Weak"}
-                                 {strength === 2 && "Fair"}
-                                 {strength === 3 && "Good"}
-                                 {strength === 4 && "Strong"}
-                                 {strength === 5 && "Very Strong"}
+                                 {strength === 0 && (t`None`)}
+                                 {strength === 1 && (t`Weak`)}
+                                 {strength === 2 && (t`Fair`)}
+                                 {strength === 3 && (t`Good`)}
+                                 {strength === 4 && (t`Strong`)}
+                                 {strength === 5 && (t`Very Strong`)}
                               </div>
                            </div>
                         </div>
                         <InputForm
-                           label="Confirm Password"
+                           label={t`Confirm Password`}
                            type="password"
                            value={confirmPassword}
                            setValue={setConfirmPassword}
@@ -157,7 +158,7 @@ export default function ResetPasswordPage() {
                   </div>
                   <div className="modal-buttons">
                      <button type="submit" className="submit-button" id="submit-button-reset">
-                        Submit
+                     <Trans>Submit</Trans>
                      </button>
                   </div>
                </div>

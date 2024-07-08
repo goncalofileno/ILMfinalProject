@@ -11,12 +11,14 @@ import pdfIcon from "../../resources/icons/other/pdf.png";
 import { useState, useEffect } from "react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import Cookies from "js-cookie";
 import AppNavbar from "../headers/AppNavbar";
 import "./StatisticsPdf.css";
 import { Chart } from "react-google-charts";
 import { Row, Col } from "react-bootstrap";
 import { getAppStatistics } from "../../utilities/services";
 import { useMediaQuery } from "react-responsive";
+import { Trans, t } from "@lingui/macro";
 
 // Create styles
 const styles = StyleSheet.create({
@@ -36,11 +38,10 @@ const StatisticsPdf = () => {
   const [projectsPerLab, setProjectsPerLab] = useState([]);
   const [totalUsers, setTotalUsers] = useState(0);
   const [averageUsersInProject, setAverageUsersInProject] = useState(0);
-  const [averageExecutionProjectTime, setAverageExecutionProjectTime] =
-    useState(0);
-  const [supplierWithMostResources, setSupplierWithMostResources] =
-    useState(null);
+  const [averageExecutionProjectTime, setAverageExecutionProjectTime] = useState(0);
+  const [supplierWithMostResources, setSupplierWithMostResources] = useState(null);
   const [resourcesNumberSupplier, setResourcesNumberSupplier] = useState([]);
+  const [currentLanguage, setCurrentLanguage] = useState(Cookies.get("user-language") || "ENGLISH");
   const [projectStatusNumberPerLab, setProjectStatusNumberPerLab] = useState(
     []
   );
@@ -88,7 +89,7 @@ const StatisticsPdf = () => {
         setProjectStatusNumberPerLab(transformedProjectStatusNumberPerLab);
       });
     });
-  }, []);
+  }, [currentLanguage]);
 
   const pieRef = useRef();
 
@@ -111,36 +112,36 @@ const StatisticsPdf = () => {
   };
 
   const optionsMemberPerLab = {
-    title: "Members per Lab",
+    title: t`Members per Lab`,
     backgroundColor: "transparent",
     chartArea: { width: "80%" },
   };
 
   const optionsProjectsPerLab = {
-    title: "Projects per Lab",
+    title: t`Projects per Lab`,
     backgroundColor: "transparent",
     chartArea: { width: "80%" },
   };
 
   const optionsMemberPerLabPdf = {
-    title: "Members per Lab",
+    title: t`Members per Lab`,
     backgroundColor: "transparent",
     chartArea: { width: "100%" },
   };
 
   const optionsProjectsPerLabPdf = {
-    title: "Projects per Lab",
+    title: t`Projects per Lab`,
     backgroundColor: "transparent",
     chartArea: { width: "100%" },
   };
 
   const optionsProjectStatus = {
-    title: "Number of projects per status in each lab",
+    title: t`Number of projects per status in each lab`,
     backgroundColor: "transparent",
     chartArea: { width: "65%" },
     isStacked: true,
     hAxis: {
-      title: "Projects",
+      title: t`Projects`,
       minValue: 0,
     },
     vAxis: {
@@ -149,17 +150,26 @@ const StatisticsPdf = () => {
   };
 
   const optionsProjectStatusPdf = {
-    title: "Number of projects per status in each lab",
+    title: t`Number of projects per status in each lab`,
     backgroundColor: "transparent",
     chartArea: { width: "55%" },
     isStacked: true,
     hAxis: {
-      title: "Projects",
+      title: t`Projects`,
       minValue: 0,
     },
     vAxis: {
-      title: "Lab",
+      title: t`Lab`,
     },
+  };
+
+  const formatTime = (minutes) => {
+    const userLanguage = Cookies.get("user-language") || "ENGLISH";
+    if (userLanguage === "PORTUGUESE") {
+      return formatTimePT(minutes);
+    } else {
+      return formatTimeEN(minutes);
+    }
   };
 
   const formatTimeEN = (minutes) => {
@@ -232,7 +242,7 @@ const StatisticsPdf = () => {
 
   return (
     <div>
-      <AppNavbar />
+      <AppNavbar setCurrentLanguage={setCurrentLanguage}/>
 
       {/* Screen display */}
       <div
@@ -245,7 +255,7 @@ const StatisticsPdf = () => {
         >
           <h1 className="page-title">
             <span className="app-slogan-1">ILM </span>
-            <span className="app-slogan-2">Statistics</span>
+            <span className="app-slogan-2"><Trans>Statistics</Trans></span>
           </h1>
           <Row style={{ height: "3%" }}></Row>
           <Row style={{ height: !isTablet && "42%", width: "100%" }}>
@@ -277,22 +287,22 @@ const StatisticsPdf = () => {
             <Col xl={3} className="col-app-stats">
               <div className="app-stats">
                 <div>
-                  Total users: <span>{totalUsers}</span>
+                <Trans>Total users</Trans>: <span>{totalUsers}</span>
                 </div>
                 <div>
-                  Average users in project: <span>{averageUsersInProject}</span>
+                <Trans>Average users in project</Trans>: <span>{averageUsersInProject}</span>
                 </div>
 
-                {averageExecutionProjectTime != "NaN" && (
+                {averageExecutionProjectTime !== "NaN" && (
                   <div>
-                    Average execution time per project:{" "}
-                    <span>{formatTimeEN(averageExecutionProjectTime)}</span>
+                    <Trans>Average execution time per project</Trans>:{" "}
+                    <span>{formatTime(averageExecutionProjectTime)}</span>
                   </div>
                 )}
                 <div>
-                  Supplier with most Resources:{" "}
-                  <span>{supplierWithMostResources}</span> with{" "}
-                  <span>{resourcesNumberSupplier}</span> resources
+                <Trans>Supplier with most Resources</Trans>:{" "}
+                  <span>{supplierWithMostResources}</span> <Trans>with</Trans>{" "}
+                  <span>{resourcesNumberSupplier}</span> <Trans>resources</Trans>
                 </div>
               </div>
             </Col>
@@ -322,7 +332,7 @@ const StatisticsPdf = () => {
                   alignItems: "center",
                 }}
               >
-                Export to PDF
+                <Trans>Export to PDF</Trans>
                 <img
                   src={pdfIcon}
                   style={{
@@ -344,30 +354,30 @@ const StatisticsPdf = () => {
             <View style={styles.section}>
               <div>
                 <div className="pdf-page" ref={pieRef}>
-                  <Row className="pdf-title">ILM Statistics</Row>
+                  <Row className="pdf-title"><Trans>ILM Statistics</Trans></Row>
                   <Row>
                     <Col sm={12}>
                       <div className="app-stats-pdf">
                         <div>
-                          Total users: <span>{totalUsers}</span>
+                        <Trans>Total users</Trans>: <span>{totalUsers}</span>
                         </div>
                         <div>
-                          Average users in project:{" "}
+                        <Trans>Average users in project</Trans>:{" "}
                           <span>{averageUsersInProject}</span>
                         </div>
 
-                        {averageExecutionProjectTime != "NaN" && (
+                        {averageExecutionProjectTime !== "NaN" && (
                           <div>
-                            Average execution time per project:{" "}
+                            <Trans>Average execution time per project</Trans>:{" "}
                             <span>
-                              {formatTimeEN(averageExecutionProjectTime)}
+                              {formatTime(averageExecutionProjectTime)}
                             </span>
                           </div>
                         )}
                         <div>
-                          Supplier with most Resources:{" "}
-                          <span>{supplierWithMostResources}</span> with{" "}
-                          <span>{resourcesNumberSupplier}</span> resources
+                        <Trans>Supplier with most Resources</Trans>:{" "}
+                          <span>{supplierWithMostResources}</span> <Trans>with</Trans>{" "}
+                          <span>{resourcesNumberSupplier}</span> <Trans>resources</Trans>
                         </div>
                       </div>
                     </Col>

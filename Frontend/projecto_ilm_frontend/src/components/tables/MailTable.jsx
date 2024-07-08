@@ -13,6 +13,7 @@ import "./MailTable.css";
 import DOMPurify from "dompurify";
 import { useNavigate, useLocation } from "react-router-dom";
 import useMailStore from "../../stores/useMailStore";
+import { Trans, t } from "@lingui/macro";
 import { useMediaQuery } from "react-responsive";
 
 const MailTable = () => {
@@ -24,6 +25,7 @@ const MailTable = () => {
     fetchMailsInInbox,
     setReceivedMails,
     setTotalMails,
+    decrementUnreadCount
   } = useMailStore();
   const [loading, setLoading] = useState(true);
   const [selectedMail, setSelectedMail] = useState(null);
@@ -112,6 +114,7 @@ const MailTable = () => {
     if (!mail.seen) {
       await markMailAsSeen(sessionId, mail.id);
       fetchMails(currentPage, unreadOnly);
+      decrementUnreadCount();
     }
     setSelectedMail(mail);
   };
@@ -263,7 +266,7 @@ const MailTable = () => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div><Trans>Loading...</Trans></div>;
   }
 
   return (
@@ -272,47 +275,44 @@ const MailTable = () => {
         <div
           className="flex-btn-row-mail-table"
           id="div-container-search-email"
+        <Form.Check
+          type="switch"
+          id="unread-only-switch"
+          label={t`Unread only`}
+          checked={unreadOnly}
+          onChange={handleUnreadOnlyChange}
+          className="custom-switch2"
+        />
+        <Form.Control
+          type="text"
+          placeholder={t`Search mails`}
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+          style={{ borderRadius: "10px", cursor: "text" }}
+          className="custom-focus"
+        />
+        <Button
+          variant="primary"
+          onClick={() =>
+            updateURL({ search: searchInput, page: 1, unread: unreadOnly })
+          }
+          id="primary-btn-boot"
         >
-          <Form.Check
-            type="switch"
-            id="unread-only-switch"
-            label="Unread only"
-            checked={unreadOnly}
-            onChange={handleUnreadOnlyChange}
-            className="custom-switch2"
-          />
-          <Form.Control
-            type="text"
-            placeholder="Search mails"
-            value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
-            style={{ borderRadius: "10px", cursor: "text" }}
-            className="custom-focus"
-          />
-        </div>
-        <div className="flex-btn-row-mail-table">
-          <Button
-            variant="primary"
-            onClick={() =>
-              updateURL({ search: searchInput, page: 1, unread: unreadOnly })
-            }
-            id="primary-btn-boot"
-          >
-            Search
-          </Button>
-          <Button
-            variant="secondary"
-            onClick={handleClearSearch}
-            style={{ borderRadius: "10px" }}
-          >
-            Clear Search
-          </Button>
+          <Trans>Search</Trans>
+        </Button>
+        <Button
+          variant="secondary"
+          onClick={handleClearSearch}
+          style={{ borderRadius: "10px" }}
+        >
+          <Trans>Clear Search</Trans>
+        </Button>
         </div>
       </InputGroup>
 
       {receivedMails.length === 0 ? (
         <div className="no-results">
-          No emails found matching your criteria.
+          <Trans>No emails found matching your criteria.</Trans>
         </div>
       ) : (
         <>
@@ -402,12 +402,12 @@ const MailTable = () => {
       {selectedMail && (
         <Modal show={true} onHide={handleCloseModal}>
           <Modal.Header closeButton>
-            <Modal.Title>Mail Details</Modal.Title>
+            <Modal.Title><Trans>Mail Details</Trans></Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form>
               <Form.Group controlId="formContact">
-                <Form.Label>From</Form.Label>
+                <Form.Label><Trans>From</Trans></Form.Label>
                 <Form.Control
                   type="text"
                   readOnly
@@ -416,7 +416,7 @@ const MailTable = () => {
                 />
               </Form.Group>
               <Form.Group controlId="formSubject">
-                <Form.Label>Subject</Form.Label>
+                <Form.Label><Trans>Subject</Trans></Form.Label>
                 <Form.Control
                   type="text"
                   readOnly
@@ -425,7 +425,7 @@ const MailTable = () => {
                 />
               </Form.Group>
               <Form.Group controlId="formMessage">
-                <Form.Label>Message</Form.Label>
+                <Form.Label><Trans>Message</Trans></Form.Label>
                 <div
                   className="custom-focus"
                   style={{
@@ -435,7 +435,7 @@ const MailTable = () => {
                     backgroundColor: "#e9ecef",
                     overflowY: "auto",
                     maxHeight: "400px",
-                    whiteSpace: "pre-wrap", // Preserve whitespace and new lines
+                    whiteSpace: "pre-wrap",
                   }}
                   dangerouslySetInnerHTML={{
                     __html: DOMPurify.sanitize(selectedMail.text),
@@ -443,7 +443,7 @@ const MailTable = () => {
                 />
               </Form.Group>
               <Form.Group controlId="formDate">
-                <Form.Label>Date</Form.Label>
+                <Form.Label><Trans>Date</Trans></Form.Label>
                 <Form.Control
                   type="text"
                   readOnly
@@ -455,14 +455,14 @@ const MailTable = () => {
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleCloseModal}>
-              Close
+            <Trans>Close</Trans>
             </Button>
             <Button
               variant="primary"
               onClick={handleReplyClick}
               style={{ backgroundColor: "#f39c12", borderColor: "#f39c12" }}
             >
-              Reply
+              <Trans>Reply</Trans>
             </Button>
           </Modal.Footer>
         </Modal>
@@ -471,15 +471,15 @@ const MailTable = () => {
       {showDeleteModal && (
         <Modal show={true} onHide={handleCancelDelete}>
           <Modal.Header closeButton>
-            <Modal.Title>Confirm Delete</Modal.Title>
+            <Modal.Title><Trans>Confirm Delete</Trans></Modal.Title>
           </Modal.Header>
-          <Modal.Body>Are you sure you want to delete this mail?</Modal.Body>
+          <Modal.Body><Trans>Are you sure you want to delete this mail?</Trans></Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleCancelDelete}>
-              Cancel
+            <Trans>Cancel</Trans>
             </Button>
             <Button variant="danger" onClick={handleConfirmDelete}>
-              Delete
+            <Trans>Delete</Trans>
             </Button>
           </Modal.Footer>
         </Modal>

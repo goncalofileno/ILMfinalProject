@@ -124,8 +124,8 @@ public class MailBean {
         }
     }
 
-    public boolean sendMail(String sessionId, MailDto mailDto) {
-        UserEntity sender = sessionDao.findBySessionId(sessionId).getUser();
+    public boolean sendMail(UserEntity userSender, MailDto mailDto) {
+        UserEntity sender = userSender;
         UserEntity receiver = userDao.findByEmail(mailDto.getReceiverMail());
 
         if (sender != null && receiver != null) {
@@ -155,9 +155,10 @@ public class MailBean {
     public List<ContactDto> getContactsBySessionId(String sessionId) {
         List<ContactDto> contacts = new ArrayList<>();
         UserEntity user = sessionDao.findBySessionId(sessionId).getUser();
-        List<UserEntity> allUsers = userDao.findAll();
+        List<UserEntity> allUsers = userDao.findAllUsersExceptAdministationAndUser(user);
+
         for (UserEntity contact : allUsers) {
-            if (!contact.equals(user)) {
+            if (!contact.equals(user) || contact.getSystemUsername().equals("admnistration")) {
                 ContactDto contactDto = new ContactDto();
                 contactDto.setName(contact.getFirstName() + " " + contact.getLastName());
                 contactDto.setEmail(contact.getEmail());

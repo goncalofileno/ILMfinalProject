@@ -6,6 +6,8 @@ import { getTableProjects } from "../utilities/services";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
+import { Trans, t } from "@lingui/macro";
+import Cookies from "js-cookie";
 
 const ProjectsPage = () => {
   const query = new URLSearchParams(useLocation().search);
@@ -37,6 +39,7 @@ const ProjectsPage = () => {
   const [keywordButton, setKeywordButton] = useState(false);
   const [navigateTableProjectsTrigger, setNavigateTableProjectsTrigger] =
     useState(false);
+    const [currentLanguage, setCurrentLanguage] = useState(Cookies.get("user-language") || "ENGLISH");
 
   const sortByName = () => {
     if (statusAsc !== "") setStatusAsc("");
@@ -123,11 +126,11 @@ const ProjectsPage = () => {
     const queryParams = new URLSearchParams(queryParamsObj).toString();
 
     navigate(`/projects?${queryParams}`);
-  }, [navigateTableProjectsTrigger]);
+  }, [navigateTableProjectsTrigger, currentLanguage]);
 
   return (
     <>
-      <AppNavbar setIsAsideVisible={setIsAsideVisible} pageWithAside={true} />
+      <AppNavbar setIsAsideVisible={setIsAsideVisible} pageWithAside={true} setCurrentLanguage={setCurrentLanguage} />
       <AsideProjectsTable
         selectedLab={selectedLab}
         setSelectedLab={setSelectedLab}
@@ -151,8 +154,8 @@ const ProjectsPage = () => {
         onClick={() => isAsideVisible && setIsAsideVisible((prev) => !prev)}
       >
         <h1 className="page-title">
-          <span className="app-slogan-1">All </span>
-          <span className="app-slogan-2">Projects</span>
+          <span className="app-slogan-1"><Trans id="todos-os-projectos-all">All</Trans> </span>
+          <span className="app-slogan-2"><Trans>Projects</Trans></span>
         </h1>
         <div className="table-margin-top">
           <ProjectsTable

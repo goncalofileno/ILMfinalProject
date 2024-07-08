@@ -2,6 +2,7 @@ import "./Tables.css";
 import { formatResourceType } from "../../utilities/converters";
 import componentIcon from "../../resources/icons/other/application-control.png";
 import Cookies from "js-cookie";
+import { Trans, t } from "@lingui/macro";
 import { useMediaQuery } from "react-responsive";
 
 export default function YourResourcesProjectCreationTable({
@@ -38,11 +39,11 @@ export default function YourResourcesProjectCreationTable({
     <table className="table-resources-proj-creation your-resources-table">
       <thead>
         <tr>
-          <th style={{ width: !isTablet ? "25%" : "35%" }}>Name</th>
-          {!isTablet && <th style={{ width: "26.5%" }}>Type</th>}
-          <th style={{ width: !isTablet ? "21%" : "31%" }}>Brand</th>
+          <th style={{ width: !isTablet ? "25%" : "35%" }}><Trans>Name</Trans></th>
+          {!isTablet && <th style={{ width: "26.5%" }}><Trans>Type</Trans></th>}
+          <th style={{ width: !isTablet ? "21%" : "31%" }}><Trans>Brand</Trans></th>
           <th colSpan={2} style={{ width: !isTablet ? "27.5%" : "34%" }}>
-            Supplier
+            <Trans>Supplier</Trans>
           </th>
         </tr>
       </thead>

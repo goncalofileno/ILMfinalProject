@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form, Alert } from 'react-bootstrap';
 import Cookies from 'js-cookie';
 import { getUserProjects, inviteUserToProject } from '../../utilities/services';
+import { Trans, t } from "@lingui/macro";
 
 const InviteProjectModal = ({ show, handleClose, systemUsername }) => {
   const [projects, setProjects] = useState([]);
@@ -22,14 +23,14 @@ const InviteProjectModal = ({ show, handleClose, systemUsername }) => {
           setAlertVariant('danger');
         }
       } catch (error) {
-        setAlertMessage('Failed to fetch projects. Please try again.');
+        setAlertMessage(t`Failed to fetch projects. Please try again.`);
         setAlertVariant('danger');
       }
     };
 
     if (show) {
-      setProjects([]);  // Clear previous projects
-      setSelectedProject('');  // Clear selected project
+      setProjects([]); 
+      setSelectedProject('');
       fetchProjects();
     }
   }, [show, systemUsername]);
@@ -42,7 +43,7 @@ const InviteProjectModal = ({ show, handleClose, systemUsername }) => {
     try {
       const response = await inviteUserToProject(sessionId, selectedProject, systemUsername);
       if (response.ok) {
-        setAlertMessage('User invited successfully!');
+        setAlertMessage(t`User invited successfully!`);
         setAlertVariant('success');
         setTimeout(() => {
           handleCloseModal();
@@ -52,11 +53,11 @@ const InviteProjectModal = ({ show, handleClose, systemUsername }) => {
         setAlertMessage(errorMessage);
         setAlertVariant('danger');
       } else {
-        setAlertMessage('Failed to invite user. Please try again.');
+        setAlertMessage(t`Failed to invite user. Please try again.`);
         setAlertVariant('danger');
       }
     } catch (error) {
-      setAlertMessage('An error occurred. Please try again.');
+      setAlertMessage(t`An error occurred. Please try again.`);
       setAlertVariant('danger');
     } finally {
       setLoading(false);
@@ -72,20 +73,20 @@ const InviteProjectModal = ({ show, handleClose, systemUsername }) => {
   return (
     <Modal show={show} onHide={handleCloseModal}>
       <Modal.Header closeButton>
-        <Modal.Title>Invite to Project</Modal.Title>
+        <Modal.Title><Trans>Invite to Project</Trans></Modal.Title>
       </Modal.Header>
       <Modal.Body>
         {alertMessage && <Alert variant={alertVariant}>{alertMessage}</Alert>}
         {projects.length > 0 ? (
           <>
             <Form.Group className="mt-2">
-              <Form.Label>Select Project</Form.Label>
+              <Form.Label><Trans>Select Project</Trans></Form.Label>
               <Form.Control
                 as="select"
                 value={selectedProject}
                 onChange={(e) => setSelectedProject(e.target.value)}
               >
-                <option value="">Select a project...</option>
+                <option value=""><Trans>Select a project</Trans>...</option>
                 {projects.map((project) => (
                   <option key={project.name} value={project.name}>
                     {project.name}
@@ -100,7 +101,7 @@ const InviteProjectModal = ({ show, handleClose, systemUsername }) => {
                 disabled={loading}
                 style={{ marginRight: '10px' }}
               >
-                Cancel
+                <Trans>Cancel</Trans>
               </Button>
               <Button
                 variant="primary"
@@ -108,14 +109,14 @@ const InviteProjectModal = ({ show, handleClose, systemUsername }) => {
                 disabled={!selectedProject || loading}
                 style={{ backgroundColor: '#f39c12', borderColor: '#f39c12' }}
               >
-                {loading ? 'Inviting...' : 'Invite'}
+                {loading ? (t`Inviting...`) : (t`Invite`)}
               </Button>
             </div>
           </>
         ) : (
           <div className="d-flex justify-content-end mt-3">
             <Button variant="secondary" onClick={handleCloseModal}>
-              Cancel
+            <Trans>Cancel</Trans>
             </Button>
           </div>
         )}

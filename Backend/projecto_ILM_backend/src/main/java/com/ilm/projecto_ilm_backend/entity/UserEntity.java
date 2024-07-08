@@ -1,5 +1,6 @@
 package com.ilm.projecto_ilm_backend.entity;
 
+import com.ilm.projecto_ilm_backend.ENUMS.LanguageENUM;
 import com.ilm.projecto_ilm_backend.ENUMS.UserTypeENUM;
 import com.ilm.projecto_ilm_backend.ENUMS.ConvertersENUM.UserTypeEnumConverter;
 import jakarta.persistence.*;
@@ -26,7 +27,7 @@ import java.util.List;
         @NamedQuery(name = "User.getUserProjectCreationDto", query = "SELECT u.lab.local, u.firstName, u.lastName, u.thumbnailPhoto, u.id, u.systemUsername, COUNT(s) AS matchingSkillCount " +
                 "FROM UserEntity u " +
                 "LEFT JOIN u.skills s ON s.name IN :skillNames " +
-                "WHERE u.id <> :id AND u.id NOT IN :excludedIds AND u.profileCreated = true " +
+                "WHERE u.id <> :id AND u.id <> 1 AND u.id NOT IN :excludedIds AND u.profileCreated = true " +
                 "AND (:lab IS NULL OR u.lab = :lab) " +
                 "AND (:keyword IS NULL OR (LOWER(u.firstName) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
                 "OR LOWER(u.lastName) LIKE LOWER(CONCAT('%', :keyword, '%')))) " +
@@ -35,18 +36,20 @@ import java.util.List;
 
         @NamedQuery(name = "User.countUserProjectCreationDto", query = "SELECT COUNT(u)" +
                 " FROM UserEntity u " +
-                "WHERE u.id <> :id AND u.id NOT IN :excludedIds AND u.profileCreated=true " +
+                "WHERE u.id <> :id AND u.id <> 1 AND u.id NOT IN :excludedIds AND u.profileCreated=true " +
                 " AND (:lab IS NULL OR u.lab = :lab) " +
                 "AND (:keyword IS NULL OR (LOWER(u.firstName) LIKE LOWER(CONCAT('%', :keyword, '%'))" +
                 " OR  LOWER(u.lastName) LIKE LOWER(CONCAT('%', :keyword, '%'))))"),
         @NamedQuery(name = "User.getUserSkills", query = "SELECT s FROM UserEntity u JOIN u.skills s WHERE u.id = :id ORDER BY CASE WHEN s.name IN :skillNames THEN 0 ELSE 1 END"),
-        @NamedQuery(name = "User.countUsersInApp", query = "SELECT COUNT(u) FROM UserEntity u WHERE u.mailConfirmed=true"),
+        @NamedQuery(name = "User.countUsersInApp", query = "SELECT COUNT(u) FROM UserEntity u WHERE u.mailConfirmed=true AND u.id <> 1"),
         @NamedQuery(
                 name = "User.countUsersPerLab",
                 query = "SELECT u.lab.local, COUNT(u) " +
                         "FROM UserEntity u " +
+                        "WHERE u.id <> 1 " +
                         "GROUP BY u.lab.local"
-        )
+        ),
+        @NamedQuery(name = "User.findAllUsersExceptAdministationAndUser", query = "SELECT u FROM UserEntity u WHERE u.id <> 1 AND u <> :user"),
 
 })
 
@@ -185,8 +188,8 @@ public class UserEntity implements Serializable {
     @Column(name = "tutorial", nullable = false, unique = false, updatable = true)
     private boolean tutorial;
 
-
-
+    @Column(name = "language", nullable = false, unique = false, updatable = true)
+    private LanguageENUM language;
 
     /**
      * The interests of the user. This is a many-to-many relationship.
@@ -600,6 +603,14 @@ public class UserEntity implements Serializable {
      */
     public void setTutorial(boolean tutorial) {
         this.tutorial = tutorial;
+    }
+
+    public LanguageENUM getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(LanguageENUM language) {
+        this.language = language;
     }
 
     /**

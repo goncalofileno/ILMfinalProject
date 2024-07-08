@@ -12,6 +12,7 @@ import com.ilm.projecto_ilm_backend.entity.*;
 import com.ilm.projecto_ilm_backend.security.exceptions.NoProjectsForInviteeException;
 import com.ilm.projecto_ilm_backend.security.exceptions.NoProjectsToInviteException;
 import com.ilm.projecto_ilm_backend.security.exceptions.UnauthorizedAccessException;
+import com.ilm.projecto_ilm_backend.security.exceptions.NoProjectsForInviteeException;
 import com.ilm.projecto_ilm_backend.utilities.imgsPath;
 import jakarta.ejb.Singleton;
 import jakarta.ejb.Startup;
@@ -78,6 +79,9 @@ public class ProjectBean {
 
     @Inject
     LogBean logBean;
+
+    @Inject
+    TaskBean taskBean;
 
     @Inject
     ResourceSupplierDao resourceSupplierDao;
@@ -187,7 +191,6 @@ public class ProjectBean {
     }
 
 
-
     public String projectSystemNameGenerator(String originalName) {
         // Convert to lower case
         String lowerCaseName = originalName.toLowerCase();
@@ -216,14 +219,14 @@ public class ProjectBean {
                 UserProjectEntity userProjectEntity = new UserProjectEntity();
 
                 userProjectEntity.setProject(project);
-                userProjectEntity.setUser(userDao.findById(1));
+                userProjectEntity.setUser(userDao.findById(2));
                 userProjectEntity.setType(UserInProjectTypeENUM.CREATOR);
                 userProjectDao.merge(userProjectEntity);
 
                 UserProjectEntity userProjectEntity2 = new UserProjectEntity();
 
                 userProjectEntity2.setProject(project);
-                userProjectEntity2.setUser(userDao.findById(2));
+                userProjectEntity2.setUser(userDao.findById(3));
                 userProjectEntity2.setType(UserInProjectTypeENUM.MEMBER);
                 userProjectDao.merge(userProjectEntity2);
 
@@ -233,7 +236,7 @@ public class ProjectBean {
             UserProjectEntity userProjectEntity = new UserProjectEntity();
 
             userProjectEntity.setProject(project);
-            userProjectEntity.setUser(userDao.findById(1));
+            userProjectEntity.setUser(userDao.findById(2));
             userProjectEntity.setType(UserInProjectTypeENUM.CREATOR);
             userProjectDao.merge(userProjectEntity);
         }
@@ -383,7 +386,7 @@ public class ProjectBean {
         return (int) Math.ceil((double) numberOfProjects / numberOfProjectPerPage);
     }
 
-    public List<ProjectProfileDto> getProjectsToInvite(int userId, String inviteeUsername) {
+    public List<ProjectProfileDto> getProjectsToInvite(int userId, String inviteeUsername) throws NoProjectsToInviteException, NoProjectsForInviteeException{
         UserEntity invitee = userBean.getUserBySystemUsername(inviteeUsername);
 
         if (invitee == null) {
@@ -424,12 +427,18 @@ public class ProjectBean {
                 })
                 .collect(Collectors.toList());
 
+        // Filtra ainda por projetos que tenham vagas disponíveis
+        projects = projects.stream()
+                .filter(project -> userProjectDao.getNumberOfUsersByProjectId(projectDao.findByName(project.getName()).getId()) < projectDao.findByName(project.getName()).getMaxMembers())
+                .collect(Collectors.toList());
+
         if (projects.isEmpty()) {
             throw new NoProjectsForInviteeException("The user you want to invite has no projects to be invited to.");
         }
 
         return projects;
     }
+
 
 
     public boolean isUserCreatorOrManagerByProjectName(int userId, String projectName) {
@@ -451,6 +460,15 @@ public class ProjectBean {
             return "User is already invited to this project";
         }
 
+        //verifica se o projecto esta cancelado ou tem as vagas preenchidas
+        if (project.getStatus() == StateProjectENUM.CANCELED) {
+            return "Project is canceled";
+        }
+
+        if (userProjectDao.getNumberOfUsersByProjectId(project.getId()) >= project.getMaxMembers()) {
+            return "Project is full";
+        }
+
         UserProjectEntity userProjectEntity = new UserProjectEntity();
         userProjectEntity.setUser(userToInvite);
         userProjectEntity.setProject(project);
@@ -458,19 +476,31 @@ public class ProjectBean {
 
         userProjectDao.persist(userProjectEntity);
 
-        // Send invitation email
-        String subject = "Invite to Project " + project.getName();
-        String text = "<p>User " + "<strong>" + sender.getFirstName() + " " + sender.getLastName() + "</strong>" + " has invited you to join the project <strong>" + project.getName() + "</strong>.</p>" +
-                "<p>Click the button below to accept the invitation:</p>" +
-                "<a href=\"http://localhost:3000/project/" + project.getSystemName() + "\" style=\"display:inline-block; padding:10px 20px; font-size:16px; color:#fff; background-color:#f39c12; text-align:center; text-decoration:none; border-radius:5px;\">Accept Invitation</a>" +
-                "<p>If the button does not work, you can also copy and paste the following link into your browser:</p>" +
-                "<p>http://localhost:3000/project/" + project.getSystemName() + "</p>" +
-                "<p></p>" +
-                "<p>Best regards,<br>ILM Management Team</p>";
+        UserEntity admnistration = userDao.findBySystemUsername("admnistration");
 
-        MailDto mailDto = new MailDto(subject, text, (sender.getFirstName() + " " + sender.getLastName()), sender.getEmail(), userToInvite.getFirstName() + " " + userToInvite.getLastName(), userToInvite.getEmail());
-
-        mailBean.sendMail(sessionId, mailDto);
+        if (userToInvite.getLanguage() == LanguageENUM.ENGLISH) {
+            String subject = "Invite to Project " + project.getName();
+            String text = "<p>User " + "<strong>" + sender.getFirstName() + " " + sender.getLastName() + "</strong>" + " has invited you to join the project <strong>" + project.getName() + "</strong>.</p>" +
+                    "<p>Click the button below to accept the invitation:</p>" +
+                    "<a href=\"http://localhost:3000/project/" + project.getSystemName() + "\" style=\"display:inline-block; padding:10px 20px; font-size:16px; color:#fff; background-color:#f39c12; text-align:center; text-decoration:none; border-radius:5px;\">Accept Invitation</a>" +
+                    "<p>If the button does not work, you can also copy and paste the following link into your browser:</p>" +
+                    "<p>http://localhost:3000/project/" + project.getSystemName() + "</p>" +
+                    "<p></p>" +
+                    "<p>Best regards,<br>ILM Management Team</p>";
+            MailDto mailDto = new MailDto(subject, text, (sender.getFirstName() + " " + sender.getLastName()), sender.getEmail(), userToInvite.getFirstName() + " " + userToInvite.getLastName(), userToInvite.getEmail());
+            mailBean.sendMail(admnistration, mailDto);
+        } else if (userToInvite.getLanguage() == LanguageENUM.PORTUGUESE) {
+            String subject = "Convite para o Projeto " + project.getName();
+            String text = "<p>O utilizador " + "<strong>" + sender.getFirstName() + " " + sender.getLastName() + "</strong>" + " convidou-o a juntar-se ao projeto <strong>" + project.getName() + "</strong>.</p>" +
+                    "<p>Clique no botão abaixo para aceitar o convite:</p>" +
+                    "<a href=\"http://localhost:3000/project/" + project.getSystemName() + "\" style=\"display:inline-block; padding:10px 20px; font-size:16px; color:#fff; background-color:#f39c12; text-align:center; text-decoration:none; border-radius:5px;\">Aceitar Convite</a>" +
+                    "<p>Se o botão não funcionar, pode também copiar e colar o seguinte link no seu navegador:</p>" +
+                    "<p>http://localhost:3000/project/" + project.getSystemName() + "</p>" +
+                    "<p></p>" +
+                    "<p>Com os melhores cumprimentos,<br>Equipa de Gestão ILM</p>";
+            MailDto mailDto = new MailDto(subject, text, (admnistration.getFirstName() + " " + admnistration.getLastName()), admnistration.getEmail(), userToInvite.getFirstName() + " " + userToInvite.getLastName(), userToInvite.getEmail());
+            mailBean.sendMail(admnistration, mailDto);
+        }
 
         notificationBean.createInviteNotification(project.getSystemName(), userDao.getFullNameBySystemUsername(sender.getSystemUsername()), userToInvite, sender.getSystemUsername());
 
@@ -480,6 +510,16 @@ public class ProjectBean {
     public String acceptInvite(int userId, String projectName) {
         ProjectEntity project = projectDao.findByName(projectName);
         UserProjectEntity userProject = userProjectDao.findByUserIdAndProjectIdAndType(userId, project.getId(), UserInProjectTypeENUM.PENDING_BY_INVITATION);
+
+        //verifica se o projecto esta cancelado ou tem as vagas preenchidas
+        if (project.getStatus() == StateProjectENUM.CANCELED) {
+            return "Project is canceled";
+        }
+
+        if (userProjectDao.getNumberOfUsersByProjectId(project.getId()) >= project.getMaxMembers()) {
+            return "Project is full";
+        }
+
         userProject.setType(UserInProjectTypeENUM.MEMBER_BY_INVITATION);
         userProjectDao.merge(userProject);
         UserEntity invitator = userBean.getUserBySystemUsername(notificationBean.getSystemUsernameOfCreatorOfNotificationByReceptorAndType(userId, NotificationTypeENUM.INVITE));
@@ -488,6 +528,23 @@ public class ProjectBean {
         System.out.println("ACCEPTOR: " + acceptor.getSystemUsername());
         notificationBean.createInviteAcceptedNotification(project.getSystemName(), userDao.getFullNameBySystemUsername(acceptor.getSystemUsername()), invitator, acceptor.getSystemUsername());
         logBean.createMemberAddedLog(project, invitator, acceptor.getFullName());
+
+        //verifica se o numero de membros do projeto é igual ao maximo de membros e se for elimina todos os convites pendentes que ainda possam existir para esse projeto
+        if (userProjectDao.getNumberOfUsersByProjectId(project.getId()) == project.getMaxMembers()) {
+            List<UserProjectEntity> userProjects = userProjectDao.findByProjectId(project.getId());
+            for (UserProjectEntity userProjectEntity : userProjects) {
+                if (userProjectEntity.getType() == UserInProjectTypeENUM.PENDING_BY_INVITATION) {
+                    userProjectDao.remove(userProjectEntity);
+                }
+            }
+            List <NotificationEntity> notifications = notificationDao.findByProjectSystemName(project.getSystemName());
+            for (NotificationEntity notification : notifications) {
+                if (notification.getType() == NotificationTypeENUM.INVITE) {
+                    notificationDao.remove(notification);
+                }
+            }
+        }
+
         return "Invite accepted successfully";
     }
 
@@ -662,51 +719,87 @@ public class ProjectBean {
         List<UserEntity> teamMembers = getProjectMembersByProjectId(project.getId());
         projectDao.merge(project);
 
-
         for (UserEntity user : teamMembers) {
             if (approve) {
                 notificationBean.createProjectNotification(project.getSystemName(), StateProjectENUM.APPROVED, userResponsable.getFirstName() + " " + userResponsable.getLastName(), user, userResponsable.getSystemUsername());
 
-                // Send approval email
-                String subject = "Project " + project.getName() + " Approved";
-                String text = "<p>Dear " + user.getFirstName() + " " + user.getLastName() + ",</p>" +
-                        "<p>We are pleased to inform you that the project <strong><a href=\"http://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong> has been approved. You can now start working on the project.</p>" +
-                        "<p>Best regards,<br>ILM Management Team</p>";
+                UserEntity admnistration = userDao.findBySystemUsername("admnistration");
+                if (user.getLanguage() == LanguageENUM.ENGLISH) {
+                    String subject = "Project " + project.getName() + " Approved";
+                    String text = "<p>Dear " + user.getFirstName() + " " + user.getLastName() + ",</p>" +
+                            "<p>We are pleased to inform you that the project <strong><a href=\"http://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong> has been approved. You can now start working on the project.</p>" +
+                            "<p>Best regards,<br>ILM Management Team</p>";
 
-                MailDto mailDto = new MailDto(
-                        subject,
-                        text,
-                        userResponsable.getFirstName() + " " + userResponsable.getLastName(),
-                        userResponsable.getEmail(),
-                        user.getFirstName() + " " + user.getLastName(),
-                        user.getEmail()
-                );
+                    MailDto mailDto = new MailDto(
+                            subject,
+                            text,
+                            admnistration.getFirstName() + " " + admnistration.getLastName(),
+                            admnistration.getEmail(),
+                            user.getFirstName() + " " + user.getLastName(),
+                            user.getEmail()
+                    );
 
-                mailBean.sendMail(sessionId, mailDto);
+                    mailBean.sendMail(admnistration, mailDto);
+                } else if (user.getLanguage() == LanguageENUM.PORTUGUESE) {
+                    String subject = "Projeto " + project.getName() + " Aprovado";
+                    String text = "<p>Caro(a) " + user.getFirstName() + " " + user.getLastName() + ",</p>" +
+                            "<p>É com prazer que informamos que o projeto <strong><a href=\"http://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong> foi aprovado. Pode agora começar a trabalhar no projeto.</p>" +
+                            "<p>Com os melhores cumprimentos,<br>Equipa de Gestão ILM</p>";
+
+                    MailDto mailDto = new MailDto(
+                            subject,
+                            text,
+                            admnistration.getFirstName() + " " + admnistration.getLastName(),
+                            admnistration.getEmail(),
+                            user.getFirstName() + " " + user.getLastName(),
+                            user.getEmail()
+                    );
+
+                    mailBean.sendMail(admnistration, mailDto);
+                }
             } else {
                 notificationBean.createRejectProjectNotification(project.getSystemName(), StateProjectENUM.PLANNING, userResponsable.getFirstName() + " " + userResponsable.getLastName(), user, userResponsable.getSystemUsername());
 
-                // Send rejection email
-                String subject = "Project " + project.getName() + " Rejected";
-                String text = "<p>Dear " + user.getFirstName() + " " + user.getLastName() + ",</p>" +
-                        "<p>We regret to inform you that the project <strong><a href=\"http://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong> has been rejected.</p>" +
-                        "<p>Reason: " + reason + "</p>" +
-                        "<p>We apologize for any inconvenience this may cause.</p>" +
-                        "<p>Best regards,<br>ILM Management Team</p>";
+                UserEntity admnistration = userDao.findBySystemUsername("admnistration");
+                if (user.getLanguage() == LanguageENUM.ENGLISH) {
+                    String subject = "Project " + project.getName() + " Rejected";
+                    String text = "<p>Dear " + user.getFirstName() + " " + user.getLastName() + ",</p>" +
+                            "<p>We regret to inform you that the project <strong><a href=\"http://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong> has been rejected.</p>" +
+                            "<p>Reason: " + reason + "</p>" +
+                            "<p>We apologize for any inconvenience this may cause.</p>" +
+                            "<p>Best regards,<br>ILM Management Team</p>";
 
-                MailDto mailDto = new MailDto(
-                        subject,
-                        text,
-                        userResponsable.getFirstName() + " " + userResponsable.getLastName(),
-                        userResponsable.getEmail(),
-                        user.getFirstName() + " " + user.getLastName(),
-                        user.getEmail()
-                );
+                    MailDto mailDto = new MailDto(
+                            subject,
+                            text,
+                            admnistration.getFirstName() + " " + admnistration.getLastName(),
+                            admnistration.getEmail(),
+                            user.getFirstName() + " " + user.getLastName(),
+                            user.getEmail()
+                    );
 
-                mailBean.sendMail(sessionId, mailDto);
+                    mailBean.sendMail(admnistration, mailDto);
+                } else if (user.getLanguage() == LanguageENUM.PORTUGUESE) {
+                    String subject = "Projeto " + project.getName() + " Rejeitado";
+                    String text = "<p>Caro(a) " + user.getFirstName() + " " + user.getLastName() + ",</p>" +
+                            "<p>Lamentamos informar que o projeto <strong><a href=\"http://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong> foi rejeitado.</p>" +
+                            "<p>Razão: " + reason + "</p>" +
+                            "<p>Pedimos desculpa por qualquer inconveniente que isto possa causar.</p>" +
+                            "<p>Com os melhores cumprimentos,<br>Equipa de Gestão ILM</p>";
+
+                    MailDto mailDto = new MailDto(
+                            subject,
+                            text,
+                            admnistration.getFirstName() + " " + admnistration.getLastName(),
+                            admnistration.getEmail(),
+                            user.getFirstName() + " " + user.getLastName(),
+                            user.getEmail()
+                    );
+
+                    mailBean.sendMail(admnistration, mailDto);
+                }
             }
         }
-
         return approve ? "Project approved successfully" : "Project rejected successfully";
     }
 
@@ -772,24 +865,44 @@ public class ProjectBean {
                 notificationBean.createProjectNotification(project.getSystemName(), StateProjectENUM.CANCELED, userDao.getFullNameBySystemUsername(sender.getSystemUsername()), user, sender.getSystemUsername());
             }
 
-            // Send cancellation email
-            String subject = "Project " + project.getName() + " Canceled";
-            String text = "<p>Dear " + user.getFirstName() + " " + user.getLastName() + ",</p>" +
-                    "<p>We regret to inform you that the project <strong><a href=\"http://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong> has been canceled.</p>" +
-                    "<p>Reason: " + reason + "</p>" +
-                    "<p>We apologize for any inconvenience this may cause.</p>" +
-                    "<p>Best regards,<br>ILM Management Team</p>";
+            UserEntity admnistration = userDao.findBySystemUsername("admnistration");
+            if (user.getLanguage() == LanguageENUM.ENGLISH) {
+                String subject = "Project " + project.getName() + " Canceled";
+                String text = "<p>Dear " + user.getFirstName() + " " + user.getLastName() + ",</p>" +
+                        "<p>We regret to inform you that the project <strong><a href=\"http://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong> has been canceled.</p>" +
+                        "<p>Reason: " + reason + "</p>" +
+                        "<p>We apologize for any inconvenience this may cause.</p>" +
+                        "<p>Best regards,<br>ILM Management Team</p>";
 
-            MailDto mailDto = new MailDto(
-                    subject,
-                    text,
-                    sender.getFirstName() + " " + sender.getLastName(),
-                    sender.getEmail(),
-                    user.getFirstName() + " " + user.getLastName(),
-                    user.getEmail()
-            );
+                MailDto mailDto = new MailDto(
+                        subject,
+                        text,
+                        admnistration.getFirstName() + " " + admnistration.getLastName(),
+                        admnistration.getEmail(),
+                        user.getFirstName() + " " + user.getLastName(),
+                        user.getEmail()
+                );
 
-            mailBean.sendMail(sessionId, mailDto);
+                mailBean.sendMail(admnistration, mailDto);
+            } else if (user.getLanguage() == LanguageENUM.PORTUGUESE) {
+                String subject = "Projeto " + project.getName() + " Cancelado";
+                String text = "<p>Caro(a) " + user.getFirstName() + " " + user.getLastName() + ",</p>" +
+                        "<p>Lamentamos informar que o projeto <strong><a href=\"http://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong> foi cancelado.</p>" +
+                        "<p>Razão: " + reason + "</p>" +
+                        "<p>Pedimos desculpa por qualquer inconveniente que isto possa causar.</p>" +
+                        "<p>Com os melhores cumprimentos,<br>Equipa de Gestão ILM</p>";
+
+                MailDto mailDto = new MailDto(
+                        subject,
+                        text,
+                        admnistration.getFirstName() + " " + admnistration.getLastName(),
+                        admnistration.getEmail(),
+                        user.getFirstName() + " " + user.getLastName(),
+                        user.getEmail()
+                );
+
+                mailBean.sendMail(admnistration, mailDto);
+            }
         }
 
         return "Project canceled successfully";
@@ -896,28 +1009,49 @@ public class ProjectBean {
         }
         userProjectDao.remove(userProject);
 
+        taskBean.removeUserFromProjectTasks(userToRemove.getId(), project.getId());
+
         notificationBean.createRemovedNotification(systemProjectName, currentUser.getSystemUsername(), userToRemove);
 
-        String subject = "You have been removed from project " + project.getName();
-        String text = "<p>Dear " + userToRemove.getFirstName() + " " + userToRemove.getLastName() + ",</p>" +
-                "<p>We regret to inform you that you have been removed from the project <strong><a href=\"http://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong>.</p>" +
-                "<p>Reason: " + reason + "</p>" +
-                "<p>We apologize for any inconvenience this may cause.</p>" +
-                "<p>Best regards,<br>ILM Management Team</p>";
+        UserEntity admnistration = userDao.findBySystemUsername("admnistration");
+        if (userToRemove.getLanguage() == LanguageENUM.ENGLISH) {
+            String subject = "You have been removed from project " + project.getName();
+            String text = "<p>Dear " + userToRemove.getFirstName() + " " + userToRemove.getLastName() + ",</p>" +
+                    "<p>We regret to inform you that you have been removed from the project <strong><a href=\"http://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong>.</p>" +
+                    "<p>Reason: " + reason + "</p>" +
+                    "<p>We apologize for any inconvenience this may cause.</p>" +
+                    "<p>Best regards,<br>ILM Management Team</p>";
 
-        MailDto mailDto = new MailDto(
-                subject,
-                text,
-                userDao.getFullNameBySystemUsername(currentUser.getSystemUsername()),
-                currentUser.getEmail(),
-                userToRemove.getFirstName() + " " + userToRemove.getLastName(),
-                userToRemove.getEmail()
-        );
+            MailDto mailDto = new MailDto(
+                    subject,
+                    text,
+                    userDao.getFullNameBySystemUsername(admnistration.getSystemUsername()),
+                    admnistration.getEmail(),
+                    userToRemove.getFirstName() + " " + userToRemove.getLastName(),
+                    userToRemove.getEmail()
+            );
+            mailBean.sendMail(admnistration, mailDto);
 
+        } else if (userToRemove.getLanguage() == LanguageENUM.PORTUGUESE) {
+            String subject = "Foi removido do projeto " + project.getName();
+            String text = "<p>Caro(a) " + userToRemove.getFirstName() + " " + userToRemove.getLastName() + ",</p>" +
+                    "<p>Lamentamos informar que foi removido do projeto <strong><a href=\"http://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong>.</p>" +
+                    "<p>Razão: " + reason + "</p>" +
+                    "<p>Pedimos desculpa por qualquer inconveniente que isto possa causar.</p>" +
+                    "<p>Com os melhores cumprimentos,<br>Equipa de Gestão ILM</p>";
+
+            MailDto mailDto = new MailDto(
+                    subject,
+                    text,
+                    userDao.getFullNameBySystemUsername(admnistration.getSystemUsername()),
+                    admnistration.getEmail(),
+                    userToRemove.getFirstName() + " " + userToRemove.getLastName(),
+                    userToRemove.getEmail()
+            );
+
+            mailBean.sendMail(admnistration, mailDto);
+        }
         logBean.createMemberRemovedLog(project, currentUser, userToRemove.getFullName());
-
-        mailBean.sendMail(sessionId, mailDto);
-
         return "User removed successfully";
     }
 
@@ -926,34 +1060,62 @@ public class ProjectBean {
         UserEntity user = userDao.findById(userToAccept);
         UserEntity currentUser = userDao.findById(currentUserId);
         UserProjectEntity userProject = userProjectDao.findByUserIdAndProjectId(userToAccept, project.getId());
+
         if (userProject == null || userProject.getType() != UserInProjectTypeENUM.PENDING_BY_APPLIANCE) {
             throw new IllegalArgumentException("User is not pending to join the project");
         }
+
+        if (userProjectDao.getNumberOfUsersByProjectId(project.getId()) >= project.getMaxMembers()) {
+            throw new IllegalStateException("Project is full");
+        }
+
+        if (project.getStatus() == StateProjectENUM.CANCELED) {
+            throw new IllegalStateException("Project is canceled");
+        }
+
         userProject.setType(UserInProjectTypeENUM.MEMBER_BY_APPLIANCE);
         userProjectDao.merge(userProject);
 
         notificationBean.createApplianceAcceptedNotification(systemProjectName, currentUser.getSystemUsername(), user);
 
-        String subject = "Your application to project " + project.getName() + " has been accepted";
-        String text = "<p>Dear " + user.getFirstName() + " " + user.getLastName() + ",</p>" +
-                "<p>We are pleased to inform you that your application to join the project <strong><a href=\"http://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong> has been accepted.</p>" +
-                "<p>You can now start working on the project.</p>" +
-                "<p>Best regards,<br>ILM Management Team</p>";
+        UserEntity admnistration = userDao.findBySystemUsername("admnistration");
+        if(user.getLanguage() == LanguageENUM.ENGLISH) {
+            String subject = "Your application to project " + project.getName() + " has been accepted";
+            String text = "<p>Dear " + user.getFirstName() + " " + user.getLastName() + ",</p>" +
+                    "<p>We are pleased to inform you that your application to join the project <strong><a href=\"http://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong> has been accepted.</p>" +
+                    "<p>You can now start working on the project.</p>" +
+                    "<p>Best regards,<br>ILM Management Team</p>";
 
-        MailDto mailDto = new MailDto(
-                subject,
-                text,
-                userDao.getFullNameBySystemUsername(currentUser.getSystemUsername()),
-                currentUser.getEmail(),
-                user.getFirstName() + " " + user.getLastName(),
-                user.getEmail()
-        );
+            MailDto mailDto = new MailDto(
+                    subject,
+                    text,
+                    userDao.getFullNameBySystemUsername(admnistration.getSystemUsername()),
+                    admnistration.getEmail(),
+                    user.getFirstName() + " " + user.getLastName(),
+                    user.getEmail()
+            );
 
+            mailBean.sendMail(admnistration, mailDto);
+        } else if (user.getLanguage() == LanguageENUM.PORTUGUESE) {
+            String subject = "A sua candidatura ao projeto " + project.getName() + " foi aceite";
+            String text = "<p>Caro(a) " + user.getFirstName() + " " + user.getLastName() + ",</p>" +
+                    "<p>É com prazer que informamos que a sua candidatura ao projeto <strong><a href=\"http://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong> foi aceite.</p>" +
+                    "<p>Pode agora começar a trabalhar no projeto.</p>" +
+                    "<p>Com os melhores cumprimentos,<br>Equipa de Gestão ILM</p>";
+
+            MailDto mailDto = new MailDto(
+                    subject,
+                    text,
+                    userDao.getFullNameBySystemUsername(admnistration.getSystemUsername()),
+                    admnistration.getEmail(),
+                    user.getFirstName() + " " + user.getLastName(),
+                    user.getEmail()
+            );
+
+            mailBean.sendMail(admnistration, mailDto);
+
+        }
         logBean.createMemberAddedLog(project, currentUser, user.getFullName());
-
-
-        mailBean.sendMail(sessionId, mailDto);
-
         return "Application accepted successfully";
     }
 
@@ -969,23 +1131,44 @@ public class ProjectBean {
 
         notificationBean.createApplianceRejectedNotification(systemProjectName, currentUser.getSystemUsername(), user);
 
-        String subject = "Your application to project " + project.getName() + " has been rejected";
-        String text = "<p>Dear " + user.getFirstName() + " " + user.getLastName() + ",</p>" +
-                "<p>We regret to inform you that your application to join the project <strong><a href=\"http://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong> has been rejected.</p>" +
-                "<p>Reason: " + reason + "</p>" +
-                "<p>We apologize for any inconvenience this may cause.</p>" +
-                "<p>Best regards,<br>ILM Management Team</p>";
+        UserEntity admnistration = userDao.findBySystemUsername("admnistration");
+        if(user.getLanguage() == LanguageENUM.ENGLISH) {
+            String subject = "Your application to project " + project.getName() + " has been rejected";
+            String text = "<p>Dear " + user.getFirstName() + " " + user.getLastName() + ",</p>" +
+                    "<p>We regret to inform you that your application to join the project <strong><a href=\"http://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong> has been rejected.</p>" +
+                    "<p>Reason: " + reason + "</p>" +
+                    "<p>We apologize for any inconvenience this may cause.</p>" +
+                    "<p>Best regards,<br>ILM Management Team</p>";
 
-        MailDto mailDto = new MailDto(
-                subject,
-                text,
-                userDao.getFullNameBySystemUsername(currentUser.getSystemUsername()),
-                currentUser.getEmail(),
-                user.getFirstName() + " " + user.getLastName(),
-                user.getEmail()
-        );
+            MailDto mailDto = new MailDto(
+                    subject,
+                    text,
+                    userDao.getFullNameBySystemUsername(admnistration.getSystemUsername()),
+                    admnistration.getEmail(),
+                    user.getFirstName() + " " + user.getLastName(),
+                    user.getEmail()
+            );
 
-        mailBean.sendMail(sessionId, mailDto);
+            mailBean.sendMail(admnistration, mailDto);
+        } else if(user.getLanguage() == LanguageENUM.PORTUGUESE){
+            String subject = "A sua candidatura ao projeto " + project.getName() + " foi rejeitada";
+            String text = "<p>Caro(a) " + user.getFirstName() + " " + user.getLastName() + ",</p>" +
+                    "<p>Lamentamos informar que a sua candidatura ao projeto <strong><a href=\"http://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong> foi rejeitada.</p>" +
+                    "<p>Razão: " + reason + "</p>" +
+                    "<p>Pedimos desculpa por qualquer inconveniente que isto possa causar.</p>" +
+                    "<p>Com os melhores cumprimentos,<br>Equipa de Gestão ILM</p>";
+
+            MailDto mailDto = new MailDto(
+                    subject,
+                    text,
+                    userDao.getFullNameBySystemUsername(admnistration.getSystemUsername()),
+                    admnistration.getEmail(),
+                    user.getFirstName() + " " + user.getLastName(),
+                    user.getEmail()
+            );
+
+            mailBean.sendMail(admnistration, mailDto);
+        }
 
         return "Application rejected successfully";
     }
@@ -1011,6 +1194,7 @@ public class ProjectBean {
 
         ProjectMembersPageDto projectMembersPageDto = new ProjectMembersPageDto();
         projectMembersPageDto.setProjectMembers(members);
+        projectMembersPageDto.setMaxMembers(project.getMaxMembers());
         projectMembersPageDto.setProjectState(projectState);
         projectMembersPageDto.setProjectName(projectName);
         projectMembersPageDto.setProjectSkills(skills);
@@ -1060,7 +1244,6 @@ public class ProjectBean {
 
 
         return "User type changed successfully";
-
     }
 
 
@@ -1349,20 +1532,38 @@ public class ProjectBean {
             userProjectEntity.setType(UserInProjectTypeENUM.MEMBER);
             userProjectDao.persist(userProjectEntity);
             notificationBean.createProjectInsertedNotification(projectSystemName, userDao.getFullNameBySystemUsername(sender.getSystemUsername()), userReceiver, sender.getSystemUsername());
-            String subject = "You have been added to project " + project.getName();
-            String text = "<p>Dear " + userReceiver.getFirstName() + " " + userReceiver.getLastName() + ",</p>" +
-                    "<p>You have been added to the project <strong><a href=\"http://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong>.</p>" +
-                    "<p>Best regards,<br>ILM Management Team</p>";
+            UserEntity admnistration = userDao.findBySystemUsername("admnistration");
+            if(userReceiver.getLanguage() == LanguageENUM.ENGLISH) {
+                String subject = "You have been added to project " + project.getName();
+                String text = "<p>Dear " + userReceiver.getFirstName() + " " + userReceiver.getLastName() + ",</p>" +
+                        "<p>You have been added to the project <strong><a href=\"http://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong>.</p>" +
+                        "<p>Best regards,<br>ILM Management Team</p>";
 
-            MailDto mailDto = new MailDto(
-                    subject,
-                    text,
-                    userDao.getFullNameBySystemUsername(sender.getSystemUsername()),
-                    sender.getEmail(),
-                    userReceiver.getFirstName() + " " + userReceiver.getLastName(),
-                    userReceiver.getEmail()
-            );
-            mailBean.sendMail(sessionDao.findSessionIdByUserId(sender.getId()), mailDto);
+                MailDto mailDto = new MailDto(
+                        subject,
+                        text,
+                        userDao.getFullNameBySystemUsername(admnistration.getSystemUsername()),
+                        admnistration.getEmail(),
+                        userReceiver.getFirstName() + " " + userReceiver.getLastName(),
+                        userReceiver.getEmail()
+                );
+                mailBean.sendMail(admnistration, mailDto);
+            } else if (userReceiver.getLanguage() == LanguageENUM.PORTUGUESE) {
+                String subject = "Foi adicionado ao projeto " + project.getName();
+                String text = "<p>Caro(a) " + userReceiver.getFirstName() + " " + userReceiver.getLastName() + ",</p>" +
+                        "<p>Foi adicionado ao projeto <strong><a href=\"http://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong>.</p>" +
+                        "<p>Com os melhores cumprimentos,<br>Equipa de Gestão ILM</p>";
+
+                MailDto mailDto = new MailDto(
+                        subject,
+                        text,
+                        userDao.getFullNameBySystemUsername(admnistration.getSystemUsername()),
+                        admnistration.getEmail(),
+                        userReceiver.getFirstName() + " " + userReceiver.getLastName(),
+                        userReceiver.getEmail()
+                );
+                mailBean.sendMail(admnistration, mailDto);
+            }
         }
 
         project.setMaxMembers(projectCreationMembersDto.getMaxMembers());
@@ -1384,21 +1585,40 @@ public class ProjectBean {
 
         notificationDao.removeByProjectIdAndReceptorAndType(project.getSystemName(), userToRemove.getId(), NotificationTypeENUM.INVITE);
 
-        String subject = "Invitation to project " + project.getName() + " removed";
-        String text = "<p>Dear " + userToRemove.getFirstName() + " " + userToRemove.getLastName() + ",</p>" +
-                "<p>We regret to inform you that the invitation to join the project <strong><a href=\"http://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong> has been removed.</p>" +
-                "<p>Best regards,<br>ILM Management Team</p>";
+        UserEntity admnistration = userDao.findBySystemUsername("admnistration");
+        if(userToRemove.getLanguage() == LanguageENUM.ENGLISH) {
+            String subject = "Invitation to project " + project.getName() + " removed";
+            String text = "<p>Dear " + userToRemove.getFirstName() + " " + userToRemove.getLastName() + ",</p>" +
+                    "<p>We regret to inform you that the invitation to join the project <strong><a href=\"http://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong> has been removed.</p>" +
+                    "<p>Best regards,<br>ILM Management Team</p>";
 
-        MailDto mailDto = new MailDto(
-                subject,
-                text,
-                userDao.getFullNameBySystemUsername(currentUser.getSystemUsername()),
-                currentUser.getEmail(),
-                userToRemove.getFirstName() + " " + userToRemove.getLastName(),
-                userToRemove.getEmail()
-        );
+            MailDto mailDto = new MailDto(
+                    subject,
+                    text,
+                    userDao.getFullNameBySystemUsername(admnistration.getSystemUsername()),
+                    admnistration.getEmail(),
+                    userToRemove.getFirstName() + " " + userToRemove.getLastName(),
+                    userToRemove.getEmail()
+            );
 
-        mailBean.sendMail(sessionId, mailDto);
+            mailBean.sendMail(admnistration, mailDto);
+        } else if (userToRemove.getLanguage() == LanguageENUM.PORTUGUESE) {
+            String subject = "Convite para o projeto " + project.getName() + " removido";
+            String text = "<p>Caro(a) " + userToRemove.getFirstName() + " " + userToRemove.getLastName() + ",</p>" +
+                    "<p>Lamentamos informar que o convite para se juntar ao projeto <strong><a href=\"http://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong> foi removido.</p>" +
+                    "<p>Com os melhores cumprimentos,<br>Equipa de Gestão ILM</p>";
+
+            MailDto mailDto = new MailDto(
+                    subject,
+                    text,
+                    userDao.getFullNameBySystemUsername(admnistration.getSystemUsername()),
+                    admnistration.getEmail(),
+                    userToRemove.getFirstName() + " " + userToRemove.getLastName(),
+                    userToRemove.getEmail()
+            );
+
+            mailBean.sendMail(admnistration, mailDto);
+        }
 
         return "Invitation removed successfully";
     }
@@ -1435,7 +1655,7 @@ public class ProjectBean {
         return true;
     }
 
-    public String leaveProject(int userId, String projectSystemName, String reason){
+    public String leaveProject(int userId, String projectSystemName, String reason) {
         ProjectEntity project = projectDao.findBySystemName(projectSystemName);
         UserEntity user = userDao.findById(userId);
         UserProjectEntity userProject = userProjectDao.findByUserIdAndProjectId(userId, project.getId());
@@ -1447,9 +1667,13 @@ public class ProjectBean {
         }
         userProjectDao.remove(userProject);
 
+        taskBean.removeUserFromProjectTasks(userId, project.getId());
+
         List<UserEntity> teamManagers = userProjectDao.findCreatorsAndManagersByProjectId(project.getId());
+        UserEntity admnistration = userDao.findBySystemUsername("admnistration");
         for (UserEntity teamManager : teamManagers) {
             notificationBean.createLeftProjectNotification(projectSystemName, user.getSystemUsername(), teamManager);
+            if(teamManager.getLanguage() == LanguageENUM.ENGLISH){
             String subject = "User " + user.getFullName() + " left project " + project.getName();
             String text = "<p>Dear " + teamManager.getFullName() + ",</p>" +
                     "<p>We regret to inform you that user <strong>" + user.getFullName() + "</strong> has left the project <strong><a href=\"http://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong>.</p>" +
@@ -1459,12 +1683,29 @@ public class ProjectBean {
             MailDto mailDto = new MailDto(
                     subject,
                     text,
-                    userDao.getFullNameBySystemUsername(user.getSystemUsername()),
-                    user.getEmail(),
+                    userDao.getFullNameBySystemUsername(admnistration.getSystemUsername()),
+                    admnistration.getEmail(),
                     teamManager.getFullName(),
                     teamManager.getEmail()
             );
-            mailBean.sendMail(sessionDao.findSessionIdByUserId(user.getId()), mailDto);
+            mailBean.sendMail(admnistration, mailDto);
+        } else if(teamManager.getLanguage() == LanguageENUM.PORTUGUESE){
+            String subject = "Utilizador " + user.getFullName() + " saiu do projeto " + project.getName();
+            String text = "<p>Caro(a) " + teamManager.getFullName() + ",</p>" +
+                    "<p>Lamentamos informar que o utilizador <strong>" + user.getFullName() + "</strong> saiu do projeto <strong><a href=\"http://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong>.</p>" +
+                    "<p>Razão: " + reason + "</p>" +
+                    "<p>Pedimos desculpa por qualquer inconveniente que isto possa causar.</p>" +
+                    "<p>Com os melhores cumprimentos,<br>Equipa de Gestão ILM</p>";
+            MailDto mailDto = new MailDto(
+                    subject,
+                    text,
+                    userDao.getFullNameBySystemUsername(admnistration.getSystemUsername()),
+                    admnistration.getEmail(),
+                    teamManager.getFullName(),
+                    teamManager.getEmail()
+            );
+            mailBean.sendMail(admnistration, mailDto);
+        }
         }
 
         logBean.createMemberLeftLog(project, user);
@@ -1473,6 +1714,6 @@ public class ProjectBean {
 
     }
 
-    }
+}
 
 

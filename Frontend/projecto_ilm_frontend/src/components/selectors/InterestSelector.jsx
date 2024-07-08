@@ -11,8 +11,9 @@ import {
 } from "react-bootstrap";
 import { getInterests } from "../../utilities/services";
 import { useParams } from "react-router-dom";
-import InterestCard from "./InterestCard"; // Import the new InterestCard component
-import "./InterestSelector.css"; // Ensure the path is correct
+import InterestCard from "./InterestCard"; 
+import "./InterestSelector.css"; 
+import { Trans, t } from "@lingui/macro";
 
 const InterestSelector = ({
   label,
@@ -140,7 +141,7 @@ const InterestSelector = ({
               borderColor: "#f39c12",
             }}
           >
-            Add
+            <Trans>Add</Trans>
           </Button>
         </InputGroup>
         {suggestions.length > 0 && (
@@ -166,9 +167,9 @@ const InterestSelector = ({
         <Row>
           {selectedInterests.length === 0 ? (
             <Col>
-              {label === "Interests:"
-                ? "No interests added yet."
-                : "No keyword added yet."}
+              {label === (t`Interests:`)
+                ? (t`No interests added yet.`)
+                : (t`No keyword added yet.`)}
             </Col>
           ) : (
             selectedInterests.map((interest) => (

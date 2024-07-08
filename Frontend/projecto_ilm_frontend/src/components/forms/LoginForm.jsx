@@ -5,6 +5,7 @@ import { useMediaQuery } from "react-responsive";
 import { useState } from "react";
 import { loginUser } from "../../utilities/services";
 import { useAuth } from "../../utilities/AuthContext";
+import { Trans, t } from "@lingui/macro";
 
 export default function LoginForm({ setShowAlert, setIsModalActive }) {
   const navigate = useNavigate();
@@ -15,23 +16,29 @@ export default function LoginForm({ setShowAlert, setIsModalActive }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    loginUser(email, password).then((response) => {
-      if (response.status === 200) {
-        // Atualizar o estado de autenticação
-        setIsAuthenticated(true);
-
-        if (response.data && response.data.auxiliarToken) {
-          navigate(`/create-profile/${response.data.auxiliarToken}`);
+    loginUser(email, password)
+      .then((response) => {
+        if (response.status === 200) {
+          // Atualizar o estado de autenticação
+          setIsAuthenticated(true);
+  
+          if (response.data && response.data.auxiliarToken) {
+            navigate(`/create-profile/${response.data.auxiliarToken}`);
+          } else {
+            if (response.data.hasProjects) {
+              navigate("/myprojects");
+            } else {
+              navigate("/projects");
+            }
+          }
         } else {
-          navigate("/projects");
+          setShowAlert(true);
         }
-      } else {
+      })
+      .catch((error) => {
+        console.error("Error during login process", error);
         setShowAlert(true);
-      }
-    }).catch((error) => {
-      console.error("Error during login process", error);
-      setShowAlert(true);
-    });
+      });
   };
 
   return (
@@ -67,7 +74,7 @@ export default function LoginForm({ setShowAlert, setIsModalActive }) {
               id="register-button-login"
               onClick={() => navigate("/register")}
             >
-              Register
+              <Trans>Register</Trans>
             </button>
 
             <button type="submit" className="submit-button" id="login-button">
@@ -75,22 +82,7 @@ export default function LoginForm({ setShowAlert, setIsModalActive }) {
             </button>
           </div>
           <div id="forgot-pass-div" onClick={() => setIsModalActive(true)}>
-            Forgot your password
-          </div>
-          <div id="line-or-div">
-            <div className="or-line-register" id="or-left-line">
-              <hr />
-            </div>
-            <div>or</div>
-            <div className="or-line-register" id="or-right-line">
-              <hr />
-            </div>
-          </div>
-          <div id="sign-up-with">
-            <div>Sign up with:</div>
-            <div id="sign-up-with-icons">
-              <i className="fab fa-google fa-lg"></i>
-            </div>
+            <Trans>Forgot your password</Trans>
           </div>
         </div>
       </form>

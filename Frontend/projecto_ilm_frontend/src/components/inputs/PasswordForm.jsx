@@ -1,6 +1,7 @@
 import "./InputForm.css";
 import { useEffect, useState } from "react";
 import { Tooltip, OverlayTrigger } from "react-bootstrap";
+import { Trans, t } from "@lingui/macro";
 
 export default function PasswordForm({
    label,
@@ -26,15 +27,15 @@ export default function PasswordForm({
    const renderTooltip = (props) => (
       <Tooltip id="password-tooltip" {...props}>
          <div>
-            <p>Password must contain:</p>
+            <p><Trans>Password must contain:</Trans></p>
             <ul>
-               <li className={conditionsMet.upper ? "text-success" : "text-danger"}>At least one uppercase letter</li>
-               <li className={conditionsMet.lower ? "text-success" : "text-danger"}>At least one lowercase letter</li>
-               <li className={conditionsMet.number ? "text-success" : "text-danger"}>At least one number</li>
+               <li className={conditionsMet.upper ? "text-success" : "text-danger"}><Trans>At least one uppercase letter</Trans></li>
+               <li className={conditionsMet.lower ? "text-success" : "text-danger"}><Trans>At least one lowercase letter</Trans></li>
+               <li className={conditionsMet.number ? "text-success" : "text-danger"}><Trans>At least one number</Trans></li>
                <li className={conditionsMet.special ? "text-success" : "text-danger"}>
-                  At least one special character (!@#$%^&*)
+               <Trans>At least one special character (!@#$%^&*)</Trans>
                </li>
-               <li className={conditionsMet.length ? "text-success" : "text-danger"}>Minimum 8 characters</li>
+               <li className={conditionsMet.length ? "text-success" : "text-danger"}><Trans>Minimum 8 characters</Trans></li>
             </ul>
          </div>
       </Tooltip>

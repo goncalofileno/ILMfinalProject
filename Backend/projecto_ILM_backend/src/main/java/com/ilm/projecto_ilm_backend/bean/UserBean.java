@@ -83,8 +83,11 @@ public class UserBean {
     @Inject
     ProjectBean projectBean;
 
+    @Inject
+    UserProjectDao userProjectDao;
 
-    private static final int NUMBER_OF_USERS_PER_PAGE=6;
+
+    private static final int NUMBER_OF_USERS_PER_PAGE = 6;
     /**
      * The logger used to log information, warning and error messages.
      */
@@ -96,6 +99,40 @@ public class UserBean {
      */
     public void createDefaultUsersIfNotExistent() throws MessagingException, UnsupportedEncodingException {
         if (userDao.findById(1) == null) {
+
+            UserEntity user = new UserEntity();
+            user.setUsername("admnistration");
+            user.setSystemUsername("admnistration");
+            user.setPassword(HashUtil.toSHA256("admnistration"));
+            user.setEmail("admnistration@iml.com");
+            user.setFirstName("Admnistration");
+            user.setLastName("ILM");
+            user.setType(UserTypeENUM.ADMIN);
+            user.setRegistrationDate(LocalDateTime.now());
+            user.setMailConfirmed(true);
+            user.setProfileCreated(true);
+            user.setPhoto("http://localhost:8080/images/users/4/profile_picture.png?t=1720364913202");
+            user.setAvatarPhoto("http://localhost:8080/images/users/4/profile_picture.png?t=1720364913202");
+            user.setThumbnailPhoto("http://localhost:8080/images/users/4/profile_picture.png?t=1720364913202");
+            LabEntity lab = new LabEntity();
+            lab = labDao.findbyLocal(WorkLocalENUM.COIMBRA);
+            List<InterestEntity> interests = interestDao.findAll();
+            user.setInterests(interests);
+            List<SkillEntity> skills = skillDao.findAll();
+            user.setSkills(skills);
+            user.setLab(lab);
+            user.setPublicProfile(false);
+            user.setDeleted(false);
+            user.setTutorial(false);
+            user.setLanguage(LanguageENUM.ENGLISH);
+
+            userDao.persist(user);
+
+
+        }
+
+        if (userDao.findById(2) == null) {
+
             UserEntity user = new UserEntity();
             user.setUsername("admin");
             user.setSystemUsername("admin");
@@ -120,11 +157,15 @@ public class UserBean {
             user.setPublicProfile(false);
             user.setDeleted(false);
             user.setTutorial(false);
+            user.setLanguage(LanguageENUM.ENGLISH);
 
             userDao.persist(user);
+
+
         }
 
-        if (userDao.findById(2) == null) {
+        if (userDao.findById(3) == null) {
+
             UserEntity user = new UserEntity();
             user.setUsername("user");
             user.setSystemUsername("user");
@@ -149,11 +190,12 @@ public class UserBean {
             user.setPublicProfile(false);
             user.setDeleted(false);
             user.setTutorial(false);
+            user.setLanguage(LanguageENUM.ENGLISH);
 
             userDao.persist(user);
         }
 
-        if (userDao.findById(3) == null) {
+        if(userDao.findById(4) == null) {
             UserEntity user = new UserEntity();
             user.setUsername("guest");
             user.setPassword("guest");
@@ -167,17 +209,20 @@ public class UserBean {
             user.setDeleted(false);
             user.setTutorial(false);
             user.setPublicProfile(false);
+            user.setLanguage(LanguageENUM.ENGLISH);
+
+            userDao.persist(user);
         }
 
-        for (int i=3;i<19;i++){
+        for (int i = 5; i < 19; i++) {
             if (userDao.findById(i) == null) {
                 UserEntity user = new UserEntity();
-                user.setUsername("user"+i);
-                user.setSystemUsername("user"+i);
+                user.setUsername("user" + i);
+                user.setSystemUsername("user" + i);
                 user.setPassword(HashUtil.toSHA256("user"));
-                user.setEmail("user"+i+"@user.com");
-                user.setFirstName("User"+i);
-                user.setLastName("User"+i);
+                user.setEmail("user" + i + "@user.com");
+                user.setFirstName("User" + i);
+                user.setLastName("User" + i);
                 user.setType(UserTypeENUM.STANDARD_USER);
                 user.setRegistrationDate(LocalDateTime.now());
                 user.setMailConfirmed(true);
@@ -195,6 +240,7 @@ public class UserBean {
                 user.setPublicProfile(false);
                 user.setDeleted(false);
                 user.setTutorial(false);
+                user.setLanguage(LanguageENUM.ENGLISH);
 
                 userDao.persist(user);
             }
@@ -405,7 +451,6 @@ public class UserBean {
             return false;
         }
     }
-
 
 
     /**
@@ -705,44 +750,44 @@ public class UserBean {
         return false;
     }
 
-    public UserProjectCreationInfoDto getUserProjectCreationInfoDto(String sessionId, String systemProjectName, RejectedIdsDto rejectedUsersDto, int page, String labName, String keyword){
+    public UserProjectCreationInfoDto getUserProjectCreationInfoDto(String sessionId, String systemProjectName, RejectedIdsDto rejectedUsersDto, int page, String labName, String keyword) {
         int userId = sessionDao.findBySessionId(sessionId).getUser().getId();
         LabEntity lab;
         if (labName == null || labName.equals("")) lab = null;
         else lab = labDao.findbyLocal(WorkLocalENUM.valueOf(labName));
         if (keyword.equals("")) keyword = null;
 
-        List<String> skillsInProject=projectDao.getSkillsBySystemName(systemProjectName);
-        List<Object[]> userInfo= userDao.getUserProjectCreationDto(userId, rejectedUsersDto.getRejectedIds(),NUMBER_OF_USERS_PER_PAGE,page, lab, keyword,skillsInProject);
+        List<String> skillsInProject = projectDao.getSkillsBySystemName(systemProjectName);
+        List<Object[]> userInfo = userDao.getUserProjectCreationDto(userId, rejectedUsersDto.getRejectedIds(), NUMBER_OF_USERS_PER_PAGE, page, lab, keyword, skillsInProject);
 
-        ArrayList<UserProjectCreationDto> userProjectCreationDtos= new ArrayList<>();
-        UserProjectCreationInfoDto userProjectCreationInfoDto=new UserProjectCreationInfoDto();
+        ArrayList<UserProjectCreationDto> userProjectCreationDtos = new ArrayList<>();
+        UserProjectCreationInfoDto userProjectCreationInfoDto = new UserProjectCreationInfoDto();
 
-        for(Object[] user: userInfo){
-            UserProjectCreationDto userProjectCreationDto= new UserProjectCreationDto();
+        for (Object[] user : userInfo) {
+            UserProjectCreationDto userProjectCreationDto = new UserProjectCreationDto();
 
             userProjectCreationDto.setLab((WorkLocalENUM) user[0]);
-            userProjectCreationDto.setName((String) user[1]+" "+(String) user[2]);
+            userProjectCreationDto.setName((String) user[1] + " " + (String) user[2]);
             userProjectCreationDto.setPhoto((String) user[3]);
             userProjectCreationDto.setId((int) user[4]);
 
-            List<SkillEntity> skillsEntities= userDao.getUserSkills((int) user[4], skillsInProject);
-            List<SkillDto> skills= new ArrayList<>();
-            for(SkillEntity skill: skillsEntities){
-                if(!skill.isDeleted()) {
+            List<SkillEntity> skillsEntities = userDao.getUserSkills((int) user[4], skillsInProject);
+            List<SkillDto> skills = new ArrayList<>();
+            for (SkillEntity skill : skillsEntities) {
+                if (!skill.isDeleted()) {
                     SkillDto skillDto = new SkillDto();
                     skillDto.setId(skill.getId());
                     skillDto.setName(skill.getName());
                     skillDto.setType(skill.getType().toString());
-                    skillDto.setInProject(projectDao.isSkillInProject(systemProjectName,skill.getName()));
+                    skillDto.setInProject(projectDao.isSkillInProject(systemProjectName, skill.getName()));
                     skills.add(skillDto);
                 }
             }
             userProjectCreationDto.setSkills(skills);
             userProjectCreationDto.setSystemUsername((String) user[5]);
             userProjectCreationDtos.add(userProjectCreationDto);
-            int numberOfUsers =userDao.getNumberUserProjectCreationDto(userId, rejectedUsersDto.getRejectedIds(),lab, keyword);
-            int maxPageNumber=calculateMaximumPageUsers(numberOfUsers,NUMBER_OF_USERS_PER_PAGE);
+            int numberOfUsers = userDao.getNumberUserProjectCreationDto(userId, rejectedUsersDto.getRejectedIds(), lab, keyword);
+            int maxPageNumber = calculateMaximumPageUsers(numberOfUsers, NUMBER_OF_USERS_PER_PAGE);
             System.out.println("max page: " + maxPageNumber);
             System.out.println("number of users: " + numberOfUsers);
 
@@ -759,11 +804,35 @@ public class UserBean {
 
     public UserInProjectTypeENUM getUserInProjectENUM(String sessionId, String projectSystemName) {
         UserEntity user = getUserBySessionId(sessionId);
-        int projectId=projectDao.getIdBySystemName(projectSystemName);
+        int projectId = projectDao.getIdBySystemName(projectSystemName);
         if (user != null) {
-            return projectBean.getUserTypeInProject(user.getId(),projectId);
+            return projectBean.getUserTypeInProject(user.getId(), projectId);
         }
         return null;
+    }
+
+    public boolean updateLanguage(String sessionId, LanguageENUM language) {
+        UserEntity user = getUserBySessionId(sessionId);
+
+        if (language != LanguageENUM.ENGLISH && language != LanguageENUM.PORTUGUESE) {
+            return false;
+        }
+
+        if (user != null) {
+            user.setLanguage(language);
+            userDao.merge(user);
+            return true;
+        }
+        return false;
+    }
+
+    //checks if the user have projects where its creator, manager or member
+    public boolean userHasProjects(String sessionId) {
+        UserEntity user = getUserBySessionId(sessionId);
+        if (user != null) {
+            return userProjectDao.userHasProjects(user.getId());
+        }
+        return false;
     }
 
 

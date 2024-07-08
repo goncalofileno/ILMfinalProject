@@ -8,6 +8,8 @@ import { getMyProjectsTable } from "../utilities/services";
 import { useLocation, useNavigate } from "react-router-dom";
 import { formatLab } from "../utilities/converters";
 import { useMediaQuery } from "react-responsive";
+import { Trans, t } from "@lingui/macro";
+import Cookies from "js-cookie";
 
 export default function MyProjectsPage() {
   const query = new URLSearchParams(useLocation().search);
@@ -34,6 +36,7 @@ export default function MyProjectsPage() {
   const [keyword, setKeyword] = useState(query.get("search_query") || "");
   const [navigateTableProjectsTrigger, setNavigateTableProjectsTrigger] =
     useState(false);
+    const[currentLanguage, setCurrentLanguage] = useState(Cookies.get("user-language") || "ENGLISH");
 
   useEffect(() => {
     getMyProjectsTable(
@@ -62,7 +65,7 @@ export default function MyProjectsPage() {
     const queryParams = new URLSearchParams(queryParamsObj).toString();
 
     navigate(`/myprojects?${queryParams}`);
-  }, [navigateTableProjectsTrigger]);
+  }, [navigateTableProjectsTrigger, currentLanguage]);
 
   const handlePreviousClick = () => {
     setCurrentPage(currentPage - 1);
@@ -75,7 +78,7 @@ export default function MyProjectsPage() {
   };
   return (
     <>
-      <AppNavbar setIsAsideVisible={setIsAsideVisible} pageWithAside={true} />
+      <AppNavbar setIsAsideVisible={setIsAsideVisible} pageWithAside={true} setCurrentLanguage={setCurrentLanguage}/>
       <AsideMyProjectsPage
         selectedLab={selectedLab}
         setSelectedLab={setSelectedLab}
@@ -101,8 +104,8 @@ export default function MyProjectsPage() {
         }
       >
         <h1 className="page-title" style={{ marginBottom: "0px" }}>
-          <span className="app-slogan-1">My </span>
-          <span className="app-slogan-2">Projects</span>
+          <span className="app-slogan-1"><Trans id="o-my-projects">My</Trans> </span>
+          <span className="app-slogan-2"><Trans>Projects</Trans></span>
         </h1>
         <InputGroup
           className="mail-filters"
@@ -115,7 +118,7 @@ export default function MyProjectsPage() {
         >
           <Form.Control
             type="text"
-            placeholder="Search for project name"
+            placeholder={t`Search for project name`}
             style={{
               borderRadius: "10px",
               cursor: "text",
@@ -127,25 +130,25 @@ export default function MyProjectsPage() {
             onChange={(e) => setKeyword(e.target.value)}
           />
           <div className="flex-btn-row-mail-table">
-            <Button
-              variant="primary"
-              onClick={() => {
-                setNavigateTableProjectsTrigger(!navigateTableProjectsTrigger);
-              }}
-              id="primary-btn-boot"
-            >
-              Search
-            </Button>
-            <Button
-              variant="secondary"
-              onClick={() => {
-                setKeyword("");
-                setNavigateTableProjectsTrigger(!navigateTableProjectsTrigger);
-              }}
-              style={{ borderRadius: "10px" }}
-            >
-              Clear Search
-            </Button>
+          <Button
+            variant="primary"
+            onClick={() => {
+              setNavigateTableProjectsTrigger(!navigateTableProjectsTrigger);
+            }}
+            id="primary-btn-boot"
+          >
+            <Trans>Search</Trans>
+          </Button>
+          <Button
+            variant="secondary"
+            onClick={() => {
+              setKeyword("");
+              setNavigateTableProjectsTrigger(!navigateTableProjectsTrigger);
+            }}
+            style={{ borderRadius: "10px" }}
+          >
+            <Trans>Clear Search</Trans>
+          </Button>
           </div>
         </InputGroup>
         <Container fluid className="my-projects-container">

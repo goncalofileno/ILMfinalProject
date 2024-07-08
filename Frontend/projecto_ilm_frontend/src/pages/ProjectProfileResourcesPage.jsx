@@ -1,7 +1,7 @@
 import AppNavbar from "../components/headers/AppNavbar";
 import ProjectTabs from "../components/headers/ProjectTabs";
-import { Row, Col, Form, InputGroup, Button } from "react-bootstrap";
-import { useParams } from "react-router-dom";
+import { Row, Col, Form, InputGroup, Button, Alert } from "react-bootstrap";
+import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import ResourcesProjectCreationTable from "../components/tables/ResourcesProjectCreationTable";
@@ -13,11 +13,11 @@ import {
   addInitialResources,
   getProjectResources,
 } from "../utilities/services";
-import { useNavigate } from "react-router-dom";
 import AddResourceModal from "../components/modals/AddResourceModal";
 import StandardModal from "../components/modals/StandardModal";
 import { Alert } from "react-bootstrap";
 import { useMediaQuery } from "react-responsive";
+import { Trans, t } from "@lingui/macro";
 
 export default function ProjectProfileResourcesPage() {
   const { systemProjectName } = useParams();
@@ -57,9 +57,7 @@ export default function ProjectProfileResourcesPage() {
   }, [yourResources]);
 
   useEffect(() => {
-    console.log("resource.lenght " + yourResources.length);
     if (yourResources.length === 0) {
-      console.log("here");
       getProjectResources(systemProjectName)
         .then((response) => response.json())
         .then((data) => {
@@ -87,7 +85,6 @@ export default function ProjectProfileResourcesPage() {
           )
             .then((response) => response.json())
             .then((data) => {
-              console.log(data);
               setResources(data.tableResources);
               setTotalPages(data.maxPageNumber);
             });
@@ -112,7 +109,6 @@ export default function ProjectProfileResourcesPage() {
       )
         .then((response) => response.json())
         .then((data) => {
-          console.log(data);
           setResources(data.tableResources);
           setTotalPages(data.maxPageNumber);
         });
@@ -125,6 +121,7 @@ export default function ProjectProfileResourcesPage() {
         setSuppliers(data.suppliers);
       });
   }, []);
+
   useEffect(() => {
     const rejectedIdsDto = {
       rejectedIds: yourResources.map((resource) => resource.resourceSupplierId),
@@ -143,15 +140,13 @@ export default function ProjectProfileResourcesPage() {
     )
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         setResources(data.tableResources);
         setTotalPages(data.maxPageNumber);
       });
   }, [resourcesTableTrigger]);
+
   useEffect(() => {
     return () => {
-      // Clear the cookies you want to remove
-
       Cookies.set("yourResources", []);
       Cookies.remove("yourResources");
     };
@@ -200,11 +195,14 @@ export default function ProjectProfileResourcesPage() {
     addInitialResources(systemProjectName, rejectedIdsDto).then((response) => {
       if (response.status === 200) {
         setModalType("success");
-        setModalMessage("The resources have been saved successfully!");
+        setModalMessage(t`The resources have been saved successfully!`);
         setModalActive(true);
       }
     });
   };
+
+  const isProjectInactive = projectState === "CANCELED" || projectState === "READY";
+
   return (
     <>
       <AppNavbar />
@@ -219,15 +217,14 @@ export default function ProjectProfileResourcesPage() {
           typeOfUserSeingProject={userInProjectType}
           projectName={projectName}
         />
-
         <Row className="row-container2" style={{ marginTop: "0px" }}>
-          {projectState === "CANCELED" && (
+          {isProjectInactive && (
             <>
               <div className="background-disabled"></div>
               <Row>
                 <Col>
                   <Alert variant="danger" className="standard-modal">
-                    The project is canceled, and the chat is disabled.
+                    <Trans>The project is {projectState.toLowerCase()}, and you can't change the resources in the project.</Trans>
                   </Alert>
                 </Col>
               </Row>
@@ -244,18 +241,20 @@ export default function ProjectProfileResourcesPage() {
                   <InputGroup className="gap-10px">
                     <Form.Control
                       type="text"
-                      placeholder="Search for resource"
+                      placeholder={t`Search for resources`}
                       style={{ borderRadius: "10px", cursor: "text" }}
                       className="custom-focus"
                       value={keyword}
                       onChange={(e) => setKeyword(e.target.value)}
+                      disabled={isProjectInactive}
                     />
                     <Button
                       variant="primary"
                       id="primary-btn-boot"
                       onClick={() => setResourcesTableTrigger((prev) => !prev)}
+                      disabled={isProjectInactive}
                     >
-                      <i class="fas fa-search"></i>
+                      <i className="fas fa-search"></i>
                     </Button>
                     <Button
                       variant="secondary"
@@ -264,8 +263,9 @@ export default function ProjectProfileResourcesPage() {
                         setKeyword("");
                         setResourcesTableTrigger((prev) => !prev);
                       }}
+                      disabled={isProjectInactive}
                     >
-                      Clear
+                      <Trans>Clear</Trans>
                     </Button>
                   </InputGroup>
                 </Col>
@@ -279,9 +279,9 @@ export default function ProjectProfileResourcesPage() {
                       setBrand(e.target.value);
                       setResourcesTableTrigger((prev) => !prev);
                     }}
+                    disabled={isProjectInactive}
                   >
-                    {" "}
-                    <option value="">All Brands</option>
+                    <option value="">{t`All Brands`}</option>
                     {brands.map((brand, index) => (
                       <option key={index} value={brand}>
                         {brand}
@@ -296,9 +296,9 @@ export default function ProjectProfileResourcesPage() {
                       setSupplier(e.target.value);
                       setResourcesTableTrigger((prev) => !prev);
                     }}
+                    disabled={isProjectInactive}
                   >
-                    {" "}
-                    <option value="">All Suppliers</option>
+                    <option value="">{t`All Suppliers`}</option>
                     {suppliers.map((supplier, index) => (
                       <option key={index} value={supplier}>
                         {supplier}
@@ -328,7 +328,8 @@ export default function ProjectProfileResourcesPage() {
                     setResourcesTableTrigger={setResourcesTableTrigger}
                     setSelectedResource={setSelectedResource}
                     setSelectedResources={setSelectedResources}
-                  ></ResourcesProjectCreationTable>
+                    disabled={isProjectInactive}
+                  />
                 </Col>
                 <Col xs={1} sm={1}></Col>
               </Row>
@@ -384,7 +385,7 @@ export default function ProjectProfileResourcesPage() {
               >
                 <Col xs={1} sm={1}></Col>
                 <Col xs={11} sm={11}>
-                  <h4 className="h4-resources-project-creat">Your Resources</h4>
+                  <h4 className="h4-resources-project-creat"><Trans>Your Resources</Trans></h4>
                 </Col>
               </Row>
               <Row style={{ height: "83%" }}>
@@ -406,7 +407,8 @@ export default function ProjectProfileResourcesPage() {
                     setResourcesTableTrigger={setResourcesTableTrigger}
                     setSelectedResource={setSelectedResource}
                     setSelectedResources={setSelectedResources}
-                  ></YourResourcesProjectCreationTable>
+                    disabled={isProjectInactive}
+                  />
                 </Col>
               </Row>
             </Row>
@@ -441,7 +443,7 @@ export default function ProjectProfileResourcesPage() {
                   setIsModalActive(true);
                 }}
               >
-                Add Resource
+                <Trans>Add Resource</Trans>
               </button>
             </Col>
             <Col xs={1} sm={1} className="table-resources-pagination">
@@ -459,7 +461,7 @@ export default function ProjectProfileResourcesPage() {
                 style={{ width: "100%" }}
                 onClick={handleSubmit}
               >
-                Save Resources
+                <Trans>Save Resources</Trans>
               </button>
             </Col>
             <Col xs={1} sm={1}></Col>
@@ -478,13 +480,14 @@ export default function ProjectProfileResourcesPage() {
         setSelectedResources={setSelectedResources}
         setYourResources={setYourResources}
         setTableTrigger={setResourcesTableTrigger}
-      ></AddResourceModal>
+        disabled={isProjectInactive}
+      />
       <StandardModal
         modalType={modalType}
         message={modalMessage}
         modalActive={modalActive}
         setModalActive={setModalActive}
-      ></StandardModal>
+      />
     </>
   );
 }
