@@ -36,7 +36,6 @@ export default function ProjectCreationPage1() {
   const [warningType, setWarningType] = useState("");
   const [warningTxt, setWarningTxt] = useState("");
   const isTablet = useMediaQuery({ query: "(max-width: 991px)" });
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -194,7 +193,7 @@ export default function ProjectCreationPage1() {
         <Row className="project-creation-page">
           {isTablet && (
             <Row className="row-display" style={{ marginTop: "30px" }}>
-              <Col sm={5}>
+              <Col xs={6} sm={5}>
                 <InputForm
                   label={t`Project Name`}
                   value={projectName}
@@ -205,7 +204,7 @@ export default function ProjectCreationPage1() {
                   onBlurActive={true}
                 ></InputForm>
               </Col>
-              <Col sm={2}>
+              <Col xs={5} sm={2}>
                 <div className="lab-drop-down-div">
                   <label htmlFor="lab-drop-down" className="custom-label">
                     <Trans>Laboratory</Trans>
@@ -224,7 +223,7 @@ export default function ProjectCreationPage1() {
                   </Form.Control>
                 </div>
               </Col>
-              <Col sm={2}>
+              <Col xs={6} sm={2}>
                 <div className="lab-drop-down-div">
                   <label htmlFor="start-date" className="custom-label">
                     <Trans>Start Date</Trans>
@@ -239,7 +238,7 @@ export default function ProjectCreationPage1() {
                   ></input>
                 </div>
               </Col>
-              <Col sm={2}>
+              <Col xs={5} sm={2}>
                 <div className="lab-drop-down-div">
                   <label htmlFor="end-date" className="custom-label">
                     <Trans>End Date</Trans>

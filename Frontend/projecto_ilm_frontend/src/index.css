@@ -323,3 +323,10 @@ code {
   width: 100%;
   z-index: 100;
 }
+
+#column-quantity {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
