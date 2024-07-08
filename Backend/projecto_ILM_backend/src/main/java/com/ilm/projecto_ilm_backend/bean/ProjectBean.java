@@ -1007,6 +1007,11 @@ public class ProjectBean {
         if (userProject.getType() == UserInProjectTypeENUM.MEMBER && !userProjectDao.isUserCreatorOrManager(currentUserId, project.getId())) {
             throw new UnauthorizedAccessException("Only the creator or a manager can remove a member");
         }
+
+        if (project.getStatus() == StateProjectENUM.CANCELED || project.getStatus() == StateProjectENUM.READY) {
+            throw new IllegalStateException("Project is canceled or ready");
+        }
+
         userProjectDao.remove(userProject);
 
         taskBean.removeUserFromProjectTasks(userToRemove.getId(), project.getId());
@@ -1069,8 +1074,8 @@ public class ProjectBean {
             throw new IllegalStateException("Project is full");
         }
 
-        if (project.getStatus() == StateProjectENUM.CANCELED) {
-            throw new IllegalStateException("Project is canceled");
+        if (project.getStatus() == StateProjectENUM.CANCELED || project.getStatus() == StateProjectENUM.READY) {
+            throw new IllegalStateException("Project is canceled or ready");
         }
 
         userProject.setType(UserInProjectTypeENUM.MEMBER_BY_APPLIANCE);
@@ -1124,9 +1129,15 @@ public class ProjectBean {
         UserEntity user = userDao.findById(userToReject);
         UserEntity currentUser = userDao.findById(currentUserId);
         UserProjectEntity userProject = userProjectDao.findByUserIdAndProjectId(userToReject, project.getId());
+
         if (userProject == null || userProject.getType() != UserInProjectTypeENUM.PENDING_BY_APPLIANCE) {
             throw new IllegalArgumentException("User is not pending to join the project");
         }
+
+        if (project.getStatus() == StateProjectENUM.CANCELED || project.getStatus() == StateProjectENUM.READY) {
+            throw new IllegalStateException("Project is canceled or ready");
+        }
+
         userProjectDao.remove(userProject);
 
         notificationBean.createApplianceRejectedNotification(systemProjectName, currentUser.getSystemUsername(), user);
@@ -1356,6 +1367,15 @@ public class ProjectBean {
     public boolean updateProject(ProjectCreationDto projectUpdateDto, String sessionId, String systemProjectName) {
 
         UserEntity user = userDao.findById(sessionDao.findUserIdBySessionId(sessionId));
+        ProjectEntity projectCheck = projectDao.findBySystemName(systemProjectName);
+
+        if(projectCheck == null) return false;
+
+        if (!userProjectDao.isUserCreatorOrManager(user.getId(), projectCheck.getId())) {
+            throw new UnauthorizedAccessException("Only the creator or a manager can update project details");
+        }
+
+        if(projectCheck.getStatus() == StateProjectENUM.CANCELED || projectCheck.getStatus() == StateProjectENUM.READY) return false;
 
         try {
             ProjectEntity project = projectDao.findBySystemName(systemProjectName);
