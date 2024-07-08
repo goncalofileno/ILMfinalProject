@@ -49,6 +49,12 @@
   filter: invert(100%);
 }
 
+@media (max-width: 768px) {
+  .nav-item label {
+    font-size: 12px;
+  }
+}
+
 .nav-right {
   display: flex;
   align-items: center;

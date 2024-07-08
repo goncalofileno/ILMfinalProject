@@ -20,7 +20,7 @@
 
 .bar-status {
   position: absolute;
-  z-index: 10000;
+  z-index: 999;
   transform: translate(10px, -23px);
   font-size: 16px;
   font-weight: 500;

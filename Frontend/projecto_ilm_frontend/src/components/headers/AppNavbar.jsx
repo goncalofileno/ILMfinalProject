@@ -18,7 +18,7 @@ import mailIcon from "../../resources/icons/navbar/mail-icon.png";
 import bellIcon from "../../resources/icons/navbar/notification-icon.png";
 import userProfileIcon from "../../resources/avatares/Avatar padrão.jpg";
 
-export default function AppNavbar({ setIsAsideVisible }) {
+export default function AppNavbar({ setIsAsideVisible, pageWithAside }) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [userImage, setUserImage] = useState(userProfileIcon);
@@ -146,27 +146,29 @@ export default function AppNavbar({ setIsAsideVisible }) {
   return (
     <div>
       <div className="app-navbar">
-        {!isMobile ? (
+        {!isMobile || !pageWithAside ? (
           <div
             className="logo"
             onClick={() => handleNavigation("/projects")}
           ></div>
         ) : (
-          <div className="flex-logo-hamb">
-            <div
-              className="logo"
-              onClick={() => handleNavigation("/projects")}
-            ></div>
+          pageWithAside && (
+            <div className="flex-logo-hamb">
+              <div
+                className="logo"
+                onClick={() => handleNavigation("/projects")}
+              ></div>
 
-            <div>
-              <button
-                className="hamb-btn"
-                onClick={() => setIsAsideVisible((prev) => !prev)}
-              >
-                <i class="fas fa-bars fa-2x"></i>
-              </button>
+              <div>
+                <button
+                  className="hamb-btn"
+                  onClick={() => setIsAsideVisible((prev) => !prev)}
+                >
+                  <i class="fas fa-bars fa-2x"></i>
+                </button>
+              </div>
             </div>
-          </div>
+          )
         )}
         <div className="nav-icons-wrapper">
           <div className="nav-icons">
@@ -270,12 +272,15 @@ export default function AppNavbar({ setIsAsideVisible }) {
             <div
               className={getNavItemClass("/myprojects")}
               onClick={() => handleNavigation("/myprojects")}
+              id="my-projects-nav-item"
             >
               <div
                 className="icon"
                 style={getNavIconStyle("/myprojects")}
               ></div>
-              <label>My Projects</label>
+              <label style={{ width: "65px", textAlign: "center" }}>
+                My Projects
+              </label>
             </div>
             <div
               className={getNavItemClass("/mail/inbox")}

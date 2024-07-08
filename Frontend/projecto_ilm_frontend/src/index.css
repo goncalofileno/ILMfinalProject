@@ -159,11 +159,61 @@ code {
   margin-top: 60px;
   padding-bottom: 30px;
 }
+@media (max-width: 768px) {
+  .ilm-pageb-noheight {
+    padding-bottom: 70px;
+  }
+}
+
 .ilm-page-mobile {
   background-color: rgb(245, 245, 245);
   margin-top: 60px;
   padding: 15px 30px;
   padding-bottom: 75px;
+}
+
+.ilm-page-mobile-my-projects {
+  background-color: rgb(245, 245, 245);
+  margin-top: 60px;
+  padding: 15px 30px;
+  padding-bottom: 75px;
+}
+
+@media (max-width: 768px) and (min-width: 577px) {
+  .ilm-page-mobile-my-projects {
+    height: 170vh;
+  }
+}
+
+@media (max-width: 576px) {
+  .page-small-mobile-my-projects {
+    height: 260vh;
+  }
+}
+
+.ilm-page-tablet-with-aside {
+  background-color: rgb(245, 245, 245);
+  top: 0%;
+  width: 85%;
+  margin-left: 15%;
+  margin-top: 60px;
+  padding-top: 15px;
+  padding-left: 40px;
+  padding-right: 40px;
+  border-top-left-radius: 100px;
+  position: relative;
+}
+
+@media (max-width: 1199px) {
+  .ilm-page-tablet-with-aside {
+    height: 130vh;
+  }
+}
+
+@media (max-width: 1000px) {
+  .ilm-page-tablet-with-aside {
+    height: 160vh;
+  }
 }
 .ilm-page2-noheight {
   background-color: rgb(255, 255, 255);
@@ -220,7 +270,7 @@ code {
 }
 
 .table-margin-top {
-  margin-top: 15px;
+  margin-top: 10px;
 }
 
 .page-title {

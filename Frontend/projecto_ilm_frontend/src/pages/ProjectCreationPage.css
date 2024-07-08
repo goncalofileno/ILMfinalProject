@@ -42,6 +42,15 @@
   padding: 10px 15px;
 }
 
+@media (max-width: 991px) {
+  .text-area-project-creation {
+    height: 230px;
+  }
+  .div-half-col {
+    width: 100%;
+  }
+}
+
 .text-area-project-creation:focus {
   outline: none;
   box-shadow: 0 0 5px 2px rgba(243, 156, 18, 0.5);

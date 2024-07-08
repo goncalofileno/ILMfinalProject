@@ -5,10 +5,13 @@ import { useEffect, useState } from "react";
 import { getAllResources } from "../utilities/services";
 import { useLocation, useNavigate } from "react-router-dom";
 import AddResourceModal from "../components/modals/AddResourceModal";
+import { useMediaQuery } from "react-responsive";
 
 export default function ResourcesPage() {
   const query = new URLSearchParams(useLocation().search);
   const navigate = useNavigate();
+  const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
+  const [isAsideVisible, setIsAsideVisible] = useState(false);
   const [resources, setResources] = useState([]);
   const [totalPages, setTotalPages] = useState(null);
   const [currentPage, setCurrentPage] = useState(
@@ -103,7 +106,7 @@ export default function ResourcesPage() {
   }, [navigateTableResourcesTrigger]);
   return (
     <>
-      <AppNavbar />
+      <AppNavbar setIsAsideVisible={setIsAsideVisible} pageWithAside={true} />
 
       <AddResourceModal
         isModalActive={isModalActive}
@@ -127,8 +130,12 @@ export default function ResourcesPage() {
         setTypeAsc={setTypeAsc}
         setBrandAsc={setBrandAsc}
         setSupplierAsc={setSupplierAsc}
+        isVisible={isAsideVisible}
       />
-      <div className="ilm-pageb-with-aside">
+      <div
+        className={isMobile ? "ilm-page-mobile" : "ilm-pageb-with-aside"}
+        onClick={() => isAsideVisible && setIsAsideVisible((prev) => !prev)}
+      >
         <h1 className="page-title">
           <span className="app-slogan-1">All </span>
           <span className="app-slogan-2">Resources</span>

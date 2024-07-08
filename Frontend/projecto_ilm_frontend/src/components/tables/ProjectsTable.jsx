@@ -4,8 +4,6 @@ import TablePagination from "../paginations/TablePagination";
 import { InputGroup, Form, Button } from "react-bootstrap";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
-import PieGraphic from "../charts/PieGraphic";
-import { useCurrentPng } from "recharts-to-png";
 import { useMediaQuery } from "react-responsive";
 
 export default function ProjectsTable({
@@ -32,7 +30,8 @@ export default function ProjectsTable({
 }) {
   const NUMBER_OF_PROJECTS_PAGE = 8;
   const userType = Cookies.get("user-userType");
-  const isTablet = useMediaQuery({ query: "(max-width: 975px)" });
+  const isTablet = useMediaQuery({ query: "(max-width: 1024px)" });
+  const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
   const navigate = useNavigate();
   const defaultPhoto =
     "https://cdn.pixabay.com/photo/2016/03/29/08/48/project-1287781_1280.jpg";
@@ -66,39 +65,68 @@ export default function ProjectsTable({
   return (
     <>
       <div className="search-table-div">
-        <InputGroup className="mail-filters" style={{ width: "50%" }}>
-          <Form.Control
-            type="text"
-            placeholder="Search for project name"
-            value={keyword}
-            onChange={(e) => setKeyword(e.target.value)}
-            style={{ borderRadius: "10px", cursor: "text" }}
-            className="custom-focus"
-          />
-          <Button
-            variant="primary"
-            onClick={() => {
-              setKeywordButton(!keywordButton);
-              setCurrentPage(1);
-              setNavigateTableProjectsTrigger(!navigateTableProjectsTrigger);
-            }}
-            id="primary-btn-boot"
-          >
-            Search
-          </Button>
-          <Button
-            variant="secondary"
-            onClick={() => {
-              handleClearSearch();
-              setNavigateTableProjectsTrigger(!navigateTableProjectsTrigger);
-            }}
-            style={{ borderRadius: "10px" }}
-          >
-            Clear Search
-          </Button>
+        <InputGroup
+          className={isMobile && "projects-filters-input"}
+          style={{ width: isMobile ? "100%" : "50%" }}
+        >
+          {isMobile && (
+            <div className="flex-row-button-filters">
+              <button
+                className="submit-button"
+                id="btn-add-project-table-projects"
+                onClick={() => navigate("/create-project/info")}
+              >
+                Add Project
+              </button>
+
+              {userType === "ADMIN" && (
+                <button
+                  className="submit-button"
+                  id="btn-projects-statistics-table-projects"
+                  onClick={() => navigate("/statistics")}
+                >
+                  Projects Statistics
+                </button>
+              )}
+            </div>
+          )}
+          <div className="projects-filters">
+            <Form.Control
+              type="text"
+              placeholder="Search for project name"
+              value={keyword}
+              onChange={(e) => setKeyword(e.target.value)}
+              style={{ borderRadius: "10px", cursor: "text" }}
+              className="custom-focus"
+            />
+            <Button
+              variant="primary"
+              onClick={() => {
+                setKeywordButton(!keywordButton);
+                setCurrentPage(1);
+                setNavigateTableProjectsTrigger(!navigateTableProjectsTrigger);
+              }}
+              id="primary-btn-boot"
+            >
+              Search
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                handleClearSearch();
+                setNavigateTableProjectsTrigger(!navigateTableProjectsTrigger);
+              }}
+              style={{ borderRadius: "10px", width: "200px" }}
+            >
+              Clear {!isTablet && "Search"}
+            </Button>
+          </div>
         </InputGroup>
       </div>
-      <table className="centered-table">
+      <table
+        className="centered-table"
+        style={{ fontSize: isMobile && "12px" }}
+      >
         <thead>
           <tr>
             <th colSpan="2" style={{ width: "25%" }} onClick={sortByName}>
@@ -125,25 +153,31 @@ export default function ProjectsTable({
                 labAsc === false && <i class="fas fa-arrow-down fa-xs"></i>
               )}
             </th>
-            <th style={{ width: "15%" }} onClick={sortByStartDate}>
-              <span style={{ marginRight: "10px" }}>Start date</span>
-              {startDateAsc ? (
-                <i class="fas fa-arrow-up fa-xs"></i>
-              ) : (
-                startDateAsc === false && (
-                  <i class="fas fa-arrow-down fa-xs"></i>
-                )
-              )}
-            </th>
-            <th style={{ width: "15%" }} onClick={sortByEndDate}>
-              <span style={{ marginRight: "10px" }}>End date</span>
-              {endDateAsc ? (
-                <i class="fas fa-arrow-up fa-xs"></i>
-              ) : (
-                endDateAsc === false && <i class="fas fa-arrow-down fa-xs"></i>
-              )}
-            </th>
-            {!isTablet && <th style={{ width: "15%" }}>Members</th>}
+            {!isTablet && (
+              <>
+                <th style={{ width: "15%" }} onClick={sortByStartDate}>
+                  <span style={{ marginRight: "10px" }}>Start date</span>
+                  {startDateAsc ? (
+                    <i class="fas fa-arrow-up fa-xs"></i>
+                  ) : (
+                    startDateAsc === false && (
+                      <i class="fas fa-arrow-down fa-xs"></i>
+                    )
+                  )}
+                </th>
+                <th style={{ width: "15%" }} onClick={sortByEndDate}>
+                  <span style={{ marginRight: "10px" }}>End date</span>
+                  {endDateAsc ? (
+                    <i class="fas fa-arrow-up fa-xs"></i>
+                  ) : (
+                    endDateAsc === false && (
+                      <i class="fas fa-arrow-down fa-xs"></i>
+                    )
+                  )}
+                </th>
+                <th style={{ width: "15%" }}>Members</th>{" "}
+              </>
+            )}
           </tr>
         </thead>
 
@@ -197,12 +231,15 @@ export default function ProjectsTable({
                       {formatStatus(project.status)}
                     </td>
                     <td>{formatLab(project.lab)}</td>
-                    <td>{project.startDate}</td>
-                    <td>{project.finalDate}</td>
                     {!isTablet && (
-                      <td>
-                        {project.numberOfMembers} / {project.maxMembers}{" "}
-                      </td>
+                      <>
+                        <td>{project.startDate}</td>
+                        <td>{project.finalDate}</td>
+
+                        <td>
+                          {project.numberOfMembers} / {project.maxMembers}{" "}
+                        </td>
+                      </>
                     )}
                   </tr>
                 )
@@ -216,9 +253,13 @@ export default function ProjectsTable({
                   <td className="row-no-content"></td>
                   <td className="row-no-content"></td>
                   <td className="row-no-content"></td>
-                  <td className="row-no-content"></td>
-                  <td className="row-no-content"></td>
-                  {!isTablet && <td className="row-no-content"></td>}
+                  {!isTablet && (
+                    <>
+                      <td className="row-no-content"></td>
+                      <td className="row-no-content"></td>
+                      <td className="row-no-content"></td>
+                    </>
+                  )}
                 </tr>
               ))}
           </tbody>
@@ -227,14 +268,17 @@ export default function ProjectsTable({
       <div id="align-div-buttons">
         <div id="flex-row-table-projects">
           <div className="row-btns-table-projects-1">
-            <button
-              className="submit-button"
-              id="btn-add-project-table-projects"
-              onClick={() => navigate("/create-project/info")}
-            >
-              Add Project
-            </button>
+            {!isMobile && (
+              <button
+                className="submit-button"
+                id="btn-add-project-table-projects"
+                onClick={() => navigate("/create-project/info")}
+              >
+                Add Project
+              </button>
+            )}
           </div>
+
           <div className="tablePagination-div">
             {projects.length > 0 && (
               <TablePagination
@@ -245,15 +289,20 @@ export default function ProjectsTable({
               />
             )}
           </div>
+
           <div className="row-btns-table-projects-2">
-            {userType === "ADMIN" && (
-              <button
-                className="submit-button"
-                id="btn-projects-statistics-table-projects"
-                onClick={() => navigate("/statistics")}
-              >
-                Projects Statistics
-              </button>
+            {!isMobile && (
+              <>
+                {userType === "ADMIN" && (
+                  <button
+                    className="submit-button"
+                    id="btn-projects-statistics-table-projects"
+                    onClick={() => navigate("/statistics")}
+                  >
+                    Projects Statistics
+                  </button>
+                )}
+              </>
             )}
           </div>
         </div>

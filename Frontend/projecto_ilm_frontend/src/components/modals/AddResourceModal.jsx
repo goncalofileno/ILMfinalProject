@@ -11,6 +11,7 @@ import {
   editResource,
 } from "../../utilities/services";
 import { formatResourceType } from "../../utilities/converters";
+import { useMediaQuery } from "react-responsive";
 
 export default function AddResourceModal({
   isModalActive,
@@ -41,6 +42,8 @@ export default function AddResourceModal({
   const [modalErrorText, setModalErrorText] = useState("");
   const [modalErrorVisible, setModalErrorVisible] = useState(false);
   const [supplierContactDisabled, setSupplierContactDisabled] = useState(true);
+  const isTablet = useMediaQuery({ query: "(max-width: 1000px)" });
+  const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
 
   useEffect(() => {
     getResourcesFilters(true, true)
@@ -219,7 +222,7 @@ export default function AddResourceModal({
           <div className="modal-background" onClick={handleCancel}></div>
           <form
             className="ilm-modal"
-            style={{ width: "40%" }}
+            style={{ width: isTablet ? "80%" : "40%" }}
             onSubmit={handleSubmit}
           >
             <div className="modal-content">
@@ -252,7 +255,7 @@ export default function AddResourceModal({
 
               <div className="modal-body" style={{ gap: "15px" }}>
                 <div className="modal-row">
-                  <div style={{ width: "45%" }}>
+                  <div style={{ width: !isMobile ? "45%" : "90%" }}>
                     <AutoCompleteForm
                       label="Name"
                       suggestions={namesSuggestions}
@@ -261,7 +264,7 @@ export default function AddResourceModal({
                     ></AutoCompleteForm>
                   </div>
 
-                  <div style={{ width: "45%" }}>
+                  <div style={{ width: !isMobile ? "45%" : "90%" }}>
                     <Form.Label className="custom-label">Type</Form.Label>
                     <Form.Control
                       as="select"
@@ -280,7 +283,7 @@ export default function AddResourceModal({
                   </div>
                 </div>
                 <div className="modal-row">
-                  <div style={{ width: "45%" }}>
+                  <div style={{ width: !isMobile ? "45%" : "90%" }}>
                     <AutoCompleteForm
                       label="Brand"
                       suggestions={brandsSuggestions}
@@ -288,7 +291,7 @@ export default function AddResourceModal({
                       setValue={setBrand}
                     ></AutoCompleteForm>
                   </div>
-                  <div style={{ width: "45%" }}>
+                  <div style={{ width: !isMobile ? "45%" : "90%" }}>
                     <InputForm
                       label="Serial Number"
                       type="text"
@@ -299,7 +302,7 @@ export default function AddResourceModal({
                 </div>
                 <div className="modal-row">
                   {" "}
-                  <div style={{ width: "45%" }}>
+                  <div style={{ width: !isMobile ? "45%" : "90%" }}>
                     <AutoCompleteForm
                       label="Supplier"
                       suggestions={suppliersSuggestions}
@@ -309,7 +312,7 @@ export default function AddResourceModal({
                       handleOnBlurFunction={handleSupplierBlur}
                     ></AutoCompleteForm>
                   </div>
-                  <div style={{ width: "45%" }}>
+                  <div style={{ width: !isMobile ? "45%" : "90%" }}>
                     <InputForm
                       label="Supplier Contact"
                       type="text"
@@ -341,7 +344,7 @@ export default function AddResourceModal({
                     onChange={(e) => setObservations(e.target.value)}
                   />
                 </Form.Group>
-                <div className="modal-row">
+                <div className="modal-row" style={{ flexDirection: "row" }}>
                   <button
                     className="secondary-button"
                     id="cancel-resource-btn"

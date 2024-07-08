@@ -13,6 +13,7 @@ import "./MailTable.css";
 import DOMPurify from "dompurify";
 import { useNavigate, useLocation } from "react-router-dom";
 import useMailStore from "../../stores/useMailStore";
+import { useMediaQuery } from "react-responsive";
 
 const MailTable = () => {
   const navigate = useNavigate();
@@ -38,6 +39,8 @@ const MailTable = () => {
   const [preFilledContact, setPreFilledContact] = useState("");
   const [preFilledSubject, setPreFilledSubject] = useState("");
   const [isSearching, setIsSearching] = useState(false);
+  const isMobile = useMediaQuery({ query: "(max-width: 660px)" });
+  const NUMBER_OF_MAILS_PAGE = 8;
 
   useEffect(() => {
     const query = new URLSearchParams(location.search);
@@ -266,38 +269,45 @@ const MailTable = () => {
   return (
     <div>
       <InputGroup className="mail-filters">
-        <Form.Check
-          type="switch"
-          id="unread-only-switch"
-          label="Unread only"
-          checked={unreadOnly}
-          onChange={handleUnreadOnlyChange}
-          className="custom-switch2"
-        />
-        <Form.Control
-          type="text"
-          placeholder="Search mails"
-          value={searchInput}
-          onChange={(e) => setSearchInput(e.target.value)}
-          style={{ borderRadius: "10px", cursor: "text" }}
-          className="custom-focus"
-        />
-        <Button
-          variant="primary"
-          onClick={() =>
-            updateURL({ search: searchInput, page: 1, unread: unreadOnly })
-          }
-          id="primary-btn-boot"
+        <div
+          className="flex-btn-row-mail-table"
+          id="div-container-search-email"
         >
-          Search
-        </Button>
-        <Button
-          variant="secondary"
-          onClick={handleClearSearch}
-          style={{ borderRadius: "10px" }}
-        >
-          Clear Search
-        </Button>
+          <Form.Check
+            type="switch"
+            id="unread-only-switch"
+            label="Unread only"
+            checked={unreadOnly}
+            onChange={handleUnreadOnlyChange}
+            className="custom-switch2"
+          />
+          <Form.Control
+            type="text"
+            placeholder="Search mails"
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            style={{ borderRadius: "10px", cursor: "text" }}
+            className="custom-focus"
+          />
+        </div>
+        <div className="flex-btn-row-mail-table">
+          <Button
+            variant="primary"
+            onClick={() =>
+              updateURL({ search: searchInput, page: 1, unread: unreadOnly })
+            }
+            id="primary-btn-boot"
+          >
+            Search
+          </Button>
+          <Button
+            variant="secondary"
+            onClick={handleClearSearch}
+            style={{ borderRadius: "10px" }}
+          >
+            Clear Search
+          </Button>
+        </div>
       </InputGroup>
 
       {receivedMails.length === 0 ? (
@@ -338,18 +348,29 @@ const MailTable = () => {
                       ...
                     </span>
                   </td>
-                  <td className="mail-cell centered-cell max-width-15">
-                    {hoveredMailId === mail.id ? (
-                      <FaTrash
-                        onClick={(event) => handleDeleteClick(mail, event)}
-                        className="trash-icon"
-                      />
-                    ) : (
-                      formatDate(mail.date)
-                    )}
-                  </td>
+                  {!isMobile && (
+                    <td className="mail-cell centered-cell max-width-15">
+                      {hoveredMailId === mail.id ? (
+                        <FaTrash
+                          onClick={(event) => handleDeleteClick(mail, event)}
+                          className="trash-icon"
+                        />
+                      ) : (
+                        formatDate(mail.date)
+                      )}
+                    </td>
+                  )}
                 </tr>
               ))}
+              {Array(NUMBER_OF_MAILS_PAGE - receivedMails.length)
+                .fill()
+                .map((index) => (
+                  <tr key={index + receivedMails.length}>
+                    <td className="row-no-content"></td>
+                    <td className="row-no-content"></td>
+                    {!isMobile && <td className="row-no-content"></td>}
+                  </tr>
+                ))}
             </tbody>
           </table>
           <div className="pagination-container">

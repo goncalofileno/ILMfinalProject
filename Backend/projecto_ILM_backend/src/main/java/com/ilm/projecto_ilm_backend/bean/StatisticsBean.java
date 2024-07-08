@@ -115,7 +115,7 @@ public class StatisticsBean {
         ArrayList<ProjectsStatusNumberPerLab> projectsStatusNumberPerLabs = new ArrayList<>();
 
         for (WorkLocalENUM location : WorkLocalENUM.values()) {
-            ProjectsStatusNumberPerLab projectStatusNumberPerLab = new ProjectsStatusNumberPerLab(location);
+            ProjectsStatusNumberPerLab projectStatusNumberPerLab = new ProjectsStatusNumberPerLab(convertToTitleCase(location.toString()));
             projectsStatusNumberPerLabs.add(projectStatusNumberPerLab);
             for(StateProjectENUM state : StateProjectENUM.values()){
                 projectStatusNumberPerLab.addStatusNumber(new StatusNumberDto(state, 0L));
@@ -132,5 +132,11 @@ public class StatisticsBean {
 
         }
         return projectsStatusNumberPerLabs;
+    }
+
+    private String convertToTitleCase(String location) {
+        // Convert the first character to uppercase and the rest to lowercase
+        if(location.equals("VILA_REAL")){return "Vila Real";}
+        return location.substring(0, 1).toUpperCase() + location.substring(1).toLowerCase();
     }
 }

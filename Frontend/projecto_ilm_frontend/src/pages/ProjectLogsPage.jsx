@@ -28,7 +28,7 @@ import ProjectLogIcon from "../resources/icons/logs/project-log-icon.png";
 import ResourceLogIcon from "../resources/icons/logs/resource-log-icon.png";
 import "./ProjectLogsPage.css";
 import { formatStatusDropDown } from "../utilities/converters";
-import StandardModal from "../components/modals/StandardModal";
+import { useMediaQuery } from "react-responsive";
 
 const ProjectLogsPage = () => {
   const { systemProjectName } = useParams();
@@ -42,6 +42,8 @@ const ProjectLogsPage = () => {
   const [selectedTask, setSelectedTask] = useState(null);
   const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(0);
   const suggestionsRef = useRef(null);
+  const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
+  const isTablet = useMediaQuery({ query: "(max-width: 1024px)" });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -145,7 +147,8 @@ const ProjectLogsPage = () => {
   const logMessages = {
     MEMBER_ADDED: (log) => (
       <>
-        The member <strong>{log.receiver}</strong> was added to the project by <strong>{log.authorName}</strong>.
+        The member <strong>{log.receiver}</strong> was added to the project by{" "}
+        <strong>{log.authorName}</strong>.
       </>
     ),
     MEMBER_REMOVED: (log) => (
@@ -155,7 +158,8 @@ const ProjectLogsPage = () => {
     ),
     TASKS_CREATED: (log) => (
       <>
-        The task <strong>{log.taskTitle}</strong> was created in the project plan.
+        The task <strong>{log.taskTitle}</strong> was created in the project
+        plan.
       </>
     ),
     TASKS_COMPLETED: (log) => (
@@ -181,17 +185,23 @@ const ProjectLogsPage = () => {
     PROJECT_INFO_UPDATED: () => <>The project data was updated.</>,
     PROJECT_STATUS_UPDATED: (log) => (
       <>
-        The user <strong>{log.authorName}</strong> project status changed from <strong>{log.projectOldState}</strong> to <strong>{log.projectNewState}</strong>.
+        The user <strong>{log.authorName}</strong> project status changed from{" "}
+        <strong>{log.projectOldState}</strong> to{" "}
+        <strong>{log.projectNewState}</strong>.
       </>
     ),
     RESOURCES_UPDATED: (log) => (
       <>
-        The resources in the project were updated by <strong>{log.authorName}</strong>.
+        The resources in the project were updated by{" "}
+        <strong>{log.authorName}</strong>.
       </>
     ),
     MEMBER_TYPE_CHANGED: (log) => (
       <>
-        The user <strong>{log.receiver}</strong> user type was changed from <strong>{log.memberOldType}</strong> to <strong>{log.memberNewType}</strong> by <strong>{log.authorName}</strong>.
+        The user <strong>{log.receiver}</strong> user type was changed from{" "}
+        <strong>{log.memberOldType}</strong> to{" "}
+        <strong>{log.memberNewType}</strong> by{" "}
+        <strong>{log.authorName}</strong>.
       </>
     ),
     MEMBER_LEFT: (log) => (
@@ -199,7 +209,7 @@ const ProjectLogsPage = () => {
         The user <strong>{log.authorName}</strong> left the project.
       </>
     ),
-    default: () => "Unknown log type."
+    default: () => "Unknown log type.",
   };
 
   const renderLogMessage = (log) => {
@@ -268,12 +278,24 @@ const ProjectLogsPage = () => {
   return (
     <>
       <AppNavbar />
-      <div className="bckg-color-ilm-page ilm-pageb">
+
+      <div
+        className={
+          !isMobile ? "bckg-color-ilm-page ilm-pageb" : "ilm-page-mobile"
+        }
+      >
         <ProjectTabs
           typeOfUserSeingProject={logsAndNotes.typeOfUserSeingPage}
           projectName={logsAndNotes.projectName}
         />
-        <Container style={{ height: "89%", marginTop: "2%" }}>
+        <Container
+          id="container-project-logs-page"
+          style={{
+            height: !isMobile ? "89%" : "140vh",
+            marginTop: "1%",
+            paddingRight: "0",
+          }}
+        >
           <Row>
             <Col>
               <h5>
@@ -287,8 +309,12 @@ const ProjectLogsPage = () => {
               )}
             </Col>
           </Row>
-          <Row style={{ height: "80%" }}>
-            <Col md={6} style={{ height: "100%" }}>
+          <Row style={{ height: !isMobile ? "80%" : "400px" }}>
+            <Col
+              sm={12}
+              md={6}
+              style={{ height: "100%", marginBottom: isMobile && "40px" }}
+            >
               <Card style={{ height: "100%" }}>
                 <Card.Header>
                   <h4>Logs</h4>
@@ -324,7 +350,7 @@ const ProjectLogsPage = () => {
                 </Card.Body>
               </Card>
             </Col>
-            <Col md={6} style={{ height: "100%" }}>
+            <Col sm={12} md={6} style={{ height: "100%" }}>
               <Row style={{ height: "100%" }}>
                 <div
                   style={{
@@ -338,7 +364,7 @@ const ProjectLogsPage = () => {
                   }}
                 >
                   <Row style={{ height: "100%" }}>
-                    <Col sm={9} style={{ height: "100%" }}>
+                    <Col xs={9} sm={9} style={{ height: "100%" }}>
                       <h4>Notes</h4>
                       <div
                         style={{
@@ -378,6 +404,7 @@ const ProjectLogsPage = () => {
                       </div>
                     </Col>
                     <Col
+                      xs={3}
                       sm={3}
                       style={{
                         display: "flex",
@@ -387,19 +414,24 @@ const ProjectLogsPage = () => {
                       }}
                     >
                       {" "}
-                      <Button
-                        style={{
-                          backgroundColor: "#f39c12",
-                          borderColor: "#f39c12",
-                          width: "100%",
-                        }}
-                        onClick={() => setShowCreateNoteModal(true)}
-                        disabled={["CANCELED", "READY"].includes(
-                          logsAndNotes.projectStatus
-                        )}
-                      >
-                        Add Note
-                      </Button>
+                      <div id="add-note-button-div">
+                        <Button
+                          id="add-note-button"
+                          style={{
+                            backgroundColor: "#f39c12",
+                            borderColor: "#f39c12",
+                            width: isMobile ? "50%" : "100%",
+                            display: "flex",
+                            justifyContent: "center",
+                          }}
+                          onClick={() => setShowCreateNoteModal(true)}
+                          disabled={["CANCELED", "READY"].includes(
+                            logsAndNotes.projectStatus
+                          )}
+                        >
+                          Add {!isTablet && "Note"}
+                        </Button>
+                      </div>
                     </Col>
                   </Row>
                 </div>

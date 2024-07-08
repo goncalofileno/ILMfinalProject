@@ -1,7 +1,11 @@
 .my-projects-container {
   height: 89%;
 }
-
+@media (max-width: 1199px) {
+  .my-projects-container {
+    height: unset;
+  }
+}
 .ilm-arrow:hover {
   background-color: rgb(225, 225, 225);
 }

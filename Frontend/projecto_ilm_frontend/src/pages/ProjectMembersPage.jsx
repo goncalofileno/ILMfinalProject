@@ -34,6 +34,7 @@ import {
   formatResourceType,
   formatTypeUserInProject,
 } from "../utilities/converters";
+import { useMediaQuery } from "react-responsive";
 
 const ProjectMembersPage = () => {
   const { systemProjectName } = useParams();
@@ -54,7 +55,8 @@ const ProjectMembersPage = () => {
   const [maxPageNumber, setMaxPageNumber] = useState(1);
   const [navigateTableTrigger, setNavigateTableTrigger] = useState(false);
   const NUMBER_OF_MEMBERS_PAGE = 5;
-
+  const isPhone = useMediaQuery({ query: "(max-width: 767px)" });
+  const isTablet = useMediaQuery({ query: "(max-width: 991px)" });
   const sessionId = Cookies.get("session-id");
   const userSystemUsername = Cookies.get("user-systemUsername");
 
@@ -329,10 +331,13 @@ const ProjectMembersPage = () => {
           </Row>
           <Row>
             <Col>
-              <div className="d-flex justify-content-between">
+              <div
+                className="d-flex justify-content-between"
+                style={{ flexDirection: isTablet && "column" }}
+              >
                 <Card
                   style={{
-                    width: "48%",
+                    width: !isTablet ? "48%" : "100%",
                     border: "none",
                     backgroundColor: "transparent",
                   }}
@@ -351,10 +356,11 @@ const ProjectMembersPage = () => {
                     >
                       <thead id="table-users-project-head">
                         <tr>
-                          <th style={{ width: "17%" }}>Photo</th>
-                          <th>Name</th>
-                          <th>Type</th>
-                          <th>Actions</th>
+                          <th colSpan={2} style={{ width: "40%" }}>
+                            Name
+                          </th>
+                          <th style={{ width: "30%" }}>Type</th>
+                          <th style={{ width: "30%" }}>Actions</th>
                         </tr>
                       </thead>
                       <tbody
@@ -369,7 +375,7 @@ const ProjectMembersPage = () => {
                           <tr key={member.id}>
                             <td
                               className="align-middle"
-                              style={{ width: "17%" }}
+                              style={{ width: "15%" }}
                             >
                               <img
                                 src={member.profilePicture}
@@ -379,12 +385,18 @@ const ProjectMembersPage = () => {
                                 className="rounded-circle"
                               />
                             </td>
-                            <td className="align-middle">
+                            <td
+                              style={{ width: "25%" }}
+                              className="align-middle"
+                            >
                               {member.systemUsername === userSystemUsername
                                 ? "You"
                                 : member.name}
                             </td>
-                            <td className="align-middle">
+                            <td
+                              style={{ width: "30%" }}
+                              className="align-middle"
+                            >
                               {typeLabels[member.type]}
                               {member.type !== "CREATOR" && (
                                 <Form.Select
@@ -405,7 +417,10 @@ const ProjectMembersPage = () => {
                                 </Form.Select>
                               )}
                             </td>
-                            <td className="align-middle">
+                            <td
+                              style={{ width: "30%" }}
+                              className="align-middle"
+                            >
                               {member.type !== "CREATOR" && (
                                 <Button
                                   variant="danger"
@@ -437,7 +452,7 @@ const ProjectMembersPage = () => {
 
                 <Card
                   style={{
-                    width: "48%",
+                    width: !isTablet ? "48%" : "100%",
                     border: "none",
                     backgroundColor: "transparent",
                   }}
@@ -459,10 +474,11 @@ const ProjectMembersPage = () => {
                       >
                         <thead id="table-users-project-head">
                           <tr>
-                            <th style={{ width: "17%" }}>Photo</th>
-                            <th>Name</th>
-                            <th>Type</th>
-                            <th style={{ width: "33%" }}>Actions</th>
+                            <th style={{ width: "40%" }} colSpan={2}>
+                              Name
+                            </th>
+                            <th style={{ width: "30%" }}>Type</th>
+                            <th style={{ width: "30%" }}>Actions</th>
                           </tr>
                         </thead>
                         <tbody id="body-table-members-project">
@@ -470,7 +486,7 @@ const ProjectMembersPage = () => {
                             <tr key={member.id}>
                               <td
                                 className="align-middle"
-                                style={{ width: "17%" }}
+                                style={{ width: "15%" }}
                               >
                                 <img
                                   src={member.profilePicture}
@@ -480,17 +496,23 @@ const ProjectMembersPage = () => {
                                   className="rounded-circle"
                                 />
                               </td>
-                              <td className="align-middle">
+                              <td
+                                style={{ width: "25%" }}
+                                className="align-middle"
+                              >
                                 {member.systemUsername === userSystemUsername
                                   ? "You"
                                   : member.name}
                               </td>
-                              <td className="align-middle">
+                              <td
+                                style={{ width: "30%" }}
+                                className="align-middle"
+                              >
                                 {typeLabels[member.type]}
                               </td>
                               <td
                                 className="align-middle"
-                                style={{ width: "33%" }}
+                                style={{ width: "30%" }}
                               >
                                 {member.type === "PENDING_BY_APPLIANCE" && (
                                   <>
@@ -589,7 +611,7 @@ const ProjectMembersPage = () => {
                     </Col>
                     <Col sm={4}>
                       <Form.Group as={Col} className="mb-3">
-                        <Form.Label column sm={2}>
+                        <Form.Label column sm={2} style={{ width: "100%" }}>
                           <h6>Lab</h6>
                         </Form.Label>
                         <Col sm={10}>
@@ -614,11 +636,19 @@ const ProjectMembersPage = () => {
                   >
                     <thead id="table-users-project-head">
                       <tr>
-                        <th>Photo</th>
-                        <th>Name</th>
-                        <th>Lab</th>
-                        <th>Skills</th>
-                        <th>Actions</th>
+                        <th
+                          colSpan={2}
+                          style={{ width: !isPhone ? "30%" : "40%" }}
+                        >
+                          Name
+                        </th>
+                        {!isPhone && <th style={{ width: "20%" }}>Lab</th>}
+                        <th style={{ width: !isPhone ? "30%" : "35%" }}>
+                          Skills
+                        </th>
+                        <th style={{ width: !isPhone ? "20%" : "25%" }}>
+                          Actions
+                        </th>
                       </tr>
                     </thead>
                     <tbody id="body-table-members-project">
@@ -643,7 +673,10 @@ const ProjectMembersPage = () => {
                             }
                             style={{ height: "16.67%" }}
                           >
-                            <td className="align-middle">
+                            <td
+                              style={{ width: !isPhone ? "10%" : "15%" }}
+                              className="align-middle"
+                            >
                               <img
                                 src={user.photo}
                                 alt={user.name}
@@ -652,15 +685,24 @@ const ProjectMembersPage = () => {
                                 className="rounded-circle"
                               />
                             </td>
-                            <td className="align-middle">
+                            <td
+                              style={{ width: !isPhone ? "20%" : "25%" }}
+                              className="align-middle"
+                            >
                               {user.systemUsername === userSystemUsername
                                 ? "You"
                                 : user.name}
                             </td>
-                            <td className="align-middle">
-                              {formatLab(user.lab)}
-                            </td>
-                            <td>
+                            {!isPhone && (
+                              <td
+                                style={{ width: "20%" }}
+                                className="align-middle"
+                              >
+                                {formatLab(user.lab)}
+                              </td>
+                            )}
+
+                            <td style={{ width: !isPhone ? "30%" : "35%" }}>
                               <div className="skills-td-users">
                                 {user.skills.map((skill) => (
                                   <div
@@ -678,7 +720,10 @@ const ProjectMembersPage = () => {
                                 ))}
                               </div>
                             </td>
-                            <td className="align-middle">
+                            <td
+                              style={{ width: !isPhone ? "20%" : "25%" }}
+                              className="align-middle"
+                            >
                               <Button
                                 variant="primary"
                                 onClick={(e) => {

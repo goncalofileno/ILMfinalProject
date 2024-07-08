@@ -34,7 +34,7 @@
 }
 
 .project-name-tab-container {
-  width: 500px;
+  width: 250px;
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -44,5 +44,12 @@
 
 .project-name-tab {
   font-size: 30px;
-  font-weight: 500;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+@media (max-width: 560px) {
+  .project-tabs .nav-link {
+    font-size: 18px;
+  }
 }
