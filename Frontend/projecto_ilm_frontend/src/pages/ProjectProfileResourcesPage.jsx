@@ -1,7 +1,7 @@
 import AppNavbar from "../components/headers/AppNavbar";
 import ProjectTabs from "../components/headers/ProjectTabs";
-import { Row, Col, Form, InputGroup, Button } from "react-bootstrap";
-import { useParams } from "react-router-dom";
+import { Row, Col, Form, InputGroup, Button, Alert } from "react-bootstrap";
+import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import ResourcesProjectCreationTable from "../components/tables/ResourcesProjectCreationTable";
@@ -13,10 +13,8 @@ import {
   addInitialResources,
   getProjectResources,
 } from "../utilities/services";
-import { useNavigate } from "react-router-dom";
 import AddResourceModal from "../components/modals/AddResourceModal";
 import StandardModal from "../components/modals/StandardModal";
-import { Alert } from "react-bootstrap";
 import { Trans, t } from "@lingui/macro";
 
 export default function ProjectProfileResourcesPage() {
@@ -56,9 +54,7 @@ export default function ProjectProfileResourcesPage() {
   }, [yourResources]);
 
   useEffect(() => {
-    console.log("resource.lenght " + yourResources.length);
     if (yourResources.length === 0) {
-      console.log("here");
       getProjectResources(systemProjectName)
         .then((response) => response.json())
         .then((data) => {
@@ -86,7 +82,6 @@ export default function ProjectProfileResourcesPage() {
           )
             .then((response) => response.json())
             .then((data) => {
-              console.log(data);
               setResources(data.tableResources);
               setTotalPages(data.maxPageNumber);
             });
@@ -111,7 +106,6 @@ export default function ProjectProfileResourcesPage() {
       )
         .then((response) => response.json())
         .then((data) => {
-          console.log(data);
           setResources(data.tableResources);
           setTotalPages(data.maxPageNumber);
         });
@@ -124,6 +118,7 @@ export default function ProjectProfileResourcesPage() {
         setSuppliers(data.suppliers);
       });
   }, []);
+
   useEffect(() => {
     const rejectedIdsDto = {
       rejectedIds: yourResources.map((resource) => resource.resourceSupplierId),
@@ -142,15 +137,13 @@ export default function ProjectProfileResourcesPage() {
     )
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         setResources(data.tableResources);
         setTotalPages(data.maxPageNumber);
       });
   }, [resourcesTableTrigger]);
+
   useEffect(() => {
     return () => {
-      // Clear the cookies you want to remove
-
       Cookies.set("yourResources", []);
       Cookies.remove("yourResources");
     };
@@ -204,6 +197,9 @@ export default function ProjectProfileResourcesPage() {
       }
     });
   };
+
+  const isProjectInactive = projectState === "CANCELED" || projectState === "READY";
+
   return (
     <>
       <AppNavbar />
@@ -212,15 +208,14 @@ export default function ProjectProfileResourcesPage() {
           typeOfUserSeingProject={userInProjectType}
           projectName={projectName}
         />
-
         <Row className="row-container2" style={{ marginTop: "0px" }}>
-          {projectState === "CANCELED" && (
+          {isProjectInactive && (
             <>
               <div className="background-disabled"></div>
               <Row>
                 <Col>
                   <Alert variant="danger" className="standard-modal">
-                  <Trans>The project is canceled, and the chat is disabled.</Trans>
+                    <Trans>The project is {projectState.toLowerCase()}, and you can't change the resources in the project.</Trans>
                   </Alert>
                 </Col>
               </Row>
@@ -242,13 +237,15 @@ export default function ProjectProfileResourcesPage() {
                       className="custom-focus"
                       value={keyword}
                       onChange={(e) => setKeyword(e.target.value)}
+                      disabled={isProjectInactive}
                     />
                     <Button
                       variant="primary"
                       id="primary-btn-boot"
                       onClick={() => setResourcesTableTrigger((prev) => !prev)}
+                      disabled={isProjectInactive}
                     >
-                      <i class="fas fa-search"></i>
+                      <i className="fas fa-search"></i>
                     </Button>
                     <Button
                       variant="secondary"
@@ -257,6 +254,7 @@ export default function ProjectProfileResourcesPage() {
                         setKeyword("");
                         setResourcesTableTrigger((prev) => !prev);
                       }}
+                      disabled={isProjectInactive}
                     >
                       <Trans>Clear</Trans>
                     </Button>
@@ -272,9 +270,9 @@ export default function ProjectProfileResourcesPage() {
                       setBrand(e.target.value);
                       setResourcesTableTrigger((prev) => !prev);
                     }}
+                    disabled={isProjectInactive}
                   >
-                    {" "}
-                    <option value=""><Trans>All Brands</Trans></option>
+                    <option value="">{t`All Brands`}</option>
                     {brands.map((brand, index) => (
                       <option key={index} value={brand}>
                         {brand}
@@ -289,9 +287,9 @@ export default function ProjectProfileResourcesPage() {
                       setSupplier(e.target.value);
                       setResourcesTableTrigger((prev) => !prev);
                     }}
+                    disabled={isProjectInactive}
                   >
-                    {" "}
-                    <option value=""><Trans>All Suppliers</Trans></option>
+                    <option value="">{t`All Suppliers`}</option>
                     {suppliers.map((supplier, index) => (
                       <option key={index} value={supplier}>
                         {supplier}
@@ -321,36 +319,27 @@ export default function ProjectProfileResourcesPage() {
                     setResourcesTableTrigger={setResourcesTableTrigger}
                     setSelectedResource={setSelectedResource}
                     setSelectedResources={setSelectedResources}
-                  ></ResourcesProjectCreationTable>
+                    disabled={isProjectInactive}
+                  />
                 </Col>
                 <Col sm={1}></Col>
               </Row>
             </Row>
           </Col>
 
-          <Col
-            sm={5}
-            style={{
-              maxHeight: "100%",
-              height: "100%",
-            }}
-          >
+          <Col sm={5} style={{ maxHeight: "100%", height: "100%" }}>
             <Row style={{ height: "100%" }}>
               <Row style={{ height: "17%", marginBottom: "0.5%" }}>
                 <Col sm={1}></Col>
                 <Col sm={11}>
-                  <h4 className="h4-resources-project-creat"><Trans>Your Resources</Trans></h4>
+                  <h4 className="h4-resources-project-creat">
+                    <Trans>Your Resources</Trans>
+                  </h4>
                 </Col>
               </Row>
               <Row style={{ height: "83%" }}>
                 <Col sm={1}></Col>
-                <Col
-                  sm={11}
-                  style={{
-                    maxHeight: "100%",
-                    height: "100%",
-                  }}
-                >
+                <Col sm={11} style={{ maxHeight: "100%", height: "100%" }}>
                   <YourResourcesProjectCreationTable
                     resources={yourResources}
                     setResources={setYourResources}
@@ -360,7 +349,8 @@ export default function ProjectProfileResourcesPage() {
                     setResourcesTableTrigger={setResourcesTableTrigger}
                     setSelectedResource={setSelectedResource}
                     setSelectedResources={setSelectedResources}
-                  ></YourResourcesProjectCreationTable>
+                    disabled={isProjectInactive}
+                  />
                 </Col>
               </Row>
             </Row>
@@ -370,16 +360,16 @@ export default function ProjectProfileResourcesPage() {
         <Row className="last-row-resources-creation">
           <Col sm={1}></Col>
           <Col sm={2}>
-            {" "}
-            <button
+            <Button
               className="submit-button"
               id="btn-add-project-table-projects"
               onClick={() => {
                 setIsModalActive(true);
               }}
+              disabled={isProjectInactive}
             >
               <Trans>Add Resource</Trans>
-            </button>
+            </Button>
           </Col>
           <Col sm={1} className="table-resources-pagination">
             <TablePagination
@@ -387,17 +377,18 @@ export default function ProjectProfileResourcesPage() {
               currentPage={currentPage}
               setCurrentPage={setCurrentPage}
               setNavigateTableTrigger={setResourcesTableTrigger}
-            ></TablePagination>
+            />
           </Col>
           <Col sm={3}></Col>
           <Col sm={4}>
-            <button
+            <Button
               className="submit-button"
               style={{ width: "100%" }}
               onClick={handleSubmit}
+              disabled={isProjectInactive}
             >
               <Trans>Save Resources</Trans>
-            </button>
+            </Button>
           </Col>
           <Col sm={1}></Col>
         </Row>
@@ -414,13 +405,14 @@ export default function ProjectProfileResourcesPage() {
         setSelectedResources={setSelectedResources}
         setYourResources={setYourResources}
         setTableTrigger={setResourcesTableTrigger}
-      ></AddResourceModal>
+        disabled={isProjectInactive}
+      />
       <StandardModal
         modalType={modalType}
         message={modalMessage}
         modalActive={modalActive}
         setModalActive={setModalActive}
-      ></StandardModal>
+      />
     </>
   );
 }

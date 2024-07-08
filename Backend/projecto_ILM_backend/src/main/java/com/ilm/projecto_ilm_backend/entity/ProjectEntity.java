@@ -20,11 +20,12 @@ import com.ilm.projecto_ilm_backend.ENUMS.ConvertersENUM.StateProjectEnumConvert
 @NamedQuery(name = "Project.findNameAndDescriptionHome", query = "SELECT p.name, p.description FROM ProjectEntity p WHERE p.status = 1 OR  p.status = 2 OR  p.status = 3 OR  p.status = 4 ")
 @NamedQuery(
         name = "Project.getProjectTableDtoInfo",
-        query = "SELECT p.id, p.name, p.lab, p.status, FUNCTION('DATE', p.startDate), FUNCTION('DATE', p.endDate), p.maxMembers,p.photo, p.systemName " +
+        query = "SELECT p.id, p.name, p.lab, p.status, FUNCTION('DATE', p.startDate), FUNCTION('DATE', p.endDate), p.maxMembers, p.photo, p.systemName " +
                 "FROM ProjectEntity p LEFT JOIN UserProjectEntity up ON p.id = up.project.id " +
                 "WHERE (:lab IS NULL OR p.lab = :lab) " +
                 "AND (:status IS NULL OR p.status = :status) " +
-                "AND (:keyword IS NULL OR LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%')))" +
+                "AND ((:keyword IS NULL OR LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%')))" +
+                "OR (:keyword IS NULL OR LOWER(p.keywords) LIKE LOWER(CONCAT('%', :keyword, '%'))))" +
                 "GROUP BY p.id, p.name, p.lab, p.status, p.startDate, p.endDate, p.maxMembers " +
                 "HAVING (:slotsAvailable = FALSE OR p.maxMembers > COUNT(up))")
 
@@ -33,7 +34,8 @@ import com.ilm.projecto_ilm_backend.ENUMS.ConvertersENUM.StateProjectEnumConvert
         "FROM ProjectEntity p " +
         "WHERE (:lab IS NULL OR p.lab = :lab) " +
         "AND (:status IS NULL OR p.status = :status) " +
-        "AND (:keyword IS NULL OR (LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%'))))" +
+        "AND ((:keyword IS NULL OR (LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%'))))" +
+        "OR (:keyword IS NULL OR (LOWER(p.keywords) LIKE LOWER(CONCAT('%', :keyword, '%')))))" +
         "AND (:slotsAvailable = FALSE OR p.maxMembers > " +
         "(SELECT COUNT(up) FROM UserProjectEntity up WHERE up.project.id = p.id))")
 

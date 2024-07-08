@@ -17,7 +17,7 @@ import java.io.Serializable;
         @NamedQuery(name = "UserProject.findByProjectId", query = "SELECT up FROM UserProjectEntity up WHERE up.project.id = :projectId"),
         @NamedQuery(name = "UserProject.findByUserId", query = "SELECT up FROM UserProjectEntity up WHERE up.user.id = :userId"),
         @NamedQuery(name = "UserProject.findNumberOfUsers", query = "SELECT COUNT(up) FROM UserProjectEntity up WHERE up.project.id = :projectId AND (up.type=0 OR up.type=1 OR up.type=2 OR up.type=3 OR up.type=4)"),
-        @NamedQuery(name = "UserProject.isUserInProject", query = "SELECT COUNT(up) FROM UserProjectEntity up WHERE up.project.id = :projectId AND up.user.id = :userId"),
+        @NamedQuery(name = "UserProject.isUserInProject", query = "SELECT COUNT(up) FROM UserProjectEntity up WHERE up.project.id = :projectId AND up.user.id = :userId AND (up.type=0 OR up.type=1 OR up.type=2 OR up.type=3 OR up.type=4)"),
         @NamedQuery(name = "UserProject.countUserProjects", query = "SELECT COUNT(up) FROM UserProjectEntity up"),
         @NamedQuery(name = "UserProject.isUserAlreadyInvited", query = "SELECT COUNT(up) FROM UserProjectEntity up WHERE up.user.id = :userId AND up.project.id = :projectId AND up.type = :invited"),
         @NamedQuery(name = "UserProject.findByUserIdAndProjectId", query = "SELECT up FROM UserProjectEntity up WHERE up.user.id = :userId AND up.project.id = :projectId"),
@@ -31,6 +31,7 @@ import java.io.Serializable;
         @NamedQuery(name = "UserProject.isUserCreator", query = "SELECT COUNT(up) FROM UserProjectEntity up WHERE up.project.id = :projectId AND up.user.id = :userId AND up.type = 0"),
         @NamedQuery(name = "UserProject.isUserCreatorOrManager", query = "SELECT COUNT(up) FROM UserProjectEntity up WHERE up.project.id = :projectId AND up.user.id = :userId AND (up.type = 0 OR up.type = 1)"),
         @NamedQuery(name = "UserProject.countMembersByProjectId", query = "SELECT COUNT(up) FROM UserProjectEntity up WHERE up.project.id = :projectId"),
+        @NamedQuery(name = "UserProject.userHasProjects" , query = "SELECT COUNT(up) FROM UserProjectEntity up WHERE up.user.id = :userId AND (up.type=0 OR up.type=1 OR up.type=2 OR up.type=3 OR up.type=4)" ),
 
 })
 public class UserProjectEntity implements Serializable {

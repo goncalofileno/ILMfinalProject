@@ -9,13 +9,15 @@ import java.util.List;
 public class ProjectMembersPageDto {
 
      private List<ProjectMemberDto> projectMembers;
+     private int maxMembers;
      private StateProjectENUM projectState;
      private String projectName;
      private List<SkillDto> projectSkills;
      private UserInProjectTypeENUM userSeingProject;
 
-     public ProjectMembersPageDto(List<ProjectMemberDto> projectMembers, StateProjectENUM projectState, String projectName, List<SkillDto> projectSkills, UserInProjectTypeENUM userSeingProject) {
+     public ProjectMembersPageDto(List<ProjectMemberDto> projectMembers, int maxMembers, StateProjectENUM projectState, String projectName, List<SkillDto> projectSkills, UserInProjectTypeENUM userSeingProject) {
           this.projectMembers = projectMembers;
+            this.maxMembers = maxMembers;
           this.projectState = projectState;
           this.projectName = projectName;
           this.projectSkills = projectSkills;
@@ -31,6 +33,14 @@ public class ProjectMembersPageDto {
 
      public void setProjectMembers(List<ProjectMemberDto> projectMembers) {
           this.projectMembers = projectMembers;
+     }
+
+     public int getMaxMembers() {
+          return maxMembers;
+     }
+
+     public void setMaxMembers(int maxMembers) {
+          this.maxMembers = maxMembers;
      }
 
      public StateProjectENUM getProjectState() {

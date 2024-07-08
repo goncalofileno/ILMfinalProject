@@ -43,6 +43,7 @@ const ProjectLogsPage = () => {
   const [selectedTask, setSelectedTask] = useState(null);
   const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(0);
   const suggestionsRef = useRef(null);
+  const [currentLanguage, setCurrentLanguage] = useState(Cookies.get("user-language") || "ENGLISH");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -64,7 +65,7 @@ const ProjectLogsPage = () => {
       }
     };
     fetchData();
-  }, [systemProjectName]);
+  }, [systemProjectName, currentLanguage]);
 
   const handleMarkAsDone = async (noteId, done) => {
     const sessionId = Cookies.get("session-id");
@@ -264,10 +265,10 @@ const ProjectLogsPage = () => {
   };
 
   const renderLogMessage = (log) => {
-    const userLanguage = Cookies.get("user-language") || "en";
+    const userLanguage = Cookies.get("user-language") || "ENGLISH";
     const messageFunc =
-      userLanguage === "pt" ? logMessagesPt[log.type] : logMessagesEn[log.type];
-    return messageFunc ? messageFunc(log) : userLanguage === "pt" ? logMessagesPt.default() : logMessagesEn.default();
+      userLanguage === "PORTUGUESE" ? logMessagesPt[log.type] : logMessagesEn[log.type];
+    return messageFunc ? messageFunc(log) : userLanguage === "PORTUGUESE" ? logMessagesPt.default() : logMessagesEn.default();
   };
 
   const logIcons = {
@@ -330,7 +331,7 @@ const ProjectLogsPage = () => {
 
   return (
     <>
-      <AppNavbar />
+      <AppNavbar setCurrentLanguage={setCurrentLanguage}/>
       <div className="bckg-color-ilm-page ilm-pageb">
         <ProjectTabs
           typeOfUserSeingProject={logsAndNotes.typeOfUserSeingPage}

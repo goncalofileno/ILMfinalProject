@@ -51,7 +51,6 @@ msgstr "Add New Member"
 
 #: src/components/modals/AddTaskModal.jsx:216
 #: src/components/modals/AddTaskModal.jsx:401
-#: src/pages/ProjectPlanPage.jsx:425
 msgid "Add New Task"
 msgstr "Add New Task"
 
@@ -59,7 +58,7 @@ msgstr "Add New Task"
 msgid "Add Note"
 msgstr "Add Note"
 
-#: src/components/tables/ProjectsTable.jsx:249
+#: src/components/tables/ProjectsTable.jsx:253
 msgid "Add Project"
 msgstr "Add Project"
 
@@ -315,8 +314,8 @@ msgid "Close"
 msgstr "Close"
 
 #: src/pages/ProjectPlanPage.jsx:486
-msgid "Completed tasks"
-msgstr "Completed tasks"
+#~ msgid "Completed tasks"
+#~ msgstr "Completed tasks"
 
 #: src/components/asides/AsideMailActions.jsx:52
 #: src/components/modals/ComposeMailModal.jsx:144
@@ -402,8 +401,8 @@ msgid "Date"
 msgstr "Date"
 
 #: src/pages/ProjectPlanPage.jsx:436
-msgid "Day"
-msgstr "Day"
+#~ msgid "Day"
+#~ msgstr "Day"
 
 #: src/components/tooltips/CustomTooltipContent.jsx:36
 msgid "day(s)"
@@ -435,8 +434,8 @@ msgid "Description"
 msgstr "Description"
 
 #: src/pages/ProjectPlanPage.jsx:486
-msgid "DONE"
-msgstr "DONE"
+#~ msgid "DONE"
+#~ msgstr "DONE"
 
 #: src/components/tooltips/CustomTooltipContent.jsx:36
 msgid "Duration"
@@ -582,7 +581,7 @@ msgstr "First Name is required."
 msgid "Forget Password"
 msgstr "Forget Password"
 
-#: src/components/forms/LoginForm.jsx:81
+#: src/components/forms/LoginForm.jsx:85
 msgid "Forgot your password"
 msgstr "Forgot your password"
 
@@ -614,8 +613,8 @@ msgid "In Charge"
 msgstr "In Charge"
 
 #: src/pages/ProjectPlanPage.jsx:487
-msgid "IN PROGRESS"
-msgstr "IN PROGRESS"
+#~ msgid "IN PROGRESS"
+#~ msgstr "IN PROGRESS"
 
 #: src/components/asides/AsideMailActions.jsx:62
 msgid "Inbox"
@@ -713,8 +712,8 @@ msgid "Leave Project"
 msgstr "Leave Project"
 
 #: src/pages/ProjectPlanPage.jsx:482
-msgid "Legend"
-msgstr "Legend"
+#~ msgid "Legend"
+#~ msgstr "Legend"
 
 #: src/components/modals/NotificationModal.jsx:222
 msgid "Load More"
@@ -734,7 +733,7 @@ msgstr "Location"
 msgid "Login to see more details"
 msgstr "Login to see more details"
 
-#: src/components/headers/AppNavbar.jsx:272
+#: src/components/headers/AppNavbar.jsx:273
 msgid "Logout"
 msgstr "Logout"
 
@@ -798,8 +797,8 @@ msgid "Minimum 8 characters"
 msgstr "Minimum 8 characters"
 
 #: src/pages/ProjectPlanPage.jsx:437
-msgid "Month"
-msgstr "Month"
+#~ msgid "Month"
+#~ msgstr "Month"
 
 #: src/pages/EditProjectPage.jsx:236
 #: src/pages/ProjectCreationPage1.jsx:212
@@ -811,12 +810,12 @@ msgstr "Motivation"
 msgid "o-my-projects"
 msgstr "My"
 
-#: src/components/headers/AppNavbar.jsx:271
+#: src/components/headers/AppNavbar.jsx:272
 msgid "My Profile"
 msgstr "My Profile"
 
-#: src/components/headers/AppNavbar.jsx:220
-#: src/components/headers/AppNavbar.jsx:304
+#: src/components/headers/AppNavbar.jsx:221
+#: src/components/headers/AppNavbar.jsx:305
 msgid "My Projects"
 msgstr "My Projects"
 
@@ -1025,12 +1024,12 @@ msgid "Plan"
 msgstr "Plan"
 
 #: src/pages/ProjectPlanPage.jsx:488
-msgid "PLANNED"
-msgstr "PLANNED"
+#~ msgid "PLANNED"
+#~ msgstr "PLANNED"
 
 #: src/pages/ProjectPlanPage.jsx:488
-msgid "Planned tasks"
-msgstr "Planned tasks"
+#~ msgid "Planned tasks"
+#~ msgstr "Planned tasks"
 
 #: src/components/headers/ProjectTabs.jsx:14
 #~ msgid "Plano"
@@ -1065,13 +1064,12 @@ msgstr "Progress"
 #: src/components/tables/ProjectsTable.jsx:106
 #: src/pages/EditProjectPage.jsx:201
 #: src/pages/ProjectCreationPage3.jsx:151
-#: src/pages/ProjectPlanPage.jsx:489
 msgid "Project"
 msgstr "Project"
 
 #: src/pages/ProjectPlanPage.jsx:489
-msgid "PROJECT"
-msgstr "PROJECT"
+#~ msgid "PROJECT"
+#~ msgstr "PROJECT"
 
 #: src/pages/ProjectCreationPage1.jsx:81
 #: src/pages/ProjectCreationPage1.jsx:90
@@ -1100,16 +1098,16 @@ msgid "Project name available"
 msgstr "Project name available"
 
 #: src/pages/ProjectPlanPage.jsx:474
-msgid "Project Progress"
-msgstr "Project Progress"
+#~ msgid "Project Progress"
+#~ msgstr "Project Progress"
 
 #: src/pages/EditProjectPage.jsx:114
 #: src/pages/EditProjectPage.jsx:123
 msgid "Project updated successfully"
 msgstr "Project updated successfully"
 
-#: src/components/headers/AppNavbar.jsx:203
-#: src/components/headers/AppNavbar.jsx:287
+#: src/components/headers/AppNavbar.jsx:204
+#: src/components/headers/AppNavbar.jsx:288
 #: src/components/Pdf/StatisticsPdf.jsx:130
 #: src/components/Pdf/StatisticsPdf.jsx:144
 #: src/pages/App.jsx:245
@@ -1124,7 +1122,7 @@ msgstr "Projects"
 msgid "Projects per Lab"
 msgstr "Projects per Lab"
 
-#: src/components/tables/ProjectsTable.jsx:269
+#: src/components/tables/ProjectsTable.jsx:273
 msgid "Projects Statistics"
 msgstr "Projects Statistics"
 
@@ -1158,7 +1156,7 @@ msgstr "Reason of Reject"
 msgid "Reason to leave the Project"
 msgstr "Reason to leave the Project"
 
-#: src/components/forms/LoginForm.jsx:73
+#: src/components/forms/LoginForm.jsx:77
 #: src/components/forms/RegisterForm.jsx:147
 msgid "Register"
 msgstr "Register"
@@ -1225,8 +1223,8 @@ msgstr "Resource Edition"
 msgid "resources"
 msgstr "resources"
 
-#: src/components/headers/AppNavbar.jsx:210
-#: src/components/headers/AppNavbar.jsx:294
+#: src/components/headers/AppNavbar.jsx:211
+#: src/components/headers/AppNavbar.jsx:295
 #: src/components/headers/ProjectTabs.jsx:16
 #: src/pages/ProjectCreationPage3.jsx:152
 #: src/pages/ResourcesPage.jsx:135
@@ -1436,13 +1434,12 @@ msgid "Take Flight"
 msgstr "Take Flight"
 
 #: src/components/modals/AddTaskModal.jsx:57
-#: src/pages/ProjectPlanPage.jsx:178
 msgid "Task title must be unique."
 msgstr "Task title must be unique."
 
 #: src/pages/ProjectPlanPage.jsx:487
-msgid "Tasks in progress"
-msgstr "Tasks in progress"
+#~ msgid "Tasks in progress"
+#~ msgstr "Tasks in progress"
 
 #: src/pages/ProfilePage.jsx:162
 msgid "The invite for the project: {projectName} was successfully rejected."
@@ -1504,8 +1501,8 @@ msgid "To"
 msgstr "To"
 
 #: src/pages/ProjectPlanPage.jsx:446
-msgid "Toggle List Cell Width"
-msgstr "Toggle List Cell Width"
+#~ msgid "Toggle List Cell Width"
+#~ msgstr "Toggle List Cell Width"
 
 #: src/components/selectors/SkillSelector.jsx:198
 msgid "Tools"
@@ -1575,8 +1572,8 @@ msgid "Very Strong"
 msgstr "Very Strong"
 
 #: src/pages/ProjectPlanPage.jsx:430
-msgid "View Mode"
-msgstr "View Mode"
+#~ msgid "View Mode"
+#~ msgstr "View Mode"
 
 #: src/components/forms/RegisterForm.jsx:199
 #: src/pages/EditProfilePage.jsx:609
@@ -1600,8 +1597,8 @@ msgid "with"
 msgstr "with"
 
 #: src/pages/ProjectPlanPage.jsx:438
-msgid "Year"
-msgstr "Year"
+#~ msgid "Year"
+#~ msgstr "Year"
 
 #: src/components/tables/ProjectMembersTable.jsx:43
 #: src/pages/ProjectChatPage.jsx:148

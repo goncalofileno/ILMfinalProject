@@ -24,6 +24,7 @@ const MailTable = () => {
     fetchMailsInInbox,
     setReceivedMails,
     setTotalMails,
+    decrementUnreadCount
   } = useMailStore();
   const [loading, setLoading] = useState(true);
   const [selectedMail, setSelectedMail] = useState(null);
@@ -110,6 +111,7 @@ const MailTable = () => {
     if (!mail.seen) {
       await markMailAsSeen(sessionId, mail.id);
       fetchMails(currentPage, unreadOnly);
+      decrementUnreadCount();
     }
     setSelectedMail(mail);
   };

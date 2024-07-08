@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Container, Row, Col, Button, Form } from "react-bootstrap";
-import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { Container, Row, Col, Button, Form, Alert } from "react-bootstrap";
+import { useParams, useNavigate } from "react-router-dom";
 import { Gantt, ViewMode } from "gantt-task-react";
 import "gantt-task-react/dist/index.css";
 import AppNavbar from "../components/headers/AppNavbar";
@@ -10,21 +10,22 @@ import Cookies from "js-cookie";
 import EditTaskModal from "../components/modals/EditTaskModal";
 import AddTaskModal from "../components/modals/AddTaskModal";
 import DeleteTaskModal from "../components/modals/DeleteTaskModal";
-import { formatTaskStatus } from "../utilities/converters";
-import "./ProjectPlanPage.css";
 import ProgressBar from "../components/bars/ProgressBar";
-import CustomTooltipContent from "../components/tooltips/CustomTooltipContent"; 
+import CustomTooltipContent from "../components/tooltips/CustomTooltipContent";
+import "./ProjectPlanPage.css";
 import { Trans, t } from "@lingui/macro";
 
 const parseDate = (dateString) => new Date(dateString);
 
 const transformTasksData = (projectTask, tasks, projectProgress) => {
   const transformedTasks = tasks
-    .filter((task) => task.initialDate && task.finalDate) 
+    .filter((task) => task.initialDate && task.finalDate)
     .map((task) => ({
       id: task.systemTitle,
       name: task.title,
-      type: task.systemTitle.endsWith("_final_presentation") ? "milestone" : "task", 
+      type: task.systemTitle.endsWith("_final_presentation")
+        ? "milestone"
+        : "task",
       start: parseDate(task.initialDate),
       end: parseDate(task.finalDate),
       progress: 0,
@@ -63,7 +64,6 @@ const transformTasksData = (projectTask, tasks, projectProgress) => {
     });
   }
 
-  // Adiciona a tarefa final de apresentação como a última
   const finalPresentationTask = transformedTasks.find((task) =>
     task.id.endsWith("_final_presentation")
   );
@@ -86,7 +86,6 @@ const formatToLocalDateTime = (date) => {
 const ProjectPlanPage = () => {
   const { systemProjectName, taskSystemTitle } = useParams();
   const navigate = useNavigate();
-  const location = useLocation();
   const [tasks, setTasks] = useState([]);
   const [viewMode, setViewMode] = useState(ViewMode.Month);
   const [listCellWidth, setListCellWidth] = useState("");
@@ -104,15 +103,17 @@ const ProjectPlanPage = () => {
   const [titleError, setTitleError] = useState("");
   const [percentage, setPercentage] = useState(0);
   const [projectState, setProjectState] = useState("IN_PROGRESS");
-  const [currentLanguage, setCurrentLanguage] = useState(Cookies.get("user-language") || "ENGLISH");
-
 
   const fetchData = async () => {
     const sessionId = Cookies.get("session-id");
     try {
       const data = await getTasksPage(sessionId, systemProjectName);
       console.log("Tasks data:", data);
-      const transformedTasks = transformTasksData(data.projectTask, data.tasks, data.projectProgress);
+      const transformedTasks = transformTasksData(
+        data.projectTask,
+        data.tasks,
+        data.projectProgress
+      );
       setProjectName(data.projectName);
       setUserSeingTasksType(data.userSeingTasksType);
       setTasks(transformedTasks);
@@ -121,9 +122,10 @@ const ProjectPlanPage = () => {
       setPercentage(data.projectProgress);
       setProjectState(data.projectState);
 
-      // Check if a task modal should be opened based on URL
       if (taskSystemTitle) {
-        const taskToOpen = transformedTasks.find(task => task.id === taskSystemTitle);
+        const taskToOpen = transformedTasks.find(
+          (task) => task.id === taskSystemTitle
+        );
         if (taskToOpen) {
           handleTaskClick(taskToOpen);
         }
@@ -136,24 +138,14 @@ const ProjectPlanPage = () => {
 
   useEffect(() => {
     fetchData();
-  }, [systemProjectName, currentLanguage]);
-
-  useEffect(() => {
-    const handleLanguageChange = () => {
-      setCurrentLanguage(Cookies.get("user-language") || "ENGLISH");
-    };
-
-    window.addEventListener("languageChange", handleLanguageChange);
-
-    return () => {
-      window.removeEventListener("languageChange", handleLanguageChange);
-    };
-  }, []);
+  }, [systemProjectName]);
 
   const handleTaskClick = (task) => {
-    if (task.type === "project") return; // Prevent modal for project type
+    if (task.type === "project") return;
 
-    navigate(`/project/${systemProjectName}/plan/${task.id}`, { replace: true });
+    navigate(`/project/${systemProjectName}/plan/${task.id}`, {
+      replace: true,
+    });
 
     const inChargeMember = task.rawTask.membersOfTask.find(
       (member) =>
@@ -175,7 +167,7 @@ const ProjectPlanPage = () => {
     let error = "";
 
     if (name === "title" && taskTitles.includes(value)) {
-      error = (t`Task title must be unique.`);
+      error = "Task title must be unique.";
       setTitleError(error);
     } else {
       setTitleError("");
@@ -188,12 +180,12 @@ const ProjectPlanPage = () => {
 
   const checkSaveEnabled = (details) => {
     return (
-      details.title ||
-      details.description ||
-      details.status ||
-      details.initialDate ||
-      details.finalDate ||
-      details.inCharge ||
+      details.title &&
+      details.description &&
+      details.status &&
+      details.initialDate &&
+      details.finalDate &&
+      details.inCharge &&
       !titleError
     );
   };
@@ -231,6 +223,7 @@ const ProjectPlanPage = () => {
       handleCloseModal();
       fetchData();
       setTaskDetails({});
+      taskSystemTitle = null;
     } catch (error) {
       console.error("Error updating task:", error);
     }
@@ -328,7 +321,7 @@ const ProjectPlanPage = () => {
         (member) =>
           member.type === "CREATOR" || member.type === "CREATOR_INCHARGE"
       )?.id,
-      inChargeId: inChargeMember?.id || null, 
+      inChargeId: inChargeMember?.id || null,
       systemProjectName: systemProjectName,
     };
 
@@ -336,8 +329,8 @@ const ProjectPlanPage = () => {
 
     try {
       await updateTask(updateTaskDto);
-      fetchData(); 
-      setTaskDetails({}); 
+      fetchData();
+      setTaskDetails({});
     } catch (error) {
       console.error("Error updating task on date change:", error);
     }
@@ -380,8 +373,8 @@ const ProjectPlanPage = () => {
     try {
       await deleteTask(deleteTaskDto);
       setIsDeleteModalVisible(false);
-      fetchData(); 
-      setTaskDetails({}); 
+      fetchData();
+      setTaskDetails({});
     } catch (error) {
       console.error("Error deleting task:", error);
     }
@@ -411,9 +404,17 @@ const ProjectPlanPage = () => {
       task.type !== "project"
   );
 
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+  if (!tasks.length) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <>
-      <AppNavbar setCurrentLanguage={setCurrentLanguage}/>
+      <AppNavbar />
       <div className="bckg-color-ilm-page ilm-pageb">
         <ProjectTabs typeOfUserSeingProject={userSeingTasksType} />
         <Container style={{ height: "91%" }}>
@@ -421,21 +422,25 @@ const ProjectPlanPage = () => {
             <Col>
               <Row>
                 <div style={{ width: "500px" }}>
-                  <Button onClick={() => setIsAddModalVisible(true)}>
-                  <Trans>Add New Task</Trans>
+                  <Button
+                    onClick={() => setIsAddModalVisible(true)}
+                    disabled={["CANCELED", "READY"].includes(projectState)}
+                  >
+                    Add New Task
                   </Button>
                 </div>
                 <div style={{ width: "500px" }}>
                   <Form.Group controlId="viewModeSelector">
-                    <Form.Label><Trans>View Mode</Trans></Form.Label>
+                    <Form.Label>View Mode</Form.Label>
                     <Form.Control
                       as="select"
                       value={viewMode}
                       onChange={handleViewModeChange}
+                      disabled={["CANCELED", "READY"].includes(projectState)}
                     >
-                      <option value={ViewMode.Day}><Trans>Day</Trans></option>
-                      <option value={ViewMode.Month}><Trans>Month</Trans></option>
-                      <option value={ViewMode.Year}><Trans>Year</Trans></option>
+                      <option value={ViewMode.Day}>Day</option>
+                      <option value={ViewMode.Month}>Month</option>
+                      <option value={ViewMode.Year}>Year</option>
                     </Form.Control>
                   </Form.Group>
                 </div>
@@ -443,8 +448,9 @@ const ProjectPlanPage = () => {
                   <Form.Group controlId="listCellWidthToggle">
                     <Form.Check
                       type="checkbox"
-                      label={t`Toggle List Cell Width`}
+                      label="Toggle List Cell Width"
                       onChange={handleListCellWidthChange}
+                      disabled={["CANCELED", "READY"].includes(projectState)}
                     />
                   </Form.Group>
                 </div>
@@ -454,16 +460,27 @@ const ProjectPlanPage = () => {
                   <Gantt
                     tasks={tasks}
                     viewMode={viewMode}
-                    onDateChange={handleDateChange}
+                    onDateChange={
+                      !["CANCELED", "READY"].includes(projectState)
+                        ? handleDateChange
+                        : undefined
+                    }
                     onProgressChange={(task) =>
                       console.log("Task progress changed:", task)
                     }
-                    onDoubleClick={handleTaskClick}
-                    onDelete={(task) => handleDeleteClick(task)}
+                    onDoubleClick={
+                      !["CANCELED", "READY"].includes(projectState)
+                        ? handleTaskClick
+                        : undefined
+                    }
+                    onDelete={(task) =>
+                      !["CANCELED", "READY"].includes(projectState)
+                        ? handleDeleteClick(task)
+                        : undefined
+                    }
                     listCellWidth={listCellWidth}
                     columnWidth={100}
                     TooltipContent={CustomTooltipContent}
-                    locale={currentLanguage === "PORTUGUESE" ? "por" : "eng"}
                   />
                 )}
               </Row>
@@ -471,7 +488,7 @@ const ProjectPlanPage = () => {
           </Row>
           <Row>
             <div style={{ marginTop: "15px" }}>
-              <h5><Trans>Project Progress</Trans>:</h5>
+              <h5>Project Progress:</h5>
             </div>
             <div>
               <ProgressBar percentage={percentage} status={projectState} />
@@ -479,17 +496,66 @@ const ProjectPlanPage = () => {
           </Row>
           <Row>
             <div style={{ marginTop: "15px" }}>
-              <h5><Trans>Legend</Trans>:</h5>
+              <h5>Legend:</h5>
             </div>
             <div>
               <ul>
-                <li><span style={{ backgroundColor: "#8BC34A", padding: "2px 8px", borderRadius: "4px" }}><Trans>DONE</Trans></span> - <Trans>Completed tasks</Trans></li>
-                <li><span style={{ backgroundColor: "#FFEB3B", padding: "2px 8px", borderRadius: "4px" }}><Trans>IN PROGRESS</Trans></span> - <Trans>Tasks in progress</Trans></li>
-                <li><span style={{ backgroundColor: "#F44336", padding: "2px 8px", borderRadius: "4px" }}><Trans>PLANNED</Trans></span> - <Trans>Planned tasks</Trans></li>
-                <li><span style={{ backgroundColor: "#3F51B5", padding: "2px 8px", borderRadius: "4px" }}><Trans>PROJECT</Trans></span> - <Trans>Project</Trans></li>
+                <li>
+                  <span
+                    style={{
+                      backgroundColor: "#8BC34A",
+                      padding: "2px 8px",
+                      borderRadius: "4px",
+                    }}
+                  >
+                    DONE
+                  </span>{" "}
+                  - Completed tasks
+                </li>
+                <li>
+                  <span
+                    style={{
+                      backgroundColor: "#FFEB3B",
+                      padding: "2px 8px",
+                      borderRadius: "4px",
+                    }}
+                  >
+                    IN PROGRESS
+                  </span>{" "}
+                  - Tasks in progress
+                </li>
+                <li>
+                  <span
+                    style={{
+                      backgroundColor: "#F44336",
+                      padding: "2px 8px",
+                      borderRadius: "4px",
+                    }}
+                  >
+                    PLANNED
+                  </span>{" "}
+                  - Planned tasks
+                </li>
+                <li>
+                  <span
+                    style={{
+                      backgroundColor: "#3F51B5",
+                      padding: "2px 8px",
+                      borderRadius: "4px",
+                    }}
+                  >
+                    PROJECT
+                  </span>{" "}
+                  - Project
+                </li>
               </ul>
             </div>
           </Row>
+          {["CANCELED", "READY"].includes(projectState) && (
+            <Alert variant="danger" className="standard-modal">
+              The project is {projectState.toLowerCase()} and no tasks can be added or changes made.
+            </Alert>
+          )}
         </Container>
       </div>
 
@@ -508,6 +574,7 @@ const ProjectPlanPage = () => {
         availableTasks={availableTasks}
         handleAddDependentTask={handleAddDependentTask}
         handleRemoveDependentTask={handleRemoveDependentTask}
+        disabled={["CANCELED", "READY"].includes(projectState)}
       />
 
       <AddTaskModal
@@ -518,6 +585,7 @@ const ProjectPlanPage = () => {
         tasks={tasks}
         titleError={titleError}
         systemProjectName={systemProjectName}
+        disabled={["CANCELED", "READY"].includes(projectState)}
       />
 
       <DeleteTaskModal

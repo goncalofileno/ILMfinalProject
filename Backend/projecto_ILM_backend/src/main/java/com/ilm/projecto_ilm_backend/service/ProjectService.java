@@ -252,6 +252,7 @@ public class ProjectService {
     }
 
 
+
     @POST
     @Path("/inviteUser")
     @Consumes(MediaType.APPLICATION_JSON)

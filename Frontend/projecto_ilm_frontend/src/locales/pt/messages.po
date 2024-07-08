@@ -51,7 +51,6 @@ msgstr "Adicionar novo Membro"
 
 #: src/components/modals/AddTaskModal.jsx:216
 #: src/components/modals/AddTaskModal.jsx:401
-#: src/pages/ProjectPlanPage.jsx:425
 msgid "Add New Task"
 msgstr "Adicionar nova Tarefa"
 
@@ -59,7 +58,7 @@ msgstr "Adicionar nova Tarefa"
 msgid "Add Note"
 msgstr "Adicionar Nota"
 
-#: src/components/tables/ProjectsTable.jsx:249
+#: src/components/tables/ProjectsTable.jsx:253
 msgid "Add Project"
 msgstr "Adicionar Projecto"
 
@@ -315,8 +314,8 @@ msgid "Close"
 msgstr "Fechar"
 
 #: src/pages/ProjectPlanPage.jsx:486
-msgid "Completed tasks"
-msgstr "Tarefas completas"
+#~ msgid "Completed tasks"
+#~ msgstr "Tarefas completas"
 
 #: src/components/asides/AsideMailActions.jsx:52
 #: src/components/modals/ComposeMailModal.jsx:144
@@ -402,8 +401,8 @@ msgid "Date"
 msgstr "Data"
 
 #: src/pages/ProjectPlanPage.jsx:436
-msgid "Day"
-msgstr "Dia"
+#~ msgid "Day"
+#~ msgstr "Dia"
 
 #: src/components/tooltips/CustomTooltipContent.jsx:36
 msgid "day(s)"
@@ -435,8 +434,8 @@ msgid "Description"
 msgstr "Descrição"
 
 #: src/pages/ProjectPlanPage.jsx:486
-msgid "DONE"
-msgstr "COMPLETA"
+#~ msgid "DONE"
+#~ msgstr "COMPLETA"
 
 #: src/components/tooltips/CustomTooltipContent.jsx:36
 msgid "Duration"
@@ -582,7 +581,7 @@ msgstr "O Primeiro Nome é obrigatório."
 msgid "Forget Password"
 msgstr "Esqueceu a Password"
 
-#: src/components/forms/LoginForm.jsx:81
+#: src/components/forms/LoginForm.jsx:85
 msgid "Forgot your password"
 msgstr "Esqueceu-se da password?"
 
@@ -618,8 +617,8 @@ msgid "In Charge"
 msgstr "Responsável"
 
 #: src/pages/ProjectPlanPage.jsx:487
-msgid "IN PROGRESS"
-msgstr "EM PROGRESSO"
+#~ msgid "IN PROGRESS"
+#~ msgstr "EM PROGRESSO"
 
 #: src/components/asides/AsideMailActions.jsx:62
 msgid "Inbox"
@@ -717,8 +716,8 @@ msgid "Leave Project"
 msgstr "Abandonar Projecto"
 
 #: src/pages/ProjectPlanPage.jsx:482
-msgid "Legend"
-msgstr "Legenda"
+#~ msgid "Legend"
+#~ msgstr "Legenda"
 
 #: src/components/modals/NotificationModal.jsx:222
 msgid "Load More"
@@ -738,7 +737,7 @@ msgstr "Localização"
 msgid "Login to see more details"
 msgstr "Faça login para mais detalhes"
 
-#: src/components/headers/AppNavbar.jsx:272
+#: src/components/headers/AppNavbar.jsx:273
 msgid "Logout"
 msgstr "Logout"
 
@@ -806,8 +805,8 @@ msgstr "8 caracters no mínimo"
 #~ msgstr "minutos atrás"
 
 #: src/pages/ProjectPlanPage.jsx:437
-msgid "Month"
-msgstr "Mês"
+#~ msgid "Month"
+#~ msgstr "Mês"
 
 #: src/pages/EditProjectPage.jsx:236
 #: src/pages/ProjectCreationPage1.jsx:212
@@ -819,12 +818,12 @@ msgstr "Motivação"
 msgid "o-my-projects"
 msgstr "Os Meus"
 
-#: src/components/headers/AppNavbar.jsx:271
+#: src/components/headers/AppNavbar.jsx:272
 msgid "My Profile"
 msgstr "O meu Perfil"
 
-#: src/components/headers/AppNavbar.jsx:220
-#: src/components/headers/AppNavbar.jsx:304
+#: src/components/headers/AppNavbar.jsx:221
+#: src/components/headers/AppNavbar.jsx:305
 msgid "My Projects"
 msgstr "Os Meus Projetos"
 
@@ -1033,12 +1032,12 @@ msgid "Plan"
 msgstr "Plano"
 
 #: src/pages/ProjectPlanPage.jsx:488
-msgid "PLANNED"
-msgstr "PLANEADA"
+#~ msgid "PLANNED"
+#~ msgstr "PLANEADA"
 
 #: src/pages/ProjectPlanPage.jsx:488
-msgid "Planned tasks"
-msgstr "Tarefas Planeadas"
+#~ msgid "Planned tasks"
+#~ msgstr "Tarefas Planeadas"
 
 #: src/pages/EditProjectPage.jsx:142
 #: src/pages/ProjectCreationPage1.jsx:115
@@ -1069,13 +1068,12 @@ msgstr "Progresso"
 #: src/components/tables/ProjectsTable.jsx:106
 #: src/pages/EditProjectPage.jsx:201
 #: src/pages/ProjectCreationPage3.jsx:151
-#: src/pages/ProjectPlanPage.jsx:489
 msgid "Project"
 msgstr "Projeto"
 
 #: src/pages/ProjectPlanPage.jsx:489
-msgid "PROJECT"
-msgstr "PROJETO"
+#~ msgid "PROJECT"
+#~ msgstr "PROJETO"
 
 #: src/pages/ProjectCreationPage1.jsx:81
 #: src/pages/ProjectCreationPage1.jsx:90
@@ -1104,16 +1102,16 @@ msgid "Project name available"
 msgstr "Nome Disponível"
 
 #: src/pages/ProjectPlanPage.jsx:474
-msgid "Project Progress"
-msgstr "Progresso do Projeto"
+#~ msgid "Project Progress"
+#~ msgstr "Progresso do Projeto"
 
 #: src/pages/EditProjectPage.jsx:114
 #: src/pages/EditProjectPage.jsx:123
 msgid "Project updated successfully"
 msgstr "Projeto alterado com sucesso"
 
-#: src/components/headers/AppNavbar.jsx:203
-#: src/components/headers/AppNavbar.jsx:287
+#: src/components/headers/AppNavbar.jsx:204
+#: src/components/headers/AppNavbar.jsx:288
 #: src/components/Pdf/StatisticsPdf.jsx:130
 #: src/components/Pdf/StatisticsPdf.jsx:144
 #: src/pages/App.jsx:245
@@ -1128,7 +1126,7 @@ msgstr "Projetos"
 msgid "Projects per Lab"
 msgstr "Projetos por Lab"
 
-#: src/components/tables/ProjectsTable.jsx:269
+#: src/components/tables/ProjectsTable.jsx:273
 msgid "Projects Statistics"
 msgstr "Estatísticas de Projetos"
 
@@ -1162,7 +1160,7 @@ msgstr "Razão de Rejeição"
 msgid "Reason to leave the Project"
 msgstr "Razão de abandono de Projeto"
 
-#: src/components/forms/LoginForm.jsx:73
+#: src/components/forms/LoginForm.jsx:77
 #: src/components/forms/RegisterForm.jsx:147
 msgid "Register"
 msgstr "Registo"
@@ -1229,8 +1227,8 @@ msgstr "Edição de Recurso"
 msgid "resources"
 msgstr "recursos"
 
-#: src/components/headers/AppNavbar.jsx:210
-#: src/components/headers/AppNavbar.jsx:294
+#: src/components/headers/AppNavbar.jsx:211
+#: src/components/headers/AppNavbar.jsx:295
 #: src/components/headers/ProjectTabs.jsx:16
 #: src/pages/ProjectCreationPage3.jsx:152
 #: src/pages/ResourcesPage.jsx:135
@@ -1440,13 +1438,12 @@ msgid "Take Flight"
 msgstr "Levantam Voo"
 
 #: src/components/modals/AddTaskModal.jsx:57
-#: src/pages/ProjectPlanPage.jsx:178
 msgid "Task title must be unique."
 msgstr "O título da tarefa deve ser único."
 
 #: src/pages/ProjectPlanPage.jsx:487
-msgid "Tasks in progress"
-msgstr "Tarefas em Progresso"
+#~ msgid "Tasks in progress"
+#~ msgstr "Tarefas em Progresso"
 
 #: src/pages/ProfilePage.jsx:162
 msgid "The invite for the project: {projectName} was successfully rejected."
@@ -1508,8 +1505,8 @@ msgid "To"
 msgstr "Para"
 
 #: src/pages/ProjectPlanPage.jsx:446
-msgid "Toggle List Cell Width"
-msgstr "Ativar Visão Detalhada"
+#~ msgid "Toggle List Cell Width"
+#~ msgstr "Ativar Visão Detalhada"
 
 #: src/components/selectors/SkillSelector.jsx:198
 msgid "Tools"
@@ -1579,8 +1576,8 @@ msgid "Very Strong"
 msgstr "Muito Forte"
 
 #: src/pages/ProjectPlanPage.jsx:430
-msgid "View Mode"
-msgstr "Modo de Vizualização"
+#~ msgid "View Mode"
+#~ msgstr "Modo de Vizualização"
 
 #: src/components/forms/RegisterForm.jsx:199
 #: src/pages/EditProfilePage.jsx:609
@@ -1604,8 +1601,8 @@ msgid "with"
 msgstr "com"
 
 #: src/pages/ProjectPlanPage.jsx:438
-msgid "Year"
-msgstr "Ano"
+#~ msgid "Year"
+#~ msgstr "Ano"
 
 #: src/components/tables/ProjectMembersTable.jsx:43
 #: src/pages/ProjectChatPage.jsx:148

@@ -12,19 +12,15 @@ import com.ilm.projecto_ilm_backend.validator.DatabaseValidator;
 import com.ilm.projecto_ilm_backend.validator.UserProfileValidator;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
-
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-
 import jakarta.inject.Inject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import java.net.URI;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
 
 /**
  * REST service for user-related operations.
@@ -105,7 +101,6 @@ public class UserService {
         }
 
     }
-
 
     /**
      * Checks if an email is already in the database.
@@ -315,6 +310,12 @@ public class UserService {
                     NewCookie languageCookie = new NewCookie("user-language", String.valueOf(userEntity.getLanguage()), "/", null, null, NewCookie.DEFAULT_MAX_AGE, false, false);
 
                     Map<String, Object> responseBody = new HashMap<>();
+                    if(userBean.userHasProjects(sessionId)){
+                        responseBody.put("hasProjects", true);
+                    } else {
+                        responseBody.put("hasProjects", false);
+                    }
+
                     return Response.status(Response.Status.OK)
                             .cookie(sessionCookie)
                             .cookie(systemUsernameCookie)
