@@ -12,6 +12,7 @@ import com.ilm.projecto_ilm_backend.entity.*;
 import com.ilm.projecto_ilm_backend.security.exceptions.NoProjectsForInviteeException;
 import com.ilm.projecto_ilm_backend.security.exceptions.NoProjectsToInviteException;
 import com.ilm.projecto_ilm_backend.security.exceptions.UnauthorizedAccessException;
+import com.ilm.projecto_ilm_backend.security.exceptions.NoProjectsForInviteeException;
 import com.ilm.projecto_ilm_backend.utilities.imgsPath;
 import jakarta.ejb.Singleton;
 import jakarta.ejb.Startup;
@@ -78,6 +79,9 @@ public class ProjectBean {
 
     @Inject
     LogBean logBean;
+
+    @Inject
+    TaskBean taskBean;
 
     @Inject
     ResourceSupplierDao resourceSupplierDao;
@@ -382,7 +386,7 @@ public class ProjectBean {
         return (int) Math.ceil((double) numberOfProjects / numberOfProjectPerPage);
     }
 
-    public List<ProjectProfileDto> getProjectsToInvite(int userId, String inviteeUsername) {
+    public List<ProjectProfileDto> getProjectsToInvite(int userId, String inviteeUsername) throws NoProjectsToInviteException, NoProjectsForInviteeException{
         UserEntity invitee = userBean.getUserBySystemUsername(inviteeUsername);
 
         if (invitee == null) {
@@ -423,12 +427,18 @@ public class ProjectBean {
                 })
                 .collect(Collectors.toList());
 
+        // Filtra ainda por projetos que tenham vagas disponíveis
+        projects = projects.stream()
+                .filter(project -> userProjectDao.getNumberOfUsersByProjectId(projectDao.findByName(project.getName()).getId()) < projectDao.findByName(project.getName()).getMaxMembers())
+                .collect(Collectors.toList());
+
         if (projects.isEmpty()) {
             throw new NoProjectsForInviteeException("The user you want to invite has no projects to be invited to.");
         }
 
         return projects;
     }
+
 
 
     public boolean isUserCreatorOrManagerByProjectName(int userId, String projectName) {
@@ -448,6 +458,15 @@ public class ProjectBean {
 
         if (userProjectDao.isUserAlreadyInvited(userToInvite.getId(), project.getId())) {
             return "User is already invited to this project";
+        }
+
+        //verifica se o projecto esta cancelado ou tem as vagas preenchidas
+        if (project.getStatus() == StateProjectENUM.CANCELED) {
+            return "Project is canceled";
+        }
+
+        if (userProjectDao.getNumberOfUsersByProjectId(project.getId()) >= project.getMaxMembers()) {
+            return "Project is full";
         }
 
         UserProjectEntity userProjectEntity = new UserProjectEntity();
@@ -491,6 +510,16 @@ public class ProjectBean {
     public String acceptInvite(int userId, String projectName) {
         ProjectEntity project = projectDao.findByName(projectName);
         UserProjectEntity userProject = userProjectDao.findByUserIdAndProjectIdAndType(userId, project.getId(), UserInProjectTypeENUM.PENDING_BY_INVITATION);
+
+        //verifica se o projecto esta cancelado ou tem as vagas preenchidas
+        if (project.getStatus() == StateProjectENUM.CANCELED) {
+            return "Project is canceled";
+        }
+
+        if (userProjectDao.getNumberOfUsersByProjectId(project.getId()) >= project.getMaxMembers()) {
+            return "Project is full";
+        }
+
         userProject.setType(UserInProjectTypeENUM.MEMBER_BY_INVITATION);
         userProjectDao.merge(userProject);
         UserEntity invitator = userBean.getUserBySystemUsername(notificationBean.getSystemUsernameOfCreatorOfNotificationByReceptorAndType(userId, NotificationTypeENUM.INVITE));
@@ -499,6 +528,17 @@ public class ProjectBean {
         System.out.println("ACCEPTOR: " + acceptor.getSystemUsername());
         notificationBean.createInviteAcceptedNotification(project.getSystemName(), userDao.getFullNameBySystemUsername(acceptor.getSystemUsername()), invitator, acceptor.getSystemUsername());
         logBean.createMemberAddedLog(project, invitator, acceptor.getFullName());
+
+        //verifica se o numero de membros do projeto é igual ao maximo de membros e se for elimina todos os convites pendentes que ainda possam existir para esse projeto
+        if (userProjectDao.getNumberOfUsersByProjectId(project.getId()) == project.getMaxMembers()) {
+            List<UserProjectEntity> userProjects = userProjectDao.findByProjectId(project.getId());
+            for (UserProjectEntity userProjectEntity : userProjects) {
+                if (userProjectEntity.getType() == UserInProjectTypeENUM.PENDING_BY_INVITATION) {
+                    userProjectDao.remove(userProjectEntity);
+                }
+            }
+        }
+
         return "Invite accepted successfully";
     }
 
@@ -963,6 +1003,8 @@ public class ProjectBean {
         }
         userProjectDao.remove(userProject);
 
+        taskBean.removeUserFromProjectTasks(userToRemove.getId(), project.getId());
+
         notificationBean.createRemovedNotification(systemProjectName, currentUser.getSystemUsername(), userToRemove);
 
         UserEntity admnistration = userDao.findBySystemUsername("admnistration");
@@ -1012,9 +1054,19 @@ public class ProjectBean {
         UserEntity user = userDao.findById(userToAccept);
         UserEntity currentUser = userDao.findById(currentUserId);
         UserProjectEntity userProject = userProjectDao.findByUserIdAndProjectId(userToAccept, project.getId());
+
         if (userProject == null || userProject.getType() != UserInProjectTypeENUM.PENDING_BY_APPLIANCE) {
             throw new IllegalArgumentException("User is not pending to join the project");
         }
+
+        if (userProjectDao.getNumberOfUsersByProjectId(project.getId()) >= project.getMaxMembers()) {
+            throw new IllegalStateException("Project is full");
+        }
+
+        if (project.getStatus() == StateProjectENUM.CANCELED) {
+            throw new IllegalStateException("Project is canceled");
+        }
+
         userProject.setType(UserInProjectTypeENUM.MEMBER_BY_APPLIANCE);
         userProjectDao.merge(userProject);
 
@@ -1136,6 +1188,7 @@ public class ProjectBean {
 
         ProjectMembersPageDto projectMembersPageDto = new ProjectMembersPageDto();
         projectMembersPageDto.setProjectMembers(members);
+        projectMembersPageDto.setMaxMembers(project.getMaxMembers());
         projectMembersPageDto.setProjectState(projectState);
         projectMembersPageDto.setProjectName(projectName);
         projectMembersPageDto.setProjectSkills(skills);
@@ -1185,7 +1238,6 @@ public class ProjectBean {
 
 
         return "User type changed successfully";
-
     }
 
 
@@ -1608,6 +1660,8 @@ public class ProjectBean {
             throw new IllegalArgumentException("Cannot leave the project if you are the creator");
         }
         userProjectDao.remove(userProject);
+
+        taskBean.removeUserFromProjectTasks(userId, project.getId());
 
         List<UserEntity> teamManagers = userProjectDao.findCreatorsAndManagersByProjectId(project.getId());
         UserEntity admnistration = userDao.findBySystemUsername("admnistration");

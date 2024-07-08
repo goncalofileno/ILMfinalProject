@@ -157,6 +157,19 @@ export default function ProjectCreationPage1() {
       setWarningTxt("");
     }
   };
+
+  const getTomorrowDate = () => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    return tomorrow.toISOString().split("T")[0];
+  };
+
+  const getOneWeekAfterStartDate = (startDate) => {
+    const date = new Date(startDate);
+    date.setDate(date.getDate() + 7);
+    return date.toISOString().split("T")[0];
+  };
+
   return (
     <>
       <AppNavbar />
@@ -254,26 +267,30 @@ export default function ProjectCreationPage1() {
               </Col>
               <Col sm={2}>
                 <div className="lab-drop-down-div">
-                  <label htmlFor="lab-drop-down" className="custom-label">
+                  <label htmlFor="start-date" className="custom-label">
                     <Trans>Start Date</Trans>
                   </label>
                   <input
                     type="date"
+                    id="start-date"
                     className="date-input"
                     value={startDate}
+                    min={getTomorrowDate()}
                     onChange={(e) => setStartDate(e.target.value)}
                   ></input>
                 </div>
               </Col>
               <Col sm={2}>
                 <div className="lab-drop-down-div">
-                  <label htmlFor="lab-drop-down" className="custom-label">
+                  <label htmlFor="end-date" className="custom-label">
                     <Trans>End Date</Trans>
                   </label>
                   <input
                     type="date"
+                    id="end-date"
                     className="date-input"
                     value={endDate}
+                    min={startDate ? getOneWeekAfterStartDate(startDate) : ""}
                     onChange={(e) => setEndDate(e.target.value)}
                   ></input>
                 </div>

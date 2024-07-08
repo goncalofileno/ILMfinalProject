@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Container, Row, Col, Button, Form } from "react-bootstrap";
-import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { Container, Row, Col, Button, Form, Alert } from "react-bootstrap";
+import { useParams, useNavigate } from "react-router-dom";
 import { Gantt, ViewMode } from "gantt-task-react";
 import "gantt-task-react/dist/index.css";
 import AppNavbar from "../components/headers/AppNavbar";
@@ -10,22 +10,22 @@ import Cookies from "js-cookie";
 import EditTaskModal from "../components/modals/EditTaskModal";
 import AddTaskModal from "../components/modals/AddTaskModal";
 import DeleteTaskModal from "../components/modals/DeleteTaskModal";
-import { formatTaskStatus } from "../utilities/converters";
-import "./ProjectPlanPage.css";
 import ProgressBar from "../components/bars/ProgressBar";
-import CustomTooltipContent from "../components/tooltips/CustomTooltipContent"; // Import the custom tooltip
+import CustomTooltipContent from "../components/tooltips/CustomTooltipContent";
+import "./ProjectPlanPage.css";
+import { Trans, t } from "@lingui/macro";
 
 const parseDate = (dateString) => new Date(dateString);
 
 const transformTasksData = (projectTask, tasks, projectProgress) => {
   const transformedTasks = tasks
-    .filter((task) => task.initialDate && task.finalDate) // Filtra tarefas com datas válidas
+    .filter((task) => task.initialDate && task.finalDate)
     .map((task) => ({
       id: task.systemTitle,
       name: task.title,
       type: task.systemTitle.endsWith("_final_presentation")
         ? "milestone"
-        : "task", // Define tipo como milestone para a tarefa final
+        : "task",
       start: parseDate(task.initialDate),
       end: parseDate(task.finalDate),
       progress: 0,
@@ -64,7 +64,6 @@ const transformTasksData = (projectTask, tasks, projectProgress) => {
     });
   }
 
-  // Adiciona a tarefa final de apresentação como a última
   const finalPresentationTask = transformedTasks.find((task) =>
     task.id.endsWith("_final_presentation")
   );
@@ -87,7 +86,6 @@ const formatToLocalDateTime = (date) => {
 const ProjectPlanPage = () => {
   const { systemProjectName, taskSystemTitle } = useParams();
   const navigate = useNavigate();
-  const location = useLocation();
   const [tasks, setTasks] = useState([]);
   const [viewMode, setViewMode] = useState(ViewMode.Month);
   const [listCellWidth, setListCellWidth] = useState("");
@@ -124,7 +122,6 @@ const ProjectPlanPage = () => {
       setPercentage(data.projectProgress);
       setProjectState(data.projectState);
 
-      // Check if a task modal should be opened based on URL
       if (taskSystemTitle) {
         const taskToOpen = transformedTasks.find(
           (task) => task.id === taskSystemTitle
@@ -144,7 +141,7 @@ const ProjectPlanPage = () => {
   }, [systemProjectName]);
 
   const handleTaskClick = (task) => {
-    if (task.type === "project") return; // Prevent modal for project type
+    if (task.type === "project") return;
 
     navigate(`/project/${systemProjectName}/plan/${task.id}`, {
       replace: true,
@@ -183,12 +180,12 @@ const ProjectPlanPage = () => {
 
   const checkSaveEnabled = (details) => {
     return (
-      details.title ||
-      details.description ||
-      details.status ||
-      details.initialDate ||
-      details.finalDate ||
-      details.inCharge ||
+      details.title &&
+      details.description &&
+      details.status &&
+      details.initialDate &&
+      details.finalDate &&
+      details.inCharge &&
       !titleError
     );
   };
@@ -223,13 +220,10 @@ const ProjectPlanPage = () => {
 
     try {
       await updateTask(updateTaskDto);
-
       handleCloseModal();
-      taskSystemTitle = null;
-
       fetchData();
-
       setTaskDetails({});
+      taskSystemTitle = null;
     } catch (error) {
       console.error("Error updating task:", error);
     }
@@ -410,6 +404,14 @@ const ProjectPlanPage = () => {
       task.type !== "project"
   );
 
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+  if (!tasks.length) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <>
       <AppNavbar />
@@ -420,7 +422,10 @@ const ProjectPlanPage = () => {
             <Col>
               <Row>
                 <div style={{ width: "500px" }}>
-                  <Button onClick={() => setIsAddModalVisible(true)}>
+                  <Button
+                    onClick={() => setIsAddModalVisible(true)}
+                    disabled={["CANCELED", "READY"].includes(projectState)}
+                  >
                     Add New Task
                   </Button>
                 </div>
@@ -431,6 +436,7 @@ const ProjectPlanPage = () => {
                       as="select"
                       value={viewMode}
                       onChange={handleViewModeChange}
+                      disabled={["CANCELED", "READY"].includes(projectState)}
                     >
                       <option value={ViewMode.Day}>Day</option>
                       <option value={ViewMode.Month}>Month</option>
@@ -444,6 +450,7 @@ const ProjectPlanPage = () => {
                       type="checkbox"
                       label="Toggle List Cell Width"
                       onChange={handleListCellWidthChange}
+                      disabled={["CANCELED", "READY"].includes(projectState)}
                     />
                   </Form.Group>
                 </div>
@@ -453,15 +460,27 @@ const ProjectPlanPage = () => {
                   <Gantt
                     tasks={tasks}
                     viewMode={viewMode}
-                    onDateChange={handleDateChange}
+                    onDateChange={
+                      !["CANCELED", "READY"].includes(projectState)
+                        ? handleDateChange
+                        : undefined
+                    }
                     onProgressChange={(task) =>
                       console.log("Task progress changed:", task)
                     }
-                    onDoubleClick={handleTaskClick}
-                    onDelete={(task) => handleDeleteClick(task)}
+                    onDoubleClick={
+                      !["CANCELED", "READY"].includes(projectState)
+                        ? handleTaskClick
+                        : undefined
+                    }
+                    onDelete={(task) =>
+                      !["CANCELED", "READY"].includes(projectState)
+                        ? handleDeleteClick(task)
+                        : undefined
+                    }
                     listCellWidth={listCellWidth}
                     columnWidth={100}
-                    TooltipContent={CustomTooltipContent} // Use custom tooltip here
+                    TooltipContent={CustomTooltipContent}
                   />
                 )}
               </Row>
@@ -532,6 +551,11 @@ const ProjectPlanPage = () => {
               </ul>
             </div>
           </Row>
+          {["CANCELED", "READY"].includes(projectState) && (
+            <Alert variant="danger" className="standard-modal">
+              The project is {projectState.toLowerCase()} and no tasks can be added or changes made.
+            </Alert>
+          )}
         </Container>
       </div>
 
@@ -550,6 +574,7 @@ const ProjectPlanPage = () => {
         availableTasks={availableTasks}
         handleAddDependentTask={handleAddDependentTask}
         handleRemoveDependentTask={handleRemoveDependentTask}
+        disabled={["CANCELED", "READY"].includes(projectState)}
       />
 
       <AddTaskModal
@@ -560,6 +585,7 @@ const ProjectPlanPage = () => {
         tasks={tasks}
         titleError={titleError}
         systemProjectName={systemProjectName}
+        disabled={["CANCELED", "READY"].includes(projectState)}
       />
 
       <DeleteTaskModal

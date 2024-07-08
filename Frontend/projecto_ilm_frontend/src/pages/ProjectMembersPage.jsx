@@ -28,10 +28,6 @@ import TablePagination from "../components/paginations/TablePagination";
 import "./ProjectMembersPage.css";
 import {
   formatLab,
-  formatStatus,
-  formatStatusDropDown,
-  formatSkill,
-  formatResourceType,
   formatTypeUserInProject,
 } from "../utilities/converters";
 import { Trans, t } from "@lingui/macro";
@@ -253,9 +249,6 @@ const ProjectMembersPage = () => {
         systemProjectName,
         userId
       );
-      // if (!result.ok) {
-      //   throw new Error(`HTTP error! status: ${result.status}`);
-      // }
       const updatedData = await getProjectMembersPage(
         sessionId,
         systemProjectName
@@ -310,6 +303,15 @@ const ProjectMembersPage = () => {
     ["PENDING_BY_APPLIANCE", "PENDING_BY_INVITATION"].includes(member.type)
   );
 
+  const isProjectInactive = projectData.projectState === "CANCELED" || projectData.projectState === "READY";
+  const isTeamFull = members.length >= projectData.maxMembers;
+
+  const getMemberType = (memberType) => {
+    return ["MEMBER", "MEMBER_BY_INVITATION", "MEMBER_BY_APPLIANCE"].includes(memberType)
+      ? "MEMBER"
+      : memberType;
+  };
+
   return (
     <>
       <AppNavbar setCurrentLanguage={setCurrentLanguage}/>
@@ -321,18 +323,26 @@ const ProjectMembersPage = () => {
         <Container>
           <Row>
             <Col>
-              {projectData.projectState === "CANCELED" && (
+              {isProjectInactive && (
                 <Alert variant="danger" className="standard-modal">
                   <Trans>
-                    The project is canceled and no changes can be made.
+                    The project is {projectData.projectState.toLowerCase()} and no changes can be made.
                   </Trans>
                 </Alert>
               )}
             </Col>
           </Row>
           <Row>
+          {isTeamFull && (
+                    <Alert variant="warning">
+                      <Trans>
+                        The team is full. No more members can be invited or accepted until the team has an available slot.
+                      </Trans>
+                    </Alert>
+                  )}
             <Col>
               <div className="d-flex justify-content-between">
+             
                 <Card
                   style={{
                     width: "48%",
@@ -344,7 +354,7 @@ const ProjectMembersPage = () => {
                     style={{ backgroundColor: "transparent", border: "none" }}
                   >
                     <h5>
-                      <Trans>Members</Trans>
+                      <Trans>Members ({members.length}/{projectData.maxMembers})</Trans>
                     </h5>
                   </Card.Header>
                   <Card.Body
@@ -400,26 +410,26 @@ const ProjectMembersPage = () => {
                             <td className="align-middle">
                               {formatTypeUserInProject(member.type)}
                               {member.type !== "CREATOR" && (
-                                <Form.Select
-                                  value={
-                                    selectedMemberType[member.systemUsername] ||
-                                    member.type
-                                  }
-                                  onChange={(e) =>
-                                    handleRoleChange(member, e.target.value)
-                                  }
-                                  disabled={
-                                    projectData.projectState === "CANCELED"
-                                  }
-                                  className="mt-2"
-                                >
-                                  <option value="MANAGER">
-                                    <Trans>Manager</Trans>
-                                  </option>
-                                  <option value="MEMBER">
-                                    <Trans>Member</Trans>
-                                  </option>
-                                </Form.Select>
+                                <>
+                                  <Form.Select
+                                    value={
+                                      selectedMemberType[member.systemUsername] ||
+                                      getMemberType(member.type)
+                                    }
+                                    onChange={(e) =>
+                                      handleRoleChange(member, e.target.value)
+                                    }
+                                    disabled={isProjectInactive}
+                                    className="mt-2"
+                                  >
+                                    <option value="MANAGER">
+                                      <Trans>Manager</Trans>
+                                    </option>
+                                    <option value="MEMBER">
+                                      <Trans>Member</Trans>
+                                    </option>
+                                  </Form.Select>
+                                </>
                               )}
                             </td>
                             <td className="align-middle">
@@ -427,9 +437,7 @@ const ProjectMembersPage = () => {
                                 <Button
                                   variant="danger"
                                   onClick={() => handleRemoveMember(member)}
-                                  disabled={
-                                    projectData.projectState === "CANCELED"
-                                  }
+                                  disabled={isProjectInactive}
                                 >
                                   <Trans>Remove</Trans>
                                 </Button>
@@ -474,110 +482,109 @@ const ProjectMembersPage = () => {
                         <Trans>No requests or applications to show.</Trans>
                       </p>
                     ) : (
-                      <table
-                        className="table-users-project-table"
-                        style={{ height: "440px" }}
-                      >
-                        <thead id="table-users-project-head">
-                          <tr>
-                            <th style={{ width: "17%" }}>
-                              <Trans>Photo</Trans>
-                            </th>
-                            <th>
-                              <Trans>Name</Trans>
-                            </th>
-                            <th>
-                              <Trans>Type</Trans>
-                            </th>
-                            <th style={{ width: "33%" }}>
-                              <Trans>Actions</Trans>
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody id="body-table-members-project">
-                          {requests.map((member) => (
-                            <tr key={member.id}>
-                              <td
-                                className="align-middle"
-                                style={{ width: "17%" }}
-                              >
-                                <img
-                                  src={member.profilePicture}
-                                  alt={member.name}
-                                  width={50}
-                                  height={50}
-                                  className="rounded-circle"
-                                />
-                              </td>
-                              <td className="align-middle">
-                                {member.systemUsername === userSystemUsername
-                                  ? t`You`
-                                  : member.name}
-                              </td>
-                              <td className="align-middle">
-                                {formatTypeUserInProject(member.type)}
-                              </td>
-                              <td
-                                className="align-middle"
-                                style={{ width: "33%" }}
-                              >
-                                {member.type === "PENDING_BY_APPLIANCE" && (
-                                  <>
-                                    <Button
-                                      variant="success"
-                                      onClick={() =>
-                                        handleAcceptRequest(member)
-                                      }
-                                      disabled={
-                                        projectData.projectState === "CANCELED"
-                                      }
-                                      className="me-2"
-                                    >
-                                      <Trans>Accept</Trans>
-                                    </Button>
-                                    <Button
-                                      variant="danger"
-                                      onClick={() =>
-                                        handleRejectRequest(member)
-                                      }
-                                      disabled={
-                                        projectData.projectState === "CANCELED"
-                                      }
-                                    >
-                                      <Trans>Reject</Trans>
-                                    </Button>
-                                  </>
-                                )}
-                                {member.type === "PENDING_BY_INVITATION" && (
-                                  <>
-                                    <Button
-                                      variant="danger"
-                                      onClick={() =>
-                                        handleRemoveInvitation(member.id)
-                                      }
-                                      disabled={
-                                        projectData.projectState === "CANCELED"
-                                      }
-                                    >
-                                      <Trans>Cancel</Trans>
-                                    </Button>
-                                  </>
-                                )}
-                              </td>
+                      <>
+                        <table
+                          className="table-users-project-table"
+                          style={{ height: "440px" }}
+                        >
+                          <thead id="table-users-project-head">
+                            <tr>
+                              <th style={{ width: "17%" }}>
+                                <Trans>Photo</Trans>
+                              </th>
+                              <th>
+                                <Trans>Name</Trans>
+                              </th>
+                              <th>
+                                <Trans>Type</Trans>
+                              </th>
+                              <th style={{ width: "33%" }}>
+                                <Trans>Actions</Trans>
+                              </th>
                             </tr>
-                          ))}
-                          {requests.length < NUMBER_OF_MEMBERS_PAGE &&
-                            Array(NUMBER_OF_MEMBERS_PAGE - requests.length)
-                              .fill()
-                              .map((index) => (
-                                <tr key={index + members.length}>
-                                  <td></td>
-                                  <td></td>
-                                  <td></td>
-                                </tr>
-                              ))}
-                        </tbody>
-                      </table>
+                          </thead>
+                          <tbody id="body-table-members-project">
+                            {requests.map((member) => (
+                              <tr key={member.id}>
+                                <td
+                                  className="align-middle"
+                                  style={{ width: "17%" }}
+                                >
+                                  <img
+                                    src={member.profilePicture}
+                                    alt={member.name}
+                                    width={50}
+                                    height={50}
+                                    className="rounded-circle"
+                                  />
+                                </td>
+                                <td className="align-middle">
+                                  {member.systemUsername === userSystemUsername
+                                    ? t`You`
+                                    : member.name}
+                                </td>
+                                <td className="align-middle">
+                                  {formatTypeUserInProject(member.type)}
+                                </td>
+                                <td
+                                  className="align-middle"
+                                  style={{ width: "33%" }}
+                                >
+                                  {member.type === "PENDING_BY_APPLIANCE" && (
+                                    <>
+                                      <Button
+                                        variant="success"
+                                        onClick={() =>
+                                          handleAcceptRequest(member)
+                                        }
+                                        disabled={
+                                          isProjectInactive ||
+                                          isTeamFull
+                                        }
+                                        className="me-2"
+                                      >
+                                        <Trans>Accept</Trans>
+                                      </Button>
+                                      <Button
+                                        variant="danger"
+                                        onClick={() =>
+                                          handleRejectRequest(member)
+                                        }
+                                        disabled={isProjectInactive}
+                                      >
+                                        <Trans>Reject</Trans>
+                                      </Button>
+                                    </>
+                                  )}
+                                  {member.type === "PENDING_BY_INVITATION" && (
+                                    <>
+                                      <Button
+                                        variant="danger"
+                                        onClick={() =>
+                                          handleRemoveInvitation(member.id)
+                                        }
+                                        disabled={isProjectInactive}
+                                      >
+                                        <Trans>Cancel</Trans>
+                                      </Button>
+                                    </>
+                                  )}
+                                </td>
+                              </tr>
+                            ))}
+                            {requests.length < NUMBER_OF_MEMBERS_PAGE &&
+                              Array(NUMBER_OF_MEMBERS_PAGE - requests.length)
+                                .fill()
+                                .map((index) => (
+                                  <tr key={index + members.length}>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                  </tr>
+                                ))}
+                          </tbody>
+                        </table>
+                      </>
                     )}
                   </Card.Body>
                 </Card>
@@ -616,6 +623,7 @@ const ProjectMembersPage = () => {
                             type="text"
                             value={searchKeyword}
                             onChange={(e) => setSearchKeyword(e.target.value)}
+                            disabled={isProjectInactive || isTeamFull}
                           />
                         </Col>
                       </Form.Group>
@@ -631,6 +639,7 @@ const ProjectMembersPage = () => {
                           <Form.Select
                             value={selectedLab}
                             onChange={(e) => setSelectedLab(e.target.value)}
+                            disabled={isProjectInactive || isTeamFull}
                           >
                             <option value="">
                               <Trans>All Labs</Trans>
@@ -671,7 +680,7 @@ const ProjectMembersPage = () => {
                     <tbody id="body-table-members-project">
                       {allUsers.length === 0 ? (
                         <tr style={{ height: "100%" }}>
-                          <td colspan="7">
+                          <td colSpan="7">
                             <div className="no-results no-results-align">
                               <Trans>
                                 No users available to show based on the selected
@@ -735,6 +744,7 @@ const ProjectMembersPage = () => {
                                   handleInvite(user.systemUsername);
                                 }}
                                 style={{ backgroundColor: "rgb(30, 40, 82)", borderColor: "rgb(30, 40, 82)"}}
+                                disabled={isProjectInactive || isTeamFull}
                               >
                                 <Trans>Invite</Trans>
                               </Button>
@@ -777,6 +787,7 @@ const ProjectMembersPage = () => {
                 rows={3}
                 value={removeReason}
                 onChange={(e) => setRemoveReason(e.target.value)}
+                disabled={isProjectInactive}
               />
             </Form.Group>
           </Modal.Body>
@@ -787,7 +798,7 @@ const ProjectMembersPage = () => {
             >
               <Trans>Cancel</Trans>
             </Button>
-            <Button variant="danger" onClick={handleConfirmRemove}>
+            <Button variant="danger" onClick={handleConfirmRemove} disabled={isProjectInactive}>
               <Trans>Confirm Remove</Trans>
             </Button>
           </Modal.Footer>
@@ -810,6 +821,7 @@ const ProjectMembersPage = () => {
                 rows={3}
                 value={rejectReason}
                 onChange={(e) => setRejectReason(e.target.value)}
+                disabled={isProjectInactive}
               />
             </Form.Group>
           </Modal.Body>
@@ -820,7 +832,7 @@ const ProjectMembersPage = () => {
             >
               <Trans>Cancel</Trans>
             </Button>
-            <Button variant="danger" onClick={handleConfirmReject}>
+            <Button variant="danger" onClick={handleConfirmReject} disabled={isProjectInactive}>
               <Trans>Confirm Reject</Trans>
             </Button>
           </Modal.Footer>

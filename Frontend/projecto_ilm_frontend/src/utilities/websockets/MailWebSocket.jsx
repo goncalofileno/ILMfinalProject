@@ -140,7 +140,7 @@ const MailWebSocket = () => {
   };
 
   const handleNotificationEnd = () => {
-    setNotification(null); // Reset notification after animation ends
+    setNotification(null); 
   };
 
   return (
@@ -153,7 +153,7 @@ const MailWebSocket = () => {
         <NotificationBanner
           notification={notification}
           onClick={handleNotificationClick}
-          onEnd={handleNotificationEnd} // Reset notification after animation ends
+          onEnd={handleNotificationEnd} 
         />
       )}
     </>

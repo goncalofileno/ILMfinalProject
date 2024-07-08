@@ -21,7 +21,8 @@ import userProfileIcon from "../../resources/avatares/Avatar padrão.jpg";
 import { Trans, t } from "@lingui/macro";
 import { useLanguage } from "../../I18nLoader";
 
-export default function AppNavbar({ setIsAsideVisible }) {
+
+export default function AppNavbar({ setIsAsideVisible, setCurrentLanguage }) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [userImage, setUserImage] = useState(userProfileIcon);
@@ -46,12 +47,13 @@ export default function AppNavbar({ setIsAsideVisible }) {
     setDropdownOpen(!dropdownOpen);
   };
 
+
   const handleLogout = async () => {
     const response = await logoutUser();
     if (response.ok) {
       navigate("/"); 
     } else {
-      console.error("Failed to logout");
+      navigate("/");
     }
   };
 
@@ -72,6 +74,7 @@ export default function AppNavbar({ setIsAsideVisible }) {
       const response = await updateLanguage(sessionId, newLanguage);
       if (response.success) {
         Cookies.set("user-language", newLanguage);
+        setCurrentLanguage(newLanguage);
         console.log("Language updated successfully");
       } else {
         console.error("Failed to update language:", response.error);

@@ -559,4 +559,72 @@ public class TaskBean {
         taskDao.merge(task);
     }
 
+    @Transactional
+    public void removeUserFromProjectTasks(int userId, int projectId) {
+        List<TaskEntity> tasks = taskDao.findByProject(projectId);
+        UserEntity user = userDao.findById(userId);
+        UserEntity creator = userProjectDao.findCreatorByProjectId(projectId);
+        for (TaskEntity task : tasks) {
+            UserTaskEntity userTask = userTaskDao.findByTaskIdAndUserId(task.getId(), userId);
+            if (userTask != null) {
+                if (userTask.getType() == UserInTaskTypeENUM.INCHARGE) {
+                    if (userTask.getUser().getId() == user.getId()) {
+                        userTaskDao.remove(userTask);
+                        if (userTaskDao.findByTaskIdAndUserId(task.getId(), creator.getId()) == null) {
+                            UserTaskEntity userTaskCreator = new UserTaskEntity();
+                            userTaskCreator.setTask(task);
+                            userTaskCreator.setUser(creator);
+                            userTaskCreator.setType(UserInTaskTypeENUM.INCHARGE);
+                            userTaskDao.persist(userTaskCreator);
+                        } else {
+                            UserTaskEntity userTaskCreator = userTaskDao.findByTaskIdAndUserId(task.getId(), creator.getId());
+                            userTaskCreator.setType(UserInTaskTypeENUM.CREATOR_INCHARGE);
+                            userTaskDao.merge(userTaskCreator);
+                        }
+                    } else {
+                        userTaskDao.remove(userTask);
+                    }
+                } else if (userTask.getType() == UserInTaskTypeENUM.CREATOR_INCHARGE) {
+                    if (userTask.getUser().getId() == user.getId()) {
+                        userTaskDao.remove(userTask);
+                        if (userTaskDao.findByTaskIdAndUserId(task.getId(), creator.getId()) == null) {
+                            UserTaskEntity userTaskCreator = new UserTaskEntity();
+                            userTaskCreator.setTask(task);
+                            userTaskCreator.setUser(creator);
+                            userTaskCreator.setType(UserInTaskTypeENUM.INCHARGE);
+                            userTaskDao.persist(userTaskCreator);
+                        } else {
+                            UserTaskEntity userTaskCreator = userTaskDao.findByTaskIdAndUserId(task.getId(), creator.getId());
+                            userTaskCreator.setType(UserInTaskTypeENUM.CREATOR_INCHARGE);
+                            userTaskDao.merge(userTaskCreator);
+                        }
+                    } else {
+                        userTaskDao.remove(userTask);
+                    }
+                } else if (userTask.getType() == UserInTaskTypeENUM.CREATOR) {
+                    if (userTask.getUser().getId() == user.getId()) {
+                        userTaskDao.remove(userTask);
+                        if (userTaskDao.findByTaskIdAndUserId(task.getId(), creator.getId()) == null) {
+                            UserTaskEntity userTaskCreator = new UserTaskEntity();
+                            userTaskCreator.setTask(task);
+                            userTaskCreator.setUser(creator);
+                            userTaskCreator.setType(UserInTaskTypeENUM.INCHARGE);
+                            userTaskDao.persist(userTaskCreator);
+                        } else {
+                            UserTaskEntity userTaskCreator = userTaskDao.findByTaskIdAndUserId(task.getId(), creator.getId());
+                            userTaskCreator.setType(UserInTaskTypeENUM.CREATOR_INCHARGE);
+                            userTaskDao.merge(userTaskCreator);
+                        }
+                    } else {
+                        userTaskDao.remove(userTask);
+                    }
+                } else if (userTask.getType() == UserInTaskTypeENUM.MEMBER) {
+                    userTaskDao.remove(userTask);
+                }
+            }
+        }
+    }
+
+
+
 }
