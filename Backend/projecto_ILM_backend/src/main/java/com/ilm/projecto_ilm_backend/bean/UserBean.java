@@ -101,11 +101,11 @@ public class UserBean {
         if (userDao.findById(1) == null) {
 
             UserEntity user = new UserEntity();
-            user.setUsername("admnistration");
-            user.setSystemUsername("admnistration");
-            user.setPassword(HashUtil.toSHA256("admnistration"));
+            user.setUsername("administration");
+            user.setSystemUsername("administration");
+            user.setPassword(HashUtil.toSHA256("administration"));
             user.setEmail("admnistration@iml.com");
-            user.setFirstName("Admnistration");
+            user.setFirstName("Administration");
             user.setLastName("ILM");
             user.setType(UserTypeENUM.ADMIN);
             user.setRegistrationDate(LocalDateTime.now());

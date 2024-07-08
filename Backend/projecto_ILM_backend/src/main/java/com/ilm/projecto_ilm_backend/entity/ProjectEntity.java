@@ -208,7 +208,7 @@ public class ProjectEntity implements Serializable {
     /**
      * The users associated with the project. This is a one-to-many relationship with the UserProjectEntity class.
      */
-    @OneToMany(mappedBy = "project")
+    @OneToMany(mappedBy = "project", fetch = FetchType.EAGER)
     private List<UserProjectEntity> userProjects;
 
     /**

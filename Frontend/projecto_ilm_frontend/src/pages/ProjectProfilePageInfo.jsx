@@ -552,27 +552,27 @@ const ProjectProfilePageInfo = () => {
                             : projectInfo.creator.name}
                         </Link>
                       </Card.Text>
-                      {isCreatorOrManager && (
+                      {(isCreatorOrManager || isAdmin) && (
                         <>
-                          <div className="states-to-change">
-                            <Card.Text>
-                              <strong>
-                                <Trans>States to Change</Trans>:
-                              </strong>
-                            </Card.Text>
-                            <Form.Select
-                              value={selectedState}
-                              onChange={handleStateChange}
-                            >
-                              {projectInfo.statesToChange.map(
-                                (state, index) => (
-                                  <option key={index} value={state}>
-                                    {formatProjectState(state)}
-                                  </option>
-                                )
-                              )}
-                            </Form.Select>
-                          </div>
+                          {projectInfo.statesToChange.length > 0 && (
+                            <div className="states-to-change">
+                              <Card.Text>
+                                <strong><Trans>States to Change</Trans>:</strong>
+                              </Card.Text>
+                              <Form.Select
+                                value={selectedState}
+                                onChange={handleStateChange}
+                              >
+                                {projectInfo.statesToChange.map(
+                                  (state, index) => (
+                                    <option key={index} value={state}>
+                                      {formatProjectState(state)}
+                                    </option>
+                                  )
+                                )}
+                              </Form.Select>
+                            </div>
+                          )}
                         </>
                       )}
                     </Card.Body>

@@ -56,7 +56,7 @@ public class UserProjectEntity implements Serializable {
     /**
      * The project associated with this user project. This is a many-to-one relationship with the ProjectEntity class.
      */
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
     private ProjectEntity project;
 
