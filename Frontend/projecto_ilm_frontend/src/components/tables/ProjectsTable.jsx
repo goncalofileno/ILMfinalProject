@@ -78,7 +78,7 @@ export default function ProjectsTable({
                 id="btn-add-project-table-projects"
                 onClick={() => navigate("/create-project/info")}
               >
-                Add Project
+                <Trans>Add Project</Trans>
               </button>
 
               {userType === "ADMIN" && (
@@ -87,7 +87,7 @@ export default function ProjectsTable({
                   id="btn-projects-statistics-table-projects"
                   onClick={() => navigate("/statistics")}
                 >
-                  Projects Statistics
+                  <Trans>Projects Statistics</Trans>
                 </button>
               )}
             </div>
@@ -95,7 +95,7 @@ export default function ProjectsTable({
           <div className="projects-filters">
             <Form.Control
               type="text"
-              placeholder="Search for project name"
+              placeholder={t`Search for project name`}
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
               style={{ borderRadius: "10px", cursor: "text" }}
@@ -110,7 +110,7 @@ export default function ProjectsTable({
               }}
               id="primary-btn-boot"
             >
-              Search
+              <Trans>Search</Trans>
             </Button>
             <Button
               variant="secondary"
@@ -120,7 +120,7 @@ export default function ProjectsTable({
               }}
               style={{ borderRadius: "10px", width: "200px" }}
             >
-              Clear {!isTablet && "Search"}
+              <Trans>Clear</Trans> {!isTablet && "Search"}
             </Button>
           </div>
         </InputGroup>
@@ -164,7 +164,7 @@ export default function ProjectsTable({
             {!isTablet && (
               <>
                 <th style={{ width: "15%" }} onClick={sortByStartDate}>
-                  <span style={{ marginRight: "10px" }}>Start date</span>
+                  <span style={{ marginRight: "10px" }}><Trans>Start date</Trans></span>
                   {startDateAsc ? (
                     <i class="fas fa-arrow-up fa-xs"></i>
                   ) : (
@@ -174,7 +174,7 @@ export default function ProjectsTable({
                   )}
                 </th>
                 <th style={{ width: "15%" }} onClick={sortByEndDate}>
-                  <span style={{ marginRight: "10px" }}>End date</span>
+                  <span style={{ marginRight: "10px" }}><Trans>End date</Trans></span>
                   {endDateAsc ? (
                     <i class="fas fa-arrow-up fa-xs"></i>
                   ) : (
@@ -183,7 +183,7 @@ export default function ProjectsTable({
                     )
                   )}
                 </th>
-                <th style={{ width: "15%" }}>Members</th>{" "}
+                <th style={{ width: "15%" }}><Trans>Members</Trans></th>{" "}
               </>
             )}
           </tr>
@@ -286,7 +286,7 @@ export default function ProjectsTable({
                 id="btn-add-project-table-projects"
                 onClick={() => navigate("/create-project/info")}
               >
-                Add Project
+                <Trans>Add Project</Trans>
               </button>
             )}
           </div>
@@ -311,7 +311,7 @@ export default function ProjectsTable({
                     id="btn-projects-statistics-table-projects"
                     onClick={() => navigate("/statistics")}
                   >
-                    Projects Statistics
+                    <Trans>Projects Statistics</Trans>
                   </button>
                 )}
               </>

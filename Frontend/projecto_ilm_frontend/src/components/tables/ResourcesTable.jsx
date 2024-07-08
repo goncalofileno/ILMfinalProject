@@ -59,7 +59,7 @@ export default function ResourcesTable({
               id="btn-add-project-table-projects"
               onClick={() => setIsModalActive(true)}
             >
-              Add Resource
+              <Trans>Add Resource</Trans>
             </button>
           )}
           <div className="projects-filters">
@@ -83,7 +83,7 @@ export default function ResourcesTable({
               onClick={handleClean}
               style={{ borderRadius: "10px", width: "200px" }}
             >
-              Clear {!isTablet && "Search"}
+              <Trans>Clear</Trans> {!isTablet && "Search"}
             </Button>
           </div>
         </InputGroup>

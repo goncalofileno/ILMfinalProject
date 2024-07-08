@@ -1340,6 +1340,7 @@ public class ProjectBean {
         projectCreationDto.setStartDate(project.getStartDate().toString());
         projectCreationDto.setEndDate(project.getEndDate().toString());
         projectCreationDto.setPhoto(project.getPhoto()); // Assuming project entity has a getPhoto method
+        projectCreationDto.setMaxMembers(project.getMaxMembers());
 
         // Map skills
         List<SkillDto> skillDtos = new ArrayList<>();
@@ -1393,6 +1394,9 @@ public class ProjectBean {
             project.setDescription(projectUpdateDto.getDescription());
             project.setMotivation(projectUpdateDto.getMotivation());
             project.setLab(labDao.findbyLocal(WorkLocalENUM.valueOf(projectUpdateDto.getLab())));
+
+            if(projectUpdateDto.getMaxMembers() > MAX_PROJECT_MEMBERS_MAX || projectUpdateDto.getMaxMembers() < 1) return false;
+            project.setMaxMembers(projectUpdateDto.getMaxMembers());
 
             String keywordsList = null;
             for (InterestDto interestDto : projectUpdateDto.getKeywords()) {
