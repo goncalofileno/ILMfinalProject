@@ -6,19 +6,19 @@ import com.ilm.projecto_ilm_backend.ENUMS.WorkLocalENUM;
 import java.util.ArrayList;
 
 public class ProjectsStatusNumberPerLab {
-    private WorkLocalENUM lab;
+    private String lab;
     private ArrayList<StatusNumberDto> statusNumber;
 
-    public ProjectsStatusNumberPerLab(WorkLocalENUM lab) {
+    public ProjectsStatusNumberPerLab(String lab) {
         this.lab = lab;
         this.statusNumber = new ArrayList<>();
     }
 
-    public WorkLocalENUM getLab() {
+    public String getLab() {
         return lab;
     }
 
-    public void setLab(WorkLocalENUM lab) {
+    public void setLab(String lab) {
         this.lab = lab;
     }
 

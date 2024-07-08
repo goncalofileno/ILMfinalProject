@@ -51,6 +51,16 @@
   display: flex;
   flex-wrap: wrap;
 }
+@media (max-width: 991px) {
+  .user-card-body {
+    height: 117px;
+    max-height: 117px;
+  }
+  .user-card-footer {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+}
 
 .user-card-body::-webkit-scrollbar {
   width: 7px;

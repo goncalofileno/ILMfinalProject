@@ -41,7 +41,7 @@ import com.ilm.projecto_ilm_backend.ENUMS.ConvertersENUM.StateProjectEnumConvert
         name = "Project.findAllProjectsOrderedByUser",
         query = "SELECT p.id, p.name, p.lab, p.status, FUNCTION('DATE', p.startDate), FUNCTION('DATE', p.endDate), p.maxMembers, p.photo, p.systemName FROM ProjectEntity p " +
                 "LEFT JOIN p.userProjects up WITH up.user.id = :userId " +
-                "ORDER BY CASE WHEN up.user.id IS NOT NULL THEN 0 ELSE 1 END, p.name ASC"
+                "ORDER BY CASE WHEN up.type =1 OR up.type=2 OR up.type =3 OR up.type=4 THEN 0 ELSE 1 END, p.name ASC"
 )
 
 @NamedQuery(

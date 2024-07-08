@@ -1,100 +1,96 @@
 /* Estilo para a tabela de emails enviados */
 #sent-mail-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-family: Arial, sans-serif;
-    margin-bottom: 20px;
-  }
-  
-  #sent-mail-table tr {
-    background: none;
-    transition: background-color 0.3s;
-    background-color: rgba(30, 40, 82, 0.056);
-  }
-  
-  #sent-mail-table tr:hover {
-    background-color: rgba(243, 156, 18, 0.1); /* Cor de fundo ao passar o mouse */
-    cursor: pointer;
-  }
-  
-  #sent-mail-table .mail-cell {
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
-    vertical-align: middle; /* Alinha o conteúdo verticalmente no meio */
-  }
-  
-  #sent-mail-table .sender-info {
-    display: flex;
-    align-items: center;
-  }
-  
-  #sent-mail-table .sender-photo {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    margin-right: 10px;
-  }
-  
-  #sent-mail-table .sender-details {
-    display: flex;
-    flex-direction: column;
-    text-align: left;
-  }
-  
-  #sent-mail-table .receiver-name {
-    font-weight: bold;
-    color: #1e2852;
-  }
-  
-  #sent-mail-table .receiver-email {
-    font-size: 0.8em;
-    color: #666;
-  }
-  
-  #sent-mail-table .mail-subject {
-    font-weight: bold;
-    color: #333;
-  }
-  
-  #sent-mail-table .mail-preview {
-    display: block;
-    color: #666;
-    font-size: 0.9em;
-    margin-top: 5px;
-  }
-  
-  #sent-mail-table .fa-trash,
-  #sent-mail-table .trash-icon {
-    cursor: pointer;
-    color: #f39c12;
-    font-size: 1.2em;
-  }
-  
-  #sent-mail-table .fa-trash:hover,
-  #sent-mail-table .trash-icon:hover {
-    color: red;
-  }
-  
-  .centered-cell {
-    text-align: center; /* Centraliza o conteúdo */
-  }
+  width: 100%;
+  border-collapse: collapse;
+  font-family: Arial, sans-serif;
+  margin-bottom: 20px;
+}
 
-  .left-aligned-cell {
-    text-align: left; /* Alinha o conteúdo à esquerda */
-  }
-  
-  .mail-filters {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-    gap: 10px;
-  }
-  
-  .pagination-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-  }
-  
+#sent-mail-table tr {
+  background: none;
+  transition: background-color 0.3s;
+  background-color: rgba(30, 40, 82, 0.056);
+}
+
+#sent-mail-table tr:hover {
+  background-color: rgba(
+    243,
+    156,
+    18,
+    0.1
+  ); /* Cor de fundo ao passar o mouse */
+  cursor: pointer;
+}
+
+#sent-mail-table .mail-cell {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  vertical-align: middle; /* Alinha o conteúdo verticalmente no meio */
+}
+
+#sent-mail-table .sender-info {
+  display: flex;
+  align-items: center;
+}
+
+#sent-mail-table .sender-photo {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+#sent-mail-table .sender-details {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+#sent-mail-table .receiver-name {
+  font-weight: bold;
+  color: #1e2852;
+}
+
+#sent-mail-table .receiver-email {
+  font-size: 0.8em;
+  color: #666;
+}
+
+#sent-mail-table .mail-subject {
+  font-weight: bold;
+  color: #333;
+}
+
+#sent-mail-table .mail-preview {
+  display: block;
+  color: #666;
+  font-size: 0.9em;
+  margin-top: 5px;
+}
+
+#sent-mail-table .fa-trash,
+#sent-mail-table .trash-icon {
+  cursor: pointer;
+  color: #f39c12;
+  font-size: 1.2em;
+}
+
+#sent-mail-table .fa-trash:hover,
+#sent-mail-table .trash-icon:hover {
+  color: red;
+}
+
+.centered-cell {
+  text-align: center; /* Centraliza o conteúdo */
+}
+
+.left-aligned-cell {
+  text-align: left; /* Alinha o conteúdo à esquerda */
+}
+
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}

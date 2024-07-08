@@ -1,6 +1,7 @@
 import "./MyProjectCard.css";
 import ProgressBar from "../bars/ProgressBar";
 import { useNavigate } from "react-router-dom";
+import { useMediaQuery } from "react-responsive";
 
 export default function MyProjectCard({
   name,
@@ -15,6 +16,8 @@ export default function MyProjectCard({
   systemProjectName,
   photo,
 }) {
+  const isMobile = useMediaQuery({ query: "(max-width: 850px)" });
+
   const navigate = useNavigate();
   console.log(name + " " + photo);
   return (
@@ -36,7 +39,10 @@ export default function MyProjectCard({
           ></div>
           <div className="my-project-background-color">
             <div className="my-projects-body">
-              <div className="my-projects-info">
+              <div
+                className="my-projects-info"
+                style={{ width: isMobile && "100%" }}
+              >
                 <div className="my-projects-body-div">
                   Lab <span>{lab}</span>
                 </div>
@@ -53,9 +59,11 @@ export default function MyProjectCard({
                   End date <span>{endDate}</span>
                 </div>
               </div>
-              <div className="my-projects-banner-content">
-                <div className="my-projects-banner-word">{typeMember}</div>
-              </div>
+              {!isMobile && (
+                <div className="my-projects-banner-content">
+                  <div className="my-projects-banner-word">{typeMember}</div>
+                </div>
+              )}
             </div>
             <div className="my-projects-footer">
               <div>Progress:</div>

@@ -127,7 +127,7 @@ const ProjectsPage = () => {
 
   return (
     <>
-      <AppNavbar setIsAsideVisible={setIsAsideVisible} />
+      <AppNavbar setIsAsideVisible={setIsAsideVisible} pageWithAside={true} />
       <AsideProjectsTable
         selectedLab={selectedLab}
         setSelectedLab={setSelectedLab}
@@ -146,7 +146,10 @@ const ProjectsPage = () => {
         setEndDateAsc={setEndDateAsc}
         isVisible={isAsideVisible}
       />
-      <div className={isMobile ? "ilm-page-mobile" : "ilm-pageb-with-aside"}>
+      <div
+        className={isMobile ? "ilm-page-mobile" : "ilm-pageb-with-aside"}
+        onClick={() => isAsideVisible && setIsAsideVisible((prev) => !prev)}
+      >
         <h1 className="page-title">
           <span className="app-slogan-1">All </span>
           <span className="app-slogan-2">Projects</span>
