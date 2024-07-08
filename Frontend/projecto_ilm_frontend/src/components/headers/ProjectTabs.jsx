@@ -10,11 +10,11 @@ const ProjectTabs = ({ typeOfUserSeingProject, projectName }) => {
   const location = useLocation();
 
   const tabs = [
-    { name: (t`Info`), path: "info" },
-    { name: (t`Plan`), path: "plan" },
-    { name: (t`Logs`), path: "logs" },
-    { name: (t`Resources`), path: "resources" },
-    { name: (t`Chat`), path: "chat" },
+    { name: t`Info`, path: "info" },
+    { name: t`Plan`, path: "plan" },
+    { name: t`Logs`, path: "logs" },
+    { name: t`Resources`, path: "resources" },
+    { name: t`Chat`, path: "chat" },
   ];
 
   // Add the 'Members' tab only if the user is 'CREATOR' or 'MANAGER'
@@ -34,11 +34,16 @@ const ProjectTabs = ({ typeOfUserSeingProject, projectName }) => {
     return currentPath;
   };
 
+  const filteredTabs =
+    typeOfUserSeingProject === "ADMIN"
+      ? tabs.filter((tab) => tab.path === "info" || tab.path === "resources")
+      : tabs;
+
   return (
     <>
       {!restrictedUserTypes.includes(typeOfUserSeingProject) ? (
         <Nav className="project-tabs">
-          {tabs.map((tab) =>
+          {filteredTabs.map((tab) =>
             !restrictedUserTypes.includes(typeOfUserSeingProject) ||
             tab.path === "info" ? (
               <NavItem key={tab.path}>

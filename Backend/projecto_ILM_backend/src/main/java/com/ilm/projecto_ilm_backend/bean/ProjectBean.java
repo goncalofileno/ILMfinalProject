@@ -643,7 +643,7 @@ public class ProjectBean {
             } else if (project.getStatus() == StateProjectENUM.PLANNING || project.getStatus() == StateProjectENUM.READY) {
                 return List.of(StateProjectENUM.PLANNING, StateProjectENUM.READY);
             } else {
-                return List.of(StateProjectENUM.APPROVED, StateProjectENUM.IN_PROGRESS, StateProjectENUM.CANCELED, StateProjectENUM.FINISHED);
+                return List.of(StateProjectENUM.APPROVED, StateProjectENUM.IN_PROGRESS, StateProjectENUM.FINISHED);
             }
         }
         return new ArrayList<>();
@@ -843,10 +843,25 @@ public class ProjectBean {
     @Transactional
     public String cancelProject(int userId, String projectSystemName, String reason, String sessionId) {
         ProjectEntity project = projectDao.findBySystemName(projectSystemName);
-        UserEntity sender = userDao.findById(userId);
-
         if (project == null) {
             throw new IllegalArgumentException("Project not found");
+        }
+
+        UserEntity sender = userDao.findById(userId);
+        if (sender == null) {
+            throw new IllegalArgumentException("User not found");
+        }
+
+        UserTypeENUM senderType = sender.getType();
+
+        if(userProjectDao.findByUserIdAndProjectId(userId, project.getId()) == null){
+            if (senderType != UserTypeENUM.ADMIN) {
+                throw new UnauthorizedAccessException("User is not in the project");
+            }
+        } else {
+            if (senderType != UserTypeENUM.ADMIN && !userProjectDao.isUserCreatorOrManager(userId, project.getId())) {
+                throw new UnauthorizedAccessException("User is not a creator or manager of the project");
+            }
         }
 
         project.setStatus(StateProjectENUM.CANCELED);
@@ -855,7 +870,6 @@ public class ProjectBean {
 
         projectDao.merge(project);
 
-        // Get the list of team members
         List<UserEntity> teamMembers = getProjectMembersByProjectId(project.getId());
 
         // Loop through each team member and send email
@@ -865,7 +879,7 @@ public class ProjectBean {
                 notificationBean.createProjectNotification(project.getSystemName(), StateProjectENUM.CANCELED, userDao.getFullNameBySystemUsername(sender.getSystemUsername()), user, sender.getSystemUsername());
             }
 
-            UserEntity admnistration = userDao.findBySystemUsername("admnistration");
+            UserEntity administration = userDao.findBySystemUsername("administration");
             if (user.getLanguage() == LanguageENUM.ENGLISH) {
                 String subject = "Project " + project.getName() + " Canceled";
                 String text = "<p>Dear " + user.getFirstName() + " " + user.getLastName() + ",</p>" +
@@ -877,13 +891,13 @@ public class ProjectBean {
                 MailDto mailDto = new MailDto(
                         subject,
                         text,
-                        admnistration.getFirstName() + " " + admnistration.getLastName(),
-                        admnistration.getEmail(),
+                        administration.getFirstName() + " " + administration.getLastName(),
+                        administration.getEmail(),
                         user.getFirstName() + " " + user.getLastName(),
                         user.getEmail()
                 );
 
-                mailBean.sendMail(admnistration, mailDto);
+                mailBean.sendMail(administration, mailDto);
             } else if (user.getLanguage() == LanguageENUM.PORTUGUESE) {
                 String subject = "Projeto " + project.getName() + " Cancelado";
                 String text = "<p>Caro(a) " + user.getFirstName() + " " + user.getLastName() + ",</p>" +
@@ -895,18 +909,19 @@ public class ProjectBean {
                 MailDto mailDto = new MailDto(
                         subject,
                         text,
-                        admnistration.getFirstName() + " " + admnistration.getLastName(),
-                        admnistration.getEmail(),
+                        administration.getFirstName() + " " + administration.getLastName(),
+                        administration.getEmail(),
                         user.getFirstName() + " " + user.getLastName(),
                         user.getEmail()
                 );
 
-                mailBean.sendMail(admnistration, mailDto);
+                mailBean.sendMail(administration, mailDto);
             }
         }
 
         return "Project canceled successfully";
     }
+
 
 
     @Transactional
@@ -939,14 +954,14 @@ public class ProjectBean {
         UserTypeENUM userType = userDao.findById(userId).getType();
         boolean isAdmin = userType == UserTypeENUM.ADMIN;
 
-        UserInProjectTypeENUM userInProjectType = userProjectDao.findByUserIdAndProjectId(userId, project.getId()).getType();
-
-        if (project.getStatus() == StateProjectENUM.CANCELED && !isAdmin) {
-            throw new UnauthorizedAccessException("Only admins can change the state of a canceled project.");
-        }
-
-        if (userInProjectType != UserInProjectTypeENUM.MANAGER && userInProjectType != UserInProjectTypeENUM.CREATOR && !isAdmin) {
-            throw new UnauthorizedAccessException("User does not have permission to change project state.");
+        if(userProjectDao.findByUserIdAndProjectId(userId, project.getId()) == null){
+            if (!isAdmin) {
+                throw new UnauthorizedAccessException("User is not in the project");
+            }
+        } else {
+            if (!isAdmin && !userProjectDao.isUserCreatorOrManager(userId, project.getId())) {
+                throw new UnauthorizedAccessException("User is not a creator or manager of the project");
+            }
         }
 
         if (newState == StateProjectENUM.CANCELED && reason == null) {
