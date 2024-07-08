@@ -336,7 +336,7 @@ const ProjectMembersPage = () => {
           {isTeamFull && (
                     <Alert variant="warning">
                       <Trans>
-                        The team is full. No more members can be invited or accepted until the team has an available slot.
+                        The team is full, no more members can be invited or accepted until the team has an available slot.
                       </Trans>
                     </Alert>
                   )}
