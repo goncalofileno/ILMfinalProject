@@ -275,27 +275,32 @@ const MailTable = () => {
 
   return (
     <div>
-      <InputGroup className="mail-filters">
+      <InputGroup className="mb-3 mail-filters">
+        <Form.Check
+          type="switch"
+          id="unread-only-switch"
+          label={t`Unread only`}
+          checked={unreadOnly}
+          onChange={handleUnreadOnlyChange}
+          className="custom-switch2"
+        />
+        <Form.Control
+          type="text"
+          placeholder={t`Search mails`}
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+          style={{
+            borderRadius: "10px",
+            width: isMobile ? "100%" : "50%",
+            cursor: "text",
+          }}
+          className="custom-focus"
+        />
         <div
           className="flex-btn-row-mail-table"
           id="div-container-search-email"
+          style={{ width: "100%" }}
         >
-          <Form.Check
-            type="switch"
-            id="unread-only-switch"
-            label={t`Unread only`}
-            checked={unreadOnly}
-            onChange={handleUnreadOnlyChange}
-            className="custom-switch2"
-          />
-          <Form.Control
-            type="text"
-            placeholder={t`Search mails`}
-            value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
-            style={{ borderRadius: "10px", cursor: "text" }}
-            className="custom-focus"
-          />
           <Button
             variant="primary"
             onClick={() =>

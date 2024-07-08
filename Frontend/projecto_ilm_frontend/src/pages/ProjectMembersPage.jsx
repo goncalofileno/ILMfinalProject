@@ -49,6 +49,7 @@ const ProjectMembersPage = () => {
   const [maxPageNumber, setMaxPageNumber] = useState(1);
   const [navigateTableTrigger, setNavigateTableTrigger] = useState(false);
   const NUMBER_OF_MEMBERS_PAGE = 5;
+  const NUMBER_OF_USERS_PAGE = 6;
   const isPhone = useMediaQuery({ query: "(max-width: 767px)" });
   const isTablet = useMediaQuery({ query: "(max-width: 991px)" });
   const sessionId = Cookies.get("session-id");
@@ -338,13 +339,14 @@ const ProjectMembersPage = () => {
             </Col>
           </Row>
           <Row>
-          {isTeamFull && (
-                    <Alert variant="warning">
-                      <Trans>
-                        The team is full, no more members can be invited or accepted until the team has an available slot.
-                      </Trans>
-                    </Alert>
-                  )}
+            {isTeamFull && (
+              <Alert variant="warning">
+                <Trans>
+                  The team is full, no more members can be invited or accepted
+                  until the team has an available slot.
+                </Trans>
+              </Alert>
+            )}
             <Col>
               <div
                 className="d-flex justify-content-between"
@@ -360,8 +362,10 @@ const ProjectMembersPage = () => {
                   <Card.Header
                     style={{ backgroundColor: "transparent", border: "none" }}
                   >
-                     <h5>
-                      <Trans>Members ({members.length}/{projectData.maxMembers})</Trans>
+                    <h5>
+                      <Trans>
+                        Members ({members.length}/{projectData.maxMembers})
+                      </Trans>
                     </h5>
                   </Card.Header>
                   <Card.Body
@@ -424,9 +428,7 @@ const ProjectMembersPage = () => {
                                   onChange={(e) =>
                                     handleRoleChange(member, e.target.value)
                                   }
-                                  disabled={
-                                   {isProjectInactive}
-                                  }
+                                  disabled={{ isProjectInactive }}
                                   className="mt-2"
                                 >
                                   <option value="MANAGER">Manager</option>
@@ -442,9 +444,7 @@ const ProjectMembersPage = () => {
                                 <Button
                                   variant="danger"
                                   onClick={() => handleRemoveMember(member)}
-                                  disabled={
-                                    isProjectInactive
-                                  }
+                                  disabled={isProjectInactive}
                                 >
                                   Remove
                                 </Button>
@@ -538,9 +538,7 @@ const ProjectMembersPage = () => {
                                       onClick={() =>
                                         handleAcceptRequest(member)
                                       }
-                                      disabled={
-                                        isTeamFull
-                                      }
+                                      disabled={isTeamFull}
                                       className="me-2"
                                     >
                                       Accept
@@ -550,9 +548,7 @@ const ProjectMembersPage = () => {
                                       onClick={() =>
                                         handleRejectRequest(member)
                                       }
-                                      disabled={
-                                        isProjectInactive
-                                      }
+                                      disabled={isProjectInactive}
                                     >
                                       Reject
                                     </Button>
@@ -565,9 +561,7 @@ const ProjectMembersPage = () => {
                                       onClick={() =>
                                         handleRemoveInvitation(member.id)
                                       }
-                                      disabled={
-                                        isProjectInactive
-                                      }
+                                      disabled={isProjectInactive}
                                     >
                                       Cancel
                                     </Button>
@@ -679,81 +673,104 @@ const ProjectMembersPage = () => {
                           </td>
                         </tr>
                       ) : (
-                        allUsers.map((user) => (
-                          <tr
-                            key={user.id}
-                            onClick={() =>
-                              window.open(
-                                `/profile/${user.systemUsername}`,
-                                "_blank"
-                              )
-                            }
-                            style={{ height: "16.67%" }}
-                          >
-                            <td
-                              style={{ width: !isPhone ? "10%" : "15%" }}
-                              className="align-middle"
+                        <>
+                          {allUsers.map((user) => (
+                            <tr
+                              key={user.id}
+                              onClick={() =>
+                                window.open(
+                                  `/profile/${user.systemUsername}`,
+                                  "_blank"
+                                )
+                              }
+                              style={{ height: "16.67%" }}
                             >
-                              <img
-                                src={user.photo}
-                                alt={user.name}
-                                width={50}
-                                height={50}
-                                className="rounded-circle"
-                              />
-                            </td>
-                            <td
-                              style={{ width: !isPhone ? "20%" : "25%" }}
-                              className="align-middle"
-                            >
-                              {user.systemUsername === userSystemUsername
-                                ? "You"
-                                : user.name}
-                            </td>
-                            {!isPhone && (
                               <td
-                                style={{ width: "20%" }}
+                                style={{ width: !isPhone ? "10%" : "15%" }}
                                 className="align-middle"
                               >
-                                {formatLab(user.lab)}
+                                <img
+                                  src={user.photo}
+                                  alt={user.name}
+                                  width={50}
+                                  height={50}
+                                  className="rounded-circle"
+                                />
                               </td>
-                            )}
-
-                            <td style={{ width: !isPhone ? "30%" : "35%" }}>
-                              <div className="skills-td-users">
-                                {user.skills.map((skill) => (
-                                  <div
-                                    className={`skill-div-${skill.inProject}`}
-                                    style={{
-                                      marginTop: "0px",
-                                      marginBottom: "6px",
-                                      height: "50%",
-                                    }}
-                                  >
-                                    <div className="skill-div-col1">
-                                      {skill.name}
-                                    </div>
-                                  </div>
-                                ))}
-                              </div>
-                            </td>
-                            <td
-                              style={{ width: !isPhone ? "20%" : "25%" }}
-                              className="align-middle"
-                            >
-                              <Button
-                                variant="primary"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleInvite(user.systemUsername);
-                                }}
-                                disabled={isTeamFull}
+                              <td
+                                style={{ width: !isPhone ? "20%" : "25%" }}
+                                className="align-middle"
                               >
-                                Invite
-                              </Button>
-                            </td>
-                          </tr>
-                        ))
+                                {user.systemUsername === userSystemUsername
+                                  ? "You"
+                                  : user.name}
+                              </td>
+                              {!isPhone && (
+                                <td
+                                  style={{ width: "20%" }}
+                                  className="align-middle"
+                                >
+                                  {formatLab(user.lab)}
+                                </td>
+                              )}
+
+                              <td style={{ width: !isPhone ? "30%" : "35%" }}>
+                                <div className="skills-td-users">
+                                  {user.skills.map((skill) => (
+                                    <div
+                                      className={`skill-div-${skill.inProject}`}
+                                      style={{
+                                        marginTop: "0px",
+                                        marginBottom: "6px",
+                                        height: "50%",
+                                      }}
+                                    >
+                                      <div className="skill-div-col1">
+                                        {skill.name}
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              </td>
+                              <td
+                                style={{ width: !isPhone ? "20%" : "25%" }}
+                                className="align-middle"
+                              >
+                                <Button
+                                  variant="primary"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleInvite(user.systemUsername);
+                                  }}
+                                  disabled={isTeamFull}
+                                >
+                                  Invite
+                                </Button>
+                              </td>
+                            </tr>
+                          ))}
+                          {allUsers.length < NUMBER_OF_USERS_PAGE &&
+                            Array(NUMBER_OF_USERS_PAGE - allUsers.length)
+                              .fill()
+                              .map(
+                                (
+                                  _,
+                                  index // Fixed the map function to use _, index
+                                ) => (
+                                  <tr
+                                    key={`placeholder-${index}`}
+                                    style={{ height: "16.66%" }}
+                                  >
+                                    {" "}
+                                    {/* Ensured unique key */}
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                  </tr>
+                                )
+                              )}
+                        </>
                       )}
                     </tbody>
                   </table>
