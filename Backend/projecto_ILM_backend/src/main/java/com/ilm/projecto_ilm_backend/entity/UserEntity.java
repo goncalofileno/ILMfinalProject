@@ -206,19 +206,19 @@ public class UserEntity implements Serializable {
     /**
      * The lab associated with the user. This is a many-to-one relationship.
      */
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private LabEntity lab;
 
     /**
      * The list of user projects associated with this user. This is a one-to-many relationship.
      */
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<UserProjectEntity> userProjects;
 
     /**
      * The list of user tasks associated with this user. This is a one-to-many relationship.
      */
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<UserTaskEntity> userTasks;
 
     /**

@@ -49,14 +49,14 @@ public class UserProjectEntity implements Serializable {
     /**
      * The user associated with this user project. This is a many-to-one relationship with the UserEntity class.
      */
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
     /**
      * The project associated with this user project. This is a many-to-one relationship with the ProjectEntity class.
      */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "project_id")
     private ProjectEntity project;
 
