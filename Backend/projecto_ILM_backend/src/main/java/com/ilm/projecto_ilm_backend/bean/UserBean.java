@@ -706,7 +706,7 @@ public class UserBean {
                                 projectDto.setStatus(project.getStatus().toString());
                                 return projectDto;
                             }).collect(Collectors.toList()));
-
+                    
                     profileDto.setSkills(profileUser.getSkills().stream()
                             .map(skill -> {
                                 SkillDto skillDto = new SkillDto();
