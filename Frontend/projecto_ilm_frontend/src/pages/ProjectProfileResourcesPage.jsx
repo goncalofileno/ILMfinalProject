@@ -15,7 +15,6 @@ import {
 } from "../utilities/services";
 import AddResourceModal from "../components/modals/AddResourceModal";
 import StandardModal from "../components/modals/StandardModal";
-import { Alert } from "react-bootstrap";
 import { useMediaQuery } from "react-responsive";
 import { Trans, t } from "@lingui/macro";
 
@@ -201,7 +200,8 @@ export default function ProjectProfileResourcesPage() {
     });
   };
 
-  const isProjectInactive = projectState === "CANCELED" || projectState === "READY";
+  const isProjectInactive =
+    projectState === "CANCELED" || projectState === "READY";
 
   return (
     <>
@@ -224,7 +224,10 @@ export default function ProjectProfileResourcesPage() {
               <Row>
                 <Col>
                   <Alert variant="danger" className="standard-modal">
-                    <Trans>The project is {projectState.toLowerCase()}, and you can't change the resources in the project.</Trans>
+                    <Trans>
+                      The project is {projectState.toLowerCase()}, and you can't
+                      change the resources in the project.
+                    </Trans>
                   </Alert>
                 </Col>
               </Row>
@@ -385,7 +388,9 @@ export default function ProjectProfileResourcesPage() {
               >
                 <Col xs={1} sm={1}></Col>
                 <Col xs={11} sm={11}>
-                  <h4 className="h4-resources-project-creat"><Trans>Your Resources</Trans></h4>
+                  <h4 className="h4-resources-project-creat">
+                    <Trans>Your Resources</Trans>
+                  </h4>
                 </Col>
               </Row>
               <Row style={{ height: "83%" }}>

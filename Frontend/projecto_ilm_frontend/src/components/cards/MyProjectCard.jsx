@@ -1,8 +1,11 @@
 import "./MyProjectCard.css";
 import ProgressBar from "../bars/ProgressBar";
 import { useNavigate } from "react-router-dom";
-import { Trans, t } from "@lingui/macro";
-import { formatTypeUserInProject, formatTypeUserInProjectInMaiusculas } from "../../utilities/converters";
+import { Trans } from "@lingui/macro";
+import {
+  formatTypeUserInProject,
+  formatTypeUserInProjectInMaiusculas,
+} from "../../utilities/converters";
 import { useMediaQuery } from "react-responsive";
 
 export default function MyProjectCard({
@@ -46,29 +49,33 @@ export default function MyProjectCard({
                 style={{ width: isMobile && "100%" }}
               >
                 <div className="my-projects-body-div">
-                <Trans>Lab</Trans> <span>{lab}</span>
+                  <Trans>Lab</Trans> <span>{lab}</span>
                 </div>
                 <div className="my-projects-body-div">
-                <Trans>Members</Trans>{" "}
+                  <Trans>Members</Trans>{" "}
                   <span>
                     {members}/{maxMembers}
                   </span>
                 </div>
                 <div className="my-projects-body-div">
-                <Trans>Start date</Trans> <span>{startDate}</span>
+                  <Trans>Start date</Trans> <span>{startDate}</span>
                 </div>
                 <div className="my-projects-body-div">
-                <Trans>End date</Trans> <span>{endDate}</span>
+                  <Trans>End date</Trans> <span>{endDate}</span>
                 </div>
               </div>
               {!isMobile && (
-              <div className="my-projects-banner-content">
-                <div className="my-projects-banner-word">{formatTypeUserInProjectInMaiusculas(typeMember)}</div>
-              </div>
+                <div className="my-projects-banner-content">
+                  <div className="my-projects-banner-word">
+                    {formatTypeUserInProjectInMaiusculas(typeMember)}
+                  </div>
+                </div>
               )}
             </div>
             <div className="my-projects-footer">
-              <div><Trans>Progress</Trans>:</div>
+              <div>
+                <Trans>Progress</Trans>:
+              </div>
               <div>
                 <ProgressBar
                   percentage={progress}

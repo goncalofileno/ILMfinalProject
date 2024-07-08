@@ -5,7 +5,7 @@ import ComposeIcon from "../../resources/icons/asides/mailAside/compose-icon.png
 import InboxIcon from "../../resources/icons/asides/mailAside/inbox-icon.png";
 import SentIcon from "../../resources/icons/asides/mailAside/sent-icon.png";
 import "./AsideMailActions.css";
-import { Trans, t } from "@lingui/macro";
+import { Trans } from "@lingui/macro";
 import { useMediaQuery } from "react-responsive";
 
 const AsideMailActions = ({ isVisible }) => {
@@ -47,36 +47,48 @@ const AsideMailActions = ({ isVisible }) => {
       {((isVisible && isMobile) || !isMobile) && (
         <div className={!isMobile && "aside-background"}>
           <div className={!isMobile ? "aside" : "aside-Mobile"}>
-        <div
-          className={`${getNavItemClass("compose")}`}
-          onClick={handleShowComposeModal}
-        >
-          <div className="icon" style={getNavIconStyle("compose")}></div>
-          <label><Trans>Compose New Mail</Trans></label>
+            <div
+              className={`${getNavItemClass("compose")}`}
+              onClick={handleShowComposeModal}
+            >
+              <div className="icon" style={getNavIconStyle("compose")}></div>
+              <label>
+                <Trans>Compose New Mail</Trans>
+              </label>
+            </div>
+            <div
+              className={getNavItemClass("/mail/inbox")}
+              onClick={() => {
+                setShowComposeModal(false);
+                navigate("/mail/inbox");
+              }}
+            >
+              <div
+                className="icon"
+                style={getNavIconStyle("/mail/inbox")}
+              ></div>
+              <label>
+                <Trans>Inbox</Trans>
+              </label>
+            </div>
+            <div
+              className={getNavItemClass("/mail/sent")}
+              onClick={() => {
+                setShowComposeModal(false);
+                navigate("/mail/sent");
+              }}
+            >
+              <div className="icon" style={getNavIconStyle("/mail/sent")}></div>
+              <label>
+                <Trans>Sent Mails</Trans>
+              </label>
+            </div>
+          </div>
+          <ComposeMailModal
+            show={showComposeModal}
+            handleClose={handleCloseComposeModal}
+          />
         </div>
-        <div
-          className={getNavItemClass("/mail/inbox")}
-          onClick={() => {
-            setShowComposeModal(false);
-            navigate("/mail/inbox");
-          }}
-        >
-          <div className="icon" style={getNavIconStyle("/mail/inbox")}></div>
-          <label><Trans>Inbox</Trans></label>
-        </div>
-        <div
-          className={getNavItemClass("/mail/sent")}
-          onClick={() => {
-            setShowComposeModal(false);
-            navigate("/mail/sent");
-          }}
-        >
-          <div className="icon" style={getNavIconStyle("/mail/sent")}></div>
-          <label><Trans>Sent Mails</Trans></label>
-        </div>
-      </div>
-      <ComposeMailModal show={showComposeModal} handleClose={handleCloseComposeModal} />
-    </div>
       )}
     </>
   );

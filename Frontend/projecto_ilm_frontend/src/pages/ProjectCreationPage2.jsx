@@ -150,20 +150,20 @@ export default function ProjectCreationPage2() {
             }}
           />
           <div className="flex-btn-row-mail-table">
-          <Button
-            variant="primary"
-            id="primary-btn-boot"
-            onClick={() => setGetUsersTrigger((prev) => !prev)}
-          >
-            <Trans>Search</Trans>
-          </Button>
-          <Button
-            variant="secondary"
-            style={{ borderRadius: "10px" }}
-            onClick={handleClearSearch}
-          >
-            <Trans>Clear Search</Trans>
-          </Button>
+            <Button
+              variant="primary"
+              id="primary-btn-boot"
+              onClick={() => setGetUsersTrigger((prev) => !prev)}
+            >
+              <Trans>Search</Trans>
+            </Button>
+            <Button
+              variant="secondary"
+              style={{ borderRadius: "10px" }}
+              onClick={handleClearSearch}
+            >
+              <Trans>Clear Search</Trans>
+            </Button>
           </div>
         </InputGroup>
         <Row className="row-container">

@@ -237,8 +237,8 @@ export default function AddResourceModal({
               >
                 <h3 className="modal-title">
                   {resourceSupplier === null
-                    ? (t`Resource Creation`)
-                    : (t`Resource Edition`)}
+                    ? t`Resource Creation`
+                    : t`Resource Edition`}
                   {}
                 </h3>
                 {modalErrorVisible && (
@@ -366,7 +366,7 @@ export default function AddResourceModal({
                     className="submit-button"
                     id="create-resource-btn"
                   >
-                    {resourceSupplier === null ? (t`Create`) : (t`Save`)}
+                    {resourceSupplier === null ? t`Create` : t`Save`}
                   </button>
                 </div>
               </div>
