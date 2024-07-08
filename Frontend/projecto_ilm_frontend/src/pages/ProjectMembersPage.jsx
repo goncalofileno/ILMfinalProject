@@ -338,6 +338,13 @@ const ProjectMembersPage = () => {
             </Col>
           </Row>
           <Row>
+          {isTeamFull && (
+                    <Alert variant="warning">
+                      <Trans>
+                        The team is full, no more members can be invited or accepted until the team has an available slot.
+                      </Trans>
+                    </Alert>
+                  )}
             <Col>
               <div
                 className="d-flex justify-content-between"
@@ -405,18 +412,18 @@ const ProjectMembersPage = () => {
                               style={{ width: "30%" }}
                               className="align-middle"
                             >
-                              {typeLabels[member.type]}
+                              {formatTypeUserInProject(member.type)}
                               {member.type !== "CREATOR" && (
                                 <Form.Select
                                   value={
                                     selectedMemberType[member.systemUsername] ||
-                                    member.type
+                                    getMemberType(member.type)
                                   }
                                   onChange={(e) =>
                                     handleRoleChange(member, e.target.value)
                                   }
                                   disabled={
-                                    projectData.projectState === "CANCELED"
+                                   {isProjectInactive}
                                   }
                                   className="mt-2"
                                 >
@@ -434,7 +441,7 @@ const ProjectMembersPage = () => {
                                   variant="danger"
                                   onClick={() => handleRemoveMember(member)}
                                   disabled={
-                                    projectData.projectState === "CANCELED"
+                                    isProjectInactive
                                   }
                                 >
                                   Remove
@@ -530,7 +537,7 @@ const ProjectMembersPage = () => {
                                         handleAcceptRequest(member)
                                       }
                                       disabled={
-                                        projectData.projectState === "CANCELED"
+                                        isProjectInactive
                                       }
                                       className="me-2"
                                     >
@@ -557,7 +564,7 @@ const ProjectMembersPage = () => {
                                         handleRemoveInvitation(member.id)
                                       }
                                       disabled={
-                                        projectData.projectState === "CANCELED"
+                                        isProjectInactive
                                       }
                                     >
                                       Cancel
