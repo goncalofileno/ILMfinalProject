@@ -24,6 +24,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Bean responsável por gerenciar logs e notas de projetos.
+ */
 @Singleton
 @Startup
 public class LogBean {
@@ -52,6 +55,9 @@ public class LogBean {
     @Inject
     NoteBean noteBean;
 
+    /**
+     * Cria logs padrão se não existirem.
+     */
     @Transactional
     public void createDefaultLogsIfNotExistent() {
         ProjectEntity project = projectDao.findById(1);
@@ -89,6 +95,13 @@ public class LogBean {
         }
     }
 
+    /**
+     * Cria um log de membro adicionado.
+     *
+     * @param project   O projeto ao qual o log pertence.
+     * @param author    O autor do log.
+     * @param receiver  O nome do membro adicionado.
+     */
     public void createMemberAddedLog(ProjectEntity project, UserEntity author, String receiver) {
         LogEntity log = new LogEntity();
         log.setDate(LocalDateTime.now());
@@ -99,6 +112,13 @@ public class LogBean {
         logDao.persist(log);
     }
 
+    /**
+     * Cria um log de membro removido.
+     *
+     * @param project   O projeto ao qual o log pertence.
+     * @param author    O autor do log.
+     * @param receiver  O nome do membro removido.
+     */
     public void createMemberRemovedLog(ProjectEntity project, UserEntity author, String receiver) {
         LogEntity log = new LogEntity();
         log.setDate(LocalDateTime.now());
@@ -109,6 +129,13 @@ public class LogBean {
         logDao.persist(log);
     }
 
+    /**
+     * Cria um log de tarefa criada.
+     *
+     * @param project   O projeto ao qual o log pertence.
+     * @param author    O autor do log.
+     * @param taskTitle O título da tarefa criada.
+     */
     public void createTasksCreatedLog(ProjectEntity project, UserEntity author, String taskTitle) {
         LogEntity log = new LogEntity();
         log.setDate(LocalDateTime.now());
@@ -119,6 +146,15 @@ public class LogBean {
         logDao.persist(log);
     }
 
+    /**
+     * Cria um log de tarefa concluída.
+     *
+     * @param project   O projeto ao qual o log pertence.
+     * @param author    O autor do log.
+     * @param taskTitle O título da tarefa concluída.
+     * @param oldStatus O status antigo da tarefa.
+     * @param newStatus O novo status da tarefa.
+     */
     public void createTasksCompletedLog(ProjectEntity project, UserEntity author, String taskTitle, TaskStatusENUM oldStatus, TaskStatusENUM newStatus) {
         LogEntity log = new LogEntity();
         log.setDate(LocalDateTime.now());
@@ -131,6 +167,15 @@ public class LogBean {
         logDao.persist(log);
     }
 
+    /**
+     * Cria um log de tarefa em progresso.
+     *
+     * @param project   O projeto ao qual o log pertence.
+     * @param author    O autor do log.
+     * @param taskTitle O título da tarefa.
+     * @param oldStatus O status antigo da tarefa.
+     * @param newStatus O novo status da tarefa.
+     */
     public void createTasksInProgressLog(ProjectEntity project, UserEntity author, String taskTitle, TaskStatusENUM oldStatus, TaskStatusENUM newStatus) {
         LogEntity log = new LogEntity();
         log.setDate(LocalDateTime.now());
@@ -143,6 +188,13 @@ public class LogBean {
         logDao.persist(log);
     }
 
+    /**
+     * Cria um log de tarefa deletada.
+     *
+     * @param project   O projeto ao qual o log pertence.
+     * @param author    O autor do log.
+     * @param taskTitle O título da tarefa deletada.
+     */
     public void createTasksDeletedLog(ProjectEntity project, UserEntity author, String taskTitle) {
         LogEntity log = new LogEntity();
         log.setDate(LocalDateTime.now());
@@ -153,6 +205,13 @@ public class LogBean {
         logDao.persist(log);
     }
 
+    /**
+     * Cria um log de tarefa atualizada.
+     *
+     * @param project   O projeto ao qual o log pertence.
+     * @param author    O autor do log.
+     * @param taskTitle O título da tarefa atualizada.
+     */
     public void createTasksUpdatedLog(ProjectEntity project, UserEntity author, String taskTitle) {
         LogEntity log = new LogEntity();
         log.setDate(LocalDateTime.now());
@@ -163,6 +222,12 @@ public class LogBean {
         logDao.persist(log);
     }
 
+    /**
+     * Cria um log de informações do projeto atualizadas.
+     *
+     * @param project O projeto ao qual o log pertence.
+     * @param author  O autor do log.
+     */
     public void createProjectInfoUpdatedLog(ProjectEntity project, UserEntity author) {
         LogEntity log = new LogEntity();
         log.setDate(LocalDateTime.now());
@@ -172,6 +237,14 @@ public class LogBean {
         logDao.persist(log);
     }
 
+    /**
+     * Cria um log de status do projeto atualizado.
+     *
+     * @param project   O projeto ao qual o log pertence.
+     * @param author    O autor do log.
+     * @param oldState  O estado antigo do projeto.
+     * @param newState  O novo estado do projeto.
+     */
     public void createProjectStatusUpdatedLog(ProjectEntity project, UserEntity author, StateProjectENUM oldState, StateProjectENUM newState) {
         LogEntity log = new LogEntity();
         log.setDate(LocalDateTime.now());
@@ -183,6 +256,12 @@ public class LogBean {
         logDao.persist(log);
     }
 
+    /**
+     * Cria um log de recursos atualizados.
+     *
+     * @param project O projeto ao qual o log pertence.
+     * @param author  O autor do log.
+     */
     public void createResourcesAddedLog(ProjectEntity project, UserEntity author) {
         LogEntity log = new LogEntity();
         log.setDate(LocalDateTime.now());
@@ -192,6 +271,15 @@ public class LogBean {
         logDao.persist(log);
     }
 
+    /**
+     * Cria um log de mudança de tipo de membro.
+     *
+     * @param project   O projeto ao qual o log pertence.
+     * @param author    O autor do log.
+     * @param receiver  O nome do membro.
+     * @param oldType   O tipo antigo do membro.
+     * @param newType   O novo tipo do membro.
+     */
     public void createMemberTypeChangedLog(ProjectEntity project, UserEntity author, String receiver, UserInProjectTypeENUM oldType, UserInProjectTypeENUM newType) {
         LogEntity log = new LogEntity();
         log.setDate(LocalDateTime.now());
@@ -204,7 +292,13 @@ public class LogBean {
         logDao.persist(log);
     }
 
-    public void createMemberLeftLog(ProjectEntity project, UserEntity leaver){
+    /**
+     * Cria um log de membro que deixou o projeto.
+     *
+     * @param project O projeto ao qual o log pertence.
+     * @param leaver  O membro que deixou o projeto.
+     */
+    public void createMemberLeftLog(ProjectEntity project, UserEntity leaver) {
         LogEntity log = new LogEntity();
         log.setDate(LocalDateTime.now());
         log.setType(LogTypeENUM.MEMBER_LEFT);
@@ -213,7 +307,14 @@ public class LogBean {
         logDao.persist(log);
     }
 
-
+    /**
+     * Obtém logs de um projeto pelo nome do projeto.
+     *
+     * @param sessionId           O ID da sessão do usuário.
+     * @param systemProjectName   O nome do projeto.
+     * @return Lista de DTOs de logs.
+     * @throws Exception Caso ocorra algum erro ao obter os logs.
+     */
     public List<LogDto> getLogsByProjectName(String sessionId, String systemProjectName) throws Exception {
         ProjectEntity project = projectDao.findBySystemName(systemProjectName);
         UserEntity user = userBean.getUserBySessionId(sessionId);
@@ -237,43 +338,48 @@ public class LogBean {
         return logDtos;
     }
 
-
+    /**
+     * Converte uma entidade LogEntity para um DTO LogDto.
+     *
+     * @param logEntity A entidade LogEntity a ser convertida.
+     * @return O DTO LogDto correspondente.
+     */
     private LogDto convertToDto(LogEntity logEntity) {
         LogDto logDto = new LogDto();
         logDto.setId(logEntity.getId());
         logDto.setDate(logEntity.getDate());
-        if(logEntity.getReceiver() != null) {
+        if (logEntity.getReceiver() != null) {
             logDto.setReceiver(logEntity.getReceiver());
         }
-        if(logEntity.getType() != null) {
+        if (logEntity.getType() != null) {
             logDto.setType(logEntity.getType());
         }
-        if(logEntity.getTaskTitle() != null) {
+        if (logEntity.getTaskTitle() != null) {
             logDto.setTaskTitle(logEntity.getTaskTitle());
         }
-        if(logEntity.getTaskOldStatus() != null) {
+        if (logEntity.getTaskOldStatus() != null) {
             logDto.setTaskOldStatus(logEntity.getTaskOldStatus());
         }
-        if(logEntity.getTaskNewStatus() != null) {
+        if (logEntity.getTaskNewStatus() != null) {
             logDto.setTaskNewStatus(logEntity.getTaskNewStatus());
         }
-        if(logEntity.getProjectOldState() != null) {
+        if (logEntity.getProjectOldState() != null) {
             logDto.setProjectOldState(logEntity.getProjectOldState());
         }
-        if(logEntity.getProjectNewState() != null) {
+        if (logEntity.getProjectNewState() != null) {
             logDto.setProjectNewState(logEntity.getProjectNewState());
         }
-        if(logEntity.getResourceName() != null) {
+        if (logEntity.getResourceName() != null) {
             logDto.setResourceName(logEntity.getResourceName());
         }
-        if(logEntity.getResourceStock() != 0) {
+        if (logEntity.getResourceStock() != 0) {
             logDto.setResourceStock(logEntity.getResourceStock());
         }
-        if(logEntity.getAuthor() != null) {
+        if (logEntity.getAuthor() != null) {
             logDto.setAuthorName(logEntity.getAuthor().getFirstName() + " " + logEntity.getAuthor().getLastName());
             logDto.setAuthorPhoto(logEntity.getAuthor().getPhoto());
         }
-        if(logEntity.getOldUserType() != null) {
+        if (logEntity.getOldUserType() != null) {
             logDto.setMemberOldType(logEntity.getOldUserType().name());
             logDto.setMemberNewType(logEntity.getNewUserType().name());
         }
@@ -281,6 +387,14 @@ public class LogBean {
         return logDto;
     }
 
+    /**
+     * Obtém logs e notas de um projeto pelo nome do projeto.
+     *
+     * @param sessionId           O ID da sessão do usuário.
+     * @param systemProjectName   O nome do projeto.
+     * @return DTO contendo logs e notas do projeto.
+     * @throws Exception Caso ocorra algum erro ao obter os logs e notas.
+     */
     public LogsAndNotesPageDto getLogsAndNotesByProjectName(String sessionId, String systemProjectName) throws Exception {
         ProjectEntity project = projectDao.findBySystemName(systemProjectName);
         UserEntity user = userBean.getUserBySessionId(sessionId);
@@ -320,5 +434,4 @@ public class LogBean {
 
         return logsAndNotesPageDto;
     }
-
 }

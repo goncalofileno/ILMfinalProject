@@ -31,6 +31,11 @@ public class MailBean {
     @Inject
     UserBean userBean;
 
+    /**
+        * Creates default mails if they do not exist.
+     * This method is used for testing purposes.
+     * It creates 30 mails from user 1 to user 2 and 30 mails from user 2 to user 1.
+     */
     public void createDefaultMailsIfNotExistent() {
         for (int i = 0; i < 30; i++) {
             if (maildao.findById(i) == null) {
@@ -63,6 +68,14 @@ public class MailBean {
         }
     }
 
+    /**
+     * Returns a list of mails received by the user with the given session id.
+     * @param sessionId the session id of the user
+     * @param page the page number
+     * @param pageSize the number of mails per page
+     * @param unread if true, only unread mails are returned
+     * @return a list of MailDto objects
+     */
     public List<MailDto> getMailsReceivedBySessionId(String sessionId, int page, int pageSize, boolean unread) {
         int userId = sessionDao.findBySessionId(sessionId).getUser().getId();
         List<MailEntity> mailsReceived = maildao.getMailsReceivedByUserId(userId, page, pageSize, unread);
@@ -87,12 +100,24 @@ public class MailBean {
         return mailDtos;
     }
 
+    /**
+     * Returns the total number of mails received by the user with the given session id.
+     * @param sessionId the session id of the user
+     * @param unread if true, only unread mails are counted
+     * @return the total number of mails received by the user
+     */
     public int getTotalMailsReceivedBySessionId(String sessionId, boolean unread) {
         int userId = sessionDao.findBySessionId(sessionId).getUser().getId();
         return maildao.getTotalMailsReceivedByUserId(userId, unread);
     }
 
 
+    /**
+     * Marks a mail as seen.
+     * @param sessionId the session id of the user
+     * @param mailId the id of the mail
+     * @return true if the mail was marked as seen, false otherwise
+     */
     public boolean markMailAsSeen(String sessionId, int mailId) {
         UserEntity user = sessionDao.findBySessionId(sessionId).getUser();
         MailEntity mail = maildao.findById(mailId);
@@ -106,6 +131,12 @@ public class MailBean {
         }
     }
 
+    /**
+     * Marks a mail as deleted.
+     * @param sessionId the session id of the user
+     * @param mailId the id of the mail
+     * @return true if the mail was marked as deleted, false otherwise
+     */
     public boolean markMailAsDeleted(String sessionId, int mailId) {
 
         UserEntity user = userBean.getUserBySessionId(sessionId);
@@ -124,6 +155,12 @@ public class MailBean {
         }
     }
 
+    /**
+     * Sends a mail from the user with the given session id to the user with the given email.
+     * @param userSender the user who sends the mail
+     * @param mailDto the mail to be sent
+     * @return true if the mail was sent, false otherwise
+     */
     public boolean sendMail(UserEntity userSender, MailDto mailDto) {
         UserEntity sender = userSender;
         UserEntity receiver = userDao.findByEmail(mailDto.getReceiverMail());
@@ -152,6 +189,11 @@ public class MailBean {
         }
     }
 
+    /**
+     * Returns a list of contacts of the user with the given session id.
+     * @param sessionId the session id of the user
+     * @return a list of ContactDto objects
+     */
     public List<ContactDto> getContactsBySessionId(String sessionId) {
         List<ContactDto> contacts = new ArrayList<>();
         UserEntity user = sessionDao.findBySessionId(sessionId).getUser();
@@ -168,11 +210,23 @@ public class MailBean {
         return contacts;
     }
 
+    /**
+     * Returns the number of unread mails of the user with the given session id.
+     * @param sessionId the session id of the user
+     * @return the number of unread mails
+     */
     public int getUnreadNumber(String sessionId) {
         UserEntity user = sessionDao.findBySessionId(sessionId).getUser();
         return maildao.getUnreadNumber(user.getId());
     }
 
+    /**
+     * Returns a list of mails received by the user with the given session id.
+     * @param sessionId the session id of the user
+     * @param page the page number
+     * @param pageSize the number of mails per page
+     * @return a list of MailDto objects
+     */
     public List<MailDto> searchMailsBySessionId(String sessionId, String query, int page, int pageSize, boolean unread) {
         int userId = sessionDao.findBySessionId(sessionId).getUser().getId();
         List<MailEntity> mails = maildao.searchMails(userId, query, page, pageSize, unread);
@@ -195,12 +249,24 @@ public class MailBean {
         }).collect(Collectors.toList());
     }
 
+    /**
+     * Returns the total number of mails received by the user with the given session id.
+     * @param sessionId the session id of the user
+     * @return the total number of mails received by the user
+     */
     public int getTotalSearchResultsBySessionId(String sessionId, String query, boolean unread) {
         int userId = sessionDao.findBySessionId(sessionId).getUser().getId();
         return maildao.getTotalSearchResults(userId, query, unread);
     }
 
 
+    /**
+     * Returns a list of mails sent by the user with the given session id.
+     * @param sessionId the session id of the user
+     * @param page the page number
+     * @param pageSize the number of mails per page
+     * @return a list of MailDto objects
+     */
     public List<MailDto> searchSentMailsBySessionId(String sessionId, String query, int page, int pageSize) {
         int userId = sessionDao.findBySessionId(sessionId).getUser().getId();
         List<MailEntity> mails = maildao.searchSentMails(userId, query, page, pageSize);
@@ -225,6 +291,11 @@ public class MailBean {
         return mailDtos;
     }
 
+    /**
+     * Returns the total number of mails sent by the user with the given session id.
+     * @param sessionId the session id of the user
+     * @return the total number of mails sent by the user
+     */
     public int getTotalSentSearchResultsBySessionId(String sessionId, String query) {
         int userId = sessionDao.findBySessionId(sessionId).getUser().getId();
         return maildao.getTotalSentSearchResults(userId, query);
