@@ -68,6 +68,11 @@ public class LabBean {
         }
     }
 
+    /**
+     * Retrieves all labs from the database.
+     *
+     * @return a list of LabDto instances
+     */
     public List<LabDto> getAllLabs() {
         List<LabEntity> labs = labDao.findAll();
         List<LabDto> labDtos = new ArrayList<>();

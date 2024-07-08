@@ -16,6 +16,7 @@ public class ProjectCreationDto {
     private String startDate;
     private String endDate;
     private String photo;
+    private int maxMembers;
 
     public ProjectCreationDto() {
     }
@@ -90,5 +91,13 @@ public class ProjectCreationDto {
 
     public void setPhoto(String photo) {
         this.photo = photo;
+    }
+
+    public int getMaxMembers() {
+        return maxMembers;
+    }
+
+    public void setMaxMembers(int maxMembers) {
+        this.maxMembers = maxMembers;
     }
 }

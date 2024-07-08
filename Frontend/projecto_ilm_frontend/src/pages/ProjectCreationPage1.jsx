@@ -340,26 +340,28 @@ export default function ProjectCreationPage1() {
                 </Col>
                 <Col sm={2}>
                   <div className="lab-drop-down-div">
-                    <label htmlFor="lab-drop-down" className="custom-label">
+                    <label htmlFor="start-date" className="custom-label">
                       Start Date
                     </label>
                     <input
                       type="date"
                       className="date-input"
                       value={startDate}
+                      min={getTomorrowDate()}
                       onChange={(e) => setStartDate(e.target.value)}
                     ></input>
                   </div>
                 </Col>
                 <Col sm={2}>
                   <div className="lab-drop-down-div">
-                    <label htmlFor="lab-drop-down" className="custom-label">
+                    <label htmlFor="end-date" className="custom-label">
                       End Date
                     </label>
                     <input
                       type="date"
                       className="date-input"
                       value={endDate}
+                      min={startDate ? getOneWeekAfterStartDate(startDate) : ""}
                       onChange={(e) => setEndDate(e.target.value)}
                     ></input>
                   </div>

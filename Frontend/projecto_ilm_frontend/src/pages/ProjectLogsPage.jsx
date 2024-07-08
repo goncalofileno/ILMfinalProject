@@ -520,7 +520,7 @@ const ProjectLogsPage = () => {
                             logsAndNotes.projectStatus
                           )}
                         >
-                          Add {!isTablet && "Note"}
+                          <Trans>Add </Trans> {!isTablet && (t`Note`)}
                         </Button>
                       </div>
                     </Col>

@@ -318,7 +318,7 @@ const UserProfile = () => {
                             className="flex-row pills-container"
                           >
                             <Nav.Item>
-                              <Nav.Link eventKey="projects">Projects</Nav.Link>
+                              <Nav.Link eventKey="projects"><Trans>Projects</Trans></Nav.Link>
                             </Nav.Item>
                             {loggedInUsername === systemUsername && (
                               <Nav.Item>
