@@ -115,7 +115,7 @@ public class StatisticsBean {
         ArrayList<ProjectsStatusNumberPerLab> projectsStatusNumberPerLabs = new ArrayList<>();
 
         for (WorkLocalENUM location : WorkLocalENUM.values()) {
-            ProjectsStatusNumberPerLab projectStatusNumberPerLab = new ProjectsStatusNumberPerLab(convertToTitleCase(location.toString()));
+            ProjectsStatusNumberPerLab projectStatusNumberPerLab = new ProjectsStatusNumberPerLab(location.toString());
             projectsStatusNumberPerLabs.add(projectStatusNumberPerLab);
             for(StateProjectENUM state : StateProjectENUM.values()){
                 projectStatusNumberPerLab.addStatusNumber(new StatusNumberDto(state, 0L));
@@ -124,13 +124,17 @@ public class StatisticsBean {
         for (Object[] project : projects) {
             boolean found = false;
             for (int i=0; i<projectsStatusNumberPerLabs.size() && !found; i++) {
-                if (projectsStatusNumberPerLabs.get(i).getLab().equals((WorkLocalENUM) project[0])) {
+                if (projectsStatusNumberPerLabs.get(i).getLab().equals( project[0].toString())) {
                     projectsStatusNumberPerLabs.get(i).setStatusNumber((long) project[2], (StateProjectENUM) project[1]);
                     found = true;
                 }
             }
-
         }
+
+        for (int i=0; i<projectsStatusNumberPerLabs.size(); i++) {
+            projectsStatusNumberPerLabs.get(i).setLab(convertToTitleCase(projectsStatusNumberPerLabs.get(i).getLab()));
+        }
+
         return projectsStatusNumberPerLabs;
     }
 

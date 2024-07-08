@@ -38,10 +38,14 @@ const StatisticsPdf = () => {
   const [projectsPerLab, setProjectsPerLab] = useState([]);
   const [totalUsers, setTotalUsers] = useState(0);
   const [averageUsersInProject, setAverageUsersInProject] = useState(0);
-  const [averageExecutionProjectTime, setAverageExecutionProjectTime] = useState(0);
-  const [supplierWithMostResources, setSupplierWithMostResources] = useState(null);
+  const [averageExecutionProjectTime, setAverageExecutionProjectTime] =
+    useState(0);
+  const [supplierWithMostResources, setSupplierWithMostResources] =
+    useState(null);
   const [resourcesNumberSupplier, setResourcesNumberSupplier] = useState([]);
-  const [currentLanguage, setCurrentLanguage] = useState(Cookies.get("user-language") || "ENGLISH");
+  const [currentLanguage, setCurrentLanguage] = useState(
+    Cookies.get("user-language") || "ENGLISH"
+  );
   const [projectStatusNumberPerLab, setProjectStatusNumberPerLab] = useState(
     []
   );
@@ -242,9 +246,8 @@ const StatisticsPdf = () => {
 
   return (
     <div>
-      <AppNavbar setCurrentLanguage={setCurrentLanguage}/>
+      <AppNavbar setCurrentLanguage={setCurrentLanguage} />
 
-      {/* Screen display */}
       <div
         className="screen-display"
         style={{ height: isTablet && "unset", position: isTablet && "unset" }}
@@ -255,15 +258,23 @@ const StatisticsPdf = () => {
         >
           <h1 className="page-title">
             <span className="app-slogan-1">ILM </span>
-            <span className="app-slogan-2"><Trans>Statistics</Trans></span>
+            <span className="app-slogan-2">
+              <Trans>Statistics</Trans>
+            </span>
           </h1>
-          <Row style={{ height: "3%" }}></Row>
+          <Row
+            style={{ height: !isTablet ? "3%" : "30px", width: "10%" }}
+          ></Row>
           <Row style={{ height: !isTablet && "42%", width: "100%" }}>
             <Col sm={1}></Col>
 
-            <Col sm={12} xl={7} style={{ height: "100%" }}>
+            <Col
+              sm={10}
+              xl={7}
+              style={{ height: "100%", marginBottom: isTablet && "30px" }}
+            >
               <Row style={{ height: "100%" }} className="row-pie-charts">
-                <Col sm={5} style={{ height: "100%" }}>
+                <Col sm={6} style={{ height: "100%" }}>
                   <Chart
                     chartType="PieChart"
                     data={membersPerLab}
@@ -272,7 +283,7 @@ const StatisticsPdf = () => {
                     height={"100%"}
                   />
                 </Col>
-                <Col sm={12} xl={5} style={{ height: "100%" }}>
+                <Col sm={6} style={{ height: "100%" }}>
                   {" "}
                   <Chart
                     chartType="PieChart"
@@ -284,13 +295,21 @@ const StatisticsPdf = () => {
                 </Col>
               </Row>
             </Col>
-            <Col xl={3} className="col-app-stats">
-              <div className="app-stats">
+            <Col
+              xl={3}
+              className="col-app-stats"
+              style={{
+                width: isTablet && "100%",
+                marginBottom: isTablet && "30px",
+              }}
+            >
+              <div className="app-stats" style={{ width: isTablet && "85%" }}>
                 <div>
-                <Trans>Total users</Trans>: <span>{totalUsers}</span>
+                  <Trans>Total users</Trans>: <span>{totalUsers}</span>
                 </div>
                 <div>
-                <Trans>Average users in project</Trans>: <span>{averageUsersInProject}</span>
+                  <Trans>Average users in project</Trans>:{" "}
+                  <span>{averageUsersInProject}</span>
                 </div>
 
                 {averageExecutionProjectTime !== "NaN" && (
@@ -300,18 +319,28 @@ const StatisticsPdf = () => {
                   </div>
                 )}
                 <div>
-                <Trans>Supplier with most Resources</Trans>:{" "}
+                  <Trans>Supplier with most Resources</Trans>:{" "}
                   <span>{supplierWithMostResources}</span> <Trans>with</Trans>{" "}
-                  <span>{resourcesNumberSupplier}</span> <Trans>resources</Trans>
+                  <span>{resourcesNumberSupplier}</span>{" "}
+                  <Trans>resources</Trans>
                 </div>
               </div>
             </Col>
             <Col sm={1}></Col>
           </Row>
-          <Row style={{ height: "3%" }}></Row>
+          <Row style={{ height: "3%", width: "10%" }}></Row>
           <Row style={{ height: !isTablet && "40%", width: "100%" }}>
             <Col sm={1}></Col>
-            <Col sm={12} xl={7} className="row-pie-charts">
+            <Col
+              sm={12}
+              xl={7}
+              className="row-pie-charts"
+              style={{
+                height: isTablet && "100%",
+                marginBottom: isTablet && "30px",
+                width: isTablet && "83%",
+              }}
+            >
               <Chart
                 chartType="BarChart"
                 width="100%"
@@ -349,20 +378,22 @@ const StatisticsPdf = () => {
       </div>
 
       <>
-        <Document>
+        <Document id="document-pdf">
           <Page size="A4" style={styles.page}>
             <View style={styles.section}>
               <div>
                 <div className="pdf-page" ref={pieRef}>
-                  <Row className="pdf-title"><Trans>ILM Statistics</Trans></Row>
+                  <Row className="pdf-title">
+                    <Trans>ILM Statistics</Trans>
+                  </Row>
                   <Row>
                     <Col sm={12}>
                       <div className="app-stats-pdf">
                         <div>
-                        <Trans>Total users</Trans>: <span>{totalUsers}</span>
+                          <Trans>Total users</Trans>: <span>{totalUsers}</span>
                         </div>
                         <div>
-                        <Trans>Average users in project</Trans>:{" "}
+                          <Trans>Average users in project</Trans>:{" "}
                           <span>{averageUsersInProject}</span>
                         </div>
 
@@ -375,9 +406,11 @@ const StatisticsPdf = () => {
                           </div>
                         )}
                         <div>
-                        <Trans>Supplier with most Resources</Trans>:{" "}
-                          <span>{supplierWithMostResources}</span> <Trans>with</Trans>{" "}
-                          <span>{resourcesNumberSupplier}</span> <Trans>resources</Trans>
+                          <Trans>Supplier with most Resources</Trans>:{" "}
+                          <span>{supplierWithMostResources}</span>{" "}
+                          <Trans>with</Trans>{" "}
+                          <span>{resourcesNumberSupplier}</span>{" "}
+                          <Trans>resources</Trans>
                         </div>
                       </div>
                     </Col>

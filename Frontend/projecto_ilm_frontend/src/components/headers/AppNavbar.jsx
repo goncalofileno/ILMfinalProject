@@ -23,7 +23,11 @@ import ukFlag from "../../resources/icons/navbar/united-kingdom.png";
 import { Trans, t } from "@lingui/macro";
 import { useLanguage } from "../../I18nLoader";
 
-export default function AppNavbar({ setIsAsideVisible, pageWithAside, setCurrentLanguage }) {
+export default function AppNavbar({
+  setIsAsideVisible,
+  pageWithAside,
+  setCurrentLanguage,
+}) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [userImage, setUserImage] = useState(userProfileIcon);
@@ -33,7 +37,7 @@ export default function AppNavbar({ setIsAsideVisible, pageWithAside, setCurrent
   const bellIconRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
-  const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
+  const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
   const { unreadCount, setUnreadCount } = useMailStore();
   const {
     unreadNotificationsCount,

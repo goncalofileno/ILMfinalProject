@@ -19,6 +19,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Trans, t } from "@lingui/macro";
 import { useMediaQuery } from "react-responsive";
 import e from "cors";
+import { max } from "moment";
 
 export default function EditProjectPage() {
   const [selectedInterests, setSelectedInterests] = useState([]);
@@ -110,6 +111,7 @@ export default function EditProjectPage() {
           skills: selectedSkills,
           startDate: startDate,
           endDate: endDate,
+          maxMembers: maxMembers,
         };
 
         updateProject(project, systemProjectName).then((response) => {

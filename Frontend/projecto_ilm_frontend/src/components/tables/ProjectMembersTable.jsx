@@ -6,6 +6,7 @@ import "./ProjectMembersTable.css";
 import "./Tables.css";
 import { formatTypeUserInProject } from "../../utilities/converters";
 import { Trans, t } from "@lingui/macro";
+import { useState } from "react";
 
 const ProjectMembersTable = ({ members }) => {
   const navigate = useNavigate();
@@ -20,12 +21,23 @@ const ProjectMembersTable = ({ members }) => {
     <table style={{ height: "365px" }} className="table-users-project-table">
       <thead id="table-users-project-head">
         <tr id="table-users-project">
-          <th><Trans>Photo</Trans></th>
-          <th><Trans>Name</Trans></th>
-          <th><Trans>Type</Trans></th>
+          <th>
+            <Trans>Photo</Trans>
+          </th>
+          <th>
+            <Trans>Name</Trans>
+          </th>
+          <th>
+            <Trans>Type</Trans>
+          </th>
         </tr>
       </thead>
-      <tbody id="body-table-users-project">
+      <tbody
+        id="body-table-users-project"
+        style={{
+          overflow: NUMBER_OF_MEMBERS_PAGE - members.length > 0 && "hidden",
+        }}
+      >
         {members.map((member, index) => (
           <tr
             key={index}
@@ -40,7 +52,7 @@ const ProjectMembersTable = ({ members }) => {
             </td>
             <td style={{ cursor: "pointer", color: "black" }}>
               {member.systemUsername === userSystemUsername
-                ? (t`You`)
+                ? t`You`
                 : member.name}
             </td>
             <td>{formatTypeUserInProject(member.type)}</td>

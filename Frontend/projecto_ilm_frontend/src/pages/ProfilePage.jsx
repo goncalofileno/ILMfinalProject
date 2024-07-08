@@ -25,7 +25,12 @@ import "./AlertAnimation.css";
 import ComposeMailModal from "../components/modals/ComposeMailModal";
 import InviteProjectModal from "../components/modals/InviteProjectModal.jsx";
 import { Trans, t } from "@lingui/macro";
-import { formatProjectState, formatTypeUserInProject } from "../utilities/converters.js";
+import {
+  formatProjectState,
+  formatTypeUserInProject,
+} from "../utilities/converters.js";
+
+import { useMediaQuery } from "react-responsive";
 
 const UserProfile = () => {
   const { systemUsername, section } = useParams();
@@ -42,6 +47,7 @@ const UserProfile = () => {
   const [activeKey, setActiveKey] = useState(section || "projects");
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [pendingProjectToReject, setPendingProjectToReject] = useState(null);
+  const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
   const navigate = useNavigate();
 
   const loggedInUsername = Cookies.get("user-systemUsername");
@@ -209,8 +215,13 @@ const UserProfile = () => {
   return (
     <>
       <AppNavbar />
-      <div className="bckg-color-ilm-page ilm-pageb">
-        <Container className="mt-4" style={{ height: "94%" }}>
+      <div
+        className={
+          !isMobile ? "bckg-color-ilm-page ilm-pageb" : "ilm-pageb-noheight"
+        }
+        style={{ paddingTop: "5px" }}
+      >
+        <Container className="mt-4" style={{ height: !isMobile && "94%" }}>
           <CSSTransition
             in={showAlert}
             timeout={300}
@@ -225,15 +236,22 @@ const UserProfile = () => {
               {successMessage}
             </Alert>
           </CSSTransition>
-          <Row className="justify-content-md-center" style={{ height: "100%" }}>
+          <Row
+            className="justify-content-md-center"
+            style={{ height: !isMobile && "100%" }}
+          >
             <Col md="12" style={{ height: "100%" }}>
               <Card className="shadow-sm ilm-form" style={{ height: "100%" }}>
                 <Card.Body style={{ height: "100%" }}>
                   <Row style={{ height: "100%" }}>
-                    <Col md="3" className="text-center align-divs-center">
+                    <Col
+                      md={6}
+                      className="text-center align-divs-center"
+                      style={{ flexDirection: "column" }}
+                    >
                       <div
                         className="profile-avatar mb-3 user-info-center"
-                        style={{ flexDirection: "unset" }}
+                        style={{ justifyContent: "flex-end" }}
                       >
                         <img
                           src={
@@ -244,11 +262,10 @@ const UserProfile = () => {
                           className="img-fluid rounded-circle"
                         />
                       </div>
-                    </Col>
-                    <Col md="3">
+
                       <div
                         className="user-info-center"
-                        style={{ justifyContent: "center" }}
+                        style={{ justifyContent: "center", height: "unset" }}
                       >
                         <Card.Title className="form-title">
                           {profile.firstName} {profile.lastName}
@@ -318,7 +335,9 @@ const UserProfile = () => {
                             className="flex-row pills-container"
                           >
                             <Nav.Item>
-                              <Nav.Link eventKey="projects"><Trans>Projects</Trans></Nav.Link>
+                              <Nav.Link eventKey="projects">
+                                <Trans>Projects</Trans>
+                              </Nav.Link>
                             </Nav.Item>
                             {loggedInUsername === systemUsername && (
                               <Nav.Item>
@@ -369,7 +388,9 @@ const UserProfile = () => {
                                           <strong>
                                             <Trans>Type Member</Trans>:
                                           </strong>{" "}
-                                          {formatTypeUserInProject(project.typeMember)}
+                                          {formatTypeUserInProject(
+                                            project.typeMember
+                                          )}
                                         </p>
                                         <p
                                           id="column-div-project"

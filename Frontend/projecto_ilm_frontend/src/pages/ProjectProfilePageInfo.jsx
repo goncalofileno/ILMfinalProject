@@ -19,7 +19,7 @@ import {
   markReasonAsRead,
   respondToInvite,
   changeProjectState,
-  leaveProject
+  leaveProject,
 } from "../utilities/services";
 import ProjectTabs from "../components/headers/ProjectTabs";
 import ProjectMembersTable from "../components/tables/ProjectMembersTable";
@@ -34,7 +34,11 @@ import {
 import "./ProjectProfilePageInfo.css";
 import Cookies from "js-cookie";
 import { Trans, t } from "@lingui/macro";
-import { formatProjectState, formatTypeUserInProject } from "../utilities/converters";
+import {
+  formatProjectState,
+  formatTypeUserInProject,
+} from "../utilities/converters";
+import { useMediaQuery } from "react-responsive";
 
 const ProjectProfilePageInfo = () => {
   const { systemProjectName } = useParams();
@@ -50,7 +54,9 @@ const ProjectProfilePageInfo = () => {
   const [leaveReason, setLeaveReason] = useState("");
   const sessionId = Cookies.get("session-id");
   const userSystemUsername = Cookies.get("user-systemUsername");
-  const [currentLanguage, setCurrentLanguage] = useState(Cookies.get("user-language") || "ENGLISH");
+  const [currentLanguage, setCurrentLanguage] = useState(
+    Cookies.get("user-language") || "ENGLISH"
+  );
 
   useEffect(() => {
     const fetchProjectInfo = async () => {
@@ -234,7 +240,11 @@ const ProjectProfilePageInfo = () => {
 
   const handleLeaveProject = async () => {
     try {
-      const result = await leaveProject(sessionId, systemProjectName, leaveReason);
+      const result = await leaveProject(
+        sessionId,
+        systemProjectName,
+        leaveReason
+      );
       if (result.error) {
         setError(result.error);
         console.error("Error leaving project:", result.error);
@@ -275,7 +285,9 @@ const ProjectProfilePageInfo = () => {
           {isAdmin && projectInfo.state === "READY" && (
             <div style={{ marginBottom: "10px" }}>
               <span>
-                <strong><Trans>This project is ready for approval</Trans>:</strong>
+                <strong>
+                  <Trans>This project is ready for approval</Trans>:
+                </strong>
               </span>
             </div>
           )}
@@ -335,8 +347,10 @@ const ProjectProfilePageInfo = () => {
                 <Row>
                   {["CANCELED", "READY"].includes(projectInfo.state) && (
                     <Alert variant="danger" className="mt-3">
-                      <Trans>The project is {projectInfo.state.toLowerCase()} and
-                      cannot be edited.</Trans>
+                      <Trans>
+                        The project is {projectInfo.state.toLowerCase()} and
+                        cannot be edited.
+                      </Trans>
                     </Alert>
                   )}
                 </Row>
@@ -359,7 +373,9 @@ const ProjectProfilePageInfo = () => {
         >
           <div>
             <p className="mb-1">
-              <strong><Trans>You have been invited to join this project.</Trans></strong>
+              <strong>
+                <Trans>You have been invited to join this project.</Trans>
+              </strong>
             </p>
           </div>
           <div className="button-group-horizontal">
@@ -387,9 +403,11 @@ const ProjectProfilePageInfo = () => {
           <div>
             <p className="mb-1">
               <div style={{ textAlign: "center" }}>
-                <strong><Trans>
-                  You have applied to this project. You will be notified when
-                  one of the managers responds to your application.</Trans>
+                <strong>
+                  <Trans>
+                    You have applied to this project. You will be notified when
+                    one of the managers responds to your application.
+                  </Trans>
                 </strong>
               </div>
             </p>
@@ -411,7 +429,9 @@ const ProjectProfilePageInfo = () => {
           <div>
             <p className="mb-1">
               <div>
-                <strong><Trans>You are a member of this project.</Trans></strong>
+                <strong>
+                  <Trans>You are a member of this project.</Trans>
+                </strong>
               </div>
             </p>
           </div>
@@ -424,7 +444,7 @@ const ProjectProfilePageInfo = () => {
 
   return (
     <>
-      <AppNavbar setCurrentLanguage={setCurrentLanguage}/>
+      <AppNavbar setCurrentLanguage={setCurrentLanguage} />
       <div className="ilm-pageb-noheight">
         <ProjectTabs
           typeOfUserSeingProject={projectInfo.typeOfUserSeingProject}
@@ -455,7 +475,9 @@ const ProjectProfilePageInfo = () => {
                   <Col md="12">
                     <Card.Body>
                       <Card.Text>
-                        <strong><Trans>Progress</Trans>:</strong>
+                        <strong>
+                          <Trans>Progress</Trans>:
+                        </strong>
                       </Card.Text>
                       <ProgressBar
                         percentage={projectInfo.progress}
@@ -489,21 +511,33 @@ const ProjectProfilePageInfo = () => {
                         </Col>
                       </Row>
                       <Card.Text>
-                        <strong><Trans>Description</Trans>:</strong> {projectInfo.description}
+                        <strong>
+                          <Trans>Description</Trans>:
+                        </strong>{" "}
+                        {projectInfo.description}
                       </Card.Text>
                       <Card.Text>
-                        <strong><Trans>Start Date</Trans>:</strong>{" "}
+                        <strong>
+                          <Trans>Start Date</Trans>:
+                        </strong>{" "}
                         {new Date(projectInfo.startDate).toLocaleDateString()}
                       </Card.Text>
                       <Card.Text>
-                        <strong><Trans>End Date</Trans>:</strong>{" "}
+                        <strong>
+                          <Trans>End Date</Trans>:
+                        </strong>{" "}
                         {new Date(projectInfo.endDate).toLocaleDateString()}
                       </Card.Text>
                       <Card.Text>
-                        <strong><Trans>Lab</Trans>:</strong> {formatLab(projectInfo.lab)}
+                        <strong>
+                          <Trans>Lab</Trans>:
+                        </strong>{" "}
+                        {formatLab(projectInfo.lab)}
                       </Card.Text>
                       <Card.Text>
-                        <strong><Trans>Creator</Trans>:</strong>{" "}
+                        <strong>
+                          <Trans>Creator</Trans>:
+                        </strong>{" "}
                         <Link
                           to={`/profile/${projectInfo.creator.systemUsername}`}
                         >
@@ -514,7 +548,7 @@ const ProjectProfilePageInfo = () => {
                           />
                           {projectInfo.creator.systemUsername ===
                           userSystemUsername
-                            ? (t`You`)
+                            ? t`You`
                             : projectInfo.creator.name}
                         </Link>
                       </Card.Text>
@@ -522,7 +556,9 @@ const ProjectProfilePageInfo = () => {
                         <>
                           <div className="states-to-change">
                             <Card.Text>
-                              <strong><Trans>States to Change</Trans>:</strong>
+                              <strong>
+                                <Trans>States to Change</Trans>:
+                              </strong>
                             </Card.Text>
                             <Form.Select
                               value={selectedState}
@@ -552,7 +588,9 @@ const ProjectProfilePageInfo = () => {
                       >
                         <div className="label-applyButton">
                           <div>
-                            <strong><Trans>Members</Trans></strong>{" "}
+                            <strong>
+                              <Trans>Members</Trans>
+                            </strong>{" "}
                             {projectInfo.members.length}/
                             {projectInfo.maxMembers}:
                           </div>
@@ -630,7 +668,7 @@ const ProjectProfilePageInfo = () => {
                         ) : (
                           <Col>
                             <p className="centered-message">
-                            <Trans>No skills available.</Trans>
+                              <Trans>No skills available.</Trans>
                             </p>
                           </Col>
                         )}
@@ -652,7 +690,7 @@ const ProjectProfilePageInfo = () => {
                         ) : (
                           <Col>
                             <p className="centered-message">
-                            <Trans>No keywords available.</Trans>
+                              <Trans>No keywords available.</Trans>
                             </p>
                           </Col>
                         )}
@@ -669,12 +707,16 @@ const ProjectProfilePageInfo = () => {
       {/* Cancel Project Modal */}
       <Modal show={showCancelModal} onHide={() => setShowCancelModal(false)}>
         <Modal.Header closeButton>
-          <Modal.Title><Trans>Cancel Project</Trans></Modal.Title>
+          <Modal.Title>
+            <Trans>Cancel Project</Trans>
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
             <Form.Group controlId="cancelReason">
-              <Form.Label><Trans>Reason</Trans></Form.Label>
+              <Form.Label>
+                <Trans>Reason</Trans>
+              </Form.Label>
               <Form.Control
                 as="textarea"
                 rows={5}
@@ -686,10 +728,10 @@ const ProjectProfilePageInfo = () => {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowCancelModal(false)}>
-          <Trans>Cancel</Trans>
+            <Trans>Cancel</Trans>
           </Button>
           <Button variant="danger" onClick={handleCancelProject}>
-          <Trans>Confirm Cancel</Trans>
+            <Trans>Confirm Cancel</Trans>
           </Button>
         </Modal.Footer>
       </Modal>
@@ -697,12 +739,16 @@ const ProjectProfilePageInfo = () => {
       {/* Reject Project Modal */}
       <Modal show={showRejectModal} onHide={() => setShowRejectModal(false)}>
         <Modal.Header closeButton>
-          <Modal.Title><Trans>Reject Project</Trans></Modal.Title>
+          <Modal.Title>
+            <Trans>Reject Project</Trans>
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
             <Form.Group controlId="rejectReason">
-              <Form.Label><Trans>Reason</Trans></Form.Label>
+              <Form.Label>
+                <Trans>Reason</Trans>
+              </Form.Label>
               <Form.Control
                 as="textarea"
                 rows={5}
@@ -714,10 +760,10 @@ const ProjectProfilePageInfo = () => {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowRejectModal(false)}>
-          <Trans>Cancel</Trans>
+            <Trans>Cancel</Trans>
           </Button>
           <Button variant="warning" onClick={handleRejectProject}>
-          <Trans>Confirm Reject</Trans>
+            <Trans>Confirm Reject</Trans>
           </Button>
         </Modal.Footer>
       </Modal>
@@ -725,7 +771,9 @@ const ProjectProfilePageInfo = () => {
       {/* Leave Project Modal */}
       <Modal show={showLeaveModal} onHide={() => setShowLeaveModal(false)}>
         <Modal.Header closeButton>
-          <Modal.Title><Trans>Reason to leave the Project</Trans></Modal.Title>
+          <Modal.Title>
+            <Trans>Reason to leave the Project</Trans>
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
@@ -741,10 +789,10 @@ const ProjectProfilePageInfo = () => {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowLeaveModal(false)}>
-          <Trans>Cancel</Trans>
+            <Trans>Cancel</Trans>
           </Button>
           <Button variant="danger" onClick={handleLeaveProject}>
-          <Trans>Confirm Leave</Trans>
+            <Trans>Confirm Leave</Trans>
           </Button>
         </Modal.Footer>
       </Modal>
@@ -754,8 +802,8 @@ const ProjectProfilePageInfo = () => {
         <Modal.Header closeButton>
           <Modal.Title>
             {projectInfo.state === "PLANNING"
-              ? (t`Reason of Reject`)
-              : (t`Reason of Cancellation`)}
+              ? t`Reason of Reject`
+              : t`Reason of Cancellation`}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -763,7 +811,7 @@ const ProjectProfilePageInfo = () => {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowReasonModal(false)}>
-          <Trans>Close</Trans>
+            <Trans>Close</Trans>
           </Button>
           {["MANAGER", "CREATOR"].includes(
             projectInfo.typeOfUserSeingProject
