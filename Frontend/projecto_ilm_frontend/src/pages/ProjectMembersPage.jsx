@@ -360,7 +360,9 @@ const ProjectMembersPage = () => {
                   <Card.Header
                     style={{ backgroundColor: "transparent", border: "none" }}
                   >
-                    <h5>Members</h5>
+                     <h5>
+                      <Trans>Members ({members.length}/{projectData.maxMembers})</Trans>
+                    </h5>
                   </Card.Header>
                   <Card.Body
                     style={{ border: "none", backgroundColor: "transparent" }}
@@ -520,14 +522,14 @@ const ProjectMembersPage = () => {
                                   : member.name}
                               </td>
                               <td
-                                style={{ width: "30%" }}
+                                style={{ width: "29%" }}
                                 className="align-middle"
                               >
                                 {typeLabels[member.type]}
                               </td>
                               <td
                                 className="align-middle"
-                                style={{ width: "30%" }}
+                                style={{ width: "31%" }}
                               >
                                 {member.type === "PENDING_BY_APPLIANCE" && (
                                   <>
@@ -537,7 +539,7 @@ const ProjectMembersPage = () => {
                                         handleAcceptRequest(member)
                                       }
                                       disabled={
-                                        isProjectInactive
+                                        isTeamFull
                                       }
                                       className="me-2"
                                     >
@@ -549,7 +551,7 @@ const ProjectMembersPage = () => {
                                         handleRejectRequest(member)
                                       }
                                       disabled={
-                                        projectData.projectState === "CANCELED"
+                                        isProjectInactive
                                       }
                                     >
                                       Reject
@@ -745,6 +747,7 @@ const ProjectMembersPage = () => {
                                   e.stopPropagation();
                                   handleInvite(user.systemUsername);
                                 }}
+                                disabled={isTeamFull}
                               >
                                 Invite
                               </Button>
