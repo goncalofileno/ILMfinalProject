@@ -389,8 +389,14 @@ public class ProjectBean {
     public List<ProjectProfileDto> getProjectsToInvite(int userId, String inviteeUsername) throws NoProjectsToInviteException, NoProjectsForInviteeException{
         UserEntity invitee = userBean.getUserBySystemUsername(inviteeUsername);
 
+        LanguageENUM languageOfUserInviting = userDao.findById(userId).getLanguage();
+
         if (invitee == null) {
-            throw new IllegalArgumentException("User to invite not found");
+            if(languageOfUserInviting == LanguageENUM.ENGLISH){
+                throw new NoProjectsForInviteeException("The user you want to invite does not exist.");
+            } else {
+                throw new NoProjectsForInviteeException("O utilizador que pretende convidar não existe.");
+            }
         }
 
         List<UserProjectEntity> userProjects = userProjectDao.findByUserId(userId).stream()
@@ -398,7 +404,11 @@ public class ProjectBean {
                 .collect(Collectors.toList());
 
         if (userProjects.isEmpty()) {
-            throw new NoProjectsToInviteException("You don't have any projects to invite the user to.");
+            if (languageOfUserInviting == LanguageENUM.ENGLISH) {
+                throw new NoProjectsToInviteException("You have no projects to invite the user to.");
+            } else {
+                throw new NoProjectsToInviteException("Não tem projetos para convidar o utilizador.");
+            }
         }
 
         List<UserProjectEntity> inviteeProjects = userProjectDao.findByUserId(invitee.getId());
@@ -433,7 +443,11 @@ public class ProjectBean {
                 .collect(Collectors.toList());
 
         if (projects.isEmpty()) {
-            throw new NoProjectsForInviteeException("The user you want to invite has no projects to be invited to.");
+            if (languageOfUserInviting == LanguageENUM.ENGLISH) {
+                throw new NoProjectsToInviteException("There are no projects available to invite the user to.");
+            } else {
+                throw new NoProjectsToInviteException("Não existem projetos disponíveis para convidar o utilizador.");
+            }
         }
 
         return projects;
