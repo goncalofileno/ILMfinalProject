@@ -85,13 +85,13 @@ public class TaskBean {
 
             UserTaskEntity userTask1 = new UserTaskEntity();
             userTask1.setTask(task1);
-            userTask1.setUser(userDao.findById(1));
+            userTask1.setUser(userDao.findById(2));
             userTask1.setType(UserInTaskTypeENUM.CREATOR_INCHARGE);
             userTaskDao.persist(userTask1);
 
             UserTaskEntity userTask2 = new UserTaskEntity();
             userTask2.setTask(task1);
-            userTask2.setUser(userDao.findById(2));
+            userTask2.setUser(userDao.findById(3));
             userTask2.setType(UserInTaskTypeENUM.MEMBER);
             userTaskDao.persist(userTask2);
 
@@ -111,7 +111,7 @@ public class TaskBean {
 
             UserTaskEntity userTask3 = new UserTaskEntity();
             userTask3.setTask(task2);
-            userTask3.setUser(userDao.findById(1));
+            userTask3.setUser(userDao.findById(3));
             userTask3.setType(UserInTaskTypeENUM.CREATOR_INCHARGE);
             userTaskDao.persist(userTask3);
 
@@ -138,13 +138,13 @@ public class TaskBean {
 
             UserTaskEntity userTask5 = new UserTaskEntity();
             userTask5.setTask(task3);
-            userTask5.setUser(userDao.findById(1));
+            userTask5.setUser(userDao.findById(2));
             userTask5.setType(UserInTaskTypeENUM.CREATOR_INCHARGE);
             userTaskDao.persist(userTask5);
 
             UserTaskEntity userTask6 = new UserTaskEntity();
             userTask6.setTask(task3);
-            userTask6.setUser(userDao.findById(2));
+            userTask6.setUser(userDao.findById(3));
             userTask6.setType(UserInTaskTypeENUM.MEMBER);
             userTaskDao.persist(userTask6);
         }

@@ -4,6 +4,7 @@ import { createTask } from "../../utilities/services";
 import Cookies from "js-cookie";
 import './AddTaskModal.css';
 import { Trans, t } from "@lingui/macro";
+import ReactQuill from "react-quill";
 
 const AddTaskModal = ({
   show,
@@ -13,6 +14,16 @@ const AddTaskModal = ({
   tasks,
   systemProjectName,
 }) => {
+
+  const handleQuillChange = (field, value) => {
+    handleInputChange({
+      target: {
+        name: field,
+        value: value,
+      },
+    });
+  };
+
   const currentUsername = Cookies.get("user-systemUsername");
 
   const [newTaskDetails, setNewTaskDetails] = useState({
@@ -238,11 +249,10 @@ const AddTaskModal = ({
                 <Form.Label>
                   <strong><Trans>Description</Trans>:</strong>
                 </Form.Label>
-                <Form.Control
-                  as="textarea"
-                  name="description"
-                  value={newTaskDetails.description}
-                  onChange={handleInputChange}
+                <ReactQuill
+                  value={newTaskDetails.description || ""}
+                  onChange={(value) => handleQuillChange("description", value)}
+                  style={{ height: "130px", marginBottom: "50px" }}
                 />
               </Form.Group>
               <Form.Group controlId="formTaskInitialDate">
@@ -276,19 +286,21 @@ const AddTaskModal = ({
                   }
                 />
               </Form.Group>
-            </div>
-            <div className="col-md-6">
               <Form.Group controlId="formTaskOutColaboration">
                 <Form.Label>
                   <strong><Trans>Out Colaboration</Trans>:</strong>
                 </Form.Label>
                 <Form.Control
-                  type="text"
+                  as="textarea"
                   name="outColaboration"
-                  value={newTaskDetails.outColaboration}
-                  onChange={handleInputChange}
+                  type="text"
+                  value={newTaskDetails.outColaboration || ""}
+                  onChange={(value) => handleQuillChange("outColaboration", value)}
+                  style={{ height: "70px"}}
                 />
               </Form.Group>
+            </div>
+            <div className="col-md-6">
               <Form.Group controlId="formTaskInCharge">
                 <Form.Label>
                   <strong><Trans>In Charge</Trans>:</strong>
@@ -310,9 +322,9 @@ const AddTaskModal = ({
                 <Form.Label>
                   <strong><Trans>Members</Trans>:</strong>
                 </Form.Label>
-                <ListGroup>
+                <ListGroup className="fixed-height-list2">
                   {newTaskDetails.membersOfTask.map((member) => (
-                    <ListGroup.Item key={member.id}>
+                    <ListGroup.Item key={member.id} className="mini-card">
                       {member.name}{" "}
                       {(member.type === "CREATOR" ||
                         member.type === "CREATOR_INCHARGE") &&
@@ -323,10 +335,7 @@ const AddTaskModal = ({
                           variant="danger"
                           size="sm"
                           onClick={() => handleRemoveMember(member.id)}
-                          style={{
-                            fontSize: "0.6rem",
-                            marginLeft: "10px",
-                          }}
+                          className="mini-card-button"
                           disabled={member.type === "CREATOR"} // Disable remove button for creator
                         >
                           X
@@ -354,15 +363,15 @@ const AddTaskModal = ({
                 <Form.Label>
                   <strong><Trans>Dependent Tasks</Trans>:</strong>
                 </Form.Label>
-                <ListGroup>
+                <ListGroup className="fixed-height-list2">
                   {newTaskDetails.dependentTasks.map((task) => (
-                    <ListGroup.Item key={task.id}>
+                    <ListGroup.Item key={task.id} className="mini-card">
                       {task.title}
                       <Button
                         variant="danger"
                         size="sm"
                         onClick={() => handleRemoveDependentTask(task.id)}
-                        style={{ fontSize: "0.6rem", marginLeft: "10px" }}
+                        className="mini-card-button"
                       >
                         X
                       </Button>
@@ -390,7 +399,7 @@ const AddTaskModal = ({
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={handleCloseModal}>
-        <Trans>Close</Trans>
+          <Trans>Close</Trans>
         </Button>
         <Button
           variant="primary"

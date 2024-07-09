@@ -107,7 +107,7 @@ const StatisticsPdf = () => {
 
       const pdf = new jsPDF();
       pdf.addImage(dataUrl, "PNG", 0, 0);
-      pdf.save("pie-chart.pdf");
+      pdf.save("ILM-Statistics.pdf");
     } catch (error) {
       console.error("Error exporting to PDF:", error);
     }

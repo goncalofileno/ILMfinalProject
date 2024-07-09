@@ -21,9 +21,6 @@ const CustomTooltipContent = ({ task, fontSize, fontFamily }) => {
     <div className={styles.tooltipDefaultContainer} style={style}>
       <b style={{ fontSize: `${parseInt(fontSize) + 6}px` }}>{task.name}</b>
       <p className={styles.tooltipDefaultContainerParagraph}>
-        <b><Trans>Description</Trans>:</b> {task.rawTask.description}
-      </p>
-      <p className={styles.tooltipDefaultContainerParagraph}>
         <b><Trans>Status</Trans>:</b> {taskStatus}
       </p>
       <p className={styles.tooltipDefaultContainerParagraph}>

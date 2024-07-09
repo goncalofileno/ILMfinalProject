@@ -202,6 +202,10 @@ const ProjectPlanPage = () => {
   };
 
   const handleSave = async () => {
+    const inChargeMember = taskDetails.membersOfTask.find(
+      (member) => member.systemName === taskDetails.inCharge
+    );
+
     const updateTaskDto = {
       id: taskDetails.id,
       title: taskDetails.title,
@@ -221,9 +225,7 @@ const ProjectPlanPage = () => {
         (member) =>
           member.type === "CREATOR" || member.type === "CREATOR_INCHARGE"
       )?.id,
-      inChargeId: taskDetails.membersOfTask.find(
-        (member) => member.systemName === taskDetails.inCharge
-      )?.id,
+      inChargeId: inChargeMember?.id || null,
       systemProjectName: systemProjectName,
     };
 
@@ -427,10 +429,10 @@ const ProjectPlanPage = () => {
 
   return (
     <>
-      <AppNavbar setCurrentLanguage={setCurrentLanguage} />
+      <AppNavbar setCurrentLanguage={setCurrentLanguage}  />
       <div className="bckg-color-ilm-page ilm-pageb">
         <ProjectTabs
-          typeOfUserSeingTasks={userSeingTasksType}
+          typeOfUserSeingProject={userSeingTasksType}
           projectName={projectName}
         />
         <Container style={{ height: "91%" }}>

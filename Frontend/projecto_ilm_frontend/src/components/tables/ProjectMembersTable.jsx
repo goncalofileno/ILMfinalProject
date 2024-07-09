@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import "./ProjectMembersTable.css";
 import "./Tables.css";
-import { formatTypeUserInProject } from "../../utilities/converters";
+import { formatTypeUserInProject, formatTypeUserInProjectPublic } from "../../utilities/converters";
 import { Trans, t } from "@lingui/macro";
 import { useState } from "react";
 
@@ -55,7 +55,7 @@ const ProjectMembersTable = ({ members }) => {
                 ? t`You`
                 : member.name}
             </td>
-            <td>{formatTypeUserInProject(member.type)}</td>
+            <td>{formatTypeUserInProjectPublic(member.type)}</td>
           </tr>
         ))}
         {members.length < NUMBER_OF_MEMBERS_PAGE &&
