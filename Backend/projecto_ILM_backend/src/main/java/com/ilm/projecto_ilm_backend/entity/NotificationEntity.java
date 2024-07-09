@@ -39,6 +39,8 @@ import java.util.List;
                 query = "DELETE FROM NotificationEntity n WHERE n.receptor.id = :receptorId AND n.projectSystemName = :projectSystemName AND n.type = :type"),
         @NamedQuery(name = "NotificationEntity.findByProjectSystemName",
                 query = "SELECT n FROM NotificationEntity n WHERE n.projectSystemName = :projectSystemName"),
+        @NamedQuery(name = "NotificationEntity.findDoubleNotificationTask",
+                query = "SELECT n FROM NotificationEntity n WHERE n.receptor.id = :receptor AND n.taskName = :taskTitle AND n.systemUserName = :systemUsername AND n.projectSystemName = :projectSystemName AND n.sendDate > :dateMinus AND n.sendDate < :datePlus"),
 })
 public class NotificationEntity implements Serializable {
 

@@ -64,7 +64,11 @@ public class TaskBean {
     @Inject
     private NotificationBean notificationBean;
 
-    @Inject LogBean logBean;
+    @Inject
+    NotificationDao notificationDao;
+
+    @Inject
+    LogBean logBean;
 
     private int numberOfProjectsToCreate = 20;
 
@@ -435,8 +439,15 @@ public class TaskBean {
             }
         }
 
-        if (user.getId() != inCharge.getId()) {
+        UserEntity userInCharge = userTaskDao.findInChargeByTaskId(task.getId());
+        System.out.println("User in charge: " + userInCharge.getFullName());
+        System.out.println("User in charge id: " + userInCharge.getId());
+        System.out.println("Update task in charge id: " + updateTaskDto.getInChargeId());
+
+
+        if (updateTaskDto.getInChargeId() != userInCharge.getId()) {
             notificationBean.createTaskAssignedNotification(updateTaskDto.getTitle(), updateTaskDto.getSystemProjectName(), user.getSystemUsername(), inCharge);
+            System.out.println("FOI MUDADO O USER IN CHARGE E FOI CRIADA UMA NOTIFICAÇÃO");
         }
 
         List<TaskEntity> dependentTasks = updateTaskDto.getDependentTaskIds().stream()
@@ -450,7 +461,27 @@ public class TaskBean {
         }
 
         taskDao.merge(task);
+
+        List<UserEntity> teamMembers = userTaskDao.findUsersByTaskId(task.getId());
+        for (UserEntity teamMember : teamMembers) {
+            if (teamMember.getId() != user.getId()) {
+                if (teamMember.getId() != user.getId()) {
+                    if(!checkDoubleNotification(task.getTitle(), project.getSystemName(), teamMember.getSystemUsername(), user)) {
+                        notificationBean.createTaskNotification(task.getTitle(), project.getSystemName(), user.getSystemUsername(), teamMember);
+                    }
+                }
+            }
+        }
     }
+
+    public boolean checkDoubleNotification(String taskTitle, String projectSystemName, String systemUsername, UserEntity user) {
+        if (notificationDao.findDoubleNotificationTask(taskTitle, projectSystemName, systemUsername, user, LocalDateTime.now())) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 
     private boolean organizeTaskDates(ProjectEntity project, TaskEntity task) {
         LocalDateTime projectStartDate = project.getStartDate();
@@ -725,7 +756,6 @@ public class TaskBean {
             }
         }
     }
-
 
 
 }

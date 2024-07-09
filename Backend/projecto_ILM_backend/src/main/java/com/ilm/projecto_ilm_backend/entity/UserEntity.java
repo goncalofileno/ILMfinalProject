@@ -50,7 +50,6 @@ import java.util.List;
                         "GROUP BY u.lab.local"
         ),
         @NamedQuery(name = "User.findAllUsersExceptAdministationAndUser", query = "SELECT u FROM UserEntity u WHERE u.id <> 1 AND u <> :user"),
-
 })
 
 

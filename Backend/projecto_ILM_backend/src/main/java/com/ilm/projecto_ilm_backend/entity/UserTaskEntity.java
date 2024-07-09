@@ -22,6 +22,8 @@ import java.io.Serializable;
 )
 @NamedQuery(name = "UserTask.deleteAllExceptCreatorOrCreatorInCharge", query = "DELETE FROM UserTaskEntity ut WHERE ut.task.id = :taskId AND ut.type != com.ilm.projecto_ilm_backend.ENUMS.UserInTaskTypeENUM.CREATOR AND ut.type != com.ilm.projecto_ilm_backend.ENUMS.UserInTaskTypeENUM.CREATOR_INCHARGE"
 )
+@NamedQuery(name = "UserTask.findInChargeByTaskId", query = "SELECT ut.user FROM UserTaskEntity ut WHERE ut.task.id = :taskId AND (ut.type = com.ilm.projecto_ilm_backend.ENUMS.UserInTaskTypeENUM.CREATOR_INCHARGE OR ut.type = com.ilm.projecto_ilm_backend.ENUMS.UserInTaskTypeENUM.INCHARGE)"
+)
 public class UserTaskEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
