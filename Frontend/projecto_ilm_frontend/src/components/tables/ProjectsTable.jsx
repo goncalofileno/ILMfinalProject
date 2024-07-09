@@ -32,6 +32,7 @@ export default function ProjectsTable({
 }) {
   const NUMBER_OF_PROJECTS_PAGE = 8;
   const userType = Cookies.get("user-userType");
+  const language = Cookies.get("user-language");
   const isTablet = useMediaQuery({ query: "(max-width: 1024px)" });
   const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
   const navigate = useNavigate();
@@ -120,7 +121,8 @@ export default function ProjectsTable({
               }}
               style={{ borderRadius: "10px", width: "200px" }}
             >
-              <Trans>Clear</Trans> {!isTablet && "Search"}
+              <Trans>Clear</Trans>{" "}
+              {!isTablet && language === "ENGLISH" && "Search"}
             </Button>
           </div>
         </InputGroup>
@@ -164,7 +166,9 @@ export default function ProjectsTable({
             {!isTablet && (
               <>
                 <th style={{ width: "15%" }} onClick={sortByStartDate}>
-                  <span style={{ marginRight: "10px" }}><Trans>Start date</Trans></span>
+                  <span style={{ marginRight: "10px" }}>
+                    <Trans>Start date</Trans>
+                  </span>
                   {startDateAsc ? (
                     <i class="fas fa-arrow-up fa-xs"></i>
                   ) : (
@@ -174,7 +178,9 @@ export default function ProjectsTable({
                   )}
                 </th>
                 <th style={{ width: "15%" }} onClick={sortByEndDate}>
-                  <span style={{ marginRight: "10px" }}><Trans>End date</Trans></span>
+                  <span style={{ marginRight: "10px" }}>
+                    <Trans>End date</Trans>
+                  </span>
                   {endDateAsc ? (
                     <i class="fas fa-arrow-up fa-xs"></i>
                   ) : (
@@ -183,7 +189,9 @@ export default function ProjectsTable({
                     )
                   )}
                 </th>
-                <th style={{ width: "15%" }}><Trans>Members</Trans></th>{" "}
+                <th style={{ width: "15%" }}>
+                  <Trans>Members</Trans>
+                </th>{" "}
               </>
             )}
           </tr>

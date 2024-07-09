@@ -647,6 +647,7 @@ public class UserService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateLanguage(@CookieParam("session-id") String sessionId, @QueryParam("language") LanguageENUM language) {
         try {
+            logger.info("Received a request to get the users information from a user with session ID: " + sessionId);
             if (databaseValidator.checkSessionId(sessionId)) {
                 if (userBean.updateLanguage(sessionId, language)) {
                     NewCookie languageCookie = new NewCookie("user-language", String.valueOf(language), "/", null, null, NewCookie.DEFAULT_MAX_AGE, false, false);
@@ -664,6 +665,27 @@ public class UserService {
         }
     }
 
+    @PATCH
+    @Path("/promoteToAdmin/{systemUsername}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response promoteUserToAdmin(@CookieParam("session-id") String sessionId,@PathParam("systemUsername") String systemUsername) {
+        try {
+            logger.info("Received a request to promote an user to admin from a user with session ID: " + sessionId);
+            if (databaseValidator.checkSessionId(sessionId)) {
+                if (userBean.promoteUserToAdmin(sessionId, systemUsername)) {
+                    return Response.status(Response.Status.OK).build();
+                } else {
+                    return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+                }
+            } else {
+                return Response.status(Response.Status.UNAUTHORIZED).build();
+            }
+        } catch (
+                Exception e) {
+            logger.error("Error updating user type: " + e.getMessage());
+            return Response.status(Response.Status.BAD_REQUEST).entity(Collections.singletonMap("message", e.getMessage())).build();
+        }
+    }
 
 }
 

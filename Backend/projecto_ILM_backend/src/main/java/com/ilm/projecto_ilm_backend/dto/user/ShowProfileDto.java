@@ -1,5 +1,6 @@
 package com.ilm.projecto_ilm_backend.dto.user;
 
+import com.ilm.projecto_ilm_backend.ENUMS.UserTypeENUM;
 import com.ilm.projecto_ilm_backend.dto.interest.InterestDto;
 import com.ilm.projecto_ilm_backend.dto.project.ProjectProfileDto;
 import com.ilm.projecto_ilm_backend.dto.skill.SkillDto;
@@ -18,6 +19,7 @@ public class ShowProfileDto {
     private List<SkillDto> skills;
     private List<InterestDto> interests;
     private boolean publicProfile;
+    private UserTypeENUM userType;
 
     // Getters and Setters
     public String getUsername() {
@@ -106,5 +108,13 @@ public class ShowProfileDto {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public UserTypeENUM getUserType() {
+        return userType;
+    }
+
+    public void setUserType(UserTypeENUM userType) {
+        this.userType = userType;
     }
 }
