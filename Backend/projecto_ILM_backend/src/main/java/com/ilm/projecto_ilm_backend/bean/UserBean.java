@@ -651,6 +651,7 @@ public class UserBean {
                 profileDto.setPublicProfile(profileUser.isPublicProfile());
                 profileDto.setPhoto(profileUser.getPhoto());
 
+
                 profileDto.setSkills(profileUser.getSkills().stream()
                         .map(skill -> {
                             SkillDto skillDto = new SkillDto();
@@ -691,6 +692,7 @@ public class UserBean {
                 profileDto.setLocation(profileUser.getLab().getLocal().toString());
                 profileDto.setProfileImage(profileUser.getPhoto());
                 profileDto.setPublicProfile(profileUser.isPublicProfile());
+                profileDto.setUserType(profileUser.getType());
 
                 if (profileUser.isPublicProfile() || requestingUser.getId() == (profileUser.getId())) {
                     profileDto.setBio(profileUser.getBio());
@@ -701,7 +703,6 @@ public class UserBean {
                                 ProjectEntity project = up.getProject();
                                 projectDto.setName(project.getName());
                                 projectDto.setSystemName(project.getSystemName());
-                                ;
                                 projectDto.setTypeMember(up.getType().toString());
                                 projectDto.setStatus(project.getStatus().toString());
                                 return projectDto;
@@ -835,5 +836,15 @@ public class UserBean {
         return false;
     }
 
+    public boolean promoteUserToAdmin(String sessionId, String userToChangeSystemUsername){
+        UserEntity user = getUserBySessionId(sessionId);
+        UserEntity userToChange = userDao.findBySystemUsername(userToChangeSystemUsername);
+        if(user != null && userToChange != null && user.getType() == UserTypeENUM.ADMIN && userToChange.getType() != UserTypeENUM.ADMIN){
+            userToChange.setType(UserTypeENUM.ADMIN);
+            userDao.merge(userToChange);
+            return true;
+        }
+        return false;
+    }
 
 }

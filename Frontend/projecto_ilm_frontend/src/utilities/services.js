@@ -470,6 +470,25 @@ async function getUserEditProfile(systemUsername) {
   }
 }
 
+async function promoteUserToAdmin(systemUsername) {
+  try {
+    const response = await fetch(
+      `${baseURL}user/promoteToAdmin/${systemUsername}`,
+      {
+        method: "PATCH",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      }
+    );
+    return response;
+  } catch (error) {
+    console.error("Error fetching user edit profile:", error);
+  }
+}
+
 async function changeUserPassword(currentPassword, newPassword) {
   try {
     const response = await fetch(`${baseURL}user/changePassword`, {
@@ -1838,14 +1857,17 @@ async function getAppStatistics() {
 
 const leaveProject = async (sessionId, systemProjectName, reason) => {
   try {
-    const response = await fetch(`${baseURL}project/leaveProject?projectSystemName=${systemProjectName}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify(reason),
-    });
+    const response = await fetch(
+      `${baseURL}project/leaveProject?projectSystemName=${systemProjectName}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(reason),
+      }
+    );
     const data = await response.json();
     return data;
   } catch (error) {
@@ -1880,14 +1902,17 @@ const validateSession = async (sessionId) => {
 
 const updateLanguage = async (sessionId, language) => {
   try {
-    const response = await fetch(`${baseURL}user/updateLanguage?language=${language}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        "Cookie": `session-id=${sessionId}`,
-      },
-      credentials: "include",
-    });
+    const response = await fetch(
+      `${baseURL}user/updateLanguage?language=${language}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `session-id=${sessionId}`,
+        },
+        credentials: "include",
+      }
+    );
 
     if (response.status === 200) {
       console.log("Language updated successfully");
@@ -1993,4 +2018,5 @@ export {
   validateSession,
   getAppStatistics,
   updateLanguage,
+  promoteUserToAdmin,
 };

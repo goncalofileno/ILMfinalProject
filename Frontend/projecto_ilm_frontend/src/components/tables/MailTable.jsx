@@ -296,11 +296,7 @@ const MailTable = () => {
           }}
           className="custom-focus"
         />
-        <div
-          className="flex-btn-row-mail-table"
-          id="div-container-search-email"
-          style={{ width: "100%" }}
-        >
+        <div className="flex-btn-row-mail-table">
           <Button
             variant="primary"
             onClick={() =>

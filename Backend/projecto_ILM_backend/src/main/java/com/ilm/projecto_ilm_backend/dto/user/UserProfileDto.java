@@ -1,5 +1,6 @@
 package com.ilm.projecto_ilm_backend.dto.user;
 
+import com.ilm.projecto_ilm_backend.ENUMS.UserTypeENUM;
 import com.ilm.projecto_ilm_backend.dto.interest.InterestDto;
 import com.ilm.projecto_ilm_backend.dto.skill.SkillDto;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -17,6 +18,7 @@ public class UserProfileDto {
     private String bio;
     private List<SkillDto> skills;
     private List<InterestDto> interests;
+
 
     // Getters and Setters
 
@@ -92,4 +94,5 @@ public class UserProfileDto {
     public void setInterests(List<InterestDto> interests) {
         this.interests = interests;
     }
+
 }

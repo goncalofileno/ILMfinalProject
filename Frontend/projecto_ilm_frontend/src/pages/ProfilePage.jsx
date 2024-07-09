@@ -6,6 +6,7 @@ import {
   respondToInvite,
   getUnreadNotificationsCount,
   fetchNotifications,
+  promoteUserToAdmin,
 } from "../utilities/services";
 import {
   Container,
@@ -29,7 +30,6 @@ import {
   formatProjectState,
   formatTypeUserInProject,
 } from "../utilities/converters.js";
-
 import { useMediaQuery } from "react-responsive";
 
 const UserProfile = () => {
@@ -48,14 +48,18 @@ const UserProfile = () => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [pendingProjectToReject, setPendingProjectToReject] = useState(null);
   const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
+  const isTablet = useMediaQuery({ query: "(max-width: 991px)" });
   const navigate = useNavigate();
-
+  const atualUserType = Cookies.get("user-userType");
+  const language = Cookies.get("user-language");
   const loggedInUsername = Cookies.get("user-systemUsername");
+  const [changeUserModal, setChangeUserModal] = useState(false);
 
   const fetchProfile = async () => {
     try {
       const profileData = await getUserProfile(systemUsername);
       if (profileData.status === 200) {
+        console.log(profileData.data);
         setProfile(profileData.data);
         if (
           loggedInUsername !== systemUsername &&
@@ -196,6 +200,12 @@ const UserProfile = () => {
     navigate(`/project/${systemName}`);
   };
 
+  const handleConfirmPromotion = async () => {
+    promoteUserToAdmin(systemUsername);
+    setChangeUserModal(false);
+    window.location.reload();
+  };
+
   const nonPendingProjects = profile.projects
     ? profile.projects.filter(
         (project) =>
@@ -241,7 +251,10 @@ const UserProfile = () => {
             style={{ height: !isMobile && "100%" }}
           >
             <Col md="12" style={{ height: "100%" }}>
-              <Card className="shadow-sm ilm-form" style={{ height: "100%" }}>
+              <Card
+                className="shadow-sm ilm-form"
+                style={{ height: "100%", padding: isMobile && "35px 0px" }}
+              >
                 <Card.Body style={{ height: "100%" }}>
                   <Row style={{ height: "100%" }}>
                     <Col
@@ -268,7 +281,19 @@ const UserProfile = () => {
                         style={{ justifyContent: "center", height: "unset" }}
                       >
                         <Card.Title className="form-title">
-                          {profile.firstName} {profile.lastName}
+                          {profile.firstName} {profile.lastName}{" "}
+                          <span
+                            className={
+                              profile.userType === "STANDARD_USER"
+                                ? "user-type-user"
+                                : profile.userType === "ADMIN" &&
+                                  "user-type-admin"
+                            }
+                          >
+                            {profile.userType === "STANDARD_USER"
+                              ? t`User`
+                              : profile.userType === "ADMIN" && t`Admin`}
+                          </span>
                         </Card.Title>
                         <Card.Subtitle className="mb-2 text-muted">
                           {profile.username}
@@ -298,27 +323,43 @@ const UserProfile = () => {
                           </Button>
                         ) : (
                           <div className="button-group">
-                            <Button
-                              variant="primary"
-                              className="mr-3 submit-button"
-                              style={{ padding: "10px 20px" }}
-                              onClick={handleSendMessage}
-                            >
-                              <Trans>Send Email</Trans>
-                            </Button>
-                            <Button
-                              variant="secondary"
-                              className="invite-button"
-                              style={{ padding: "10px 20px" }}
-                              onClick={handleInvite}
-                            >
-                              <Trans>Invite to Project</Trans>
-                            </Button>
+                            <div>
+                              <Button
+                                variant="primary"
+                                className="mr-3 submit-button"
+                                style={{ padding: "10px 20px" }}
+                                onClick={handleSendMessage}
+                              >
+                                <Trans>Send Email</Trans>
+                              </Button>
+                              <Button
+                                variant="secondary"
+                                className="invite-button"
+                                style={{ padding: "10px 20px" }}
+                                onClick={handleInvite}
+                              >
+                                <Trans>Invite to Project</Trans>
+                              </Button>
+                            </div>
+                            {atualUserType === "ADMIN" &&
+                              profile.userType === "STANDARD_USER" && (
+                                <Button
+                                  variant="primary"
+                                  className="secondary-button"
+                                  style={{ padding: "10px 20px" }}
+                                  onClick={() => setChangeUserModal(true)}
+                                >
+                                  <Trans>Promote to Admin</Trans>
+                                </Button>
+                              )}
                           </div>
                         )}
                       </div>
                     </Col>
-                    <Col md="6" style={{ height: "100%" }}>
+                    <Col
+                      md="6"
+                      style={{ height: "100%", marginTop: isMobile && "30px" }}
+                    >
                       {isPrivate ? (
                         <Alert variant="info" style={{ textAlign: "center" }}>
                           <Trans>This profile is private.</Trans>
@@ -360,8 +401,22 @@ const UserProfile = () => {
                               eventKey="projects"
                               style={{ height: "100%" }}
                             >
-                              <Card className="card-container">
-                                <Card.Body className="card-body">
+                              <Card
+                                className="card-container"
+                                style={{
+                                  maxHeight: !isMobile && isTablet && "50vh",
+                                }}
+                              >
+                                <Card.Body
+                                  className="card-body"
+                                  style={{
+                                    padding: isMobile && "0px",
+                                    fontSize: isMobile && "14px",
+                                    borderRadius: isMobile && "0px",
+                                    marginRight: isMobile && "0px",
+                                    marginLeft: isMobile && "0px",
+                                  }}
+                                >
                                   {nonPendingProjects.length > 0 ? (
                                     nonPendingProjects.map((project) => (
                                       <div
@@ -377,7 +432,11 @@ const UserProfile = () => {
                                           className="mb-1"
                                         >
                                           <strong>
-                                            <Trans>Project Name</Trans>:
+                                            <Trans>Project </Trans>
+                                            {!isMobile &&
+                                              language === "ENGLISH" &&
+                                              "Name"}
+                                            :
                                           </strong>
                                           {project.name}
                                         </p>
@@ -386,7 +445,11 @@ const UserProfile = () => {
                                           className="mb-1"
                                         >
                                           <strong>
-                                            <Trans>Type Member</Trans>:
+                                            <Trans>Type </Trans>
+                                            {!isMobile &&
+                                              language === "ENGLISH" &&
+                                              "Member"}
+                                            :
                                           </strong>{" "}
                                           {formatTypeUserInProject(
                                             project.typeMember
@@ -585,6 +648,29 @@ const UserProfile = () => {
           </Button>
         </Modal.Footer>
       </Modal>
+      {changeUserModal && (
+        <Modal show={true}>
+          <Modal.Header closeButton>
+            <Modal.Title>
+              <Trans>Confirm User Promotion to Admin</Trans>
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Trans>Are you sure you want to promote this user to Admin?</Trans>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button
+              variant="secondary"
+              onClick={() => setChangeUserModal(false)}
+            >
+              <Trans>Cancel</Trans>
+            </Button>
+            <Button variant="danger" onClick={handleConfirmPromotion}>
+              <Trans>Confirm</Trans>
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      )}
     </>
   );
 };
