@@ -18,11 +18,11 @@ msgstr ""
 #~ msgid "todos-os-recursos-all"
 #~ msgstr "Todos os "
 
-#: src/pages/ProjectCreationPage1.jsx:188
+#: src/pages/ProjectCreationPage1.jsx:192
 msgid "<0>Project </0><1>Creation</1>"
 msgstr "<0>Criação de </0><1>Projeto</1>"
 
-#: src/pages/ProfilePage.jsx:464
+#: src/pages/ProfilePage.jsx:529
 #: src/pages/ProjectProfilePageInfo.jsx:392
 msgid "Accept"
 msgstr "Aceitar"
@@ -34,7 +34,7 @@ msgstr "Aceitar"
 #~ msgstr "Ações"
 
 #: src/components/cards/UserCard.jsx:82
-#: src/components/selectors/InterestSelector.jsx:144
+#: src/components/selectors/InterestSelector.jsx:150
 #: src/components/selectors/SkillSelector.jsx:146
 #: src/pages/ProjectLogsPage.jsx:523
 msgid "Add"
@@ -56,7 +56,7 @@ msgstr "Adicionar novo Membro"
 
 #: src/components/modals/AddTaskModal.jsx:216
 #: src/components/modals/AddTaskModal.jsx:401
-#: src/pages/ProjectPlanPage.jsx:432
+#: src/pages/ProjectPlanPage.jsx:443
 msgid "Add New Task"
 msgstr "Adicionar nova Tarefa"
 
@@ -64,17 +64,21 @@ msgstr "Adicionar nova Tarefa"
 #~ msgid "Add Note"
 #~ msgstr "Adicionar Nota"
 
-#: src/components/tables/ProjectsTable.jsx:81
-#: src/components/tables/ProjectsTable.jsx:289
+#: src/components/tables/ProjectsTable.jsx:82
+#: src/components/tables/ProjectsTable.jsx:297
 msgid "Add Project"
 msgstr "Adicionar Projecto"
 
 #: src/components/tables/ResourcesTable.jsx:62
 #: src/components/tables/ResourcesTable.jsx:208
-#: src/pages/ProjectCreationPage3.jsx:366
-#: src/pages/ProjectProfileResourcesPage.jsx:451
+#: src/pages/ProjectCreationPage3.jsx:379
+#: src/pages/ProjectProfileResourcesPage.jsx:454
 msgid "Add Resource"
 msgstr "Adicionar Resource"
+
+#: src/pages/ProfilePage.jsx:297
+msgid "Admin"
+msgstr "Admin"
 
 #. js-lingui-explicit-id
 #: src/pages/ProjectsPage.jsx:157
@@ -82,13 +86,13 @@ msgid "todos-os-projectos-all"
 msgstr "Todos os"
 
 #. js-lingui-explicit-id
-#: src/pages/ResourcesPage.jsx:141
+#: src/pages/ResourcesPage.jsx:150
 msgid "todos os"
 msgstr "Todos os"
 
 #: src/components/asides/AsideResourcesPage.jsx:96
-#: src/pages/ProjectCreationPage3.jsx:208
-#: src/pages/ProjectProfileResourcesPage.jsx:287
+#: src/pages/ProjectCreationPage3.jsx:216
+#: src/pages/ProjectProfileResourcesPage.jsx:290
 msgid "All Brands"
 msgstr "Todas as Marcas"
 
@@ -104,8 +108,8 @@ msgid "All Status"
 msgstr "Todos os Status"
 
 #: src/components/asides/AsideResourcesPage.jsx:117
-#: src/pages/ProjectCreationPage3.jsx:225
-#: src/pages/ProjectProfileResourcesPage.jsx:304
+#: src/pages/ProjectCreationPage3.jsx:235
+#: src/pages/ProjectProfileResourcesPage.jsx:307
 msgid "All Suppliers"
 msgstr "Todos os Fornecedores"
 
@@ -130,7 +134,7 @@ msgstr "Ocorreu um erro ao cancelar o projeto."
 msgid "An error occurred while changing user role."
 msgstr "Ocorreu um erro a alterar a função do utilizador."
 
-#: src/pages/ProfilePage.jsx:75
+#: src/pages/ProfilePage.jsx:81
 msgid "An error occurred while fetching the profile."
 msgstr "Ocorreu um erro a obter o perfil do utilizador."
 
@@ -170,7 +174,7 @@ msgstr "Ocorreu um erro a rejeitar um projeto."
 msgid "An error occurred while removing the user."
 msgstr "Ocorreu um erro a remover o utilizador."
 
-#: src/pages/ProfilePage.jsx:177
+#: src/pages/ProfilePage.jsx:183
 #: src/pages/ProjectProfilePageInfo.jsx:222
 msgid "An error occurred while responding to the invite."
 msgstr "Ocorreu um erro a responder ao convite."
@@ -183,7 +187,7 @@ msgstr "Ocorreu um erro ao alterar o estado do projeto."
 msgid "An error occurred. Please try again."
 msgstr "Aconteceu algo errado. Tente novamente."
 
-#: src/pages/ProfilePage.jsx:345
+#: src/pages/ProfilePage.jsx:388
 msgid "Applications"
 msgstr "Candidaturas"
 
@@ -191,7 +195,7 @@ msgstr "Candidaturas"
 msgid "Approve Project"
 msgstr "Aprovar Projeto"
 
-#: src/components/tables/MailTable.jsx:499
+#: src/components/tables/MailTable.jsx:495
 #: src/components/tables/SentMailTable.jsx:442
 msgid "Are you sure you want to delete this mail?"
 msgstr "Tem a certeza que pretende eliminar este email?"
@@ -200,7 +204,11 @@ msgstr "Tem a certeza que pretende eliminar este email?"
 msgid "Are you sure you want to delete this task?"
 msgstr "Tem a certeza que pretende eliminar esta tarefa?"
 
-#: src/pages/ProfilePage.jsx:577
+#: src/pages/ProfilePage.jsx:661
+msgid "Are you sure you want to promote this user to Admin?"
+msgstr "Tem a certeza que prentende promover este utilizador a Administrador?"
+
+#: src/pages/ProfilePage.jsx:642
 msgid "Are you sure you want to reject this invite?"
 msgstr "Tem a certeza que pretende rejeitar este convite?"
 
@@ -224,19 +232,19 @@ msgstr "Pelo menos um caracter maiusculo"
 #~ msgid "Available Users"
 #~ msgstr "Utilizadores Disponíveis"
 
-#: src/components/Pdf/StatisticsPdf.jsx:317
-#: src/components/Pdf/StatisticsPdf.jsx:402
+#: src/components/Pdf/StatisticsPdf.jsx:315
+#: src/components/Pdf/StatisticsPdf.jsx:400
 msgid "Average execution time per project"
 msgstr "Tempo médio de execução de projeto"
 
-#: src/components/Pdf/StatisticsPdf.jsx:311
-#: src/components/Pdf/StatisticsPdf.jsx:396
+#: src/components/Pdf/StatisticsPdf.jsx:309
+#: src/components/Pdf/StatisticsPdf.jsx:394
 msgid "Average users in project"
 msgstr "Número médio de utilizadores por projeto"
 
 #: src/pages/CreateProfilePage.jsx:243
-#: src/pages/EditProfilePage.jsx:360
-#: src/pages/ProfilePage.jsx:285
+#: src/pages/EditProfilePage.jsx:363
+#: src/pages/ProfilePage.jsx:312
 msgid "Bio"
 msgstr "Sobre"
 
@@ -254,13 +262,14 @@ msgstr "Marca"
 #: src/components/modals/InviteProjectModal.jsx:104
 #: src/components/modals/InviteProjectModal.jsx:119
 #: src/components/selectors/SkillSelector.jsx:204
-#: src/components/tables/MailTable.jsx:503
+#: src/components/tables/MailTable.jsx:499
 #: src/components/tables/SentMailTable.jsx:446
-#: src/pages/EditProfilePage.jsx:508
-#: src/pages/EditProfilePage.jsx:637
+#: src/pages/EditProfilePage.jsx:515
+#: src/pages/EditProfilePage.jsx:644
 #: src/pages/EditProjectPage.jsx:491
-#: src/pages/ProfilePage.jsx:581
-#: src/pages/ProjectCreationPage1.jsx:428
+#: src/pages/ProfilePage.jsx:646
+#: src/pages/ProfilePage.jsx:668
+#: src/pages/ProjectCreationPage1.jsx:432
 #: src/pages/ProjectLogsPage.jsx:578
 #: src/pages/ProjectProfilePageInfo.jsx:731
 #: src/pages/ProjectProfilePageInfo.jsx:763
@@ -273,26 +282,27 @@ msgstr "Cancelar"
 msgid "Cancel Project"
 msgstr "Cancelar Projeto"
 
-#: src/pages/EditProfilePage.jsx:479
-#: src/pages/EditProfilePage.jsx:537
-#: src/pages/EditProfilePage.jsx:647
+#: src/pages/EditProfilePage.jsx:482
+#: src/pages/EditProfilePage.jsx:544
+#: src/pages/EditProfilePage.jsx:654
 msgid "Change Password"
 msgstr "Alterar Password"
 
 #: src/components/headers/ProjectTabs.jsx:17
-#: src/pages/ProjectChatPage.jsx:122
+#: src/pages/ProjectChatPage.jsx:130
 msgid "Chat"
 msgstr "Chat"
 
 #: src/pages/CreateProfilePage.jsx:306
-#: src/pages/EditProfilePage.jsx:428
+#: src/pages/EditProfilePage.jsx:431
 msgid "Checking..."
 msgstr "Verificando..."
 
-#: src/components/tables/ProjectsTable.jsx:123
+#: src/components/tables/ProjectsTable.jsx:124
 #: src/components/tables/ResourcesTable.jsx:86
-#: src/pages/ProjectCreationPage3.jsx:192
-#: src/pages/ProjectProfileResourcesPage.jsx:271
+#: src/pages/MyProjectsPage.jsx:161
+#: src/pages/ProjectCreationPage3.jsx:199
+#: src/pages/ProjectProfileResourcesPage.jsx:274
 msgid "Clear"
 msgstr "Limpar"
 
@@ -302,22 +312,21 @@ msgstr "Limpar"
 msgid "Clear Filters"
 msgstr "Limpar Filtros"
 
-#: src/components/tables/MailTable.jsx:318
+#: src/components/tables/MailTable.jsx:314
 #: src/components/tables/SentMailTable.jsx:258
-#: src/pages/MyProjectsPage.jsx:150
-#: src/pages/ProjectCreationPage2.jsx:165
+#: src/pages/ProjectCreationPage2.jsx:173
 msgid "Clear Search"
 msgstr "Limpar Pesquisa"
 
 #: src/components/modals/AddTaskModal.jsx:393
 #: src/components/modals/EditTaskModal.jsx:229
-#: src/components/tables/MailTable.jsx:478
+#: src/components/tables/MailTable.jsx:474
 #: src/components/tables/SentMailTable.jsx:428
 #: src/pages/ProjectProfilePageInfo.jsx:814
 msgid "Close"
 msgstr "Fechar"
 
-#: src/pages/ProjectPlanPage.jsx:516
+#: src/pages/ProjectPlanPage.jsx:486
 msgid "Completed tasks"
 msgstr "Tarefas completas"
 
@@ -326,12 +335,16 @@ msgstr "Tarefas completas"
 msgid "Compose New Mail"
 msgstr "Escrever novo Email"
 
+#: src/pages/ProfilePage.jsx:671
+msgid "Confirm"
+msgstr "Confirmar"
+
 #: src/pages/ProjectProfilePageInfo.jsx:734
 msgid "Confirm Cancel"
 msgstr "Confirmar Cancelamento"
 
 #: src/components/modals/DeleteTaskModal.jsx:9
-#: src/components/tables/MailTable.jsx:495
+#: src/components/tables/MailTable.jsx:491
 #: src/components/tables/SentMailTable.jsx:438
 msgid "Confirm Delete"
 msgstr "Confirmar eliminação"
@@ -340,7 +353,7 @@ msgstr "Confirmar eliminação"
 msgid "Confirm Leave"
 msgstr "Confirmar Abandono"
 
-#: src/pages/EditProfilePage.jsx:618
+#: src/pages/EditProfilePage.jsx:625
 msgid "Confirm New Password"
 msgstr "Confirmar Nova Password"
 
@@ -353,13 +366,17 @@ msgstr "Confirme a Password"
 msgid "Confirm Reject"
 msgstr "Confirmar Rejeição"
 
-#: src/pages/ProfilePage.jsx:573
+#: src/pages/ProfilePage.jsx:638
 msgid "Confirm Rejection"
 msgstr "Confirmar Rejeição"
 
 #: src/pages/ProjectMembersPage.jsx:791
 #~ msgid "Confirm Remove"
 #~ msgstr "Confirmar Remoção"
+
+#: src/pages/ProfilePage.jsx:657
+msgid "Confirm User Promotion to Admin"
+msgstr "Confirmação de Promoção a Administrador"
 
 #: src/components/modals/ComposeMailModal.jsx:151
 msgid "Contact"
@@ -382,7 +399,7 @@ msgstr "Criar Nota"
 msgid "Create Profile"
 msgstr "Criar Perfil"
 
-#: src/pages/ProjectCreationPage1.jsx:446
+#: src/pages/ProjectCreationPage1.jsx:450
 msgid "Create Project"
 msgstr "Criar Projeto"
 
@@ -394,16 +411,16 @@ msgstr "Criar Projeto"
 msgid "Creator"
 msgstr "Criador"
 
-#: src/pages/EditProfilePage.jsx:553
+#: src/pages/EditProfilePage.jsx:560
 msgid "Current Password"
 msgstr "Password Atual"
 
-#: src/components/tables/MailTable.jsx:465
+#: src/components/tables/MailTable.jsx:461
 #: src/components/tables/SentMailTable.jsx:415
 msgid "Date"
 msgstr "Data"
 
-#: src/pages/ProjectPlanPage.jsx:444
+#: src/pages/ProjectPlanPage.jsx:456
 msgid "Day"
 msgstr "Dia"
 
@@ -412,7 +429,7 @@ msgid "day(s)"
 msgstr "dia(s)"
 
 #: src/components/modals/DeleteTaskModal.jsx:17
-#: src/components/tables/MailTable.jsx:506
+#: src/components/tables/MailTable.jsx:502
 #: src/components/tables/SentMailTable.jsx:449
 msgid "Delete"
 msgstr "Eliminar"
@@ -420,6 +437,10 @@ msgstr "Eliminar"
 #: src/components/modals/EditTaskModal.jsx:237
 msgid "Delete Task"
 msgstr "Eliminar Task"
+
+#: src/components/cards/TaskCard.jsx:36
+msgid "Dependencies"
+msgstr "Dependências"
 
 #: src/components/modals/AddTaskModal.jsx:355
 #: src/components/modals/EditTaskModal.jsx:190
@@ -431,12 +452,12 @@ msgstr "Tarefas Dependentes"
 #: src/components/modals/EditTaskModal.jsx:49
 #: src/components/tooltips/CustomTooltipContent.jsx:24
 #: src/pages/EditProjectPage.jsx:411
-#: src/pages/ProjectCreationPage1.jsx:383
+#: src/pages/ProjectCreationPage1.jsx:387
 #: src/pages/ProjectProfilePageInfo.jsx:515
 msgid "Description"
 msgstr "Descrição"
 
-#: src/pages/ProjectPlanPage.jsx:514
+#: src/pages/ProjectPlanPage.jsx:484
 msgid "DONE"
 msgstr "COMPLETA"
 
@@ -448,8 +469,8 @@ msgstr "Duração"
 msgid "Edit"
 msgstr "Editar"
 
-#: src/pages/EditProfilePage.jsx:336
-#: src/pages/ProfilePage.jsx:297
+#: src/pages/EditProfilePage.jsx:339
+#: src/pages/ProfilePage.jsx:324
 msgid "Edit Profile"
 msgstr "Editar Perfil"
 
@@ -470,20 +491,22 @@ msgid "Email not found"
 msgstr "Email não encontrado"
 
 #: src/components/cards/MyProjectCard.jsx:64
-#: src/components/tables/ProjectsTable.jsx:177
+#: src/components/tables/ProjectsTable.jsx:182
 msgid "End date"
 msgstr "Data Final"
 
+#: src/components/cards/TaskCard.jsx:29
 #: src/components/tooltips/CustomTooltipContent.jsx:33
 #: src/pages/EditProjectPage.jsx:271
 #: src/pages/EditProjectPage.jsx:385
-#: src/pages/ProjectCreationPage1.jsx:244
+#: src/pages/ProjectCreationPage1.jsx:248
+#: src/pages/ProjectCreationPage1.jsx:362
 #: src/pages/ProjectProfilePageInfo.jsx:527
 msgid "End Date"
 msgstr "Data Final"
 
 #: src/pages/EditProjectPage.jsx:144
-#: src/pages/ProjectCreationPage1.jsx:111
+#: src/pages/ProjectCreationPage1.jsx:115
 msgid "End date must be after start date"
 msgstr "A data final deve ser após a data inicial"
 
@@ -507,8 +530,8 @@ msgstr "Escreva a sua mensagem"
 msgid "Error"
 msgstr "Erro"
 
-#: src/pages/EditProfilePage.jsx:301
-#: src/pages/EditProfilePage.jsx:305
+#: src/pages/EditProfilePage.jsx:304
+#: src/pages/EditProfilePage.jsx:308
 msgid "Error changing password."
 msgstr "Erro ao alterar password."
 
@@ -521,17 +544,17 @@ msgstr "Erro ao criar perfil"
 msgid "Error sending password reset email"
 msgstr "Erro no envio de mail para reset de password"
 
-#: src/pages/EditProfilePage.jsx:203
-#: src/pages/EditProfilePage.jsx:207
+#: src/pages/EditProfilePage.jsx:206
+#: src/pages/EditProfilePage.jsx:210
 msgid "Error updating profile"
 msgstr "Error ao alterar perfil"
 
 #: src/pages/CreateProfilePage.jsx:180
-#: src/pages/EditProfilePage.jsx:195
+#: src/pages/EditProfilePage.jsx:198
 msgid "Error uploading profile picture"
 msgstr "Error ao carregar foto de perfil"
 
-#: src/pages/ProjectCreationPage1.jsx:100
+#: src/pages/ProjectCreationPage1.jsx:104
 msgid "Error while creating project"
 msgstr "Erro ao criar projeto"
 
@@ -539,7 +562,7 @@ msgstr "Erro ao criar projeto"
 msgid "Error while updating project"
 msgstr "Erro ao alterar projeto"
 
-#: src/components/Pdf/StatisticsPdf.jsx:364
+#: src/components/Pdf/StatisticsPdf.jsx:362
 msgid "Export to PDF"
 msgstr "Extrair PDF"
 
@@ -557,7 +580,7 @@ msgid "Failed to send mail."
 msgstr "Falha ao enviar ao email."
 
 #: src/components/forms/RegisterForm.jsx:200
-#: src/pages/EditProfilePage.jsx:610
+#: src/pages/EditProfilePage.jsx:617
 #: src/pages/ResetPasswordPage.jsx:140
 msgid "Fair"
 msgstr "Média"
@@ -572,12 +595,12 @@ msgstr "Data Final"
 #~ msgstr "Terminar Criação de Projeto"
 
 #: src/pages/CreateProfilePage.jsx:259
-#: src/pages/EditProfilePage.jsx:377
+#: src/pages/EditProfilePage.jsx:380
 msgid "First Name"
 msgstr "Primeiro Nome"
 
 #: src/pages/CreateProfilePage.jsx:131
-#: src/pages/EditProfilePage.jsx:153
+#: src/pages/EditProfilePage.jsx:156
 msgid "First Name is required."
 msgstr "O Primeiro Nome é obrigatório."
 
@@ -589,12 +612,12 @@ msgstr "Esqueceu a Password"
 msgid "Forgot your password"
 msgstr "Esqueceu-se da password?"
 
-#: src/components/tables/MailTable.jsx:423
+#: src/components/tables/MailTable.jsx:419
 msgid "From"
 msgstr "De"
 
 #: src/components/forms/RegisterForm.jsx:201
-#: src/pages/EditProfilePage.jsx:611
+#: src/pages/EditProfilePage.jsx:618
 #: src/pages/ResetPasswordPage.jsx:141
 msgid "Good"
 msgstr "Boa"
@@ -603,7 +626,7 @@ msgstr "Boa"
 msgid "Hardware"
 msgstr "Hardware"
 
-#: src/pages/ProjectChatPage.jsx:87
+#: src/pages/ProjectChatPage.jsx:92
 msgid "HH:mm DD MMM YYYY"
 msgstr "HH:mm DD MMM YYYY"
 
@@ -611,16 +634,17 @@ msgstr "HH:mm DD MMM YYYY"
 #~ msgid "hours ago"
 #~ msgstr "horas atrás"
 
-#: src/components/Pdf/StatisticsPdf.jsx:387
+#: src/components/Pdf/StatisticsPdf.jsx:385
 msgid "ILM Statistics"
 msgstr "Estatísticas ILM"
 
+#: src/components/cards/TaskCard.jsx:32
 #: src/components/modals/AddTaskModal.jsx:294
 #: src/components/modals/EditTaskModal.jsx:129
 msgid "In Charge"
 msgstr "Responsável"
 
-#: src/pages/ProjectPlanPage.jsx:526
+#: src/pages/ProjectPlanPage.jsx:496
 msgid "IN PROGRESS"
 msgstr "EM PROGRESSO"
 
@@ -629,7 +653,7 @@ msgid "Inbox"
 msgstr "Caixa de Entrada"
 
 #. js-lingui-explicit-id
-#: src/pages/InboxMailPage.jsx:22
+#: src/pages/InboxMailPage.jsx:33
 msgid "inbox-caixa-de-entrada"
 msgstr "Caixa de Entrada"
 
@@ -642,13 +666,13 @@ msgstr "Info"
 msgid "Initial Date"
 msgstr "Data Inicial"
 
-#: src/pages/ProfilePage.jsx:354
+#: src/pages/ProfilePage.jsx:397
 msgid "Interests"
 msgstr "Interesses"
 
-#: src/components/selectors/InterestSelector.jsx:170
+#: src/components/selectors/InterestSelector.jsx:176
 #: src/pages/CreateProfilePage.jsx:349
-#: src/pages/EditProfilePage.jsx:488
+#: src/pages/EditProfilePage.jsx:491
 msgid "Interests:"
 msgstr "Interesses:"
 
@@ -657,7 +681,7 @@ msgstr "Interesses:"
 msgid "Invalid data. Please try again."
 msgstr "Dados inválidos. Tente novamente."
 
-#: src/pages/ProjectCreationPage1.jsx:153
+#: src/pages/ProjectCreationPage1.jsx:157
 msgid "Invalid project name"
 msgstr "Nome de projeto inválido"
 
@@ -666,7 +690,7 @@ msgid "Invite"
 msgstr "Convidar"
 
 #: src/components/modals/InviteProjectModal.jsx:76
-#: src/pages/ProfilePage.jsx:315
+#: src/pages/ProfilePage.jsx:343
 msgid "Invite to Project"
 msgstr "Convidar para Projeto"
 
@@ -679,9 +703,9 @@ msgid "Join Project"
 msgstr "Candidatar a Projeto"
 
 #: src/pages/EditProjectPage.jsx:462
-#: src/pages/ProjectCreationPage1.jsx:405
+#: src/pages/ProjectCreationPage1.jsx:409
 msgid "Keywords:"
-msgstr "Keywords:"
+msgstr "Palavras-chave:"
 
 #: src/components/selectors/SkillSelector.jsx:195
 msgid "Knowledge"
@@ -691,25 +715,26 @@ msgstr "Conhecimento"
 #: src/components/asides/AsideProjectCreationPage2.jsx:46
 #: src/components/asides/AsideProjectsTable.jsx:52
 #: src/components/cards/MyProjectCard.jsx:52
-#: src/components/Pdf/StatisticsPdf.jsx:166
-#: src/components/tables/ProjectsTable.jsx:156
+#: src/components/Pdf/StatisticsPdf.jsx:164
+#: src/components/tables/ProjectsTable.jsx:158
 #: src/pages/ProjectProfilePageInfo.jsx:533
 msgid "Lab"
 msgstr "Lab"
 
 #: src/pages/EditProjectPage.jsx:238
 #: src/pages/EditProjectPage.jsx:353
-#: src/pages/ProjectCreationPage1.jsx:210
+#: src/pages/ProjectCreationPage1.jsx:214
+#: src/pages/ProjectCreationPage1.jsx:329
 msgid "Laboratory"
 msgstr "Laboratório"
 
 #: src/pages/CreateProfilePage.jsx:274
-#: src/pages/EditProfilePage.jsx:393
+#: src/pages/EditProfilePage.jsx:396
 msgid "Last Name"
 msgstr "Último Nome"
 
 #: src/pages/CreateProfilePage.jsx:132
-#: src/pages/EditProfilePage.jsx:154
+#: src/pages/EditProfilePage.jsx:157
 msgid "Last Name is required."
 msgstr "O Último Nome é obrigatório."
 
@@ -717,7 +742,7 @@ msgstr "O Último Nome é obrigatório."
 msgid "Leave Project"
 msgstr "Abandonar Projecto"
 
-#: src/pages/ProjectPlanPage.jsx:502
+#: src/pages/ProjectPlanPage.jsx:471
 msgid "Legend"
 msgstr "Legenda"
 
@@ -726,12 +751,12 @@ msgid "Load More"
 msgstr "Carregar mais"
 
 #: src/components/tables/MailTable.jsx:271
-#: src/pages/ProfilePage.jsx:135
+#: src/pages/ProfilePage.jsx:141
 #: src/pages/ProjectLogsPage.jsx:353
 msgid "Loading..."
 msgstr "Carregando..."
 
-#: src/pages/ProfilePage.jsx:278
+#: src/pages/ProfilePage.jsx:305
 msgid "Location"
 msgstr "Localização"
 
@@ -748,7 +773,7 @@ msgstr "Logout"
 msgid "Logs"
 msgstr "Logs"
 
-#: src/components/tables/MailTable.jsx:416
+#: src/components/tables/MailTable.jsx:412
 #: src/components/tables/SentMailTable.jsx:367
 msgid "Mail Details"
 msgstr "Detalhes do Email"
@@ -780,8 +805,8 @@ msgstr "Tipo de Membro"
 #: src/components/cards/MyProjectCard.jsx:55
 #: src/components/modals/AddTaskModal.jsx:311
 #: src/components/modals/EditTaskModal.jsx:146
-#: src/components/tables/ProjectsTable.jsx:186
-#: src/pages/ProjectChatPage.jsx:216
+#: src/components/tables/ProjectsTable.jsx:193
+#: src/pages/ProjectChatPage.jsx:226
 #: src/pages/ProjectProfilePageInfo.jsx:592
 msgid "Members"
 msgstr "Membros"
@@ -790,13 +815,13 @@ msgstr "Membros"
 msgid "Members ({0}/{1})"
 msgstr "Membros ({0}/{1})"
 
-#: src/components/Pdf/StatisticsPdf.jsx:119
-#: src/components/Pdf/StatisticsPdf.jsx:131
+#: src/components/Pdf/StatisticsPdf.jsx:117
+#: src/components/Pdf/StatisticsPdf.jsx:129
 msgid "Members per Lab"
 msgstr "Membros por Lab"
 
 #: src/components/modals/ComposeMailModal.jsx:189
-#: src/components/tables/MailTable.jsx:445
+#: src/components/tables/MailTable.jsx:441
 #: src/components/tables/SentMailTable.jsx:396
 msgid "Message"
 msgstr "Mensagem"
@@ -809,16 +834,17 @@ msgstr "8 caracters no mínimo"
 #~ msgid "minutes ago"
 #~ msgstr "minutos atrás"
 
-#: src/pages/ProjectPlanPage.jsx:445
+#: src/pages/ProjectPlanPage.jsx:459
 msgid "Month"
 msgstr "Mês"
 
 #: src/pages/EditProjectPage.jsx:324
+#: src/pages/ProjectCreationPage1.jsx:301
 msgid "Motivation"
 msgstr "Motivação"
 
 #. js-lingui-explicit-id
-#: src/pages/MyProjectsPage.jsx:107
+#: src/pages/MyProjectsPage.jsx:115
 msgid "o-my-projects"
 msgstr "Os Meus"
 
@@ -840,20 +866,20 @@ msgid "Name"
 msgstr "Nome"
 
 #: src/pages/EditProjectPage.jsx:177
-#: src/pages/ProjectCreationPage1.jsx:150
+#: src/pages/ProjectCreationPage1.jsx:154
 msgid "Name has to be at least 3 characters long"
 msgstr "O Nome tem de conter pelo menos 3 caracteres"
 
 #: src/pages/EditProjectPage.jsx:179
-#: src/pages/ProjectCreationPage1.jsx:152
+#: src/pages/ProjectCreationPage1.jsx:156
 msgid "Name has to be at most 35 characters long"
 msgstr "O nome não pode ultrapassar os 35 caracteres"
 
-#: src/pages/EditProfilePage.jsx:566
+#: src/pages/EditProfilePage.jsx:573
 msgid "New Password"
 msgstr "Nova Password"
 
-#: src/pages/EditProfilePage.jsx:279
+#: src/pages/EditProfilePage.jsx:282
 msgid "New passwords do not match."
 msgstr "As Novas Passwords não coincidem."
 
@@ -861,34 +887,34 @@ msgstr "As Novas Passwords não coincidem."
 msgid "Next"
 msgstr "Próximo"
 
-#: src/pages/ProjectCreationPage2.jsx:296
+#: src/pages/ProjectCreationPage2.jsx:304
 msgid "Next step"
 msgstr "Próximo Passo"
 
-#: src/pages/ProfilePage.jsx:472
+#: src/pages/ProfilePage.jsx:537
 msgid "No applications available."
 msgstr "Sem candidaturas disponíveis."
 
-#: src/components/tables/MailTable.jsx:325
+#: src/components/tables/MailTable.jsx:321
 #: src/components/tables/SentMailTable.jsx:265
 msgid "No emails found matching your criteria."
 msgstr "Não foi encontrado qualquer email."
 
-#: src/components/selectors/InterestSelector.jsx:171
+#: src/components/selectors/InterestSelector.jsx:177
 msgid "No interests added yet."
 msgstr "Sem interesses ainda adicionados."
 
-#: src/pages/ProfilePage.jsx:541
+#: src/pages/ProfilePage.jsx:606
 msgid "No interests available."
 msgstr "Sem interesses disponíveis."
 
-#: src/components/selectors/InterestSelector.jsx:172
+#: src/components/selectors/InterestSelector.jsx:178
 msgid "No keyword added yet."
-msgstr "Sem keywords ainda adicionadas."
+msgstr "Sem palavras-chave ainda adicionadas."
 
 #: src/pages/ProjectProfilePageInfo.jsx:693
 msgid "No keywords available."
-msgstr "Sem keywords disponíveis."
+msgstr "Sem palavras-chave disponíveis."
 
 #: src/components/modals/NotificationModal.jsx:224
 msgid "No more notifications"
@@ -898,11 +924,11 @@ msgstr "Sem mais notificações"
 msgid "No notifications to show"
 msgstr "Sem notificações para mostrar"
 
-#: src/pages/ProfilePage.jsx:408
+#: src/pages/ProfilePage.jsx:473
 msgid "No projects available."
 msgstr "Sem projetos disponíveis."
 
-#: src/components/tables/ProjectsTable.jsx:196
+#: src/components/tables/ProjectsTable.jsx:204
 msgid "No projects found matching your criteria."
 msgstr "Não foram encontrados projetos."
 
@@ -918,7 +944,7 @@ msgstr "Não foram encontrados Recursos."
 msgid "No skills added yet."
 msgstr "Sem skills ainda adicionadas."
 
-#: src/pages/ProfilePage.jsx:511
+#: src/pages/ProfilePage.jsx:576
 #: src/pages/ProjectProfilePageInfo.jsx:671
 msgid "No skills available."
 msgstr "Sem skills disponíveis."
@@ -928,7 +954,7 @@ msgstr "Sem skills disponíveis."
 #~ msgstr "Sem utilizadores disponíveis."
 
 #: src/components/forms/RegisterForm.jsx:198
-#: src/pages/EditProfilePage.jsx:608
+#: src/pages/EditProfilePage.jsx:615
 #: src/pages/ResetPasswordPage.jsx:138
 msgid "None"
 msgstr "Nada"
@@ -942,8 +968,8 @@ msgstr "Nota"
 msgid "Notes"
 msgstr "Notas"
 
-#: src/components/Pdf/StatisticsPdf.jsx:143
-#: src/components/Pdf/StatisticsPdf.jsx:157
+#: src/components/Pdf/StatisticsPdf.jsx:141
+#: src/components/Pdf/StatisticsPdf.jsx:155
 msgid "Number of projects per status in each lab"
 msgstr "Número de Projetos por estado em cada Lab"
 
@@ -952,12 +978,12 @@ msgid "Observations"
 msgstr "Observações"
 
 #: src/pages/CreateProfilePage.jsx:310
-#: src/pages/EditProfilePage.jsx:434
+#: src/pages/EditProfilePage.jsx:437
 msgid "Office"
 msgstr "Lab"
 
 #: src/pages/CreateProfilePage.jsx:133
-#: src/pages/EditProfilePage.jsx:155
+#: src/pages/EditProfilePage.jsx:158
 msgid "Office is required."
 msgstr "O Lab é obrigatório."
 
@@ -974,18 +1000,18 @@ msgstr "O Lab é obrigatório."
 msgid "Out Colaboration"
 msgstr "Colaboração Externa"
 
-#: src/pages/EditProfilePage.jsx:284
+#: src/pages/EditProfilePage.jsx:287
 msgid "Password is not strong enough."
 msgstr "A Password não é forte o suficiente."
 
 #: src/components/forms/RegisterForm.jsx:79
-#: src/pages/EditProfilePage.jsx:253
+#: src/pages/EditProfilePage.jsx:256
 #: src/pages/ResetPasswordPage.jsx:33
 msgid "Password is strong"
 msgstr "A Password é forte"
 
 #: src/components/forms/RegisterForm.jsx:82
-#: src/pages/EditProfilePage.jsx:256
+#: src/pages/EditProfilePage.jsx:259
 #: src/pages/ResetPasswordPage.jsx:36
 msgid "Password must be strong"
 msgstr "A Password deve ser forte"
@@ -999,30 +1025,30 @@ msgid "Password reset email sent"
 msgstr "Email para reset de password enviado"
 
 #: src/components/forms/RegisterForm.jsx:176
-#: src/pages/EditProfilePage.jsx:586
+#: src/pages/EditProfilePage.jsx:593
 #: src/pages/ResetPasswordPage.jsx:117
 msgid "Password Strength"
 msgstr "Força da Password"
 
-#: src/pages/EditProfilePage.jsx:294
+#: src/pages/EditProfilePage.jsx:297
 msgid "Password updated successfully."
 msgstr "Password alterada com sucesso."
 
 #: src/components/forms/RegisterForm.jsx:92
-#: src/pages/EditProfilePage.jsx:269
+#: src/pages/EditProfilePage.jsx:272
 #: src/pages/ResetPasswordPage.jsx:78
 msgid "Passwords do not match"
 msgstr "As Passwords não coincidem"
 
 #: src/components/forms/RegisterForm.jsx:89
-#: src/pages/EditProfilePage.jsx:266
+#: src/pages/EditProfilePage.jsx:269
 #: src/pages/ResetPasswordPage.jsx:75
 msgid "Passwords match"
 msgstr "As Passwords coincidem"
 
 #: src/components/tables/ProjectMembersTable.jsx:25
 #: src/pages/CreateProfilePage.jsx:229
-#: src/pages/EditProfilePage.jsx:344
+#: src/pages/EditProfilePage.jsx:347
 msgid "Photo"
 msgstr "Foto"
 
@@ -1030,16 +1056,16 @@ msgstr "Foto"
 msgid "Plan"
 msgstr "Plano"
 
-#: src/pages/ProjectPlanPage.jsx:538
+#: src/pages/ProjectPlanPage.jsx:508
 msgid "PLANNED"
 msgstr "PLANEADA"
 
-#: src/pages/ProjectPlanPage.jsx:540
+#: src/pages/ProjectPlanPage.jsx:510
 msgid "Planned tasks"
 msgstr "Tarefas Planeadas"
 
 #: src/pages/EditProjectPage.jsx:149
-#: src/pages/ProjectCreationPage1.jsx:116
+#: src/pages/ProjectCreationPage1.jsx:120
 msgid "Please fill all the fields"
 msgstr "Por favor preencha todos os campos"
 
@@ -1051,11 +1077,11 @@ msgstr "Por favor preencha todos os campos"
 msgid "Please fill in all required fields."
 msgstr "Por favor preencha todos os campos obrigatórios."
 
-#: src/pages/ProjectCreationPage1.jsx:127
+#: src/pages/ProjectCreationPage1.jsx:131
 msgid "Please select a .jpg or .png file."
 msgstr "Selecione um ficheiro .jpg ou .png por favor."
 
-#: src/pages/ProjectCreationPage2.jsx:94
+#: src/pages/ProjectCreationPage2.jsx:98
 msgid "Please select a maximum number of members value smaller or equal to 30"
 msgstr "Por favor selecione um número máximo de números menor ou igual que 30"
 
@@ -1064,43 +1090,45 @@ msgstr "Por favor selecione um número máximo de números menor ou igual que 30
 msgid "Progress"
 msgstr "Progresso"
 
-#: src/components/tables/ProjectsTable.jsx:136
+#: src/components/tables/ProjectsTable.jsx:138
 #: src/pages/EditProjectPage.jsx:214
-#: src/pages/ProjectCreationPage3.jsx:156
-#: src/pages/ProjectPlanPage.jsx:552
+#: src/pages/ProfilePage.jsx:437
+#: src/pages/ProjectCreationPage3.jsx:160
+#: src/pages/ProjectPlanPage.jsx:522
 msgid "Project"
 msgstr "Projeto"
 
-#: src/pages/ProjectPlanPage.jsx:550
+#: src/pages/ProjectPlanPage.jsx:520
 msgid "PROJECT"
 msgstr "PROJETO"
 
-#: src/pages/ProjectCreationPage1.jsx:82
-#: src/pages/ProjectCreationPage1.jsx:91
+#: src/pages/ProjectCreationPage1.jsx:86
+#: src/pages/ProjectCreationPage1.jsx:95
 msgid "Project created successfully"
 msgstr "Projeto criado com sucesso"
 
 #: src/pages/EditProjectPage.jsx:287
+#: src/pages/ProjectCreationPage1.jsx:267
 msgid "Project Image"
 msgstr "Imagem de Projeto"
 
-#: src/pages/ProfilePage.jsx:380
-#: src/pages/ProfilePage.jsx:431
-#: src/pages/ProjectCreationPage1.jsx:198
+#: src/pages/ProfilePage.jsx:496
+#: src/pages/ProjectCreationPage1.jsx:202
+#: src/pages/ProjectCreationPage1.jsx:317
 msgid "Project Name"
 msgstr "Nome do Projeto"
 
 #: src/pages/EditProjectPage.jsx:173
-#: src/pages/ProjectCreationPage1.jsx:146
+#: src/pages/ProjectCreationPage1.jsx:150
 msgid "Project name already exists"
 msgstr "O nome do Projeto já existe"
 
 #: src/pages/EditProjectPage.jsx:170
-#: src/pages/ProjectCreationPage1.jsx:143
+#: src/pages/ProjectCreationPage1.jsx:147
 msgid "Project name available"
 msgstr "Nome Disponível"
 
-#: src/pages/ProjectPlanPage.jsx:494
+#: src/pages/ProjectPlanPage.jsx:575
 msgid "Project Progress"
 msgstr "Progresso do Projeto"
 
@@ -1111,28 +1139,32 @@ msgstr "Projeto alterado com sucesso"
 
 #: src/components/headers/AppNavbar.jsx:219
 #: src/components/headers/AppNavbar.jsx:313
-#: src/components/Pdf/StatisticsPdf.jsx:148
-#: src/components/Pdf/StatisticsPdf.jsx:162
+#: src/components/Pdf/StatisticsPdf.jsx:146
+#: src/components/Pdf/StatisticsPdf.jsx:160
 #: src/pages/App.jsx:245
-#: src/pages/MyProjectsPage.jsx:108
-#: src/pages/ProfilePage.jsx:339
+#: src/pages/MyProjectsPage.jsx:118
+#: src/pages/ProfilePage.jsx:382
 #: src/pages/ProjectsPage.jsx:158
 #: src/pages/Register.jsx:243
 msgid "Projects"
 msgstr "Projetos"
 
-#: src/components/Pdf/StatisticsPdf.jsx:125
-#: src/components/Pdf/StatisticsPdf.jsx:137
+#: src/components/Pdf/StatisticsPdf.jsx:123
+#: src/components/Pdf/StatisticsPdf.jsx:135
 msgid "Projects per Lab"
 msgstr "Projetos por Lab"
 
-#: src/components/tables/ProjectsTable.jsx:90
-#: src/components/tables/ProjectsTable.jsx:314
+#: src/components/tables/ProjectsTable.jsx:91
+#: src/components/tables/ProjectsTable.jsx:322
 msgid "Projects Statistics"
 msgstr "Estatísticas de Projetos"
 
+#: src/pages/ProfilePage.jsx:354
+msgid "Promote to Admin"
+msgstr "Promover a Administrador"
+
 #: src/pages/CreateProfilePage.jsx:335
-#: src/pages/EditProfilePage.jsx:462
+#: src/pages/EditProfilePage.jsx:465
 msgid "Public Profile"
 msgstr "Perfil Público"
 
@@ -1171,8 +1203,8 @@ msgid "Registered successfully. Please Verify your email."
 msgstr "Registado com sucesso. Por favor verifique o seu email."
 
 #: src/components/cards/UserCard.jsx:85
-#: src/pages/ProfilePage.jsx:453
-#: src/pages/ProfilePage.jsx:584
+#: src/pages/ProfilePage.jsx:518
+#: src/pages/ProfilePage.jsx:649
 #: src/pages/ProjectProfilePageInfo.jsx:386
 msgid "Reject"
 msgstr "Rejeitar"
@@ -1194,7 +1226,7 @@ msgstr "Rejeitar Projeto"
 #~ msgid "Remove Member"
 #~ msgstr "Remover Membro"
 
-#: src/components/tables/MailTable.jsx:485
+#: src/components/tables/MailTable.jsx:481
 msgid "Reply"
 msgstr "Responder"
 
@@ -1222,22 +1254,22 @@ msgstr "Recurso editado com sucesso."
 msgid "Resource Edition"
 msgstr "Edição de Recurso"
 
-#: src/components/Pdf/StatisticsPdf.jsx:325
-#: src/components/Pdf/StatisticsPdf.jsx:413
+#: src/components/Pdf/StatisticsPdf.jsx:323
+#: src/components/Pdf/StatisticsPdf.jsx:411
 msgid "resources"
 msgstr "recursos"
 
 #: src/components/headers/AppNavbar.jsx:228
 #: src/components/headers/AppNavbar.jsx:322
 #: src/components/headers/ProjectTabs.jsx:16
-#: src/pages/ProjectCreationPage3.jsx:157
-#: src/pages/ResourcesPage.jsx:142
+#: src/pages/ProjectCreationPage3.jsx:163
+#: src/pages/ResourcesPage.jsx:153
 msgid "Resources"
 msgstr "Recursos"
 
 #: src/components/modals/AddResourceModal.jsx:369
 #: src/components/selectors/SkillSelector.jsx:207
-#: src/pages/EditProfilePage.jsx:518
+#: src/pages/EditProfilePage.jsx:525
 msgid "Save"
 msgstr "Guardar"
 
@@ -1245,30 +1277,30 @@ msgstr "Guardar"
 msgid "Save changes"
 msgstr "Guardar alterações"
 
-#: src/pages/ProjectCreationPage3.jsx:384
-#: src/pages/ProjectProfileResourcesPage.jsx:469
+#: src/pages/ProjectCreationPage3.jsx:397
+#: src/pages/ProjectProfileResourcesPage.jsx:472
 msgid "Save Resources"
 msgstr "Guardar Recursos"
 
-#: src/components/tables/MailTable.jsx:311
-#: src/components/tables/ProjectsTable.jsx:113
+#: src/components/tables/MailTable.jsx:307
+#: src/components/tables/ProjectsTable.jsx:114
 #: src/components/tables/ResourcesTable.jsx:79
 #: src/components/tables/SentMailTable.jsx:251
-#: src/pages/MyProjectsPage.jsx:140
-#: src/pages/ProjectCreationPage2.jsx:158
+#: src/pages/MyProjectsPage.jsx:151
+#: src/pages/ProjectCreationPage2.jsx:166
 msgid "Search"
 msgstr "Procurar"
 
-#: src/components/tables/ProjectsTable.jsx:98
-#: src/pages/MyProjectsPage.jsx:121
+#: src/components/tables/ProjectsTable.jsx:99
+#: src/pages/MyProjectsPage.jsx:132
 msgid "Search for project name"
 msgstr "Procure pelo nome do projecto"
 
-#: src/pages/ProjectCreationPage3.jsx:171
+#: src/pages/ProjectCreationPage3.jsx:178
 msgid "Search for resource"
 msgstr "Procurar por Recurso"
 
-#: src/pages/ProjectProfileResourcesPage.jsx:247
+#: src/pages/ProjectProfileResourcesPage.jsx:250
 msgid "Search for resources"
 msgstr "Procurar por Recurso"
 
@@ -1277,7 +1309,7 @@ msgstr "Procurar por Recurso"
 msgid "Search for title or description"
 msgstr "Procure por titulo ou descrição"
 
-#: src/pages/ProjectCreationPage2.jsx:140
+#: src/pages/ProjectCreationPage2.jsx:148
 msgid "Search for user"
 msgstr "Procurar por Utilizador"
 
@@ -1296,7 +1328,7 @@ msgid "Select a type"
 msgstr "Selecione um tipo"
 
 #: src/pages/CreateProfilePage.jsx:319
-#: src/pages/EditProfilePage.jsx:445
+#: src/pages/EditProfilePage.jsx:448
 msgid "Select Office"
 msgstr "Selecionar Laboratório"
 
@@ -1313,15 +1345,15 @@ msgid "Select Type"
 msgstr "Selecione Tipo"
 
 #: src/components/modals/ComposeMailModal.jsx:210
-#: src/pages/ProjectChatPage.jsx:201
+#: src/pages/ProjectChatPage.jsx:210
 msgid "Send"
 msgstr "Enviar"
 
-#: src/pages/ProfilePage.jsx:307
+#: src/pages/ProfilePage.jsx:335
 msgid "Send Email"
 msgstr "Enviar Email"
 
-#: src/pages/SentMailPage.jsx:22
+#: src/pages/SentMailPage.jsx:32
 msgid "Sent e-Mails"
 msgstr "eMails Enviados"
 
@@ -1364,19 +1396,21 @@ msgid "Some of our Projects"
 msgstr "Alguns dos nossos Projetos"
 
 #: src/components/cards/MyProjectCard.jsx:61
-#: src/components/tables/ProjectsTable.jsx:167
+#: src/components/tables/ProjectsTable.jsx:170
 msgid "Start date"
 msgstr "Data Inicial"
 
+#: src/components/cards/TaskCard.jsx:26
 #: src/components/tooltips/CustomTooltipContent.jsx:30
 #: src/pages/EditProjectPage.jsx:257
 #: src/pages/EditProjectPage.jsx:372
-#: src/pages/ProjectCreationPage1.jsx:229
+#: src/pages/ProjectCreationPage1.jsx:233
+#: src/pages/ProjectCreationPage1.jsx:348
 #: src/pages/ProjectProfilePageInfo.jsx:521
 msgid "Start Date"
 msgstr "Data Inicial"
 
-#: src/pages/ProjectCreationPage1.jsx:106
+#: src/pages/ProjectCreationPage1.jsx:110
 msgid "Start date must be after today's date"
 msgstr "A data de início deve ser depois da data atual"
 
@@ -1384,28 +1418,28 @@ msgstr "A data de início deve ser depois da data atual"
 msgid "States to Change"
 msgstr "Status para Alteração"
 
-#: src/components/Pdf/StatisticsPdf.jsx:262
+#: src/components/Pdf/StatisticsPdf.jsx:260
 msgid "Statistics"
 msgstr "Estatísticas"
 
 #: src/components/asides/AsideMyProjectsPage.jsx:73
 #: src/components/asides/AsideProjectsTable.jsx:76
 #: src/components/modals/EditTaskModal.jsx:60
-#: src/components/tables/ProjectsTable.jsx:146
+#: src/components/tables/ProjectsTable.jsx:148
 #: src/components/tooltips/CustomTooltipContent.jsx:27
-#: src/pages/ProfilePage.jsx:400
-#: src/pages/ProfilePage.jsx:437
+#: src/pages/ProfilePage.jsx:465
+#: src/pages/ProfilePage.jsx:502
 msgid "Status"
 msgstr "Status"
 
 #: src/components/forms/RegisterForm.jsx:202
-#: src/pages/EditProfilePage.jsx:612
+#: src/pages/EditProfilePage.jsx:619
 #: src/pages/ResetPasswordPage.jsx:142
 msgid "Strong"
 msgstr "Forte"
 
 #: src/components/modals/ComposeMailModal.jsx:179
-#: src/components/tables/MailTable.jsx:434
+#: src/components/tables/MailTable.jsx:430
 #: src/components/tables/SentMailTable.jsx:385
 msgid "Subject"
 msgstr "Assunto"
@@ -1427,8 +1461,8 @@ msgstr "Fornecedor"
 msgid "Supplier Contact"
 msgstr "Contacto de Fornecedor"
 
-#: src/components/Pdf/StatisticsPdf.jsx:322
-#: src/components/Pdf/StatisticsPdf.jsx:409
+#: src/components/Pdf/StatisticsPdf.jsx:320
+#: src/components/Pdf/StatisticsPdf.jsx:407
 msgid "Supplier with most Resources"
 msgstr "Fornecedor com mais Recursos"
 
@@ -1441,15 +1475,15 @@ msgstr "Levantam Voo"
 msgid "Task title must be unique."
 msgstr "O título da tarefa deve ser único."
 
-#: src/pages/ProjectPlanPage.jsx:528
+#: src/pages/ProjectPlanPage.jsx:498
 msgid "Tasks in progress"
 msgstr "Tarefas em Progresso"
 
-#: src/pages/ProfilePage.jsx:168
+#: src/pages/ProfilePage.jsx:174
 msgid "The invite for the project: {projectName} was successfully rejected."
 msgstr "O convite para o projeto: {projectName} foi rejeitado com sucesso."
 
-#: src/pages/ProjectCreationPage2.jsx:77
+#: src/pages/ProjectCreationPage2.jsx:81
 msgid "The members have been added to the project successfully"
 msgstr "Os membros foram adicionados ao projeto com sucesso"
 
@@ -1461,11 +1495,11 @@ msgstr "O projeto está {0} e não pode ser modificado."
 msgid "The project is {0} and no notes can be added or changes made."
 msgstr "O projeto está {0} e notas não pode serem adicionadas."
 
-#: src/pages/ProjectPlanPage.jsx:559
+#: src/pages/ProjectPlanPage.jsx:584
 msgid "The project is {0} and no tasks can be added or changes made."
 msgstr "O projeto está {0 e não é possível adicionar novas tarefas ou editar.}"
 
-#: src/pages/ProjectProfileResourcesPage.jsx:227
+#: src/pages/ProjectProfileResourcesPage.jsx:230
 msgid "The project is {0}, and you can't change the resources in the project."
 msgstr "O projeto está {0, e não pode alterar os recursos no mesmo.}"
 
@@ -1473,15 +1507,15 @@ msgstr "O projeto está {0, e não pode alterar os recursos no mesmo.}"
 #~ msgid "The project is canceled and no changes can be made."
 #~ msgstr "O projeto está cancelado e não podem ser feitas alterações."
 
-#: src/pages/ProjectChatPage.jsx:112
+#: src/pages/ProjectChatPage.jsx:117
 msgid "The project is canceled, and the chat is disabled."
 msgstr "O projeto está cancelado e o chat está desativado."
 
-#: src/pages/ProjectCreationPage3.jsx:139
+#: src/pages/ProjectCreationPage3.jsx:142
 msgid "The resources have been added to the project successfully"
 msgstr "Os recursos foram adicionados ao projeto com sucesso."
 
-#: src/pages/ProjectProfileResourcesPage.jsx:197
+#: src/pages/ProjectProfileResourcesPage.jsx:200
 msgid "The resources have been saved successfully!"
 msgstr "Os recursos foram salvos com sucesso!"
 
@@ -1493,7 +1527,7 @@ msgstr "A equipa de projeto está cheia, mais nenhum membro pode ser aceite ou c
 msgid "This email is invalid"
 msgstr "Este mail é inválido"
 
-#: src/pages/ProfilePage.jsx:324
+#: src/pages/ProfilePage.jsx:367
 msgid "This profile is private."
 msgstr "Este perfil é privado."
 
@@ -1516,15 +1550,15 @@ msgid "To"
 msgstr "Para"
 
 #: src/pages/ProjectPlanPage.jsx:454
-msgid "Toggle List Cell Width"
-msgstr "Ativar Visão Detalhada"
+#~ msgid "Toggle List Cell Width"
+#~ msgstr "Ativar Visão Detalhada"
 
 #: src/components/selectors/SkillSelector.jsx:198
 msgid "Tools"
 msgstr "Ferramentas"
 
-#: src/components/Pdf/StatisticsPdf.jsx:308
-#: src/components/Pdf/StatisticsPdf.jsx:393
+#: src/components/Pdf/StatisticsPdf.jsx:306
+#: src/components/Pdf/StatisticsPdf.jsx:391
 msgid "Total users"
 msgstr "Total de Utilizadores"
 
@@ -1534,22 +1568,23 @@ msgstr "Total de Utilizadores"
 #: src/components/tables/ResourcesProjectCreationTable.jsx:73
 #: src/components/tables/ResourcesTable.jsx:109
 #: src/components/tables/YourResourcesProjectCreationTable.jsx:43
+#: src/pages/ProfilePage.jsx:450
 msgid "Type"
 msgstr "Tipo"
 
-#: src/pages/ProjectChatPage.jsx:185
+#: src/pages/ProjectChatPage.jsx:194
 msgid "Type a message..."
 msgstr "Digite uma mensagem..."
 
 #: src/pages/ProfilePage.jsx:389
-msgid "Type Member"
-msgstr "Tipo de Membro"
+#~ msgid "Type Member"
+#~ msgstr "Tipo de Membro"
 
 #: src/pages/ProjectLogsPage.jsx:555
 msgid "Type your note here. Use @ to mention a task."
 msgstr "Escreva a sua nota. Use @ para mencionar uma tarefa."
 
-#: src/pages/ProfilePage.jsx:70
+#: src/pages/ProfilePage.jsx:76
 msgid "Unauthorized: Invalid session."
 msgstr "Proibido: Sessão Inválida."
 
@@ -1561,16 +1596,20 @@ msgstr "Não lidos"
 msgid "Update Project"
 msgstr "Alterar Projeto"
 
+#: src/pages/ProfilePage.jsx:296
+msgid "User"
+msgstr "Utilizador"
+
 #: src/components/modals/InviteProjectModal.jsx:46
 msgid "User invited successfully!"
 msgstr "Utilizador convidado com sucesso!"
 
-#: src/pages/ProfilePage.jsx:72
+#: src/pages/ProfilePage.jsx:78
 msgid "User not found."
 msgstr "Utilizadores não encontrados."
 
 #: src/pages/CreateProfilePage.jsx:287
-#: src/pages/EditProfilePage.jsx:407
+#: src/pages/EditProfilePage.jsx:410
 msgid "Username"
 msgstr "Username"
 
@@ -1579,17 +1618,17 @@ msgid "Users in Project"
 msgstr "Membros no Projeto"
 
 #: src/components/forms/RegisterForm.jsx:203
-#: src/pages/EditProfilePage.jsx:613
+#: src/pages/EditProfilePage.jsx:620
 #: src/pages/ResetPasswordPage.jsx:143
 msgid "Very Strong"
 msgstr "Muito Forte"
 
-#: src/pages/ProjectPlanPage.jsx:437
+#: src/pages/ProjectPlanPage.jsx:447
 msgid "View Mode"
 msgstr "Modo de Vizualização"
 
 #: src/components/forms/RegisterForm.jsx:199
-#: src/pages/EditProfilePage.jsx:609
+#: src/pages/EditProfilePage.jsx:616
 #: src/pages/ResetPasswordPage.jsx:139
 msgid "Weak"
 msgstr "Fraca"
@@ -1604,17 +1643,18 @@ msgstr "Bem-vindo à nossa aplicação de Gestão do Laboratório de Inovação,
 msgid "Where Ideas"
 msgstr "Onde as Ideias"
 
-#: src/components/Pdf/StatisticsPdf.jsx:323
-#: src/components/Pdf/StatisticsPdf.jsx:411
+#: src/components/Pdf/StatisticsPdf.jsx:321
+#: src/components/Pdf/StatisticsPdf.jsx:409
 msgid "with"
 msgstr "com"
 
-#: src/pages/ProjectPlanPage.jsx:446
+#: src/pages/ProjectPlanPage.jsx:462
 msgid "Year"
 msgstr "Ano"
 
 #: src/components/tables/ProjectMembersTable.jsx:55
-#: src/pages/ProjectChatPage.jsx:157
+#: src/pages/ProjectChatPage.jsx:166
+#: src/pages/ProjectChatPage.jsx:261
 #: src/pages/ProjectProfilePageInfo.jsx:551
 msgid "You"
 msgstr "Tu"
@@ -1631,21 +1671,21 @@ msgstr "Já te candidataste a este projeto. Serás notificado quando um dos gest
 msgid "You have been invited to join this project."
 msgstr "Foste convidado para integrar neste projeto."
 
-#: src/pages/ProjectCreationPage2.jsx:88
+#: src/pages/ProjectCreationPage2.jsx:92
 msgid "You have exceeded the maximum number of members"
 msgstr "Excedeu o número máximo de membros"
 
-#: src/pages/ProfilePage.jsx:163
+#: src/pages/ProfilePage.jsx:169
 msgid "You now belong to the project: {projectName}."
 msgstr "Agora pertences ao projeto: {projectName}"
 
 #. js-lingui-explicit-id
-#: src/pages/InboxMailPage.jsx:21
+#: src/pages/InboxMailPage.jsx:30
 msgid "you-caixa-de-entrada"
 msgstr "A tua"
 
 #. js-lingui-explicit-id
-#: src/pages/SentMailPage.jsx:21
+#: src/pages/SentMailPage.jsx:29
 msgid "os-teus-emails-enviados"
 msgstr "Os teus"
 
@@ -1657,8 +1697,8 @@ msgstr "A tua conta foi confirmada com sucesso"
 msgid "Your Projects"
 msgstr "Os teus Projetos"
 
-#: src/pages/ProjectCreationPage3.jsx:310
-#: src/pages/ProjectProfileResourcesPage.jsx:392
+#: src/pages/ProjectCreationPage3.jsx:322
+#: src/pages/ProjectProfileResourcesPage.jsx:395
 msgid "Your Resources"
 msgstr "Os Recursos do Projeto"
 

@@ -15,6 +15,7 @@ import "./AppNavbar.css";
 import projectsIcon from "../../resources/icons/navbar/projects-icon.png";
 import resourceIcon from "../../resources/icons/navbar/resource-icon.png";
 import myProjectsIcon from "../../resources/icons/navbar/my-projects-icon.png";
+import usersIcon from "../../resources/icons/navbar/users-icon.png";
 import mailIcon from "../../resources/icons/navbar/mail-icon.png";
 import bellIcon from "../../resources/icons/navbar/notification-icon.png";
 import userProfileIcon from "../../resources/avatares/Avatar padrão.jpg";
@@ -135,6 +136,8 @@ export default function AppNavbar({
           ? myProjectsIcon
           : path === "/mail/inbox" || path === "/mail/sent"
           ? mailIcon
+          : path === "/users"
+          ? usersIcon
           : ""
       })`,
     };
@@ -251,6 +254,15 @@ export default function AppNavbar({
               <label>Email</label>
               {unreadCount > 0 && <span className="badge">{unreadCount}</span>}
             </div>
+            <div
+              className={getNavItemClass("/users")}
+              onClick={() => handleNavigation("/users")}
+            >
+              <div className="icon" style={getNavIconStyle("/users")}></div>
+              <label>
+                <Trans>Users</Trans>
+              </label>
+            </div>
           </div>
         </div>
         <div className="nav-right">
@@ -345,6 +357,15 @@ export default function AppNavbar({
               ></div>
               <label>Email</label>
               {unreadCount > 0 && <span className="badge">{unreadCount}</span>}
+            </div>
+            <div
+              className={getNavItemClass("/users")}
+              onClick={() => handleNavigation("/users")}
+            >
+              <div className="icon" style={getNavIconStyle("/users")}></div>
+              <label>
+                <Trans>Users</Trans>
+              </label>
             </div>
           </div>
         </div>

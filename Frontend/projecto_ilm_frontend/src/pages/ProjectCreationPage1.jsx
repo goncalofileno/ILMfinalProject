@@ -54,7 +54,7 @@ export default function ProjectCreationPage1() {
           console.log("Error while fetching labs: ", error);
         });
     });
-  }, []);
+  }, [currentLanguage]);
 
   const handleClick = () => {
     if (
@@ -264,7 +264,7 @@ export default function ProjectCreationPage1() {
               className="div-half-col"
               style={{ height: "50%", marginBottom: isTablet && "30px" }}
             >
-              <label className="custom-label">Project Image</label>
+              <label className="custom-label"><Trans>Project Image</Trans></label>
               <div className="div-img-project">
                 {preview ? (
                   <Image
@@ -298,7 +298,7 @@ export default function ProjectCreationPage1() {
               style={{ marginBottom: isTablet && "30px" }}
             >
               <label htmlFor="motivation" className="custom-label">
-                Motivation
+                <Trans>Motivation</Trans>
               </label>
               <textarea
                 name="motivation"
@@ -314,7 +314,7 @@ export default function ProjectCreationPage1() {
               <Row className="row-display">
                 <Col sm={5}>
                   <InputForm
-                    label="Project Name"
+                    label={t`Project Name`}
                     value={projectName}
                     setValue={setProjectName}
                     warningType={warningType}
@@ -326,7 +326,7 @@ export default function ProjectCreationPage1() {
                 <Col sm={2}>
                   <div className="lab-drop-down-div">
                     <label htmlFor="lab-drop-down" className="custom-label">
-                      Laboratory
+                      <Trans>Laboratory</Trans>
                     </label>
                     <Form.Control
                       as="select"
@@ -345,7 +345,7 @@ export default function ProjectCreationPage1() {
                 <Col sm={2}>
                   <div className="lab-drop-down-div">
                     <label htmlFor="start-date" className="custom-label">
-                      Start Date
+                      <Trans>Start Date</Trans>
                     </label>
                     <input
                       type="date"
@@ -359,7 +359,7 @@ export default function ProjectCreationPage1() {
                 <Col sm={2}>
                   <div className="lab-drop-down-div">
                     <label htmlFor="end-date" className="custom-label">
-                      End Date
+                      <Trans>End Date</Trans>
                     </label>
                     <input
                       type="date"

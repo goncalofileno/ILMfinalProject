@@ -38,6 +38,7 @@ import PublicRoute from "./utilities/PublicRoute";
 import { AuthProvider } from "./utilities/AuthContext";
 import StatisticsPdfPage from "./pages/StatisticsPdfPage";
 import I18nLoader, { useLanguage } from "./I18nLoader";
+import UsersPage from "./pages/UsersPage";
 
 const AppWithWebSocket = () => {
   const location = useLocation();
@@ -139,6 +140,7 @@ const AppWithWebSocket = () => {
           path="/statistics"
           element={<PrivateRoute component={StatisticsPdfPage} />}
         />
+        <Route path="/users" element={<PrivateRoute component={UsersPage} />} />
       </Routes>
     </>
   );
