@@ -6,7 +6,8 @@ import { getAllResources } from "../utilities/services";
 import { useLocation, useNavigate } from "react-router-dom";
 import AddResourceModal from "../components/modals/AddResourceModal";
 import { useMediaQuery } from "react-responsive";
-import {Trans, t} from "@lingui/macro";
+import { Trans, t } from "@lingui/macro";
+import Cookies from "js-cookie";
 
 export default function ResourcesPage() {
   const query = new URLSearchParams(useLocation().search);
@@ -33,6 +34,9 @@ export default function ResourcesPage() {
   const [isModalActive, setIsModalActive] = useState(false);
   const [resourceId, setResourceId] = useState(null);
   const [resourceSupplier, setResourceSupplier] = useState(null);
+  const [currentLanguage, setCurrentLanguage] = useState(
+    Cookies.get("user-language") || "ENGLISH"
+  );
 
   const sortByName = () => {
     if (typeAsc !== "") setTypeAsc("");
@@ -107,7 +111,11 @@ export default function ResourcesPage() {
   }, [navigateTableResourcesTrigger]);
   return (
     <>
-      <AppNavbar setIsAsideVisible={setIsAsideVisible} pageWithAside={true} />
+      <AppNavbar
+        setIsAsideVisible={setIsAsideVisible}
+        pageWithAside={true}
+        setCurrentLanguage={setCurrentLanguage}
+      />
 
       <AddResourceModal
         isModalActive={isModalActive}
@@ -138,8 +146,12 @@ export default function ResourcesPage() {
         onClick={() => isAsideVisible && setIsAsideVisible((prev) => !prev)}
       >
         <h1 className="page-title">
-          <span className="app-slogan-1"><Trans id="todos os">All</Trans> </span>
-          <span className="app-slogan-2"><Trans>Resources</Trans></span>
+          <span className="app-slogan-1">
+            <Trans id="todos os">All</Trans>{" "}
+          </span>
+          <span className="app-slogan-2">
+            <Trans>Resources</Trans>
+          </span>
         </h1>
         <div className="table-margin-top">
           <ResourcesTable

@@ -40,6 +40,9 @@ export default function ProjectProfileResourcesPage() {
   const [yourResources, setYourResources] = useState(
     Cookies.get("yourResources") ? JSON.parse(Cookies.get("yourResources")) : []
   );
+  const [currentLanguage, setCurrentLanguage] = useState(
+    Cookies.get("user-language") || "ENGLISH"
+  );
   const [selectedResource, setSelectedResource] = useState({});
   const [modalType, setModalType] = useState("warning");
   const [modalMessage, setModalMessage] = useState("");
@@ -205,7 +208,7 @@ export default function ProjectProfileResourcesPage() {
 
   return (
     <>
-      <AppNavbar />
+      <AppNavbar setCurrentLanguage={setCurrentLanguage} />
 
       <div
         className={

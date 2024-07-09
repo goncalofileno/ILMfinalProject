@@ -51,7 +51,9 @@ const UserProfile = () => {
   const isTablet = useMediaQuery({ query: "(max-width: 991px)" });
   const navigate = useNavigate();
   const atualUserType = Cookies.get("user-userType");
-  const language = Cookies.get("user-language");
+  const [currentLanguage, setCurrentLanguage] = useState(
+    Cookies.get("user-language") || "ENGLISH"
+  );
   const loggedInUsername = Cookies.get("user-systemUsername");
   const [changeUserModal, setChangeUserModal] = useState(false);
 
@@ -224,7 +226,7 @@ const UserProfile = () => {
 
   return (
     <>
-      <AppNavbar />
+      <AppNavbar setCurrentLanguage={setCurrentLanguage} />
       <div
         className={
           !isMobile ? "bckg-color-ilm-page ilm-pageb" : "ilm-pageb-noheight"
@@ -434,7 +436,7 @@ const UserProfile = () => {
                                           <strong>
                                             <Trans>Project </Trans>
                                             {!isMobile &&
-                                              language === "ENGLISH" &&
+                                              currentLanguage === "ENGLISH" &&
                                               "Name"}
                                             :
                                           </strong>
@@ -447,7 +449,7 @@ const UserProfile = () => {
                                           <strong>
                                             <Trans>Type </Trans>
                                             {!isMobile &&
-                                              language === "ENGLISH" &&
+                                              currentLanguage === "ENGLISH" &&
                                               "Member"}
                                             :
                                           </strong>{" "}

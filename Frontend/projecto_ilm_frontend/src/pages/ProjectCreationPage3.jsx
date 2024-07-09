@@ -40,6 +40,9 @@ export default function ProjectCreationPage3() {
   const [yourResources, setYourResources] = useState(
     Cookies.get("yourResources") ? JSON.parse(Cookies.get("yourResources")) : []
   );
+  const [currentLanguage, setCurrentLanguage] = useState(
+    Cookies.get("user-language") || "ENGLISH"
+  );
   const [selectedResource, setSelectedResource] = useState({});
   const [modalType, setModalType] = useState("warning");
   const [modalMessage, setModalMessage] = useState("");
@@ -147,14 +150,18 @@ export default function ProjectCreationPage3() {
   };
   return (
     <div>
-      <AppNavbar />
+      <AppNavbar setCurrentLanguage={setCurrentLanguage} />
       <div
         className={isTablet ? "ilm-page-mobile" : "ilm-pageb"}
         style={{ paddingBottom: isTablet && "150px" }}
       >
         <h1 className="page-title">
-          <span className="app-slogan-1"><Trans>Project</Trans> </span>
-          <span className="app-slogan-2"><Trans>Resources</Trans></span>
+          <span className="app-slogan-1">
+            <Trans>Project</Trans>{" "}
+          </span>
+          <span className="app-slogan-2">
+            <Trans>Resources</Trans>
+          </span>
         </h1>
         <Row className="row-container2" style={{ marginTop: "0px" }}>
           <Col xs={1} sm={1}></Col>
@@ -205,7 +212,9 @@ export default function ProjectCreationPage3() {
                     }}
                   >
                     {" "}
-                    <option value=""><Trans>All Brands</Trans></option>
+                    <option value="">
+                      <Trans>All Brands</Trans>
+                    </option>
                     {brands.map((brand, index) => (
                       <option key={index} value={brand}>
                         {brand}
@@ -222,7 +231,9 @@ export default function ProjectCreationPage3() {
                     }}
                   >
                     {" "}
-                    <option value=""><Trans>All Suppliers</Trans></option>
+                    <option value="">
+                      <Trans>All Suppliers</Trans>
+                    </option>
                     {suppliers.map((supplier, index) => (
                       <option key={index} value={supplier}>
                         {supplier}
@@ -307,7 +318,9 @@ export default function ProjectCreationPage3() {
               >
                 <Col xs={1} sm={1}></Col>
                 <Col xs={11} sm={11}>
-                  <h4 className="h4-resources-project-creat"><Trans>Your Resources</Trans></h4>
+                  <h4 className="h4-resources-project-creat">
+                    <Trans>Your Resources</Trans>
+                  </h4>
                 </Col>
               </Row>
               <Row style={{ height: "83%" }}>

@@ -34,7 +34,7 @@
 }
 
 #mail-table .mail-cell {
-  padding: 10px;
+  padding: 5px 10px;
   border-bottom: 1px solid #ddd;
   vertical-align: middle; /* Alinha o conteúdo verticalmente no meio */
 }

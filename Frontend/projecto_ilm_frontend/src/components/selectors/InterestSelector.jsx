@@ -11,8 +11,8 @@ import {
 } from "react-bootstrap";
 import { getInterests } from "../../utilities/services";
 import { useParams } from "react-router-dom";
-import InterestCard from "./InterestCard"; 
-import "./InterestSelector.css"; 
+import InterestCard from "./InterestCard";
+import "./InterestSelector.css";
 import { Trans, t } from "@lingui/macro";
 
 const InterestSelector = ({
@@ -126,7 +126,13 @@ const InterestSelector = ({
           <Form.Control
             type="text"
             placeholder={
-              label === "Interests:" ? "Add an interest" : "Add a keyword"
+              label === "Interests:"
+                ? "Add an interest"
+                : label === "Interesses:"
+                ? "Adicionar um Interesse"
+                : label === "Keywords:"
+                ? "Add a keyword"
+                : "Adicionar uma palavra-chave"
             }
             value={input}
             onChange={handleInputChange}
@@ -167,9 +173,9 @@ const InterestSelector = ({
         <Row>
           {selectedInterests.length === 0 ? (
             <Col>
-              {label === (t`Interests:`)
-                ? (t`No interests added yet.`)
-                : (t`No keyword added yet.`)}
+              {label === t`Interests:`
+                ? t`No interests added yet.`
+                : t`No keyword added yet.`}
             </Col>
           ) : (
             selectedInterests.map((interest) => (

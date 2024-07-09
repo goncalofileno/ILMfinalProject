@@ -738,6 +738,10 @@ const ProjectMembersPage = () => {
                               >
                                 <Button
                                   variant="primary"
+                                  style={{
+                                    backgroundColor: "rgb(30, 40, 82)",
+                                    borderColor: "rgb(30, 40, 82)",
+                                  }}
                                   onClick={(e) => {
                                     e.stopPropagation();
                                     handleInvite(user.systemUsername);

@@ -1,80 +1,97 @@
 .ilm-card {
-   width: 94%;
-   padding: 20px 20px;
-   color: rgb(60, 60, 60);
-   font-size: 21px;
-   border-radius: 15px;
-   padding-bottom: 15px;
+  width: 94%;
+  padding: 20px 20px;
+  color: rgb(60, 60, 60);
+  font-size: 21px;
+  border-radius: 15px;
+  padding-bottom: 15px;
 }
 
 .description-cards {
-   font-size: 15px;
-   color: rgb(100, 100, 100);
-   max-height: 158px;
-   height: 158px;
-   word-wrap: break-word;
-   overflow-y: auto;
+  font-size: 15px;
+  color: rgb(100, 100, 100);
+  max-height: 158px;
+  height: 158px;
+  word-wrap: break-word;
+  overflow-y: auto;
 }
 
 .description-cards::-webkit-scrollbar {
-   width: 7px;
-   height: 6px; /* Espessura da barra de rolagem */
+  width: 7px;
+  height: 6px; /* Espessura da barra de rolagem */
 }
 
 .description-cards::-webkit-scrollbar-track {
-   background: var(--tertiary-color); /* Cor do trilho da barra de rolagem */
-   border-radius: 8px;
+  background: var(--tertiary-color); /* Cor do trilho da barra de rolagem */
+  border-radius: 8px;
 }
 
 .description-cards::-webkit-scrollbar-thumb {
-   background: #888; /* Cor da barra de rolagem */
-   border-radius: 8px; /*Arredonda os cantos*/
+  background: #888; /* Cor da barra de rolagem */
+  border-radius: 8px; /*Arredonda os cantos*/
 }
 
 .description-cards::-webkit-scrollbar-thumb:hover {
-   background: #555; /* Cor da barra de rolagem ao passar o mouse */
+  background: #555; /* Cor da barra de rolagem ao passar o mouse */
 }
 
 .more-details-cards {
-   font-size: 14px;
-   color: rgb(100, 100, 100);
-   margin-top: 12px;
-   font-weight: bold;
-   cursor: pointer;
+  font-size: 14px;
+  color: rgb(100, 100, 100);
+  margin-top: 12px;
+  font-weight: bold;
+  cursor: pointer;
 }
 
 .more-details-cards:hover {
-   color: rgb(192, 23, 34);
+  color: rgb(192, 23, 34);
 }
 
 .margin-left-arrow {
-   margin-left: 10px;
-   transition: all 0.5s cubic-bezier(0.215, 0.61, 0.355, 1) 0s;
+  margin-left: 10px;
+  transition: all 0.5s cubic-bezier(0.215, 0.61, 0.355, 1) 0s;
 }
 
 .more-details-cards:hover .margin-left-arrow {
-   transform: translate(0px, -10px);
-   transition: all 0.5s cubic-bezier(0.215, 0.61, 0.355, 1) 0s;
+  transform: translate(0px, -10px);
+  transition: all 0.5s cubic-bezier(0.215, 0.61, 0.355, 1) 0s;
 }
 .card-bkg-color1 {
-   background: linear-gradient(56.26deg, rgba(60, 60, 60, 0.2) 0%, rgba(60, 60, 60, 0.05) 100%), rgb(255, 255, 255);
+  background: linear-gradient(
+      56.26deg,
+      rgba(60, 60, 60, 0.2) 0%,
+      rgba(60, 60, 60, 0.05) 100%
+    ),
+    rgb(255, 255, 255);
 }
 
 .card-bkg-color2 {
-   background: linear-gradient(56.26deg, rgba(192, 23, 34, 0.2) 0%, rgba(192, 23, 34, 0.05) 100%), rgb(255, 255, 255);
+  background: linear-gradient(
+      56.26deg,
+      rgba(192, 23, 34, 0.2) 0%,
+      rgba(192, 23, 34, 0.05) 100%
+    ),
+    rgb(255, 255, 255);
 }
 
 .card-bkg-color3 {
-   background: linear-gradient(56.26deg, rgba(29, 110, 0, 0.2) 0%, rgba(26, 192, 23, 0.05) 100%), rgb(255, 255, 255);
+  background: linear-gradient(
+      56.26deg,
+      rgba(29, 110, 0, 0.2) 0%,
+      rgba(26, 192, 23, 0.05) 100%
+    ),
+    rgb(255, 255, 255);
 }
 
 .card-bkg-color4 {
-   background: linear-gradient(56.26deg, rgba(7, 0, 110, 0.2) 0%, rgba(34, 23, 192, 0.05) 100%), rgb(255, 255, 255);
+  background: linear-gradient(
+      56.26deg,
+      rgba(7, 0, 110, 0.2) 0%,
+      rgba(34, 23, 192, 0.05) 100%
+    ),
+    rgb(255, 255, 255);
 }
 
 .cards-title {
-   text-wrap: nowrap;
-   background-color: #f443365e;
+  text-wrap: nowrap;
 }
-
-
