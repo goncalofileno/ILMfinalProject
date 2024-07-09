@@ -6,6 +6,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Stateless
@@ -87,5 +88,14 @@ public class TaskDao extends AbstractDao<TaskEntity> {
             return null;
         }
     }
+
+    public List<TaskEntity> findTasksAtProjectStart(int projectId, LocalDateTime projectStartDate) {
+        String query = "SELECT t FROM TaskEntity t WHERE t.project.id = :projectId AND t.initialDate = :projectStartDate";
+        return em.createQuery(query, TaskEntity.class)
+                .setParameter("projectId", projectId)
+                .setParameter("projectStartDate", projectStartDate)
+                .getResultList();
+    }
+
 
 }

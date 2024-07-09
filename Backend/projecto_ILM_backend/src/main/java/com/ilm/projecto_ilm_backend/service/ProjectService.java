@@ -15,6 +15,7 @@ import com.ilm.projecto_ilm_backend.security.exceptions.NoProjectsForInviteeExce
 import com.ilm.projecto_ilm_backend.security.exceptions.NoProjectsToInviteException;
 import com.ilm.projecto_ilm_backend.security.exceptions.UnauthorizedAccessException;
 import com.ilm.projecto_ilm_backend.validator.DatabaseValidator;
+import jakarta.ejb.EJBException;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -238,6 +239,18 @@ public class ProjectService {
                 Map<String, String> errorResponse = new HashMap<>();
                 errorResponse.put("message", e.getMessage());
                 return Response.status(Response.Status.NOT_FOUND).entity(errorResponse).build();
+            } catch (EJBException e) {
+                Throwable cause = e.getCause();
+                if (cause instanceof NoProjectsToInviteException || cause instanceof NoProjectsForInviteeException) {
+                    Map<String, String> errorResponse = new HashMap<>();
+                    errorResponse.put("message", cause.getMessage());
+                    return Response.status(Response.Status.OK).entity(errorResponse).build();
+                } else {
+                    logger.error("An error occurred while retrieving user projects: " + e.getMessage() + " from IP address: " + clientIP);
+                    Map<String, String> errorResponse = new HashMap<>();
+                    errorResponse.put("message", "An error occurred while retrieving user projects");
+                    return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorResponse).build();
+                }
             } catch (Exception e) {
                 logger.error("An error occurred while retrieving user projects: " + e.getMessage() + " from IP address: " + clientIP);
                 Map<String, String> errorResponse = new HashMap<>();
@@ -250,6 +263,7 @@ public class ProjectService {
             return Response.status(Response.Status.UNAUTHORIZED).entity(errorResponse).build();
         }
     }
+
 
 
 
