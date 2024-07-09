@@ -13,7 +13,9 @@ import DeleteTaskModal from "../components/modals/DeleteTaskModal";
 import ProgressBar from "../components/bars/ProgressBar";
 import CustomTooltipContent from "../components/tooltips/CustomTooltipContent";
 import "./ProjectPlanPage.css";
-import { Trans, t } from "@lingui/macro";
+import { Trans } from "@lingui/macro";
+import TaskCard from "../components/cards/TaskCard";
+import { useMediaQuery } from "react-responsive";
 
 const parseDate = (dateString) => new Date(dateString);
 
@@ -106,9 +108,10 @@ const ProjectPlanPage = () => {
   const [currentLanguage, setCurrentLanguage] = useState(
     Cookies.get("user-language") || "ENGLISH"
   );
-
   const locale = currentLanguage === "PORTUGUESE" ? "por" : "eng";
+  const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
 
+  // Fetch tasks data
   const fetchData = async () => {
     const sessionId = Cookies.get("session-id");
     try {
@@ -420,6 +423,8 @@ const ProjectPlanPage = () => {
     return <div>Loading...</div>;
   }
 
+  
+
   return (
     <>
       <AppNavbar setCurrentLanguage={setCurrentLanguage} />
@@ -437,7 +442,7 @@ const ProjectPlanPage = () => {
               >
                 <Trans>Add New Task</Trans>
               </Button>
-              <Form.Group controlId="viewModeSelector">
+              {!isMobile && (<Form.Group controlId="viewModeSelector">
                 <Form.Label>
                   <Trans>View Mode</Trans>
                 </Form.Label>
@@ -445,7 +450,7 @@ const ProjectPlanPage = () => {
                   as="select"
                   value={viewMode}
                   onChange={handleViewModeChange}
-                  disabled={["CANCELED", "READY"].includes(projectState)}
+                  disabled={isMobile || ["CANCELED", "READY"].includes(projectState)}
                 >
                   <option value={ViewMode.Day}>
                     <Trans>Day</Trans>
@@ -457,50 +462,10 @@ const ProjectPlanPage = () => {
                     <Trans>Year</Trans>
                   </option>
                 </Form.Control>
-              </Form.Group>
+              </Form.Group>)}
+              
             </Row>
             <Row>
-              {tasks.length > 0 && (
-                <Gantt
-                  tasks={tasks}
-                  viewMode={viewMode}
-                  onDateChange={
-                    !["CANCELED", "READY"].includes(projectState)
-                      ? handleDateChange
-                      : undefined
-                  }
-                  onProgressChange={(task) =>
-                    console.log("Task progress changed:", task)
-                  }
-                  onDoubleClick={
-                    !["CANCELED", "READY"].includes(projectState)
-                      ? handleTaskClick
-                      : undefined
-                  }
-                  onDelete={(task) =>
-                    !["CANCELED", "READY"].includes(projectState)
-                      ? handleDeleteClick(task)
-                      : undefined
-                  }
-                  listCellWidth={listCellWidth}
-                  columnWidth={100}
-                  TooltipContent={CustomTooltipContent}
-                  locale={locale}
-                />
-              )}
-            </Row>
-          </Row>
-          <Row>
-            <div style={{ marginTop: "15px" }}>
-              <h5>
-                <Trans>Project Progress</Trans>:
-              </h5>
-            </div>
-            <div>
-              <ProgressBar percentage={percentage} status={projectState} />
-            </div>
-          </Row>
-          <Row>
             <div style={{ marginTop: "15px" }}>
               <h5>
                 <Trans>Legend</Trans>:
@@ -544,7 +509,7 @@ const ProjectPlanPage = () => {
                   </span>{" "}
                   - <Trans>Planned tasks</Trans>
                 </li>
-                <li>
+                {!isMobile && (  <li>
                   <span
                     style={{
                       backgroundColor: "#3F51B5",
@@ -555,8 +520,63 @@ const ProjectPlanPage = () => {
                     <Trans>PROJECT</Trans>
                   </span>{" "}
                   - <Trans>Project</Trans>
-                </li>
+                </li>)}
+              
               </ul>
+            </div>
+          </Row>
+            <Row>
+              {isMobile ? (
+                tasks.map(
+                  (task) =>
+                    task.type !== "project" && (
+                      <Col key={task.id} xs={12}>
+                        <TaskCard
+                          task={task}
+                          handleTaskClick={handleTaskClick}
+                          projectMembers={projectMembers}
+                        />
+                      </Col>
+                    )
+                )
+              ) : (
+                <Gantt
+                  tasks={tasks}
+                  viewMode={viewMode}
+                  onDateChange={
+                    !["CANCELED", "READY"].includes(projectState)
+                      ? handleDateChange
+                      : undefined
+                  }
+                  onProgressChange={(task) =>
+                    console.log("Task progress changed:", task)
+                  }
+                  onDoubleClick={
+                    !["CANCELED", "READY"].includes(projectState)
+                      ? handleTaskClick
+                      : undefined
+                  }
+                  onDelete={(task) =>
+                    !["CANCELED", "READY"].includes(projectState)
+                      ? handleDeleteClick(task)
+                      : undefined
+                  }
+                  listCellWidth={listCellWidth}
+                  columnWidth={100}
+                  TooltipContent={CustomTooltipContent}
+                  locale={locale}
+                />
+              )}
+            </Row>
+          </Row>
+          <Row>
+            <div style={{ marginTop: "15px" }}>
+              <h5>
+                <Trans>Project Progress</Trans>:
+              </h5>
+            </div>
+            <div>
+              <ProgressBar percentage={percentage} status={projectState} />
             </div>
           </Row>
           {["CANCELED", "READY"].includes(projectState) && (

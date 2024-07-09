@@ -372,9 +372,9 @@ public class TaskBean {
             throw new ProjectNotFoundException("Task not found");
         }
 
-        if(updateTaskDto.getStatus() == TaskStatusENUM.IN_PROGRESS && task.getStatus() == TaskStatusENUM.PLANNED){
+        if (updateTaskDto.getStatus() == TaskStatusENUM.IN_PROGRESS && task.getStatus() == TaskStatusENUM.PLANNED) {
             logBean.createTasksInProgressLog(project, user, updateTaskDto.getTitle(), task.getStatus(), updateTaskDto.getStatus());
-        } else if (updateTaskDto.getStatus() == TaskStatusENUM.DONE && task.getStatus() == TaskStatusENUM.IN_PROGRESS){
+        } else if (updateTaskDto.getStatus() == TaskStatusENUM.DONE && task.getStatus() == TaskStatusENUM.IN_PROGRESS) {
             logBean.createTasksCompletedLog(project, user, updateTaskDto.getTitle(), task.getStatus(), updateTaskDto.getStatus());
         } else {
             logBean.createTasksUpdatedLog(project, user, updateTaskDto.getTitle());
@@ -384,18 +384,18 @@ public class TaskBean {
         task.setDescription(updateTaskDto.getDescription());
         task.setStatus(updateTaskDto.getStatus());
 
-        if(updateTaskDto.getInitialDate().isBefore(project.getStartDate()) && updateTaskDto.getFinalDate().isBefore(project.getStartDate())){
+        if (updateTaskDto.getInitialDate().isBefore(project.getStartDate()) && updateTaskDto.getFinalDate().isBefore(project.getStartDate())) {
             task.setInitialDate(project.getStartDate());
             task.setFinalDate(project.getStartDate().plusDays(task.getDurationDays()));
         }
 
-        if(updateTaskDto.getInitialDate().isBefore(project.getStartDate())) {
+        if (updateTaskDto.getInitialDate().isBefore(project.getStartDate())) {
             task.setInitialDate(project.getStartDate());
         } else {
             task.setInitialDate(updateTaskDto.getInitialDate());
         }
 
-        if(updateTaskDto.getFinalDate().isAfter(project.getEndDate())) {
+        if (updateTaskDto.getFinalDate().isAfter(project.getEndDate())) {
             project.setEndDate(updateTaskDto.getFinalDate());
             task.setFinalDate(updateTaskDto.getFinalDate());
         } else {
@@ -435,7 +435,7 @@ public class TaskBean {
             }
         }
 
-        if(user.getId() != inCharge.getId()) {
+        if (user.getId() != inCharge.getId()) {
             notificationBean.createTaskAssignedNotification(updateTaskDto.getTitle(), updateTaskDto.getSystemProjectName(), user.getSystemUsername(), inCharge);
         }
 
@@ -445,18 +445,22 @@ public class TaskBean {
         task.setDependentTasks(dependentTasks);
 
         // Organizar as datas
-        organizeTaskDates(task.getProject(), task);
+        if (!organizeTaskDates(task.getProject(), task)) {
+            throw new IllegalStateException("Task update failed due to overlapping dates with tasks already at the project start date.");
+        }
 
         taskDao.merge(task);
     }
-    private void organizeTaskDates(ProjectEntity project, TaskEntity task) {
+
+    private boolean organizeTaskDates(ProjectEntity project, TaskEntity task) {
         LocalDateTime projectStartDate = project.getStartDate();
         List<TaskEntity> tasks = taskDao.findByProject(project.getId());
 
         // Ajustar datas de todas as tarefas como antes
         if (task != null) {
-            adjustChildTasks(task, projectStartDate, project);
-            adjustParentTasks(task, projectStartDate, project);
+            if (!adjustParentTasks(task, projectStartDate, project) || !adjustChildTasks(task, projectStartDate, project)) {
+                return false;
+            }
         }
 
         // Encontrar a tarefa de apresentação final
@@ -492,57 +496,121 @@ public class TaskBean {
             project.setEndDate(projectEndDate);
         }
         projectDao.merge(project);
+        return true;
     }
 
-
-    private void adjustChildTasks(TaskEntity task, LocalDateTime projectStartDate, ProjectEntity project) {
-        List<TaskEntity> childTasks = taskDao.findByDependentTask(task);
-
-        for (TaskEntity childTask : childTasks) {
-            if (childTask != null && task.getFinalDate() != null && task.getFinalDate().isAfter(childTask.getInitialDate().minusDays(1))) {
-                long duration = java.time.Duration.between(childTask.getInitialDate(), childTask.getFinalDate()).toDays();
-                childTask.setInitialDate(task.getFinalDate().plusDays(1));
-                childTask.setFinalDate(childTask.getInitialDate().plusDays(duration));
-
-                // Verificar se a nova data inicial não é antes da data inicial do projeto
-                if (childTask.getInitialDate().isBefore(projectStartDate)) {
-                    childTask.setInitialDate(projectStartDate);
-                    childTask.setFinalDate(projectStartDate.plusDays(duration));
-                }
-
-                // Verificar se a nova data final ultrapassa a data final do projeto
-                if (childTask.getFinalDate().isAfter(project.getEndDate())) {
-                    project.setEndDate(childTask.getFinalDate());
-                }
-
-                taskDao.merge(childTask);
-
-                adjustChildTasks(childTask, projectStartDate, project);
-            }
-        }
-    }
-
-    private void adjustParentTasks(TaskEntity task, LocalDateTime projectStartDate, ProjectEntity project) {
+    private boolean adjustParentTasks(TaskEntity task, LocalDateTime projectStartDate, ProjectEntity project) {
         List<TaskEntity> parentTasks = task.getDependentTasks();
 
         for (TaskEntity parentTask : parentTasks) {
             if (parentTask != null && task.getInitialDate() != null && task.getInitialDate().isBefore(parentTask.getFinalDate().plusDays(1))) {
                 long duration = java.time.Duration.between(parentTask.getInitialDate(), parentTask.getFinalDate()).toDays();
-                parentTask.setFinalDate(task.getInitialDate().minusDays(1));
-                parentTask.setInitialDate(parentTask.getFinalDate().minusDays(duration));
+                LocalDateTime newFinalDate = task.getInitialDate().minusDays(1);
+                LocalDateTime newInitialDate = newFinalDate.minusDays(duration);
 
                 // Verificar se a nova data inicial não é antes da data inicial do projeto
-                if (parentTask.getInitialDate().isBefore(projectStartDate)) {
-                    parentTask.setInitialDate(projectStartDate);
-                    parentTask.setFinalDate(projectStartDate.plusDays(duration));
+                if (newInitialDate.isBefore(projectStartDate)) {
+                    // Verificar se a nova data inicial sobrepõe a data de alguma task que já está encostada ao início do projeto
+                    List<TaskEntity> tasksAtStart = taskDao.findTasksAtProjectStart(project.getId(), projectStartDate);
+                    boolean overlaps = false;
+                    for (TaskEntity t : tasksAtStart) {
+                        if (!t.equals(parentTask) && newInitialDate.isBefore(t.getFinalDate().plusDays(1))) {
+                            overlaps = true;
+                            break;
+                        }
+                    }
+
+                    if (overlaps) {
+                        // Ajustar a tarefa atual para começar após o término da tarefa encostada
+                        TaskEntity earliestTask = tasksAtStart.stream()
+                                .filter(t -> !t.equals(parentTask))
+                                .min(Comparator.comparing(TaskEntity::getFinalDate))
+                                .orElse(null);
+
+                        if (earliestTask != null) {
+                            newInitialDate = earliestTask.getFinalDate().plusDays(1);
+                            newFinalDate = newInitialDate.plusDays(duration);
+                        } else {
+                            newInitialDate = projectStartDate;
+                            newFinalDate = projectStartDate.plusDays(duration);
+                        }
+                    } else {
+                        newInitialDate = projectStartDate;
+                        newFinalDate = projectStartDate.plusDays(duration);
+                    }
                 }
+
+                // Verificar novamente a sobreposição após o ajuste da data inicial
+                List<TaskEntity> tasksAtStart = taskDao.findTasksAtProjectStart(project.getId(), projectStartDate);
+                boolean overlaps = false;
+                for (TaskEntity t : tasksAtStart) {
+                    if (!t.equals(parentTask) && newInitialDate.isBefore(t.getFinalDate().plusDays(1))) {
+                        overlaps = true;
+                        break;
+                    }
+                }
+
+                if (overlaps) {
+                    // Ajustar a tarefa atual para começar após o término da tarefa encostada
+                    TaskEntity earliestTask = tasksAtStart.stream()
+                            .filter(t -> !t.equals(parentTask))
+                            .min(Comparator.comparing(TaskEntity::getFinalDate))
+                            .orElse(null);
+
+                    if (earliestTask != null) {
+                        newInitialDate = earliestTask.getFinalDate().plusDays(1);
+                        newFinalDate = newInitialDate.plusDays(duration);
+                    } else {
+                        return false; // Não é possível ajustar sem sobreposição
+                    }
+                }
+
+                parentTask.setFinalDate(newFinalDate);
+                parentTask.setInitialDate(newInitialDate);
 
                 taskDao.merge(parentTask);
 
-                adjustParentTasks(parentTask, projectStartDate, project);
+                if (!adjustParentTasks(parentTask, projectStartDate, project)) {
+                    return false;
+                }
             }
         }
+        return true;
     }
+
+    private boolean adjustChildTasks(TaskEntity task, LocalDateTime projectStartDate, ProjectEntity project) {
+        List<TaskEntity> childTasks = taskDao.findByDependentTask(task);
+
+        for (TaskEntity childTask : childTasks) {
+            if (childTask != null && task.getFinalDate() != null && task.getFinalDate().isAfter(childTask.getInitialDate().minusDays(1))) {
+                long duration = java.time.Duration.between(childTask.getInitialDate(), childTask.getFinalDate()).toDays();
+                LocalDateTime newInitialDate = task.getFinalDate().plusDays(1);
+                LocalDateTime newFinalDate = newInitialDate.plusDays(duration);
+
+                // Verificar se a nova data inicial não é antes da data inicial do projeto
+                if (newInitialDate.isBefore(projectStartDate)) {
+                    newInitialDate = projectStartDate;
+                    newFinalDate = projectStartDate.plusDays(duration);
+                }
+
+                // Verificar se a nova data final ultrapassa a data final do projeto
+                if (newFinalDate.isAfter(project.getEndDate())) {
+                    project.setEndDate(newFinalDate);
+                }
+
+                childTask.setInitialDate(newInitialDate);
+                childTask.setFinalDate(newFinalDate);
+
+                taskDao.merge(childTask);
+
+                if (!adjustChildTasks(childTask, projectStartDate, project)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
 
     @Transactional
     public void deleteTask(String sessionId, UpdateTaskDto updateTaskDto) throws ProjectNotFoundException, UserNotFoundException, UserNotInProjectException {
