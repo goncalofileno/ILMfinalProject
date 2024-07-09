@@ -20,8 +20,8 @@
   z-index: -1;
   top: 0;
   left: 0;
-  width: 635px;
-  height: 900px;
+  width: 800px;
+
   padding: 50px;
   padding-top: 20px;
 }
@@ -34,9 +34,8 @@
 .app-stats {
   display: flex;
   flex-direction: column;
-  padding: 15px;
-  padding-top: 35px;
-  padding-bottom: 35px;
+  padding: 25px 20px;
+
   background-color: rgb(223, 229, 254);
   border-radius: 15px;
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.15);
@@ -103,4 +102,13 @@
   padding: 10px;
   border-radius: 15px;
   border: 1px solid #000;
+}
+
+#flex-app-stats-cont {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 10px;
+  width: 100%;
+  gap: 20px;
 }

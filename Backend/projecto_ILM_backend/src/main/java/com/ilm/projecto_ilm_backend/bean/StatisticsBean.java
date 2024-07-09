@@ -77,12 +77,17 @@ public class StatisticsBean {
 
     }
 
-    private SupplierWithMostResourcesDto getSupplierWithMostResources() {
+    private ArrayList<SupplierWithMostResourcesDto> getSupplierWithMostResources() {
         List<Object[]> suppliersWithMostResources = resourceSupplierDao.countResourcesPerSupplier();
-        SupplierWithMostResourcesDto supplierWithMostResourcesDto = new SupplierWithMostResourcesDto();
-        supplierWithMostResourcesDto.setSupplier((String) suppliersWithMostResources.get(0)[0]);
-        supplierWithMostResourcesDto.setResources((long) suppliersWithMostResources.get(0)[1]);
-        return supplierWithMostResourcesDto;
+        ArrayList<SupplierWithMostResourcesDto> supplierWithMostResourcesDtos = new ArrayList<>();
+        for (int i =0; i < 5 && i < suppliersWithMostResources.size() ; i++) {
+            SupplierWithMostResourcesDto supplierWithMostResourcesDto = new SupplierWithMostResourcesDto();
+            supplierWithMostResourcesDto.setSupplier((String) suppliersWithMostResources.get(i)[0]);
+            supplierWithMostResourcesDto.setResources((long) suppliersWithMostResources.get(i)[1]);
+            supplierWithMostResourcesDtos.add(supplierWithMostResourcesDto);
+        }
+
+        return supplierWithMostResourcesDtos;
     }
 
     private ArrayList<MembersPerLabDto> getMembersPerLabDto(){

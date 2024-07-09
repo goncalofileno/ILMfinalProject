@@ -19,6 +19,7 @@ import { Row, Col } from "react-bootstrap";
 import { getAppStatistics } from "../../utilities/services";
 import { useMediaQuery } from "react-responsive";
 import { Trans, t } from "@lingui/macro";
+import { useReactToPrint } from "react-to-print";
 
 // Create styles
 const styles = StyleSheet.create({
@@ -38,9 +39,10 @@ const StatisticsPdf = () => {
   const [averageUsersInProject, setAverageUsersInProject] = useState(0);
   const [averageExecutionProjectTime, setAverageExecutionProjectTime] =
     useState(0);
-  const [supplierWithMostResources, setSupplierWithMostResources] =
-    useState(null);
-  const [resourcesNumberSupplier, setResourcesNumberSupplier] = useState([]);
+  const [supplierWithMostResources, setSupplierWithMostResources] = useState(
+    []
+  );
+
   const [currentLanguage, setCurrentLanguage] = useState(
     Cookies.get("user-language") || "ENGLISH"
   );
@@ -48,6 +50,7 @@ const StatisticsPdf = () => {
     []
   );
   const isTablet = useMediaQuery({ query: "(max-width: 1199px)" });
+  const contentDocument = useRef();
 
   useEffect(() => {
     getAppStatistics().then((response) => {
@@ -67,8 +70,8 @@ const StatisticsPdf = () => {
         setAverageUsersInProject(data.averageUsersInProject);
         setAverageExecutionProjectTime(data.averageExecutionTimePerProject);
 
-        setSupplierWithMostResources(data.supplierWithMostResources.supplier);
-        setResourcesNumberSupplier(data.supplierWithMostResources.resources);
+        setSupplierWithMostResources(data.supplierWithMostResources);
+
         const transformedProjectStatusNumberPerLab =
           data.projectsStatusNumberPerLab.map(({ lab, statusNumber }) => [
             lab,
@@ -93,25 +96,9 @@ const StatisticsPdf = () => {
     });
   }, [currentLanguage]);
 
-  const pieRef = useRef();
-
-  const exportToPDF = async () => {
-    try {
-      if (!pieRef.current) {
-        console.warn("Component is not mounted or pieRef is not available");
-        return;
-      }
-      const canvas = await html2canvas(pieRef.current);
-      const dataUrl = canvas.toDataURL("image/png");
-      // Further processing
-
-      const pdf = new jsPDF();
-      pdf.addImage(dataUrl, "PNG", 0, 0);
-      pdf.save("ILM-Statistics.pdf");
-    } catch (error) {
-      console.error("Error exporting to PDF:", error);
-    }
-  };
+  const exportToPDF = useReactToPrint({
+    content: () => contentDocument.current,
+  });
 
   const optionsMemberPerLab = {
     title: t`Members per Lab`,
@@ -301,27 +288,16 @@ const StatisticsPdf = () => {
                 marginBottom: isTablet && "30px",
               }}
             >
-              <div className="app-stats" style={{ width: isTablet && "85%" }}>
-                <div>
-                  <Trans>Total users</Trans>: <span>{totalUsers}</span>
+              <div className="app-stats" style={{ gap: "5px" }}>
+                <div style={{ marginBottom: "10px" }}>
+                  <b>Supplers with the most resources</b>
                 </div>
-                <div>
-                  <Trans>Average users in project</Trans>:{" "}
-                  <span>{averageUsersInProject}</span>
-                </div>
-
-                {averageExecutionProjectTime !== "NaN" && (
+                {supplierWithMostResources.map((supplier, index) => (
                   <div>
-                    <Trans>Average execution time per project</Trans>:{" "}
-                    <span>{formatTime(averageExecutionProjectTime)}</span>
+                    {index + 1}. <b>{supplier.supplier}</b> with{" "}
+                    <b>{supplier.resources}</b> resources
                   </div>
-                )}
-                <div>
-                  <Trans>Supplier with most Resources</Trans>:{" "}
-                  <span>{supplierWithMostResources}</span> <Trans>with</Trans>{" "}
-                  <span>{resourcesNumberSupplier}</span>{" "}
-                  <Trans>resources</Trans>
-                </div>
+                ))}
               </div>
             </Col>
             <Col sm={1}></Col>
@@ -348,27 +324,44 @@ const StatisticsPdf = () => {
               />
             </Col>
             <Col sm={12} xl={3} className="col-button">
-              {" "}
-              <button
-                onClick={exportToPDF}
-                className="submit-button"
-                style={{
-                  paddingLeft: "35px",
-                  paddingRight: "35px",
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              >
-                <Trans>Export to PDF</Trans>
-                <img
-                  src={pdfIcon}
+              <div id="flex-app-stats-cont">
+                <div className="app-stats" style={{ width: isTablet && "85%" }}>
+                  <div>
+                    <Trans>Total users</Trans>: <span>{totalUsers}</span>
+                  </div>
+                  <div>
+                    <Trans>Average users in project</Trans>:{" "}
+                    <span>{averageUsersInProject}</span>
+                  </div>
+
+                  {averageExecutionProjectTime !== "NaN" && (
+                    <div>
+                      <Trans>Project Average execution time</Trans>:{" "}
+                      <span>{formatTime(averageExecutionProjectTime)}</span>
+                    </div>
+                  )}
+                </div>{" "}
+                <button
+                  onClick={exportToPDF}
+                  className="submit-button"
                   style={{
-                    height: "30px",
-                    aspectRatio: "1/1",
-                    marginLeft: "10px",
+                    paddingLeft: "35px",
+                    paddingRight: "35px",
+                    display: "flex",
+                    alignItems: "center",
                   }}
-                />
-              </button>
+                >
+                  <Trans>Export to PDF</Trans>
+                  <img
+                    src={pdfIcon}
+                    style={{
+                      height: "30px",
+                      aspectRatio: "1/1",
+                      marginLeft: "10px",
+                    }}
+                  />
+                </button>
+              </div>
             </Col>
             <Col sm={1}></Col>
           </Row>
@@ -376,79 +369,78 @@ const StatisticsPdf = () => {
       </div>
 
       <>
-        <Document id="document-pdf">
-          <Page size="A4" style={styles.page}>
-            <View style={styles.section}>
-              <div>
-                <div className="pdf-page" ref={pieRef}>
-                  <Row className="pdf-title">
-                    <Trans>ILM Statistics</Trans>
-                  </Row>
-                  <Row>
-                    <Col sm={12}>
-                      <div className="app-stats-pdf">
-                        <div>
-                          <Trans>Total users</Trans>: <span>{totalUsers}</span>
-                        </div>
-                        <div>
-                          <Trans>Average users in project</Trans>:{" "}
-                          <span>{averageUsersInProject}</span>
-                        </div>
-
-                        {averageExecutionProjectTime !== "NaN" && (
-                          <div>
-                            <Trans>Average execution time per project</Trans>:{" "}
-                            <span>
-                              {formatTime(averageExecutionProjectTime)}
-                            </span>
-                          </div>
-                        )}
-                        <div>
-                          <Trans>Supplier with most Resources</Trans>:{" "}
-                          <span>{supplierWithMostResources}</span>{" "}
-                          <Trans>with</Trans>{" "}
-                          <span>{resourcesNumberSupplier}</span>{" "}
-                          <Trans>resources</Trans>
-                        </div>
-                      </div>
-                    </Col>
-                  </Row>
-                  <Row className="row-pdf-pie-charts">
-                    <Col sm={6}>
-                      <Chart
-                        chartType="PieChart"
-                        data={membersPerLab}
-                        options={optionsMemberPerLabPdf}
-                        width={"100%"}
-                        height={"100%"}
-                      />
-                    </Col>
-                    <Col sm={6}>
-                      <Chart
-                        chartType="PieChart"
-                        data={projectsPerLab}
-                        options={optionsProjectsPerLabPdf}
-                        width={"100%"}
-                        height={"100%"}
-                      />
-                    </Col>
-                  </Row>
-                  <Row className="row-pdf-pie-charts">
-                    <Col sm={12}>
-                      <Chart
-                        chartType="BarChart"
-                        width="100%"
-                        height="100%"
-                        data={projectStatusNumberPerLab}
-                        options={optionsProjectStatusPdf}
-                      />
-                    </Col>
-                  </Row>
+        <div className="pdf-page" ref={contentDocument}>
+          <Row className="pdf-title">
+            <Trans>ILM Statistics</Trans>
+          </Row>
+          <Row>
+            <Col sm={6}>
+              <div
+                className="app-stats-pdf"
+                style={{ height: "100%", justifyContent: "center" }}
+              >
+                <div>
+                  <Trans>Total users</Trans>: <span>{totalUsers}</span>
                 </div>
+                <div>
+                  <Trans>Average users in project</Trans>:{" "}
+                  <span>{averageUsersInProject}</span>
+                </div>
+
+                {averageExecutionProjectTime !== "NaN" && (
+                  <div>
+                    <Trans>Project Average execution time</Trans>:{" "}
+                    <span>{formatTime(averageExecutionProjectTime)}</span>
+                  </div>
+                )}
               </div>
-            </View>
-          </Page>
-        </Document>{" "}
+            </Col>
+            <Col sm={6}>
+              <div className="app-stats-pdf" style={{ gap: "5px" }}>
+                <div style={{ marginBottom: "10px" }}>
+                  <b>Supplers with the most resources</b>
+                </div>
+                {supplierWithMostResources.map((supplier, index) => (
+                  <div>
+                    {index + 1}. <b>{supplier.supplier}</b> with{" "}
+                    <b>{supplier.resources}</b> resources
+                  </div>
+                ))}
+              </div>
+            </Col>
+          </Row>
+          <Row className="row-pdf-pie-charts">
+            <Col sm={6}>
+              <Chart
+                chartType="PieChart"
+                data={membersPerLab}
+                options={optionsMemberPerLabPdf}
+                width={"100%"}
+                height={"100%"}
+              />
+            </Col>
+            <Col sm={6}>
+              <Chart
+                chartType="PieChart"
+                data={projectsPerLab}
+                options={optionsProjectsPerLabPdf}
+                width={"100%"}
+                height={"100%"}
+              />
+            </Col>
+          </Row>
+          <Row className="row-pdf-pie-charts">
+            <Col sm={12}>
+              <Chart
+                chartType="BarChart"
+                width="100%"
+                height="100%"
+                data={projectStatusNumberPerLab}
+                options={optionsProjectStatusPdf}
+              />
+            </Col>
+          </Row>
+        </div>
       </>
     </div>
   );
