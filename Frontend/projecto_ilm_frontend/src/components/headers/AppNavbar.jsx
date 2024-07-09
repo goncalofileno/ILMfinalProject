@@ -343,7 +343,7 @@ export default function AppNavbar({
                 className="icon"
                 style={getNavIconStyle("/myprojects")}
               ></div>
-              <label style={{ width: "100px", textAlign: "center" }}>
+              <label style={{ width: "80px", textAlign: "center" }}>
                 <Trans>My Projects</Trans>
               </label>
             </div>
@@ -361,6 +361,7 @@ export default function AppNavbar({
             <div
               className={getNavItemClass("/users")}
               onClick={() => handleNavigation("/users")}
+              style={{ width: "60px" }}
             >
               <div className="icon" style={getNavIconStyle("/users")}></div>
               <label>

@@ -50,6 +50,7 @@ const ProjectMembersPage = () => {
   const [navigateTableTrigger, setNavigateTableTrigger] = useState(false);
   const NUMBER_OF_MEMBERS_PAGE = 5;
   const NUMBER_OF_USERS_PAGE = 6;
+  const isSmallMobile = useMediaQuery({ query: "(max-width: 575px)" });
   const isPhone = useMediaQuery({ query: "(max-width: 767px)" });
   const isTablet = useMediaQuery({ query: "(max-width: 991px)" });
   const sessionId = Cookies.get("session-id");
@@ -266,13 +267,7 @@ const ProjectMembersPage = () => {
     if (projectData) {
       fetchAllUsers(currentPage);
     }
-  }, [
-    projectData,
-    currentPage,
-    selectedLab,
-    searchKeyword,
-    navigateTableTrigger,
-  ]);
+  }, [projectData, currentPage, selectedLab, navigateTableTrigger]);
 
   if (error) {
     return <div>Error: {error}</div>;
@@ -589,7 +584,7 @@ const ProjectMembersPage = () => {
             </Col>
           </Row>
 
-          <Row className="mt-4">
+          <Row className="mt-1">
             <Col>
               <Card
                 style={{
@@ -598,7 +593,11 @@ const ProjectMembersPage = () => {
                 }}
               >
                 <Card.Header
-                  style={{ backgroundColor: "transparent", border: "none" }}
+                  style={{
+                    backgroundColor: "transparent",
+                    border: "none",
+                    marginBottom: "15px",
+                  }}
                 >
                   <h5>Available Users</h5>
                 </Card.Header>
@@ -606,44 +605,93 @@ const ProjectMembersPage = () => {
                   style={{ border: "none", backgroundColor: "transparent" }}
                 >
                   <Row>
-                    <Col sm={8}>
-                      <Form.Group as={Col} className="mb-3">
-                        <Form.Label column sm={2}>
-                          <h6>Search</h6>
-                        </Form.Label>
-                        <Col sm={10}>
+                    <Form.Group as={Col} className="mb-3">
+                      <Row style={{ display: "flex", alignItems: "center" }}>
+                        <Col sm={6}>
+                          <Form.Label column sm={2}>
+                            <h6
+                              style={{
+                                marginBottom: "0px",
+                              }}
+                            >
+                              Search
+                            </h6>
+                          </Form.Label>
                           <Form.Control
                             type="text"
                             value={searchKeyword}
                             onChange={(e) => setSearchKeyword(e.target.value)}
                           />
                         </Col>
-                      </Form.Group>
-                    </Col>
-                    <Col sm={4}>
-                      <Form.Group as={Col} className="mb-3">
-                        <Form.Label column sm={2} style={{ width: "100%" }}>
-                          <h6>Lab</h6>
-                        </Form.Label>
-                        <Col sm={10}>
-                          <Form.Select
-                            value={selectedLab}
-                            onChange={(e) => setSelectedLab(e.target.value)}
+                        <Col
+                          sm={2}
+                          style={{ marginBottom: isSmallMobile && "10px" }}
+                        >
+                          <div
+                            style={{
+                              display: "flex",
+                              flexDirection: !isSmallMobile ? "column" : "row",
+                              gap: !isSmallMobile ? "5px" : "10%",
+                              marginTop: isSmallMobile && "10px",
+                            }}
                           >
-                            <option value="">All Labs</option>
-                            {labs.map((lab) => (
-                              <option key={lab.local} value={lab.local}>
-                                {formatLab(lab.local)}
-                              </option>
-                            ))}
-                          </Form.Select>
+                            <button
+                              className="secondary-button"
+                              style={{
+                                padding: "5px",
+                                width: !isSmallMobile ? "100px" : "45%",
+                              }}
+                              onClick={() => {
+                                setSearchKeyword("");
+                                setNavigateTableTrigger((prev) => !prev);
+                              }}
+                            >
+                              Clear
+                            </button>
+                            <button
+                              className="submit-button"
+                              style={{
+                                padding: "5px",
+                                width: !isSmallMobile ? "100px" : "45%",
+                              }}
+                              onClick={() =>
+                                setNavigateTableTrigger((prev) => !prev)
+                              }
+                            >
+                              Search
+                            </button>
+                          </div>
                         </Col>
-                      </Form.Group>
-                    </Col>
+                        <Col sm={4}>
+                          <Form.Group as={Col} className="mb-3">
+                            <Form.Label
+                              column
+                              sm={2}
+                              style={{ width: "100%", paddingTop: "0px" }}
+                            >
+                              <h6>Lab</h6>
+                            </Form.Label>
+                            <Col sm={10}>
+                              <Form.Select
+                                value={selectedLab}
+                                onChange={(e) => setSelectedLab(e.target.value)}
+                              >
+                                <option value="">All Labs</option>
+                                {labs.map((lab) => (
+                                  <option key={lab.local} value={lab.local}>
+                                    {formatLab(lab.local)}
+                                  </option>
+                                ))}
+                              </Form.Select>
+                            </Col>
+                          </Form.Group>
+                        </Col>
+                      </Row>
+                    </Form.Group>
                   </Row>
                   <table
                     className="table-users-project-table"
-                    style={{ height: "500px", marginBottom: "15px" }}
+                    style={{ height: "485px", marginBottom: "15px" }}
                   >
                     <thead id="table-users-project-head">
                       <tr>
@@ -736,8 +784,7 @@ const ProjectMembersPage = () => {
                                       <Alert
                                         variant="danger"
                                         style={{
-                                          height: "40px",
-                                          padding: "10px 5px",
+                                          padding: "5px 5px",
                                           transform: "translateY(5px)",
                                         }}
                                       >

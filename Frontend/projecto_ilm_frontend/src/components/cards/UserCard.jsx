@@ -2,6 +2,7 @@ import "./MyProjectCard.css";
 import "./UserCard.css";
 import userProfileIcon from "../../resources/avatares/Avatar padrão.jpg";
 import { Trans, t } from "@lingui/macro";
+import { Alert } from "react-bootstrap";
 
 export default function UserCard({
   name,
@@ -17,6 +18,7 @@ export default function UserCard({
   setGetUsersTrigger,
   maxMembers,
   numberOfMembersInProject,
+  publicProfile,
 }) {
   const openNewWindow = () => {
     const url = `http://localhost:3000/profile/${systemUsername}`; // The URL you want to navigate to
@@ -66,12 +68,42 @@ export default function UserCard({
           </div>
         </div>
         <div className="user-card-body" onClick={openNewWindow}>
-          {skills.map((skill) => (
-            <div className={`skill-div-${skill.inProject}`}>
-              <div className="skill-div-col1">{skill.name}</div>
-              <div className="skill-div-col2">{skill.type}</div>
+          {publicProfile ? (
+            skills.map((skill) => (
+              <div className={`skill-div-${skill.inProject}`}>
+                <div className="skill-div-col1">{skill.name}</div>
+                <div className="skill-div-col2">{skill.type}</div>
+              </div>
+            ))
+          ) : (
+            <div
+              style={{
+                height: "100%",
+                width: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Alert
+                variant="danger"
+                style={{
+                  padding: "10px 5px",
+                }}
+              >
+                <span
+                  style={{
+                    height: "100%",
+                    display: "flex",
+                    alignItems: "center",
+                    fontSize: "16px",
+                  }}
+                >
+                  This user has a private profile
+                </span>
+              </Alert>
             </div>
-          ))}
+          )}
         </div>
         <div className="user-card-footer">
           <button
@@ -82,7 +114,7 @@ export default function UserCard({
             <Trans>Add</Trans>
           </button>
           <button className="secondary-button" onClick={handleRejectUser}>
-          <Trans>Reject</Trans>
+            <Trans>Reject</Trans>
           </button>
         </div>
       </div>

@@ -758,7 +758,10 @@ public class UserBean {
         else lab = labDao.findbyLocal(WorkLocalENUM.valueOf(labName));
         if (keyword.equals("")) keyword = null;
 
-        List<String> skillsInProject = projectDao.getSkillsBySystemName(systemProjectName);
+        List<String> skillsInProject=new ArrayList<>();
+        if(!systemProjectName.equals("")) {
+            skillsInProject = projectDao.getSkillsBySystemName(systemProjectName);
+        }
         List<Object[]> userInfo = userDao.getUserProjectCreationDto(userId, rejectedUsersDto.getRejectedIds(), NUMBER_OF_USERS_PER_PAGE, page, lab, keyword, skillsInProject);
 
         ArrayList<UserProjectCreationDto> userProjectCreationDtos = new ArrayList<>();
