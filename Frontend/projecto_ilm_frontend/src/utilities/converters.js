@@ -26,6 +26,45 @@ const userInProjectTypeMappingsEn = {
   GUEST: "Guest",
 };
 
+const userInProjectTypeMappingsPt = {
+  CREATOR: "Criador",
+  MANAGER: "Manager",
+  MEMBER: "Membro",
+  MEMBER_BY_INVITATION: "Membro por Convite",
+  MEMBER_BY_APPLIANCE: "Membro por Candidatura",
+  PENDING_BY_APPLIANCE: "Pendente por Candidatura",
+  PENDING_BY_INVITATION: "Pendente por Convite",
+  EXMEMBER: "Ex-Membro",
+  ADMIN: "Administrador",
+  GUEST: "Convidado",
+};
+
+const usersInProjectTypePublicMappingsEn = {
+  CREATOR: "Creator",
+  MANAGER: "Manager",
+  MEMBER: "Member",
+  MEMBER_BY_INVITATION: "Member",
+  MEMBER_BY_APPLIANCE: "Member",
+  PENDING_BY_APPLIANCE: "Pending",
+  PENDING_BY_INVITATION: "Pending",
+  EXMEMBER: "Ex-Member",
+  ADMIN: "Admin",
+  GUEST: "Guest",
+};
+
+const usersInProjectTypePublicMappingsPt = {
+  CREATOR: "Criador",
+  MANAGER: "Manager",
+  MEMBER: "Membro",
+  MEMBER_BY_INVITATION: "Membro",
+  MEMBER_BY_APPLIANCE: "Membro",
+  PENDING_BY_APPLIANCE: "Pendente",
+  PENDING_BY_INVITATION: "Pendente",
+  EXMEMBER: "Ex-Membro",
+  ADMIN: "Administrador",
+  GUEST: "Convidado",
+};
+
 const taskStatusMappingsEn = {
   PLANNED: "Planned",
   IN_PROGRESS: "In Progress",
@@ -55,18 +94,7 @@ const statusDropDownMappingsPt = {
   APPROVED: "Aprovado",
 };
 
-const userInProjectTypeMappingsPt = {
-  CREATOR: "Criador",
-  MANAGER: "Manager",
-  MEMBER: "Membro",
-  MEMBER_BY_INVITATION: "Membro por Convite",
-  MEMBER_BY_APPLIANCE: "Membro por Candidatura",
-  PENDING_BY_APPLIANCE: "Pendente por Candidatura",
-  PENDING_BY_INVITATION: "Pendente por Convite",
-  EXMEMBER: "Ex-Membro",
-  ADMIN: "Administrador",
-  GUEST: "Convidado",
-};
+
 
 const taskStatusMappingsPt = {
   PLANNED: "Planejado",
@@ -147,6 +175,12 @@ function formatTypeUserInProject(type) {
   return mappings[type] || type;
 }
 
+function formatTypeUserInProjectPublic(type) {
+  const language = getCurrentLanguage();
+  const mappings = language === "PORTUGUESE" ? usersInProjectTypePublicMappingsPt : usersInProjectTypePublicMappingsEn;
+  return mappings[type] || type;
+}
+
 function translateUserInProjectType(type) {
   const language = getCurrentLanguage();
   const mappings = language === "PORTUGUESE" ? userInProjectTypeMappingsPt : userInProjectTypeMappingsEn;
@@ -183,4 +217,5 @@ export {
   formatTaskStatus,
   formatProjectState,
   formatTypeUserInProjectInMaiusculas,
+  formatTypeUserInProjectPublic,
 };

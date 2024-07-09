@@ -125,7 +125,7 @@ public class ProjectBean {
 
                 projectDao.merge(project);
 
-                createFinalPresentation(userDao.findById(1), project.getSystemName());
+                createFinalPresentation(userDao.findById(2), project.getSystemName());
 
             }
         }
@@ -156,7 +156,7 @@ public class ProjectBean {
 
             projectDao.merge(project);
 
-            createFinalPresentation(userDao.findById(1), project.getSystemName());
+            createFinalPresentation(userDao.findById(2), project.getSystemName());
         }
     }
 

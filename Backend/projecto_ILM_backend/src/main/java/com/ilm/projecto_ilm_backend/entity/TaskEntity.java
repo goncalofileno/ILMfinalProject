@@ -48,7 +48,7 @@ public class TaskEntity implements Serializable {
     /**
      * The description of the task.
      */
-    @Column(name = "description", nullable = false, unique = false, updatable = true)
+    @Column(name = "description", nullable = false, unique = false, updatable = true, columnDefinition = "TEXT")
     private String description;
 
     /**

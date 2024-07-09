@@ -60,6 +60,11 @@ const MailWebSocket = () => {
           }
         } else if (event.data === "timeout") {
           setShowTimeoutModal(true);
+        } else if (event.data.startsWith("new_mail:")) {
+          incrementUnreadCount();
+          if (audioEnabled) {
+            audioRef.current.play();
+          }
         } else {
           try {
             const parsedData = JSON.parse(event.data);
@@ -110,22 +115,34 @@ const MailWebSocket = () => {
   };
 
   const notificationHandlers = {
-    APPLIANCE_REJECTED: (projectSystemName) => navigate(`/project/${projectSystemName}`),
-    APPLIANCE_ACCEPTED: (projectSystemName) => navigate(`/project/${projectSystemName}`),
+    APPLIANCE_REJECTED: (projectSystemName) =>
+      navigate(`/project/${projectSystemName}`),
+    APPLIANCE_ACCEPTED: (projectSystemName) =>
+      navigate(`/project/${projectSystemName}`),
     INVITE: (projectSystemName) => navigate(`/project/${projectSystemName}`),
     PROJECT: (projectSystemName) => navigate(`/project/${projectSystemName}`),
-    PROJECT_REJECTED: (projectSystemName) => navigate(`/project/${projectSystemName}`),
-    USER_TYPE_CHANGED: (projectSystemName) => navigate(`/project/${projectSystemName}`),
-    PROJECT_UPDATED: (projectSystemName) => navigate(`/project/${projectSystemName}`),
-    PROJECT_INSERTED: (projectSystemName) => navigate(`/project/${projectSystemName}`),
-    APPLIANCE: (projectSystemName) => navigate(`/project/${projectSystemName}/members`),
-    INVITE_ACCEPTED: (projectSystemName) => navigate(`/project/${projectSystemName}/members`),
-    LEFT_PROJECT: (projectSystemName) => navigate(`/project/${projectSystemName}/members`),
-    TASK: (projectSystemName) => navigate(`/project/${projectSystemName}/tasks`),
-    TASK_ASSIGNED: (projectSystemName) => navigate(`/project/${projectSystemName}/tasks`),
+    PROJECT_REJECTED: (projectSystemName) =>
+      navigate(`/project/${projectSystemName}`),
+    USER_TYPE_CHANGED: (projectSystemName) =>
+      navigate(`/project/${projectSystemName}`),
+    PROJECT_UPDATED: (projectSystemName) =>
+      navigate(`/project/${projectSystemName}`),
+    PROJECT_INSERTED: (projectSystemName) =>
+      navigate(`/project/${projectSystemName}`),
+    APPLIANCE: (projectSystemName) =>
+      navigate(`/project/${projectSystemName}/members`),
+    INVITE_ACCEPTED: (projectSystemName) =>
+      navigate(`/project/${projectSystemName}/members`),
+    LEFT_PROJECT: (projectSystemName) =>
+      navigate(`/project/${projectSystemName}/members`),
+    TASK: (projectSystemName) =>
+      navigate(`/project/${projectSystemName}/tasks`),
+    TASK_ASSIGNED: (projectSystemName) =>
+      navigate(`/project/${projectSystemName}/tasks`),
     INVITE_REJECTED: (systemUserName) => navigate(`/profile/${systemUserName}`),
     REMOVED: (systemUserName) => navigate(`/profile/${systemUserName}`),
-    PROJECT_MESSAGE: (projectSystemName) => navigate(`/project/${projectSystemName}/chat`),    
+    PROJECT_MESSAGE: (projectSystemName) =>
+      navigate(`/project/${projectSystemName}/chat`),
   };
 
   const handleNotificationClick = () => {
@@ -140,7 +157,7 @@ const MailWebSocket = () => {
   };
 
   const handleNotificationEnd = () => {
-    setNotification(null); 
+    setNotification(null);
   };
 
   return (
@@ -153,7 +170,7 @@ const MailWebSocket = () => {
         <NotificationBanner
           notification={notification}
           onClick={handleNotificationClick}
-          onEnd={handleNotificationEnd} 
+          onEnd={handleNotificationEnd}
         />
       )}
     </>
