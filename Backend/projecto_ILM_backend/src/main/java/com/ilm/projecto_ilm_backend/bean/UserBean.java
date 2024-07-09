@@ -771,17 +771,19 @@ public class UserBean {
             userProjectCreationDto.setName((String) user[1] + " " + (String) user[2]);
             userProjectCreationDto.setPhoto((String) user[3]);
             userProjectCreationDto.setId((int) user[4]);
-
+            userProjectCreationDto.setPublicProfile((boolean) user[7]);
             List<SkillEntity> skillsEntities = userDao.getUserSkills((int) user[4], skillsInProject);
             List<SkillDto> skills = new ArrayList<>();
-            for (SkillEntity skill : skillsEntities) {
-                if (!skill.isDeleted()) {
-                    SkillDto skillDto = new SkillDto();
-                    skillDto.setId(skill.getId());
-                    skillDto.setName(skill.getName());
-                    skillDto.setType(skill.getType().toString());
-                    skillDto.setInProject(projectDao.isSkillInProject(systemProjectName, skill.getName()));
-                    skills.add(skillDto);
+            if(userProjectCreationDto.isPublicProfile()) {
+                for (SkillEntity skill : skillsEntities) {
+                    if (!skill.isDeleted()) {
+                        SkillDto skillDto = new SkillDto();
+                        skillDto.setId(skill.getId());
+                        skillDto.setName(skill.getName());
+                        skillDto.setType(skill.getType().toString());
+                        skillDto.setInProject(projectDao.isSkillInProject(systemProjectName, skill.getName()));
+                        skills.add(skillDto);
+                    }
                 }
             }
             userProjectCreationDto.setSkills(skills);

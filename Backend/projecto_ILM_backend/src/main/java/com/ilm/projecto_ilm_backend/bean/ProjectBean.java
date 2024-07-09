@@ -490,7 +490,7 @@ public class ProjectBean {
 
         userProjectDao.persist(userProjectEntity);
 
-        UserEntity admnistration = userDao.findBySystemUsername("admnistration");
+        UserEntity admnistration = userDao.findBySystemUsername("administration");
 
         if (userToInvite.getLanguage() == LanguageENUM.ENGLISH) {
             String subject = "Invite to Project " + project.getName();

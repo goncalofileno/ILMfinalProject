@@ -20,6 +20,7 @@ import { Trans, t } from "@lingui/macro";
 import { useMediaQuery } from "react-responsive";
 import e from "cors";
 import { max } from "moment";
+import Cookies from "js-cookie";
 
 export default function EditProjectPage() {
   const [selectedInterests, setSelectedInterests] = useState([]);
@@ -42,6 +43,9 @@ export default function EditProjectPage() {
   const [isFormModified, setIsFormModified] = useState(false); // New state for form modification tracking
   const isTablet = useMediaQuery({ query: "(max-width: 991px)" });
   const isMobile = useMediaQuery({ query: "(max-width: 575px)" });
+  const [currentLanguage, setCurrentLanguage] = useState(
+    Cookies.get("user-language") || "ENGLISH"
+  );
   const { systemProjectName } = useParams();
   const navigate = useNavigate();
 
@@ -195,7 +199,7 @@ export default function EditProjectPage() {
 
   return (
     <>
-      <AppNavbar />
+      <AppNavbar setCurrentLanguage={setCurrentLanguage} />
       <StandardModal
         modalType={modalType}
         message={modalMessage}
@@ -450,14 +454,21 @@ export default function EditProjectPage() {
             </Row>
             <Row
               style={{
-                display: "flex",
-                flexDirection: "row",
+                display: !isMobile && "flex",
+                flexDirection: !isMobile && "row",
                 width: "100%",
                 gap: !isTablet ? "6%" : "10%",
                 marginBottom: isTablet && "30px",
               }}
             >
-              <Col sm={6} style={{ width: "45%" }}>
+              <Col
+                xs={12}
+                sm={6}
+                style={{
+                  width: !isMobile && "45%",
+                  marginBottom: isMobile && "20px",
+                }}
+              >
                 <InterestSelector
                   label={t`Keywords:`}
                   selectedInterests={selectedInterests}
@@ -467,7 +478,7 @@ export default function EditProjectPage() {
                   }}
                 ></InterestSelector>
               </Col>
-              <Col sm={6} style={{ width: "45%" }}>
+              <Col xs={12} sm={6} style={{ width: !isMobile && "45%" }}>
                 <SkillSelector
                   selectedSkills={selectedSkills}
                   setSelectedSkills={(skills) => {

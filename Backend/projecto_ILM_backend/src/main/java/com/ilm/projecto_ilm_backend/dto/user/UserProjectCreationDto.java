@@ -15,6 +15,7 @@ public class UserProjectCreationDto {
  private List<SkillDto> skills;
  private int id;
  private String systemUsername;
+ private boolean publicProfile;
 
     public UserProjectCreationDto() {
     }
@@ -66,5 +67,13 @@ public class UserProjectCreationDto {
 
     public void setSystemUsername(String systemUsername) {
         this.systemUsername = systemUsername;
+    }
+
+    public boolean isPublicProfile() {
+        return publicProfile;
+    }
+
+    public void setPublicProfile(boolean publicProfile) {
+        this.publicProfile = publicProfile;
     }
 }

@@ -139,7 +139,6 @@
   .bottom-navbar .nav-icons {
     display: flex;
     justify-content: space-between;
-    width: 42%;
   }
 
   .bottom-navbar .nav-item label {

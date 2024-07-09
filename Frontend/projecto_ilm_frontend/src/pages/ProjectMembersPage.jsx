@@ -716,20 +716,43 @@ const ProjectMembersPage = () => {
 
                               <td style={{ width: !isPhone ? "30%" : "35%" }}>
                                 <div className="skills-td-users">
-                                  {user.skills.map((skill) => (
-                                    <div
-                                      className={`skill-div-${skill.inProject}`}
-                                      style={{
-                                        marginTop: "0px",
-                                        marginBottom: "6px",
-                                        height: "50%",
-                                      }}
-                                    >
-                                      <div className="skill-div-col1">
-                                        {skill.name}
+                                  {user.publicProfile ? (
+                                    user.skills.map((skill) => (
+                                      <div
+                                        className={`skill-div-${skill.inProject}`}
+                                        style={{
+                                          marginTop: "0px",
+                                          marginBottom: "6px",
+                                          height: "50%",
+                                        }}
+                                      >
+                                        <div className="skill-div-col1">
+                                          {skill.name}
+                                        </div>
                                       </div>
+                                    ))
+                                  ) : (
+                                    <div className="profile-users-row">
+                                      <Alert
+                                        variant="danger"
+                                        style={{
+                                          height: "40px",
+                                          padding: "10px 5px",
+                                          transform: "translateY(5px)",
+                                        }}
+                                      >
+                                        <span
+                                          style={{
+                                            height: "100%",
+                                            display: "flex",
+                                            alignItems: "center",
+                                          }}
+                                        >
+                                          This user has a private profile
+                                        </span>
+                                      </Alert>
                                     </div>
-                                  ))}
+                                  )}
                                 </div>
                               </td>
                               <td

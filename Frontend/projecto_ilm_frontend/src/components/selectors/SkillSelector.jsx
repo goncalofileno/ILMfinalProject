@@ -11,7 +11,7 @@ import {
 } from "react-bootstrap";
 import { getSkills } from "../../utilities/services";
 import { useParams } from "react-router-dom";
-import SkillCard from "./SkillCard"; 
+import SkillCard from "./SkillCard";
 import "./SkillSelector.css";
 import { formatSkill } from "../../utilities/converters";
 import { Trans, t } from "@lingui/macro";
@@ -106,7 +106,7 @@ const SkillSelector = ({ selectedSkills, setSelectedSkills }) => {
         id: Math.random(),
         name: newSkillName,
         type: newSkillType,
-      }; 
+      };
       setSelectedSkills([...selectedSkills, newSkill]);
       setInput("");
       setSuggestions([]);
@@ -125,7 +125,9 @@ const SkillSelector = ({ selectedSkills, setSelectedSkills }) => {
   return (
     <Container>
       <Form.Group controlId="formSkills">
-        <Form.Label style={{ fontWeight: "500" }}><Trans>Skills</Trans>:</Form.Label>
+        <Form.Label style={{ fontWeight: "500" }}>
+          <Trans>Skills</Trans>:
+        </Form.Label>
         <InputGroup className="mb-3">
           <Form.Control
             type="text"
@@ -151,6 +153,7 @@ const SkillSelector = ({ selectedSkills, setSelectedSkills }) => {
             className={`suggestions-list ${
               suggestions.length > 0 ? "show" : ""
             }`}
+            style={{ width: "25%" }}
           >
             {suggestions.map((suggestion, index) => (
               <ListGroup.Item
@@ -168,7 +171,9 @@ const SkillSelector = ({ selectedSkills, setSelectedSkills }) => {
       <div className="fixed-container">
         <Row>
           {selectedSkills.length === 0 ? (
-            <Col><Trans>No skills added yet.</Trans></Col>
+            <Col>
+              <Trans>No skills added yet.</Trans>
+            </Col>
           ) : (
             selectedSkills.map((skill) => (
               <Col key={skill.id} md="auto">
@@ -180,31 +185,45 @@ const SkillSelector = ({ selectedSkills, setSelectedSkills }) => {
       </div>
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>
         <Modal.Header closeButton>
-          <Modal.Title><Trans>Select Skill Type for</Trans> {newSkillName}</Modal.Title>
+          <Modal.Title>
+            <Trans>Select Skill Type for</Trans> {newSkillName}
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form.Group>
-            <Form.Label><Trans>Skill Type</Trans></Form.Label>
+            <Form.Label>
+              <Trans>Skill Type</Trans>
+            </Form.Label>
             <Form.Control
               as="select"
               value={newSkillType}
               onChange={(e) => setNewSkillType(e.target.value)}
               className="custom-focus"
             >
-              <option value=""><Trans>Select a type</Trans></option>
-              <option value="KNOWLEDGE"><Trans>Knowledge</Trans></option>
-              <option value="SOFTWARE"><Trans>Software</Trans></option>
-              <option value="HARDWARE"><Trans>Hardware</Trans></option>
-              <option value="TOOLS"><Trans>Tools</Trans></option>
+              <option value="">
+                <Trans>Select a type</Trans>
+              </option>
+              <option value="KNOWLEDGE">
+                <Trans>Knowledge</Trans>
+              </option>
+              <option value="SOFTWARE">
+                <Trans>Software</Trans>
+              </option>
+              <option value="HARDWARE">
+                <Trans>Hardware</Trans>
+              </option>
+              <option value="TOOLS">
+                <Trans>Tools</Trans>
+              </option>
             </Form.Control>
           </Form.Group>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowModal(false)}>
-          <Trans>Cancel</Trans>
+            <Trans>Cancel</Trans>
           </Button>
           <Button variant="primary" onClick={handleSaveNewSkill}>
-          <Trans>Save</Trans>
+            <Trans>Save</Trans>
           </Button>
         </Modal.Footer>
       </Modal>

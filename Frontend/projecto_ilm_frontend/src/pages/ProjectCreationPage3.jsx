@@ -153,7 +153,7 @@ export default function ProjectCreationPage3() {
       <AppNavbar setCurrentLanguage={setCurrentLanguage} />
       <div
         className={isTablet ? "ilm-page-mobile" : "ilm-pageb"}
-        style={{ paddingBottom: isTablet && "150px" }}
+        style={{ paddingBottom: isTablet && "150px", paddingTop: "15px" }}
       >
         <h1 className="page-title">
           <span className="app-slogan-1">

@@ -155,6 +155,7 @@ const InterestSelector = ({
             className={`suggestions-list ${
               suggestions.length > 0 ? "show" : ""
             }`}
+            style={{ width: "25%" }}
           >
             {suggestions.map((suggestion, index) => (
               <ListGroup.Item
