@@ -3,11 +3,13 @@ package com.ilm.projecto_ilm_backend.dao;
 import com.ilm.projecto_ilm_backend.ENUMS.NotificationTypeENUM;
 import com.ilm.projecto_ilm_backend.entity.NotificationEntity;
 import com.ilm.projecto_ilm_backend.entity.ProjectEntity;
+import com.ilm.projecto_ilm_backend.entity.UserEntity;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Stateless
@@ -133,5 +135,21 @@ public class NotificationDao extends AbstractDao<NotificationEntity> {
         return em.createNamedQuery("NotificationEntity.findByProjectSystemName", NotificationEntity.class)
                 .setParameter("projectSystemName", projectSystemName)
                 .getResultList();
+    }
+
+    public boolean findDoubleNotificationTask(String taskTitle, String projectSystemName, String systemUsername, UserEntity receptor, LocalDateTime date){
+        try {
+            em.createNamedQuery("NotificationEntity.findDoubleNotificationTask", NotificationEntity.class)
+                    .setParameter("taskTitle", taskTitle)
+                    .setParameter("projectSystemName", projectSystemName)
+                    .setParameter("systemUsername", systemUsername)
+                    .setParameter("receptor", receptor)
+                    .setParameter("datePlus", date)
+                    .setParameter("dateMinus", date.minusSeconds(1))
+                    .getSingleResult();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

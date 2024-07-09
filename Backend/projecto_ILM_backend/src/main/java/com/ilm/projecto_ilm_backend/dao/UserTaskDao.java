@@ -75,4 +75,13 @@ public class UserTaskDao extends AbstractDao<UserTaskEntity> {
     public void deleteAllByTaskId(int taskId) {
         em.createQuery("DELETE FROM UserTaskEntity ut WHERE ut.task.id = :taskId").setParameter("taskId", taskId).executeUpdate();
     }
+
+    public UserEntity findInChargeByTaskId(int taskId) {
+        try {
+            return em.createNamedQuery("UserTask.findInChargeByTaskId", UserEntity.class).setParameter("taskId", taskId)
+                    .getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }
