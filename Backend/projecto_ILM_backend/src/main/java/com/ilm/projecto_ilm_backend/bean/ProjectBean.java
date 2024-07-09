@@ -737,7 +737,7 @@ public class ProjectBean {
             if (approve) {
                 notificationBean.createProjectNotification(project.getSystemName(), StateProjectENUM.APPROVED, userResponsable.getFirstName() + " " + userResponsable.getLastName(), user, userResponsable.getSystemUsername());
 
-                UserEntity admnistration = userDao.findBySystemUsername("admnistration");
+                UserEntity admnistration = userDao.findBySystemUsername("administration");
                 if (user.getLanguage() == LanguageENUM.ENGLISH) {
                     String subject = "Project " + project.getName() + " Approved";
                     String text = "<p>Dear " + user.getFirstName() + " " + user.getLastName() + ",</p>" +
@@ -774,7 +774,7 @@ public class ProjectBean {
             } else {
                 notificationBean.createRejectProjectNotification(project.getSystemName(), StateProjectENUM.PLANNING, userResponsable.getFirstName() + " " + userResponsable.getLastName(), user, userResponsable.getSystemUsername());
 
-                UserEntity admnistration = userDao.findBySystemUsername("admnistration");
+                UserEntity admnistration = userDao.findBySystemUsername("administration");
                 if (user.getLanguage() == LanguageENUM.ENGLISH) {
                     String subject = "Project " + project.getName() + " Rejected";
                     String text = "<p>Dear " + user.getFirstName() + " " + user.getLastName() + ",</p>" +
@@ -1047,7 +1047,7 @@ public class ProjectBean {
 
         notificationBean.createRemovedNotification(systemProjectName, currentUser.getSystemUsername(), userToRemove);
 
-        UserEntity admnistration = userDao.findBySystemUsername("admnistration");
+        UserEntity admnistration = userDao.findBySystemUsername("administration");
         if (userToRemove.getLanguage() == LanguageENUM.ENGLISH) {
             String subject = "You have been removed from project " + project.getName();
             String text = "<p>Dear " + userToRemove.getFirstName() + " " + userToRemove.getLastName() + ",</p>" +
@@ -1112,7 +1112,7 @@ public class ProjectBean {
 
         notificationBean.createApplianceAcceptedNotification(systemProjectName, currentUser.getSystemUsername(), user);
 
-        UserEntity admnistration = userDao.findBySystemUsername("admnistration");
+        UserEntity admnistration = userDao.findBySystemUsername("administration");
         if(user.getLanguage() == LanguageENUM.ENGLISH) {
             String subject = "Your application to project " + project.getName() + " has been accepted";
             String text = "<p>Dear " + user.getFirstName() + " " + user.getLastName() + ",</p>" +
@@ -1171,7 +1171,7 @@ public class ProjectBean {
 
         notificationBean.createApplianceRejectedNotification(systemProjectName, currentUser.getSystemUsername(), user);
 
-        UserEntity admnistration = userDao.findBySystemUsername("admnistration");
+        UserEntity admnistration = userDao.findBySystemUsername("administration");
         if(user.getLanguage() == LanguageENUM.ENGLISH) {
             String subject = "Your application to project " + project.getName() + " has been rejected";
             String text = "<p>Dear " + user.getFirstName() + " " + user.getLastName() + ",</p>" +
@@ -1585,7 +1585,7 @@ public class ProjectBean {
             userProjectEntity.setType(UserInProjectTypeENUM.MEMBER);
             userProjectDao.persist(userProjectEntity);
             notificationBean.createProjectInsertedNotification(projectSystemName, userDao.getFullNameBySystemUsername(sender.getSystemUsername()), userReceiver, sender.getSystemUsername());
-            UserEntity admnistration = userDao.findBySystemUsername("admnistration");
+            UserEntity admnistration = userDao.findBySystemUsername("administration");
             if(userReceiver.getLanguage() == LanguageENUM.ENGLISH) {
                 String subject = "You have been added to project " + project.getName();
                 String text = "<p>Dear " + userReceiver.getFirstName() + " " + userReceiver.getLastName() + ",</p>" +
@@ -1638,7 +1638,7 @@ public class ProjectBean {
 
         notificationDao.removeByProjectIdAndReceptorAndType(project.getSystemName(), userToRemove.getId(), NotificationTypeENUM.INVITE);
 
-        UserEntity admnistration = userDao.findBySystemUsername("admnistration");
+        UserEntity admnistration = userDao.findBySystemUsername("administration");
         if(userToRemove.getLanguage() == LanguageENUM.ENGLISH) {
             String subject = "Invitation to project " + project.getName() + " removed";
             String text = "<p>Dear " + userToRemove.getFirstName() + " " + userToRemove.getLastName() + ",</p>" +
@@ -1723,7 +1723,7 @@ public class ProjectBean {
         taskBean.removeUserFromProjectTasks(userId, project.getId());
 
         List<UserEntity> teamManagers = userProjectDao.findCreatorsAndManagersByProjectId(project.getId());
-        UserEntity admnistration = userDao.findBySystemUsername("admnistration");
+        UserEntity admnistration = userDao.findBySystemUsername("administration");
         for (UserEntity teamManager : teamManagers) {
             notificationBean.createLeftProjectNotification(projectSystemName, user.getSystemUsername(), teamManager);
             if(teamManager.getLanguage() == LanguageENUM.ENGLISH){

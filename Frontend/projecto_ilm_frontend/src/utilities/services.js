@@ -1409,10 +1409,11 @@ async function getUserProjectCreation(
     rejectedIds: rejectedUsers,
   };
 
+  console.log("keyword " + keyword);
   try {
     console.log("RejectedUsersDto", RejectedIdsDto);
     const response = await fetch(
-      `${baseURL}user/userProjectCreation/${systemProjectName}?page=${currentPage}&lab=${lab}&keyword=${keyword}`,
+      `${baseURL}user/userProjectCreation?systemProjectName=${systemProjectName}&page=${currentPage}&lab=${lab}&keyword=${keyword}`,
       {
         method: "POST",
         headers: {

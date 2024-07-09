@@ -211,6 +211,7 @@ export default function ProjectCreationPage2() {
                           setGetUsersTrigger={setGetUsersTrigger}
                           maxMembers={maxMembers}
                           numberOfMembersInProject={usersInProject.length}
+                          publicProfile={user.publicProfile}
                         ></UserCard>
                       </Col>
                     );

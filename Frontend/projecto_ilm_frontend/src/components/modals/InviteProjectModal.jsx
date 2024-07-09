@@ -51,7 +51,7 @@ const InviteProjectModal = ({ show, handleClose, systemUsername }) => {
         setAlertVariant("success");
         setTimeout(() => {
           handleCloseModal();
-        }, 3000);
+        }, 1500);
       } else if (response.status === 409) {
         const errorMessage = await response.text();
         setAlertMessage(errorMessage);
