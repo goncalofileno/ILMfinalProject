@@ -408,6 +408,17 @@ public class TaskBean {
 
         task.setOutColaboration(updateTaskDto.getOutColaboration());
 
+        UserEntity inCharge = userDao.findById(updateTaskDto.getInChargeId());
+        UserEntity userInCharge = userTaskDao.findInChargeByTaskId(task.getId());
+        System.out.println("User in charge: " + userInCharge.getFullName());
+        System.out.println("User in charge id: " + userInCharge.getId());
+        System.out.println("Update task in charge id: " + updateTaskDto.getInChargeId());
+
+        if (updateTaskDto.getInChargeId() != userInCharge.getId()) {
+            notificationBean.createTaskAssignedNotification(updateTaskDto.getTitle(), updateTaskDto.getSystemProjectName(), user.getSystemUsername(), inCharge);
+            System.out.println("FOI MUDADO O USER IN CHARGE E FOI CRIADA UMA NOTIFICAÇÃO");
+        }
+
         List<UserEntity> membersOfTask = updateTaskDto.getMemberIds().stream()
                 .map(memberId -> userDao.findById(memberId))
                 .collect(Collectors.toList());
@@ -429,7 +440,6 @@ public class TaskBean {
             userTaskDao.merge(userTask);
         }
 
-        UserEntity inCharge = userDao.findById(updateTaskDto.getInChargeId());
         if (inCharge != null) {
             UserTaskEntity userTask = userTaskDao.findByTaskIdAndUserId(task.getId(), inCharge.getId());
             if (userTask.getType() == UserInTaskTypeENUM.CREATOR || userTask.getType() == UserInTaskTypeENUM.CREATOR_INCHARGE) {
@@ -437,17 +447,6 @@ public class TaskBean {
             } else {
                 userTask.setType(UserInTaskTypeENUM.INCHARGE);
             }
-        }
-
-        UserEntity userInCharge = userTaskDao.findInChargeByTaskId(task.getId());
-        System.out.println("User in charge: " + userInCharge.getFullName());
-        System.out.println("User in charge id: " + userInCharge.getId());
-        System.out.println("Update task in charge id: " + updateTaskDto.getInChargeId());
-
-
-        if (updateTaskDto.getInChargeId() != userInCharge.getId()) {
-            notificationBean.createTaskAssignedNotification(updateTaskDto.getTitle(), updateTaskDto.getSystemProjectName(), user.getSystemUsername(), inCharge);
-            System.out.println("FOI MUDADO O USER IN CHARGE E FOI CRIADA UMA NOTIFICAÇÃO");
         }
 
         List<TaskEntity> dependentTasks = updateTaskDto.getDependentTaskIds().stream()
@@ -466,9 +465,7 @@ public class TaskBean {
         for (UserEntity teamMember : teamMembers) {
             if (teamMember.getId() != user.getId()) {
                 if (teamMember.getId() != user.getId()) {
-                    if(!checkDoubleNotification(task.getTitle(), project.getSystemName(), teamMember.getSystemUsername(), user)) {
-                        notificationBean.createTaskNotification(task.getTitle(), project.getSystemName(), user.getSystemUsername(), teamMember);
-                    }
+                    notificationBean.createTaskNotification(task.getTitle(), project.getSystemName(), user.getSystemUsername(), teamMember);
                 }
             }
         }

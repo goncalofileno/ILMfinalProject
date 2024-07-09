@@ -228,6 +228,15 @@ public class NotificationBean {
     }
 
     public void createTaskNotification(String taskName, String projectSystemName, String systemeUsername, UserEntity receptor) {
+
+        // Verificar se já existe uma notificação similar
+        boolean notificationExists = notificationDao.findSimilarTaskNotification(taskName, projectSystemName, receptor);
+
+        if (notificationExists) {
+            // Se uma notificação similar já existir, não crie uma nova
+            return;
+        }
+
         NotificationEntity notification = new NotificationEntity();
         notification.setType(NotificationTypeENUM.TASK);
         notification.setReadStatus(false);
