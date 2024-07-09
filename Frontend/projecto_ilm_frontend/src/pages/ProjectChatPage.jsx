@@ -19,7 +19,10 @@ import { getChatPage, sendChatMessage } from "../utilities/services";
 import "./ProjectChatPage.css";
 import { Trans, t } from "@lingui/macro";
 import { i18n } from "@lingui/core";
-import { formatProjectState, formatTypeUserInProject } from "../utilities/converters";
+import {
+  formatProjectState,
+  formatTypeUserInProject,
+} from "../utilities/converters";
 import { useMediaQuery } from "react-responsive";
 
 const setLanguageFromCookies = () => {
@@ -41,7 +44,9 @@ const ProjectChatPage = () => {
   const userSystemUsername = Cookies.get("user-systemUsername");
   const isTablet = useMediaQuery({ query: "(max-width: 991px)" });
   const isPhone = useMediaQuery({ query: "(max-width: 767px)" });
-  const [currentLanguage, setCurrentLanguage] = useState(Cookies.get("user-language") || "ENGLISH");
+  const [currentLanguage, setCurrentLanguage] = useState(
+    Cookies.get("user-language") || "ENGLISH"
+  );
 
   useEffect(() => {
     setLanguageFromCookies();
@@ -96,7 +101,7 @@ const ProjectChatPage = () => {
 
   return (
     <>
-      <AppNavbar setCurrentLanguage={setCurrentLanguage}/>
+      <AppNavbar setCurrentLanguage={setCurrentLanguage} />
       <ProjectChatWebSocket projectId={systemProjectName} />
 
       <div className={isTablet ? "ilm-page-mobile" : "ilm-pageb"}>
@@ -109,7 +114,9 @@ const ProjectChatPage = () => {
             <Row>
               <Col>
                 <Alert variant="danger" className="standard-modal">
-                  <Trans>The project is canceled, and the chat is disabled.</Trans>
+                  <Trans>
+                    The project is canceled, and the chat is disabled.
+                  </Trans>
                 </Alert>
               </Col>
             </Row>
@@ -119,7 +126,9 @@ const ProjectChatPage = () => {
             <Col md={8} style={{ height: !isTablet ? "100%" : "70vh" }}>
               <Card style={{ height: "100%" }}>
                 <Card.Header>
-                  <h5><Trans>Chat</Trans></h5>
+                  <h5>
+                    <Trans>Chat</Trans>
+                  </h5>
                 </Card.Header>
                 <Card.Body
                   style={{ height: "85%", overflowY: "auto" }}
@@ -154,7 +163,7 @@ const ProjectChatPage = () => {
                           >
                             <strong>
                               {message.systemUsername === userSystemUsername
-                                ? (t`You`)
+                                ? t`You`
                                 : message.name}
                             </strong>
                             : {message.message}
@@ -213,7 +222,9 @@ const ProjectChatPage = () => {
             >
               <Card style={{ height: "100%" }}>
                 <Card.Header>
-                  <h5><Trans>Members</Trans></h5>
+                  <h5>
+                    <Trans>Members</Trans>
+                  </h5>
                 </Card.Header>
                 <Card.Body
                   style={{
@@ -247,10 +258,12 @@ const ProjectChatPage = () => {
                             <div style={{ fontSize: "14px" }}>
                               <strong>
                                 {member.systemUsername === userSystemUsername
-                                  ? "You"
+                                  ? t`You`
                                   : member.name}
                               </strong>
-                              <div className="text-muted">{member.type}</div>
+                              <div className="text-muted">
+                                {formatTypeUserInProject(member.type)}
+                              </div>
                             </div>
                           </Col>
                           <Col

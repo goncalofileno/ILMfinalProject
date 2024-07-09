@@ -331,7 +331,7 @@ export default function AppNavbar({
                 className="icon"
                 style={getNavIconStyle("/myprojects")}
               ></div>
-              <label style={{ width: "65px", textAlign: "center" }}>
+              <label style={{ width: "100px", textAlign: "center" }}>
                 <Trans>My Projects</Trans>
               </label>
             </div>

@@ -829,7 +829,7 @@ msgstr "O meu Perfil"
 #: src/components/headers/AppNavbar.jsx:240
 #: src/components/headers/AppNavbar.jsx:335
 msgid "My Projects"
-msgstr "Os Meus Projetos"
+msgstr "Meus Projetos"
 
 #: src/components/modals/AddResourceModal.jsx:261
 #: src/components/tables/ProjectMembersTable.jsx:28

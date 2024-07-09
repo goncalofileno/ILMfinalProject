@@ -70,6 +70,9 @@ const EditProfilePage = () => {
   const systemUsername = Cookies.get("user-systemUsername");
   const [showTolltip, setShowTooltip] = useState(false);
   const [strength, setStrength] = useState(0);
+  const [currentLanguage, setCurrentLanguage] = useState(
+    Cookies.get("user-language") || "ENGLISH"
+  );
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -328,7 +331,7 @@ const EditProfilePage = () => {
 
   return (
     <>
-      <AppNavbar />
+      <AppNavbar setCurrentLanguage={setCurrentLanguage} />
       <Container className="ilm-form" style={{ marginTop: "80px" }}>
         <Row className="justify-content-md-center mt-4">
           <Col md="10">
@@ -499,7 +502,11 @@ const EditProfilePage = () => {
               </Row>
 
               <Row className="mt-4 justify-content-end">
-                <Col md="auto" className="button-group">
+                <Col
+                  md="auto"
+                  className="button-group"
+                  style={{ display: "flex", flexDirection: "row" }}
+                >
                   <Button
                     variant="secondary"
                     onClick={handleCancel}
@@ -605,12 +612,12 @@ const EditProfilePage = () => {
                         : strength === 5 && "green",
                   }}
                 >
-                  {strength === 0 && (t`None`)}
-                  {strength === 1 && (t`Weak`)}
-                  {strength === 2 && (t`Fair`)}
-                  {strength === 3 && (t`Good`)}
-                  {strength === 4 && (t`Strong`)}
-                  {strength === 5 && (t`Very Strong`)}
+                  {strength === 0 && t`None`}
+                  {strength === 1 && t`Weak`}
+                  {strength === 2 && t`Fair`}
+                  {strength === 3 && t`Good`}
+                  {strength === 4 && t`Strong`}
+                  {strength === 5 && t`Very Strong`}
                 </div>
               </div>
             </div>

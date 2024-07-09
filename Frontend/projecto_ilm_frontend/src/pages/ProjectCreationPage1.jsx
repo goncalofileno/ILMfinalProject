@@ -17,6 +17,7 @@ import StandardModal from "../components/modals/StandardModal";
 import { useNavigate } from "react-router-dom";
 import { Trans, t } from "@lingui/macro";
 import { useMediaQuery } from "react-responsive";
+import Cookies from "js-cookie";
 
 export default function ProjectCreationPage1() {
   const [selectedInterests, setSelectedInterests] = useState([]);
@@ -37,6 +38,9 @@ export default function ProjectCreationPage1() {
   const [warningTxt, setWarningTxt] = useState("");
   const isTablet = useMediaQuery({ query: "(max-width: 991px)" });
   const navigate = useNavigate();
+  const [currentLanguage, setCurrentLanguage] = useState(
+    Cookies.get("user-language") || "ENGLISH"
+  );
 
   useEffect(() => {
     getLabsWithSessionId().then((response) => {
@@ -173,7 +177,7 @@ export default function ProjectCreationPage1() {
 
   return (
     <>
-      <AppNavbar />
+      <AppNavbar setCurrentLanguage={setCurrentLanguage} />
       <StandardModal
         modalType={modalType}
         message={modalMessage}

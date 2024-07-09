@@ -9,6 +9,7 @@ import StandardModal from "../components/modals/StandardModal";
 import { useMediaQuery } from "react-responsive";
 import { useNavigate } from "react-router-dom";
 import { Trans, t } from "@lingui/macro";
+import Cookies from "js-cookie";
 
 export default function ProjectCreationPage2() {
   const [users, setUsers] = useState([]);
@@ -28,6 +29,9 @@ export default function ProjectCreationPage2() {
   const isMobileAuxiliar = useMediaQuery({ query: "(max-width: 330px)" });
   const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
   const isTablet = useMediaQuery({ query: "(max-width: 991px)" });
+  const [currentLanguage, setCurrentLanguage] = useState(
+    Cookies.get("user-language") || "ENGLISH"
+  );
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -99,7 +103,11 @@ export default function ProjectCreationPage2() {
 
   return (
     <>
-      <AppNavbar setIsAsideVisible={setIsAsideVisible} pageWithAside={true} />
+      <AppNavbar
+        setIsAsideVisible={setIsAsideVisible}
+        pageWithAside={true}
+        setCurrentLanguage={setCurrentLanguage}
+      />
       <StandardModal
         modalType={modalType}
         message={modalMessage}
