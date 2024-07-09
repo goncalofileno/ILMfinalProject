@@ -13,7 +13,9 @@ import DeleteTaskModal from "../components/modals/DeleteTaskModal";
 import ProgressBar from "../components/bars/ProgressBar";
 import CustomTooltipContent from "../components/tooltips/CustomTooltipContent";
 import "./ProjectPlanPage.css";
-import { Trans, t } from "@lingui/macro";
+import { Trans } from "@lingui/macro";
+import TaskCard from "../components/cards/TaskCard";
+import { useMediaQuery } from "react-responsive";
 
 const parseDate = (dateString) => new Date(dateString);
 
@@ -103,7 +105,13 @@ const ProjectPlanPage = () => {
   const [titleError, setTitleError] = useState("");
   const [percentage, setPercentage] = useState(0);
   const [projectState, setProjectState] = useState("IN_PROGRESS");
+  const [currentLanguage, setCurrentLanguage] = useState(
+    Cookies.get("user-language") || "ENGLISH"
+  );
+  const locale = currentLanguage === "PORTUGUESE" ? "por" : "eng";
+  const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
 
+  // Fetch tasks data
   const fetchData = async () => {
     const sessionId = Cookies.get("session-id");
     try {
@@ -121,15 +129,6 @@ const ProjectPlanPage = () => {
       setTaskTitles(data.tasks.map((task) => task.title));
       setPercentage(data.projectProgress);
       setProjectState(data.projectState);
-
-      if (taskSystemTitle) {
-        const taskToOpen = transformedTasks.find(
-          (task) => task.id === taskSystemTitle
-        );
-        if (taskToOpen) {
-          handleTaskClick(taskToOpen);
-        }
-      }
     } catch (error) {
       console.error("Fetch error:", error);
       setError(error.message);
@@ -138,7 +137,18 @@ const ProjectPlanPage = () => {
 
   useEffect(() => {
     fetchData();
-  }, [systemProjectName]);
+  }, [systemProjectName, currentLanguage]);
+
+  useEffect(() => {
+    if (taskSystemTitle) {
+      const taskToOpen = tasks.find(
+        (task) => task.id === taskSystemTitle
+      );
+      if (taskToOpen) {
+        handleTaskClick(taskToOpen);
+      }
+    }
+  }, [taskSystemTitle, tasks]);
 
   const handleTaskClick = (task) => {
     if (task.type === "project") return;
@@ -158,8 +168,9 @@ const ProjectPlanPage = () => {
   };
 
   const handleCloseModal = () => {
-    navigate(`/project/${systemProjectName}/plan`, { replace: true });
     setIsModalVisible(false);
+    setSelectedTask(null);
+    navigate(`/project/${systemProjectName}/plan`, { replace: true });
   };
 
   const handleInputChange = (e) => {
@@ -223,7 +234,7 @@ const ProjectPlanPage = () => {
       handleCloseModal();
       fetchData();
       setTaskDetails({});
-      taskSystemTitle = null;
+      setIsSaveEnabled(false);
     } catch (error) {
       console.error("Error updating task:", error);
     }
@@ -412,91 +423,53 @@ const ProjectPlanPage = () => {
     return <div>Loading...</div>;
   }
 
+  
+
   return (
     <>
-      <AppNavbar />
+      <AppNavbar setCurrentLanguage={setCurrentLanguage} />
       <div className="bckg-color-ilm-page ilm-pageb">
-        <ProjectTabs typeOfUserSeingProject={userSeingTasksType} />
+        <ProjectTabs
+          typeOfUserSeingTasks={userSeingTasksType}
+          projectName={projectName}
+        />
         <Container style={{ height: "91%" }}>
           <Row>
-            <Col>
-              <Row>
-                <div style={{ width: "500px" }}>
-                  <Button
-                    onClick={() => setIsAddModalVisible(true)}
-                    disabled={["CANCELED", "READY"].includes(projectState)}
-                  >
-                    Add New Task
-                  </Button>
-                </div>
-                <div style={{ width: "500px" }}>
-                  <Form.Group controlId="viewModeSelector">
-                    <Form.Label>View Mode</Form.Label>
-                    <Form.Control
-                      as="select"
-                      value={viewMode}
-                      onChange={handleViewModeChange}
-                      disabled={["CANCELED", "READY"].includes(projectState)}
-                    >
-                      <option value={ViewMode.Day}>Day</option>
-                      <option value={ViewMode.Month}>Month</option>
-                      <option value={ViewMode.Year}>Year</option>
-                    </Form.Control>
-                  </Form.Group>
-                </div>
-                <div>
-                  <Form.Group controlId="listCellWidthToggle">
-                    <Form.Check
-                      type="checkbox"
-                      label="Toggle List Cell Width"
-                      onChange={handleListCellWidthChange}
-                      disabled={["CANCELED", "READY"].includes(projectState)}
-                    />
-                  </Form.Group>
-                </div>
-              </Row>
-              <Row>
-                {tasks.length > 0 && (
-                  <Gantt
-                    tasks={tasks}
-                    viewMode={viewMode}
-                    onDateChange={
-                      !["CANCELED", "READY"].includes(projectState)
-                        ? handleDateChange
-                        : undefined
-                    }
-                    onProgressChange={(task) =>
-                      console.log("Task progress changed:", task)
-                    }
-                    onDoubleClick={
-                      !["CANCELED", "READY"].includes(projectState)
-                        ? handleTaskClick
-                        : undefined
-                    }
-                    onDelete={(task) =>
-                      !["CANCELED", "READY"].includes(projectState)
-                        ? handleDeleteClick(task)
-                        : undefined
-                    }
-                    listCellWidth={listCellWidth}
-                    columnWidth={100}
-                    TooltipContent={CustomTooltipContent}
-                  />
-                )}
-              </Row>
-            </Col>
-          </Row>
-          <Row>
+            <Row>
+              <Button
+                onClick={() => setIsAddModalVisible(true)}
+                disabled={["CANCELED", "READY"].includes(projectState)}
+              >
+                <Trans>Add New Task</Trans>
+              </Button>
+              {!isMobile && (<Form.Group controlId="viewModeSelector">
+                <Form.Label>
+                  <Trans>View Mode</Trans>
+                </Form.Label>
+                <Form.Control
+                  as="select"
+                  value={viewMode}
+                  onChange={handleViewModeChange}
+                  disabled={isMobile || ["CANCELED", "READY"].includes(projectState)}
+                >
+                  <option value={ViewMode.Day}>
+                    <Trans>Day</Trans>
+                  </option>
+                  <option value={ViewMode.Month}>
+                    <Trans>Month</Trans>
+                  </option>
+                  <option value={ViewMode.Year}>
+                    <Trans>Year</Trans>
+                  </option>
+                </Form.Control>
+              </Form.Group>)}
+              
+            </Row>
+            <Row>
             <div style={{ marginTop: "15px" }}>
-              <h5>Project Progress:</h5>
-            </div>
-            <div>
-              <ProgressBar percentage={percentage} status={projectState} />
-            </div>
-          </Row>
-          <Row>
-            <div style={{ marginTop: "15px" }}>
-              <h5>Legend:</h5>
+              <h5>
+                <Trans>Legend</Trans>:
+              </h5>
             </div>
             <div>
               <ul>
@@ -508,9 +481,9 @@ const ProjectPlanPage = () => {
                       borderRadius: "4px",
                     }}
                   >
-                    DONE
+                    <Trans>DONE</Trans>
                   </span>{" "}
-                  - Completed tasks
+                  - <Trans>Completed tasks</Trans>
                 </li>
                 <li>
                   <span
@@ -520,9 +493,9 @@ const ProjectPlanPage = () => {
                       borderRadius: "4px",
                     }}
                   >
-                    IN PROGRESS
+                    <Trans>IN PROGRESS</Trans>
                   </span>{" "}
-                  - Tasks in progress
+                  - <Trans>Tasks in progress</Trans>
                 </li>
                 <li>
                   <span
@@ -532,11 +505,11 @@ const ProjectPlanPage = () => {
                       borderRadius: "4px",
                     }}
                   >
-                    PLANNED
+                    <Trans>PLANNED</Trans>
                   </span>{" "}
-                  - Planned tasks
+                  - <Trans>Planned tasks</Trans>
                 </li>
-                <li>
+                {!isMobile && (  <li>
                   <span
                     style={{
                       backgroundColor: "#3F51B5",
@@ -544,16 +517,74 @@ const ProjectPlanPage = () => {
                       borderRadius: "4px",
                     }}
                   >
-                    PROJECT
+                    <Trans>PROJECT</Trans>
                   </span>{" "}
-                  - Project
-                </li>
+                  - <Trans>Project</Trans>
+                </li>)}
+              
               </ul>
+            </div>
+          </Row>
+            <Row>
+              {isMobile ? (
+                tasks.map(
+                  (task) =>
+                    task.type !== "project" && (
+                      <Col key={task.id} xs={12}>
+                        <TaskCard
+                          task={task}
+                          handleTaskClick={handleTaskClick}
+                          projectMembers={projectMembers}
+                        />
+                      </Col>
+                    )
+                )
+              ) : (
+                <Gantt
+                  tasks={tasks}
+                  viewMode={viewMode}
+                  onDateChange={
+                    !["CANCELED", "READY"].includes(projectState)
+                      ? handleDateChange
+                      : undefined
+                  }
+                  onProgressChange={(task) =>
+                    console.log("Task progress changed:", task)
+                  }
+                  onDoubleClick={
+                    !["CANCELED", "READY"].includes(projectState)
+                      ? handleTaskClick
+                      : undefined
+                  }
+                  onDelete={(task) =>
+                    !["CANCELED", "READY"].includes(projectState)
+                      ? handleDeleteClick(task)
+                      : undefined
+                  }
+                  listCellWidth={listCellWidth}
+                  columnWidth={100}
+                  TooltipContent={CustomTooltipContent}
+                  locale={locale}
+                />
+              )}
+            </Row>
+          </Row>
+          <Row>
+            <div style={{ marginTop: "15px" }}>
+              <h5>
+                <Trans>Project Progress</Trans>:
+              </h5>
+            </div>
+            <div>
+              <ProgressBar percentage={percentage} status={projectState} />
             </div>
           </Row>
           {["CANCELED", "READY"].includes(projectState) && (
             <Alert variant="danger" className="standard-modal">
-              The project is {projectState.toLowerCase()} and no tasks can be added or changes made.
+              <Trans>
+                The project is {projectState.toLowerCase()} and no tasks can be
+                added or changes made.
+              </Trans>
             </Alert>
           )}
         </Container>
