@@ -46,8 +46,7 @@ export default function AsideMyProjectsPage({
               <Form.Label className="custom-label" style={{ color: "white" }}>
                 <Trans>Lab</Trans>
               </Form.Label>
-              <Form.Control
-                as="select"
+              <Form.Select
                 className="custom-focus"
                 value={selectedLab}
                 onChange={(e) => {
@@ -66,14 +65,13 @@ export default function AsideMyProjectsPage({
                     {formatLab(lab)}
                   </option>
                 ))}
-              </Form.Control>
+              </Form.Select>
             </div>
             <div className="div-control-form">
               <Form.Label className="custom-label" style={{ color: "white" }}>
                 <Trans>Status</Trans>
               </Form.Label>
-              <Form.Control
-                as="select"
+              <Form.Select
                 className="custom-focus"
                 value={selectedStatus}
                 onChange={(e) => {
@@ -93,14 +91,13 @@ export default function AsideMyProjectsPage({
                     {formatStatusDropDown(status)}
                   </option>
                 ))}
-              </Form.Control>
+              </Form.Select>
             </div>
             <div className="div-control-form">
               <Form.Label className="custom-label" style={{ color: "white" }}>
                 <Trans>Member Type</Trans>
               </Form.Label>
-              <Form.Control
-                as="select"
+              <Form.Select
                 className="custom-focus"
                 value={selectedTypeMember}
                 onChange={(e) => {
@@ -120,7 +117,7 @@ export default function AsideMyProjectsPage({
                     {formatTypeUserInProject(typeMember)}
                   </option>
                 ))}
-              </Form.Control>
+              </Form.Select>
             </div>
 
             <button

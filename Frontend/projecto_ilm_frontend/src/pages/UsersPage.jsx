@@ -9,14 +9,14 @@ import {
 } from "../utilities/services";
 import { useState, useEffect } from "react";
 import { formatLab } from "../utilities/converters";
-import { Cookies } from "react-cookie";
 import InviteProjectModal from "../components/modals/InviteProjectModal";
 import TablePagination from "../components/paginations/TablePagination";
+import Cookies from "js-cookie";
 
 export default function UsersPage() {
   const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
   const isSmallMobile = useMediaQuery({ query: "(max-width: 575px)" });
-  const userSystemUsername = new Cookies().get("systemUsername");
+  const userSystemUsername = Cookies.get("systemUsername");
   const [allUsers, setAllUsers] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
@@ -28,6 +28,9 @@ export default function UsersPage() {
   const isPhone = useMediaQuery({ query: "(max-width: 767px)" });
   const [showInviteModal, setShowInviteModal] = useState(false);
   const NUMBER_OF_USERS_PAGE = 6;
+  const [currentLanguage, setCurrentLanguage] = useState(
+    Cookies.get("user-language") || "ENGLISH"
+  );
   const rejectedUsers = [];
 
   useEffect(() => {
@@ -68,10 +71,10 @@ export default function UsersPage() {
 
   return (
     <>
-      <AppNavbar />
+      <AppNavbar setCurrentLanguage={setCurrentLanguage} />
       <div
         className={isMobile ? "ilm-page-mobile" : "ilm-pageb"}
-        style={{ padding: "15px 30px" }}
+        style={{ padding: !isSmallMobile && "15px 70px" }}
       >
         <h1 className="page-title">
           <span className="app-slogan-1">All </span>
@@ -274,15 +277,27 @@ export default function UsersPage() {
                                         transform: "translateY(5px)",
                                       }}
                                     >
-                                      <span
-                                        style={{
-                                          height: "100%",
-                                          display: "flex",
-                                          alignItems: "center",
-                                        }}
-                                      >
-                                        This user has a private profile
-                                      </span>
+                                      {!isSmallMobile ? (
+                                        <span
+                                          style={{
+                                            height: "100%",
+                                            display: "flex",
+                                            alignItems: "center",
+                                          }}
+                                        >
+                                          This user has a private profile
+                                        </span>
+                                      ) : (
+                                        <span
+                                          style={{
+                                            height: "100%",
+                                            display: "flex",
+                                            alignItems: "center",
+                                          }}
+                                        >
+                                          Private profile
+                                        </span>
+                                      )}
                                     </Alert>
                                   </div>
                                 )}

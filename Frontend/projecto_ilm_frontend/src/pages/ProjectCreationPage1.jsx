@@ -196,7 +196,10 @@ export default function ProjectCreationPage1() {
         </h1>
         <Row className="project-creation-page">
           {isTablet && (
-            <Row className="row-display" style={{ marginTop: "30px" }}>
+            <Row
+              className="row-display"
+              style={{ marginTop: "30px", marginBottom: "30px" }}
+            >
               <Col xs={6} sm={5}>
                 <InputForm
                   label={t`Project Name`}
@@ -213,18 +216,18 @@ export default function ProjectCreationPage1() {
                   <label htmlFor="lab-drop-down" className="custom-label">
                     <Trans>Laboratory</Trans>
                   </label>
-                  <Form.Control
-                    as="select"
+                  <Form.Select
                     className="custom-focus"
                     value={selectedLab}
                     onChange={(e) => setSelectedLab(e.target.value)}
+                    style={{ width: "110px" }}
                   >
                     {labs.map((lab) => (
                       <option key={lab.local} value={lab.local}>
                         {formatLab(lab.local)}
                       </option>
                     ))}
-                  </Form.Control>
+                  </Form.Select>
                 </div>
               </Col>
               <Col xs={6} sm={2}>
@@ -239,6 +242,7 @@ export default function ProjectCreationPage1() {
                     value={startDate}
                     min={getTomorrowDate()}
                     onChange={(e) => setStartDate(e.target.value)}
+                    style={{ minWidth: "95px" }}
                   ></input>
                 </div>
               </Col>
@@ -254,6 +258,7 @@ export default function ProjectCreationPage1() {
                     value={endDate}
                     min={startDate ? getOneWeekAfterStartDate(startDate) : ""}
                     onChange={(e) => setEndDate(e.target.value)}
+                    style={{ minWidth: "95px" }}
                   ></input>
                 </div>
               </Col>
@@ -264,7 +269,9 @@ export default function ProjectCreationPage1() {
               className="div-half-col"
               style={{ height: "50%", marginBottom: isTablet && "30px" }}
             >
-              <label className="custom-label"><Trans>Project Image</Trans></label>
+              <label className="custom-label">
+                <Trans>Project Image</Trans>
+              </label>
               <div className="div-img-project">
                 {preview ? (
                   <Image
@@ -328,18 +335,18 @@ export default function ProjectCreationPage1() {
                     <label htmlFor="lab-drop-down" className="custom-label">
                       <Trans>Laboratory</Trans>
                     </label>
-                    <Form.Control
-                      as="select"
+                    <Form.Select
                       className="custom-focus"
                       value={selectedLab}
                       onChange={(e) => setSelectedLab(e.target.value)}
+                      style={{ width: "110px" }}
                     >
                       {labs.map((lab) => (
                         <option key={lab.local} value={lab.local}>
                           {formatLab(lab.local)}
                         </option>
                       ))}
-                    </Form.Control>
+                    </Form.Select>
                   </div>
                 </Col>
                 <Col sm={2}>
@@ -353,6 +360,7 @@ export default function ProjectCreationPage1() {
                       value={startDate}
                       min={getTomorrowDate()}
                       onChange={(e) => setStartDate(e.target.value)}
+                      style={{ minWidth: "95px" }}
                     ></input>
                   </div>
                 </Col>
@@ -367,6 +375,7 @@ export default function ProjectCreationPage1() {
                       value={endDate}
                       min={startDate ? getOneWeekAfterStartDate(startDate) : ""}
                       onChange={(e) => setEndDate(e.target.value)}
+                      style={{ minWidth: "95px" }}
                     ></input>
                   </div>
                 </Col>

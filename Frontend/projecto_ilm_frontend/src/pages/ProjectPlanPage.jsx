@@ -110,6 +110,7 @@ const ProjectPlanPage = () => {
   );
   const locale = currentLanguage === "PORTUGUESE" ? "por" : "eng";
   const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
+  const isSmallMobile = useMediaQuery({ query: "(max-width: 575px)" });
 
   // Fetch tasks data
   const fetchData = async () => {
@@ -141,9 +142,7 @@ const ProjectPlanPage = () => {
 
   useEffect(() => {
     if (taskSystemTitle) {
-      const taskToOpen = tasks.find(
-        (task) => task.id === taskSystemTitle
-      );
+      const taskToOpen = tasks.find((task) => task.id === taskSystemTitle);
       if (taskToOpen) {
         handleTaskClick(taskToOpen);
       }
@@ -225,7 +224,7 @@ const ProjectPlanPage = () => {
         (member) =>
           member.type === "CREATOR" || member.type === "CREATOR_INCHARGE"
       )?.id,
-      inChargeId: inChargeMember?.id || null,
+      inChargeId: inChargeMember?.id,
       systemProjectName: systemProjectName,
     };
 
@@ -425,12 +424,14 @@ const ProjectPlanPage = () => {
     return <div>Loading...</div>;
   }
 
-  
-
   return (
     <>
-      <AppNavbar setCurrentLanguage={setCurrentLanguage}  />
-      <div className="bckg-color-ilm-page ilm-pageb">
+      <AppNavbar setCurrentLanguage={setCurrentLanguage} />
+      <div
+        className={
+          !isMobile ? "bckg-color-ilm-page ilm-pageb" : "ilm-pageb-noheight"
+        }
+      >
         <ProjectTabs
           typeOfUserSeingProject={userSeingTasksType}
           projectName={projectName}
@@ -438,96 +439,117 @@ const ProjectPlanPage = () => {
         <Container style={{ height: "91%" }}>
           <Row>
             <Row>
-              <Button
-                onClick={() => setIsAddModalVisible(true)}
-                disabled={["CANCELED", "READY"].includes(projectState)}
-              >
-                <Trans>Add New Task</Trans>
-              </Button>
-              {!isMobile && (<Form.Group controlId="viewModeSelector">
-                <Form.Label>
-                  <Trans>View Mode</Trans>
-                </Form.Label>
-                <Form.Control
-                  as="select"
-                  value={viewMode}
-                  onChange={handleViewModeChange}
-                  disabled={isMobile || ["CANCELED", "READY"].includes(projectState)}
+              {!isMobile && (
+                <Col md={6}>
+                  <Form.Group controlId="viewModeSelector">
+                    <Form.Label>
+                      <Trans>View Mode</Trans>
+                    </Form.Label>
+                    <Form.Select
+                      value={viewMode}
+                      onChange={handleViewModeChange}
+                      disabled={
+                        isMobile || ["CANCELED", "READY"].includes(projectState)
+                      }
+                    >
+                      <option value={ViewMode.Day}>
+                        <Trans>Day</Trans>
+                      </option>
+                      <option value={ViewMode.Month}>
+                        <Trans>Month</Trans>
+                      </option>
+                      <option value={ViewMode.Year}>
+                        <Trans>Year</Trans>
+                      </option>
+                    </Form.Select>
+                  </Form.Group>
+                </Col>
+              )}
+              <Col xs={12} sm={12} md={6}>
+                <div
+                  style={{
+                    height: "100%",
+                    width: "100%",
+                    display: "flex",
+                    alignItems: "flex-end",
+                    justifyContent: "center",
+                  }}
                 >
-                  <option value={ViewMode.Day}>
-                    <Trans>Day</Trans>
-                  </option>
-                  <option value={ViewMode.Month}>
-                    <Trans>Month</Trans>
-                  </option>
-                  <option value={ViewMode.Year}>
-                    <Trans>Year</Trans>
-                  </option>
-                </Form.Control>
-              </Form.Group>)}
-              
+                  <Button
+                    onClick={() => setIsAddModalVisible(true)}
+                    disabled={["CANCELED", "READY"].includes(projectState)}
+                    className="submit-button"
+                    style={{ width: "80%" }}
+                  >
+                    <Trans>Add New Task</Trans>
+                  </Button>
+                </div>
+              </Col>
             </Row>
             <Row>
-            <div style={{ marginTop: "15px" }}>
-              <h5>
-                <Trans>Legend</Trans>:
-              </h5>
-            </div>
-            <div>
-              <ul>
-                <li>
-                  <span
-                    style={{
-                      backgroundColor: "#8BC34A",
-                      padding: "2px 8px",
-                      borderRadius: "4px",
-                    }}
-                  >
-                    <Trans>DONE</Trans>
-                  </span>{" "}
-                  - <Trans>Completed tasks</Trans>
-                </li>
-                <li>
-                  <span
-                    style={{
-                      backgroundColor: "#FFEB3B",
-                      padding: "2px 8px",
-                      borderRadius: "4px",
-                    }}
-                  >
-                    <Trans>IN PROGRESS</Trans>
-                  </span>{" "}
-                  - <Trans>Tasks in progress</Trans>
-                </li>
-                <li>
-                  <span
-                    style={{
-                      backgroundColor: "#F44336",
-                      padding: "2px 8px",
-                      borderRadius: "4px",
-                    }}
-                  >
-                    <Trans>PLANNED</Trans>
-                  </span>{" "}
-                  - <Trans>Planned tasks</Trans>
-                </li>
-                {!isMobile && (  <li>
-                  <span
-                    style={{
-                      backgroundColor: "#3F51B5",
-                      padding: "2px 8px",
-                      borderRadius: "4px",
-                    }}
-                  >
-                    <Trans>PROJECT</Trans>
-                  </span>{" "}
-                  - <Trans>Project</Trans>
-                </li>)}
-              
-              </ul>
-            </div>
-          </Row>
-            <Row>
+              <div style={{ marginTop: "15px" }}>
+                <h5>
+                  <Trans>Legend</Trans>:
+                </h5>
+              </div>
+              <div>
+                <ul
+                  style={{ display: "flex", flexDirection: "row", gap: "50px" }}
+                >
+                  <li>
+                    <span
+                      style={{
+                        backgroundColor: "#8BC34A",
+                        padding: "2px 8px",
+                        borderRadius: "4px",
+                      }}
+                    >
+                      <Trans>DONE</Trans>
+                    </span>{" "}
+                    - <Trans>Completed tasks</Trans>
+                  </li>
+                  <li>
+                    <span
+                      style={{
+                        backgroundColor: "#FFEB3B",
+                        padding: "2px 8px",
+                        borderRadius: "4px",
+                      }}
+                    >
+                      <Trans>IN PROGRESS</Trans>
+                    </span>{" "}
+                    - <Trans>Tasks in progress</Trans>
+                  </li>
+                  <li>
+                    <span
+                      style={{
+                        backgroundColor: "#F44336",
+                        padding: "2px 8px",
+                        borderRadius: "4px",
+                      }}
+                    >
+                      <Trans>PLANNED</Trans>
+                    </span>{" "}
+                    - <Trans>Planned tasks</Trans>
+                  </li>
+                  {!isMobile && (
+                    <li>
+                      <span
+                        style={{
+                          backgroundColor: "#3F51B5",
+                          padding: "2px 8px",
+                          borderRadius: "4px",
+                        }}
+                      >
+                        <Trans>PROJECT</Trans>
+                      </span>{" "}
+                      - <Trans>Project</Trans>
+                    </li>
+                  )}
+                </ul>
+              </div>
+            </Row>
+            <Row id="gant-row-chart-container">
               {isMobile ? (
                 tasks.map(
                   (task) =>
@@ -564,9 +586,12 @@ const ProjectPlanPage = () => {
                       : undefined
                   }
                   listCellWidth={listCellWidth}
-                  columnWidth={100}
+                  columnWidth={80}
                   TooltipContent={CustomTooltipContent}
                   locale={locale}
+                  rowHeight={50}
+                  ganttHeight={350}
+                  todayColor={"rgba(30, 40, 82,0.2)"}
                 />
               )}
             </Row>
@@ -577,7 +602,7 @@ const ProjectPlanPage = () => {
                 <Trans>Project Progress</Trans>:
               </h5>
             </div>
-            <div>
+            <div style={{ width: "97.5%" }}>
               <ProgressBar percentage={percentage} status={projectState} />
             </div>
           </Row>

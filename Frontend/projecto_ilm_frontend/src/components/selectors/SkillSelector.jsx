@@ -194,8 +194,7 @@ const SkillSelector = ({ selectedSkills, setSelectedSkills }) => {
             <Form.Label>
               <Trans>Skill Type</Trans>
             </Form.Label>
-            <Form.Control
-              as="select"
+            <Form.Select
               value={newSkillType}
               onChange={(e) => setNewSkillType(e.target.value)}
               className="custom-focus"
@@ -215,7 +214,7 @@ const SkillSelector = ({ selectedSkills, setSelectedSkills }) => {
               <option value="TOOLS">
                 <Trans>Tools</Trans>
               </option>
-            </Form.Control>
+            </Form.Select>
           </Form.Group>
         </Modal.Body>
         <Modal.Footer>
