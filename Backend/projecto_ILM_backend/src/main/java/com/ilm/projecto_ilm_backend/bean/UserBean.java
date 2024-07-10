@@ -705,6 +705,8 @@ public class UserBean {
                                 projectDto.setSystemName(project.getSystemName());
                                 projectDto.setTypeMember(up.getType().toString());
                                 projectDto.setStatus(project.getStatus().toString());
+                                projectDto.setCreatedDate(project.getCreatedAt());
+
                                 return projectDto;
                             }).collect(Collectors.toList()));
                     

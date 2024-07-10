@@ -18,6 +18,7 @@ import {
   Tab,
   Nav,
   Modal,
+  Form,
 } from "react-bootstrap";
 import Cookies from "js-cookie";
 import { CSSTransition } from "react-transition-group";
@@ -47,6 +48,8 @@ const UserProfile = () => {
   const [activeKey, setActiveKey] = useState(section || "projects");
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [pendingProjectToReject, setPendingProjectToReject] = useState(null);
+  const [projectFilter, setProjectFilter] = useState("");
+  const [sortOrder, setSortOrder] = useState("asc");
   const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
   const isTablet = useMediaQuery({ query: "(max-width: 991px)" });
   const navigate = useNavigate();
@@ -216,6 +219,19 @@ const UserProfile = () => {
       )
     : [];
 
+  const filteredProjects = nonPendingProjects.filter(
+    (project) =>
+      !projectFilter || project.status.toLowerCase() === projectFilter
+  );
+
+  const sortedProjects = filteredProjects.sort((a, b) => {
+    if (sortOrder === "asc") {
+      return new Date(a.createdDate) - new Date(b.createdDate);
+    } else {
+      return new Date(b.createdDate) - new Date(a.createdDate);
+    }
+  });
+
   const pendingProjects = profile.projects
     ? profile.projects.filter(
         (project) =>
@@ -223,6 +239,11 @@ const UserProfile = () => {
           project.typeMember === "PENDING_BY_INVITATION"
       )
     : [];
+
+  const clearFilters = () => {
+    setProjectFilter("");
+    setSortOrder("asc");
+  };
 
   return (
     <>
@@ -363,10 +384,10 @@ const UserProfile = () => {
                       style={{ height: "100%", marginTop: isMobile && "30px" }}
                     >
                       {isPrivate ? (
-                         <div style={{ marginTop:"50%" }}>
-                         <Alert variant="info" style={{ textAlign: "center" }}>
-                           <Trans>This profile is private.</Trans>
-                         </Alert>
+                        <div style={{ marginTop: "50%" }}>
+                          <Alert variant="info" style={{ textAlign: "center" }}>
+                            <Trans>This profile is private.</Trans>
+                          </Alert>
                         </div>
                       ) : (
                         <Tab.Container
@@ -405,6 +426,77 @@ const UserProfile = () => {
                               eventKey="projects"
                               style={{ height: "100%" }}
                             >
+                              <Form>
+                                <Row>
+                                  <Col md={5}>
+                                    <Form.Group className="mb-3">
+                                      <Form.Label>
+                                        <Trans>Status:</Trans>
+                                      </Form.Label>
+                                      <Form.Control
+                                        as="select"
+                                        value={projectFilter}
+                                        onChange={(e) =>
+                                          setProjectFilter(e.target.value)
+                                        }
+                                      >
+                                        <option value="">
+                                          <Trans>All</Trans>
+                                        </option>
+                                        <option value="planning">
+                                          <Trans>Planning</Trans>
+                                        </option>
+                                        <option value="ready">
+                                          <Trans>Ready</Trans>
+                                        </option>
+                                        <option value="approved">
+                                          <Trans>Approved</Trans>
+                                        </option>
+                                        <option value="in_progress">
+                                          <Trans>In Progress</Trans>
+                                        </option>
+                                        <option value="canceled">
+                                          <Trans>Canceled</Trans>
+                                        </option>
+                                        <option value="finished">
+                                          <Trans>Finished</Trans>
+                                        </option>
+                                      </Form.Control>
+                                    </Form.Group>
+                                  </Col>
+                                  <Col md={5}>
+                                    <Form.Group className="mb-3">
+                                      <Form.Label>
+                                        <Trans>Date:</Trans>
+                                      </Form.Label>
+                                      <Form.Control
+                                        as="select"
+                                        value={sortOrder}
+                                        onChange={(e) =>
+                                          setSortOrder(e.target.value)
+                                        }
+                                      >
+                                        <option value="asc">
+                                          <Trans>Ascending</Trans>
+                                        </option>
+                                        <option value="desc">
+                                          <Trans>Descending</Trans>
+                                        </option>
+                                      </Form.Control>
+                                    </Form.Group>
+                                  </Col>
+                                  <Col md={2}>
+                                    <div style={{display:"flex", alignItems:"center", height:"100%"}}>
+                                      <Button
+                                        variant="secondary"
+                                        onClick={clearFilters}
+                                      >
+                                        <Trans>Clear</Trans>
+                                      </Button>
+                                    </div>
+                                  </Col>
+                                </Row>
+                              </Form>
                               <Card
                                 className="card-container"
                                 style={{
@@ -421,8 +513,8 @@ const UserProfile = () => {
                                     marginLeft: isMobile && "0px",
                                   }}
                                 >
-                                  {nonPendingProjects.length > 0 ? (
-                                    nonPendingProjects.map((project) => (
+                                  {sortedProjects.length > 0 ? (
+                                    sortedProjects.map((project) => (
                                       <div
                                         key={project.name}
                                         id="application-request-card"
@@ -436,11 +528,7 @@ const UserProfile = () => {
                                           className="mb-1"
                                         >
                                           <strong>
-                                            <Trans>Project </Trans>
-                                            {!isMobile &&
-                                              currentLanguage === "ENGLISH" &&
-                                              "Name"}
-                                            :
+                                            <Trans>Project </Trans>:
                                           </strong>
                                           {project.name}
                                         </p>
@@ -449,7 +537,7 @@ const UserProfile = () => {
                                           className="mb-1"
                                         >
                                           <strong>
-                                            <Trans>Type </Trans>
+                                            <Trans>Type </Trans>{" "}
                                             {!isMobile &&
                                               currentLanguage === "ENGLISH" &&
                                               "Member"}
@@ -495,13 +583,13 @@ const UserProfile = () => {
                                           <div>
                                             <p className="mb-1">
                                               <strong>
-                                                <Trans>Project Name</Trans>:
+                                                <Trans>Project:</Trans>:
                                               </strong>{" "}
                                               {project.name}
                                             </p>
                                             <p className="mb-1">
                                               <strong>
-                                                <Trans>Status</Trans>:
+                                                <Trans>Status:</Trans>:
                                               </strong>{" "}
                                               {project.status}
                                             </p>

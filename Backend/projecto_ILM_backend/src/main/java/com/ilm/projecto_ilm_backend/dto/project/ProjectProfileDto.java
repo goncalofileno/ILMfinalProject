@@ -2,12 +2,19 @@ package com.ilm.projecto_ilm_backend.dto.project;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
 
+import java.time.LocalDateTime;
+
 @XmlRootElement
 public class ProjectProfileDto {
+
     private String name;
     private String systemName;
     private String typeMember;
     private String status;
+    private LocalDateTime createdDate;
+
+    public ProjectProfileDto() {
+    }
 
 // Getters and Setters
 
@@ -42,4 +49,13 @@ public class ProjectProfileDto {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(LocalDateTime createdDate) {
+        this.createdDate = createdDate;
+    }
+
 }
