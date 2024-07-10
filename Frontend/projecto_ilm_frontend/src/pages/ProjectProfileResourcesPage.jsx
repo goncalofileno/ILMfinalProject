@@ -276,8 +276,7 @@ export default function ProjectProfileResourcesPage() {
                   </InputGroup>
                 </Col>
                 <Col xs={3} sm={3}>
-                  <Form.Control
-                    as="select"
+                  <Form.Select
                     className="custom-focus"
                     style={{ marginBottom: "5px" }}
                     value={brand}
@@ -293,9 +292,8 @@ export default function ProjectProfileResourcesPage() {
                         {brand}
                       </option>
                     ))}
-                  </Form.Control>
-                  <Form.Control
-                    as="select"
+                  </Form.Select>
+                  <Form.Select
                     className="custom-focus"
                     value={supplier}
                     onChange={(e) => {
@@ -310,7 +308,7 @@ export default function ProjectProfileResourcesPage() {
                         {supplier}
                       </option>
                     ))}
-                  </Form.Control>
+                  </Form.Select>
                 </Col>
                 <Col xs={1} sm={1}></Col>
               </Row>

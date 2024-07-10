@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Modal, Button, Form, ListGroup } from "react-bootstrap";
 import { createTask } from "../../utilities/services";
 import Cookies from "js-cookie";
-import './AddTaskModal.css';
+import "./AddTaskModal.css";
 import { Trans, t } from "@lingui/macro";
 import ReactQuill from "react-quill";
 
@@ -14,7 +14,6 @@ const AddTaskModal = ({
   tasks,
   systemProjectName,
 }) => {
-
   const handleQuillChange = (field, value) => {
     handleInputChange({
       target: {
@@ -129,7 +128,10 @@ const AddTaskModal = ({
     );
     if (!member) return;
     setNewTaskDetails((prevDetails) => {
-      const newMembersOfTask = [...prevDetails.membersOfTask, { ...member, type: "" }];
+      const newMembersOfTask = [
+        ...prevDetails.membersOfTask,
+        { ...member, type: "" },
+      ];
       const newInCharge = newMembersOfTask.find(
         (taskMember) => taskMember.systemUsername === prevDetails.inCharge
       )
@@ -193,7 +195,9 @@ const AddTaskModal = ({
     (task) =>
       !newTaskDetails.dependentTasks.some(
         (depTask) => depTask.id === task.rawTask.id
-      ) && task.type !== "project" && task.type !== "milestone" // Exclui tasks do tipo projeto e milestone
+      ) &&
+      task.type !== "project" &&
+      task.type !== "milestone" // Exclui tasks do tipo projeto e milestone
   );
 
   const handleCloseModal = () => {
@@ -222,9 +226,16 @@ const AddTaskModal = ({
   };
 
   return (
-    <Modal show={show} onHide={handleCloseModal} dialogClassName="custom-modal">
+    <Modal
+      show={show}
+      onHide={handleCloseModal}
+      dialogClassName="custom-modal"
+      id="add-task-modal"
+    >
       <Modal.Header closeButton>
-        <Modal.Title><Trans>Add New Task</Trans></Modal.Title>
+        <Modal.Title>
+          <Trans>Add New Task</Trans>
+        </Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form>
@@ -232,7 +243,9 @@ const AddTaskModal = ({
             <div className="col-md-6">
               <Form.Group controlId="formTaskTitle">
                 <Form.Label>
-                  <strong><Trans>Title</Trans>:</strong>
+                  <strong>
+                    <Trans>Title</Trans>:
+                  </strong>
                 </Form.Label>
                 <Form.Control
                   type="text"
@@ -247,7 +260,9 @@ const AddTaskModal = ({
               </Form.Group>
               <Form.Group controlId="formTaskDescription">
                 <Form.Label>
-                  <strong><Trans>Description</Trans>:</strong>
+                  <strong>
+                    <Trans>Description</Trans>:
+                  </strong>
                 </Form.Label>
                 <ReactQuill
                   value={newTaskDetails.description || ""}
@@ -257,7 +272,9 @@ const AddTaskModal = ({
               </Form.Group>
               <Form.Group controlId="formTaskInitialDate">
                 <Form.Label>
-                  <strong><Trans>Initial Date</Trans>:</strong>
+                  <strong>
+                    <Trans>Initial Date</Trans>:
+                  </strong>
                 </Form.Label>
                 <Form.Control
                   type="date"
@@ -268,7 +285,9 @@ const AddTaskModal = ({
               </Form.Group>
               <Form.Group controlId="formTaskFinalDate">
                 <Form.Label>
-                  <strong><Trans>Final Date</Trans>:</strong>
+                  <strong>
+                    <Trans>Final Date</Trans>:
+                  </strong>
                 </Form.Label>
                 <Form.Control
                   type="date"
@@ -278,7 +297,8 @@ const AddTaskModal = ({
                   min={
                     newTaskDetails.initialDate
                       ? new Date(
-                          new Date(newTaskDetails.initialDate).getTime() + 86400000
+                          new Date(newTaskDetails.initialDate).getTime() +
+                            86400000
                         )
                           .toISOString()
                           .split("T")[0]
@@ -288,25 +308,30 @@ const AddTaskModal = ({
               </Form.Group>
               <Form.Group controlId="formTaskOutColaboration">
                 <Form.Label>
-                  <strong><Trans>Out Colaboration</Trans>:</strong>
+                  <strong>
+                    <Trans>Out Colaboration</Trans>:
+                  </strong>
                 </Form.Label>
                 <Form.Control
                   as="textarea"
                   name="outColaboration"
                   type="text"
                   value={newTaskDetails.outColaboration || ""}
-                  onChange={(value) => handleQuillChange("outColaboration", value)}
-                  style={{ height: "70px"}}
+                  onChange={(value) =>
+                    handleQuillChange("outColaboration", value)
+                  }
+                  style={{ height: "70px" }}
                 />
               </Form.Group>
             </div>
             <div className="col-md-6">
               <Form.Group controlId="formTaskInCharge">
                 <Form.Label>
-                  <strong><Trans>In Charge</Trans>:</strong>
+                  <strong>
+                    <Trans>In Charge</Trans>:
+                  </strong>
                 </Form.Label>
-                <Form.Control
-                  as="select"
+                <Form.Select
                   name="inCharge"
                   value={newTaskDetails.inCharge}
                   onChange={handleInputChange}
@@ -316,11 +341,13 @@ const AddTaskModal = ({
                       {member.name}
                     </option>
                   ))}
-                </Form.Control>
+                </Form.Select>
               </Form.Group>
               <Form.Group controlId="formTaskMembers">
                 <Form.Label>
-                  <strong><Trans>Members</Trans>:</strong>
+                  <strong>
+                    <Trans>Members</Trans>:
+                  </strong>
                 </Form.Label>
                 <ListGroup className="fixed-height-list2">
                   {newTaskDetails.membersOfTask.map((member) => (
@@ -331,37 +358,40 @@ const AddTaskModal = ({
                         "(Creator)"}
                       {member.type !== "CREATOR" &&
                         member.type !== "CREATOR_INCHARGE" && (
-                        <Button
-                          variant="danger"
-                          size="sm"
-                          onClick={() => handleRemoveMember(member.id)}
-                          className="mini-card-button"
-                          disabled={member.type === "CREATOR"} // Disable remove button for creator
-                        >
-                          X
-                        </Button>
-                      )}
+                          <Button
+                            variant="danger"
+                            size="sm"
+                            onClick={() => handleRemoveMember(member.id)}
+                            className="mini-card-button"
+                            disabled={member.type === "CREATOR"} // Disable remove button for creator
+                          >
+                            X
+                          </Button>
+                        )}
                     </ListGroup.Item>
                   ))}
                 </ListGroup>
-                <Form.Control
-                  as="select"
+                <Form.Select
                   onChange={(e) => {
                     handleAddMember(e.target.value);
                     e.target.value = ""; // Reset the selector
                   }}
                 >
-                  <option value=""><Trans>Add New Member</Trans></option>
+                  <option value="">
+                    <Trans>Add New Member</Trans>
+                  </option>
                   {availableMembers.map((member) => (
                     <option key={member.id} value={member.systemUsername}>
                       {member.name}
                     </option>
                   ))}
-                </Form.Control>
+                </Form.Select>
               </Form.Group>
               <Form.Group controlId="formTaskDependentTasks">
                 <Form.Label>
-                  <strong><Trans>Dependent Tasks</Trans>:</strong>
+                  <strong>
+                    <Trans>Dependent Tasks</Trans>:
+                  </strong>
                 </Form.Label>
                 <ListGroup className="fixed-height-list2">
                   {newTaskDetails.dependentTasks.map((task) => (
@@ -378,20 +408,21 @@ const AddTaskModal = ({
                     </ListGroup.Item>
                   ))}
                 </ListGroup>
-                <Form.Control
-                  as="select"
+                <Form.Select
                   onChange={(e) => {
                     handleAddDependentTask(e.target.value);
                     e.target.value = ""; // Reset the selector
                   }}
                 >
-                  <option value=""><Trans>Add New Dependent Task</Trans></option>
+                  <option value="">
+                    <Trans>Add New Dependent Task</Trans>
+                  </option>
                   {availableTasks.map((task) => (
                     <option key={task.rawTask.id} value={task.rawTask.id}>
                       {task.name}
                     </option>
                   ))}
-                </Form.Control>
+                </Form.Select>
               </Form.Group>
             </div>
           </div>

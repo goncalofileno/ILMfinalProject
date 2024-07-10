@@ -128,9 +128,9 @@ const CreateProfilePage = () => {
 
   const validateForm = () => {
     const errors = {};
-    if (!firstName) errors.firstName = (t`First Name is required.`);
-    if (!lastName) errors.lastName = (t`Last Name is required.`);
-    if (!office) errors.office = (t`Office is required.`);
+    if (!firstName) errors.firstName = t`First Name is required.`;
+    if (!lastName) errors.lastName = t`Last Name is required.`;
+    if (!office) errors.office = t`Office is required.`;
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -212,7 +212,9 @@ const CreateProfilePage = () => {
         )}
         <Row className="justify-content-md-center mt-4">
           <Col md="10">
-            <h2 className="text-center mb-4"><Trans>Create Profile</Trans></h2>
+            <h2 className="text-center mb-4">
+              <Trans>Create Profile</Trans>
+            </h2>
             <Form onSubmit={handleSubmit}>
               <Row>
                 <Col md={6}>
@@ -226,7 +228,9 @@ const CreateProfilePage = () => {
                     />
                   )}
                   <Form.Group controlId="formFileUpload" className="mb-3">
-                    <Form.Label className="custom-label"><Trans>Photo</Trans></Form.Label>
+                    <Form.Label className="custom-label">
+                      <Trans>Photo</Trans>
+                    </Form.Label>
                     <Form.Control
                       type="file"
                       onChange={handleFileChange}
@@ -240,7 +244,9 @@ const CreateProfilePage = () => {
                   </Form.Group>
 
                   <Form.Group controlId="formBio" className="mb-3">
-                    <Form.Label className="custom-label"><Trans>Bio</Trans></Form.Label>
+                    <Form.Label className="custom-label">
+                      <Trans>Bio</Trans>
+                    </Form.Label>
                     <Form.Control
                       as="textarea"
                       rows={3}
@@ -256,7 +262,8 @@ const CreateProfilePage = () => {
                   <InputForm
                     label={
                       <>
-                        <Trans>First Name</Trans> <span className="text-danger">*</span>
+                        <Trans>First Name</Trans>{" "}
+                        <span className="text-danger">*</span>
                       </>
                     }
                     type="text"
@@ -271,7 +278,8 @@ const CreateProfilePage = () => {
                   <InputForm
                     label={
                       <>
-                        <Trans>Last Name</Trans> <span className="text-danger">*</span>
+                        <Trans>Last Name</Trans>{" "}
+                        <span className="text-danger">*</span>
                       </>
                     }
                     type="text"
@@ -303,26 +311,32 @@ const CreateProfilePage = () => {
                     handleOnBlur={checkUsernameAvailability}
                     onBlurActive={true}
                   />
-                  {loading && <div><Trans>Checking...</Trans></div>}
+                  {loading && (
+                    <div>
+                      <Trans>Checking...</Trans>
+                    </div>
+                  )}
 
                   <Form.Group controlId="formOffice" className="mb-3">
                     <Form.Label className="custom-label">
-                    <Trans>Office</Trans> <span className="text-danger">*</span>
+                      <Trans>Office</Trans>{" "}
+                      <span className="text-danger">*</span>
                     </Form.Label>
-                    <Form.Control
-                      as="select"
+                    <Form.Select
                       value={office}
                       onChange={(e) => setOffice(e.target.value)}
                       isInvalid={!!formErrors.office}
                       className="custom-focus"
                     >
-                      <option value=""><Trans>Select Office</Trans></option>
+                      <option value="">
+                        <Trans>Select Office</Trans>
+                      </option>
                       {labs.map((lab, index) => (
                         <option key={index} value={lab.local}>
                           {lab.local}
                         </option>
                       ))}
-                    </Form.Control>
+                    </Form.Select>
                     <Form.Control.Feedback type="invalid">
                       {formErrors.office}
                     </Form.Control.Feedback>
@@ -332,7 +346,7 @@ const CreateProfilePage = () => {
                     className="mb-3 custom-switch"
                   >
                     <Form.Label className="custom-label">
-                    <Trans>Public Profile</Trans>
+                      <Trans>Public Profile</Trans>
                     </Form.Label>
                     <Form.Check
                       type="switch"

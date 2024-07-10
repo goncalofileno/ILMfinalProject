@@ -163,13 +163,15 @@ function App() {
                   <Col>
                     {" "}
                     <div className="ilm-description">
-                    <Trans>Welcome to our Innovation Lab Management app, where
-                      creativity meets collaboration and ideas turn into
-                      reality. With our app, you can manage and track your
-                      projects seamlessly, from brainstorming to implementation,
-                      ensuring every idea has the potential to flourish. Join us
-                      in driving progress and inspiring change, one innovative
-                      project at a time.</Trans>
+                      <Trans>
+                        Welcome to our Innovation Lab Management app, where
+                        creativity meets collaboration and ideas turn into
+                        reality. With our app, you can manage and track your
+                        projects seamlessly, from brainstorming to
+                        implementation, ensuring every idea has the potential to
+                        flourish. Join us in driving progress and inspiring
+                        change, one innovative project at a time.
+                      </Trans>
                     </div>
                     {!isSmallTablet && !isPhone ? (
                       <div className="div-project-button">
@@ -240,7 +242,9 @@ function App() {
             <Row>
               <Col xs={1} sm={1}></Col>
               <Col xs={10} sm={3}>
-                <h1 className="ilm-general-subTitle"><Trans>Projects</Trans></h1>
+                <h1 className="ilm-general-subTitle">
+                  <Trans>Projects</Trans>
+                </h1>
               </Col>
               {(isSmallTablet || isPhone) && <Col xs={1} sm={1}></Col>}
 

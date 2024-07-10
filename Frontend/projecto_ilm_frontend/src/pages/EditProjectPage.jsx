@@ -241,18 +241,18 @@ export default function EditProjectPage() {
                   <label htmlFor="lab-drop-down" className="custom-label">
                     <Trans>Laboratory</Trans>
                   </label>
-                  <Form.Control
-                    as="select"
+                  <Form.Select
                     className="custom-focus"
                     value={selectedLab}
                     onChange={handleInputChange(setSelectedLab)}
+                    style={{ width: "110px" }}
                   >
                     {labs.map((lab) => (
                       <option key={lab.local} value={lab.local}>
                         {formatLab(lab.local)}
                       </option>
                     ))}
-                  </Form.Control>
+                  </Form.Select>
                 </div>
               </Col>
               <Col xs={6} sm={2}>
@@ -265,6 +265,7 @@ export default function EditProjectPage() {
                     className="date-input"
                     value={startDate}
                     onChange={handleInputChange(setStartDate)}
+                    style={{ minWidth: "95px" }}
                   ></input>
                 </div>
               </Col>
@@ -280,6 +281,7 @@ export default function EditProjectPage() {
                     value={endDate}
                     onChange={handleInputChange(setEndDate)}
                     min={getNextDay(startDate)} // Set minimum date for end date
+                    style={{ minWidth: "95px" }}
                   ></input>
                 </div>
               </Col>
@@ -356,18 +358,18 @@ export default function EditProjectPage() {
                     <label htmlFor="lab-drop-down" className="custom-label">
                       <Trans>Laboratory</Trans>
                     </label>
-                    <Form.Control
-                      as="select"
+                    <Form.Select
                       className="custom-focus"
                       value={selectedLab}
                       onChange={handleInputChange(setSelectedLab)}
+                      style={{ width: "110px" }}
                     >
                       {labs.map((lab) => (
                         <option key={lab.local} value={lab.local}>
                           {formatLab(lab.local)}
                         </option>
                       ))}
-                    </Form.Control>
+                    </Form.Select>
                   </div>
                 </Col>
                 <Col sm={2}>
@@ -380,6 +382,7 @@ export default function EditProjectPage() {
                       className="date-input"
                       value={startDate}
                       onChange={handleInputChange(setStartDate)}
+                      style={{ minWidth: "95px" }}
                     ></input>
                   </div>
                 </Col>
@@ -394,6 +397,7 @@ export default function EditProjectPage() {
                       value={endDate}
                       onChange={handleInputChange(setEndDate)}
                       min={getNextDay(startDate)} // Set minimum date for end date
+                      style={{ minWidth: "95px" }}
                     ></input>
                   </div>
                 </Col>

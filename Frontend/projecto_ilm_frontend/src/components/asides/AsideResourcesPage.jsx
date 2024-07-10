@@ -65,8 +65,7 @@ export default function AsideResourcesPage({
               <Form.Label className="custom-label" style={{ color: "white" }}>
                 <Trans>Type</Trans>
               </Form.Label>
-              <Form.Control
-                as="select"
+              <Form.Select
                 className="custom-focus"
                 value={type}
                 onChange={handleTypeChange}
@@ -80,14 +79,13 @@ export default function AsideResourcesPage({
                     {formatResourceType(type)}
                   </option>
                 ))}
-              </Form.Control>
+              </Form.Select>
             </div>
             <div className="div-control-form">
               <Form.Label className="custom-label" style={{ color: "white" }}>
                 <Trans>Brand</Trans>
               </Form.Label>
-              <Form.Control
-                as="select"
+              <Form.Select
                 className="custom-focus"
                 value={brand}
                 onChange={handleBrandChange}
@@ -100,14 +98,13 @@ export default function AsideResourcesPage({
                     {brand}
                   </option>
                 ))}
-              </Form.Control>
+              </Form.Select>
             </div>
             <div className="div-control-form">
               <Form.Label className="custom-label" style={{ color: "white" }}>
                 <Trans>Supplier</Trans>
               </Form.Label>
-              <Form.Control
-                as="select"
+              <Form.Select
                 className="custom-focus"
                 value={supplier}
                 onChange={handleSupplierChange}
@@ -121,7 +118,7 @@ export default function AsideResourcesPage({
                     {supplier}
                   </option>
                 ))}
-              </Form.Control>
+              </Form.Select>
             </div>
             <button
               className="terciary-button"

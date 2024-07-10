@@ -49,10 +49,9 @@ export default function AsideProjectsTable({
           <div className={!isMobile ? "aside" : "aside-Mobile"}>
             <div className="div-control-form" id="first-div">
               <Form.Label className="custom-label" style={{ color: "white" }}>
-              <Trans>Lab</Trans>
+                <Trans>Lab</Trans>
               </Form.Label>
-              <Form.Control
-                as="select"
+              <Form.Select
                 className="custom-focus"
                 value={selectedLab}
                 onChange={(e) => {
@@ -63,20 +62,21 @@ export default function AsideProjectsTable({
                   );
                 }}
               >
-                <option value=""><Trans>All Labs</Trans></option>
+                <option value="">
+                  <Trans>All Labs</Trans>
+                </option>
                 {labs.map((lab, index) => (
                   <option key={index} value={lab.local}>
                     {formatLab(lab.local)}
                   </option>
                 ))}
-              </Form.Control>
+              </Form.Select>
             </div>
             <div className="div-control-form">
               <Form.Label className="custom-label" style={{ color: "white" }}>
-              <Trans>Status</Trans>
+                <Trans>Status</Trans>
               </Form.Label>
-              <Form.Control
-                as="select"
+              <Form.Select
                 className="custom-focus"
                 value={selectedStatus}
                 onChange={(e) => {
@@ -88,13 +88,15 @@ export default function AsideProjectsTable({
                 }}
               >
                 {" "}
-                <option value=""><Trans>All Status</Trans></option>
+                <option value="">
+                  <Trans>All Status</Trans>
+                </option>
                 {status.map((status, index) => (
                   <option key={index} value={status}>
                     {formatStatusDropDown(status)}
                   </option>
                 ))}
-              </Form.Control>
+              </Form.Select>
             </div>
             <div className="custom-switch" id="slots-switch">
               <Form.Label
@@ -117,7 +119,9 @@ export default function AsideProjectsTable({
               />
             </div>
             <div className="table-label-color">
-              <div id="your-projects-color"><Trans>Your Projects</Trans></div>
+              <div id="your-projects-color">
+                <Trans>Your Projects</Trans>
+              </div>
             </div>
             <button
               className="terciary-button"

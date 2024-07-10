@@ -467,6 +467,7 @@ public class TaskBean {
             if (teamMember.getId() != user.getId()) {
                 if (teamMember.getId() != user.getId()) {
                     if(!checkDoubleNotification(task.getTitle(), project.getSystemName(), teamMember.getSystemUsername(), user)) {
+                        System.out.println("checkou ? " + checkDoubleNotification(task.getTitle(), project.getSystemName(), teamMember.getSystemUsername(), user));
                         notificationBean.createTaskNotification(task.getTitle(), project.getSystemName(), user.getSystemUsername(), teamMember);
                     }
                 }
