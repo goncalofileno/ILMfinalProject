@@ -1424,7 +1424,7 @@ public class ProjectBean {
             project.setMotivation(projectUpdateDto.getMotivation());
             project.setLab(labDao.findbyLocal(WorkLocalENUM.valueOf(projectUpdateDto.getLab())));
 
-            if(projectUpdateDto.getMaxMembers() > MAX_PROJECT_MEMBERS_MAX || projectUpdateDto.getMaxMembers() < 1) return false;
+            if(projectUpdateDto.getMaxMembers() > MAX_PROJECT_MEMBERS_MAX || projectUpdateDto.getMaxMembers() < 1 || projectUpdateDto.getMaxMembers() < project.getUserProjects().size()) return false;
             project.setMaxMembers(projectUpdateDto.getMaxMembers());
 
             String keywordsList = null;

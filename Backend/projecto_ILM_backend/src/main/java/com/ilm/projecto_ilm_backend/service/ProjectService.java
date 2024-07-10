@@ -128,7 +128,6 @@ public class ProjectService {
         logger.info("Received a request to to receive all home projects a user from IP address: " + clientIP);
 
         try {
-            System.out.println("projetos :   " + projectBean.getProjectsDtosHome());
             return Response.ok(projectBean.getProjectsDtosHome()).build();
         } catch (Exception e) {
             logger.error("An error occurred while retrieving home projects: " + e.getMessage() + " from IP address: " + clientIP);

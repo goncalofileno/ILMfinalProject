@@ -45,8 +45,7 @@ export default function AsideProjectCreationPage2({
               <Form.Label className="custom-label" style={{ color: "white" }}>
                 <Trans>Lab</Trans>
               </Form.Label>
-              <Form.Control
-                as="select"
+              <Form.Select
                 className="custom-focus"
                 value={selectedLab}
                 onChange={(e) => {
@@ -62,7 +61,7 @@ export default function AsideProjectCreationPage2({
                     {formatLab(lab.local)}
                   </option>
                 ))}
-              </Form.Control>
+              </Form.Select>
             </div>
             <div className="div-control-form">
               <Form.Label className="custom-label" style={{ color: "white" }}>

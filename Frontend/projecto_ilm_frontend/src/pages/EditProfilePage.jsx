@@ -437,8 +437,7 @@ const EditProfilePage = () => {
                       <Trans>Office</Trans>{" "}
                       <span className="text-danger">*</span>
                     </Form.Label>
-                    <Form.Control
-                      as="select"
+                    <Form.Select
                       value={office}
                       onChange={(e) => setOffice(e.target.value)}
                       isInvalid={!!formErrors.office}
@@ -452,7 +451,7 @@ const EditProfilePage = () => {
                           {lab.local}
                         </option>
                       ))}
-                    </Form.Control>
+                    </Form.Select>
                     <Form.Control.Feedback type="invalid">
                       {formErrors.office}
                     </Form.Control.Feedback>

@@ -33,7 +33,7 @@ const EditTaskModal = ({
   };
 
   return (
-    <Modal show={show} onHide={handleClose}>
+    <Modal show={show} onHide={handleClose} id="edit-task-modal">
       <Modal.Header closeButton>
         <Modal.Title>
           <Trans>Edit Task</Trans>
@@ -60,6 +60,24 @@ const EditTaskModal = ({
                   {titleError}
                 </Form.Control.Feedback>
               </Form.Group>
+              <Form.Group controlId="formTaskStatus">
+                <Form.Label>
+                  <strong>
+                    <Trans>Status</Trans>:
+                  </strong>
+                </Form.Label>
+                <Form.Select
+                  name="status"
+                  value={taskDetails.status || ""}
+                  onChange={handleInputChange}
+                >
+                  <option value="PLANNED">{formatTaskStatus("PLANNED")}</option>
+                  <option value="IN_PROGRESS">
+                    {formatTaskStatus("IN_PROGRESS")}
+                  </option>
+                  <option value="DONE">{formatTaskStatus("DONE")}</option>
+                </Form.Select>
+              </Form.Group>
               <Form.Group controlId="formTaskDescription">
                 <Form.Label>
                   <strong>
@@ -72,25 +90,7 @@ const EditTaskModal = ({
                   style={{ height: "180px", marginBottom: "50px" }}
                 />
               </Form.Group>
-              <Form.Group controlId="formTaskStatus">
-                <Form.Label>
-                  <strong>
-                    <Trans>Status</Trans>:
-                  </strong>
-                </Form.Label>
-                <Form.Control
-                  as="select"
-                  name="status"
-                  value={taskDetails.status || ""}
-                  onChange={handleInputChange}
-                >
-                  <option value="PLANNED">{formatTaskStatus("PLANNED")}</option>
-                  <option value="IN_PROGRESS">
-                    {formatTaskStatus("IN_PROGRESS")}
-                  </option>
-                  <option value="DONE">{formatTaskStatus("DONE")}</option>
-                </Form.Control>
-              </Form.Group>
+
               <Form.Group controlId="formTaskInitialDate">
                 <Form.Label>
                   <strong>
@@ -149,7 +149,7 @@ const EditTaskModal = ({
                   onChange={(value) =>
                     handleQuillChange("outColaboration", value)
                   }
-                  style={{ height: "80px"}}
+                  style={{ height: "80px" }}
                 />
               </Form.Group>
               <Form.Group controlId="formTaskInCharge">
@@ -158,8 +158,7 @@ const EditTaskModal = ({
                     <Trans>In Charge</Trans>:
                   </strong>
                 </Form.Label>
-                <Form.Control
-                  as="select"
+                <Form.Select
                   name="inCharge"
                   value={taskDetails.inCharge || ""}
                   onChange={handleInputChange}
@@ -169,7 +168,7 @@ const EditTaskModal = ({
                       {member.name}
                     </option>
                   ))}
-                </Form.Control>
+                </Form.Select>
               </Form.Group>
               <Form.Group controlId="formTaskMembers">
                 <Form.Label>
@@ -199,8 +198,7 @@ const EditTaskModal = ({
                       </ListGroup.Item>
                     ))}
                 </ListGroup>
-                <Form.Control
-                  as="select"
+                <Form.Select
                   onChange={(e) => {
                     handleAddMember(e.target.value);
                     e.target.value = ""; 
@@ -214,7 +212,7 @@ const EditTaskModal = ({
                       {member.name}
                     </option>
                   ))}
-                </Form.Control>
+                </Form.Select>
               </Form.Group>
               <Form.Group controlId="formTaskDependentTasks">
                 <Form.Label>
@@ -238,8 +236,7 @@ const EditTaskModal = ({
                       </ListGroup.Item>
                     ))}
                 </ListGroup>
-                <Form.Control
-                  as="select"
+                <Form.Select
                   onChange={(e) => {
                     handleAddDependentTask(e.target.value);
                     e.target.value = ""; // Reset the selector
@@ -253,7 +250,7 @@ const EditTaskModal = ({
                       {task.name}
                     </option>
                   ))}
-                </Form.Control>
+                </Form.Select>
               </Form.Group>
             </div>
           </div>

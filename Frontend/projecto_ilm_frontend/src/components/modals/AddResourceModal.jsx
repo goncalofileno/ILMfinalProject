@@ -269,8 +269,7 @@ export default function AddResourceModal({
                     <Form.Label className="custom-label">
                       <Trans>Type</Trans>
                     </Form.Label>
-                    <Form.Control
-                      as="select"
+                    <Form.Select
                       className="custom-focus"
                       value={type}
                       onChange={(e) => setType(e.target.value)}
@@ -284,7 +283,7 @@ export default function AddResourceModal({
                           {formatResourceType(type)}
                         </option>
                       ))}
-                    </Form.Control>
+                    </Form.Select>
                   </div>
                 </div>
                 <div className="modal-row">

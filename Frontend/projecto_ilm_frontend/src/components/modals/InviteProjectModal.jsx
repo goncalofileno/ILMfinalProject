@@ -51,7 +51,7 @@ const InviteProjectModal = ({ show, handleClose, systemUsername }) => {
         setAlertVariant("success");
         setTimeout(() => {
           handleCloseModal();
-        }, 1500);
+        }, 1200);
       } else if (response.status === 409) {
         const errorMessage = await response.text();
         setAlertMessage(errorMessage);
@@ -89,8 +89,7 @@ const InviteProjectModal = ({ show, handleClose, systemUsername }) => {
               <Form.Label>
                 <Trans>Select Project</Trans>
               </Form.Label>
-              <Form.Control
-                as="select"
+              <Form.Select
                 value={selectedProject}
                 onChange={(e) => setSelectedProject(e.target.value)}
               >
@@ -102,7 +101,7 @@ const InviteProjectModal = ({ show, handleClose, systemUsername }) => {
                     {project.name}
                   </option>
                 ))}
-              </Form.Control>
+              </Form.Select>
             </Form.Group>
             <div className="d-flex justify-content-end mt-3">
               <Button

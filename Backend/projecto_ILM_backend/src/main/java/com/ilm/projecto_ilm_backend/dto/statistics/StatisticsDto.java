@@ -6,7 +6,7 @@ public class StatisticsDto {
     private int totalUsers;
     private double averageUsersInProject;
     private double averageExecutionTimePerProjectInMinutes;
-    private SupplierWithMostResourcesDto supplierWithMostResources;
+    private ArrayList<SupplierWithMostResourcesDto> supplierWithMostResources;
     private ArrayList<MembersPerLabDto> membersPerLab;
     private ArrayList<ProjectsPerLabDto> projectsPerLab;
     private ArrayList<ProjectsStatusNumberPerLab> projectsStatusNumberPerLab;
@@ -38,11 +38,11 @@ public class StatisticsDto {
         this.averageExecutionTimePerProjectInMinutes = averageExecutionTimePerProject;
     }
 
-    public SupplierWithMostResourcesDto getSupplierWithMostResources() {
+    public ArrayList<SupplierWithMostResourcesDto> getSupplierWithMostResources() {
         return supplierWithMostResources;
     }
 
-    public void setSupplierWithMostResources(SupplierWithMostResourcesDto supplierWithMostResources) {
+    public void setSupplierWithMostResources(ArrayList<SupplierWithMostResourcesDto> supplierWithMostResources) {
         this.supplierWithMostResources = supplierWithMostResources;
     }
 

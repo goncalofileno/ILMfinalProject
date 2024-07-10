@@ -32,6 +32,9 @@ export default function UsersPage() {
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [showMailModal, setShowMailModal] = useState(false); // State for the mail modal
   const NUMBER_OF_USERS_PAGE = 6;
+  const [currentLanguage, setCurrentLanguage] = useState(
+    Cookies.get("user-language") || "ENGLISH"
+  );
   const rejectedUsers = [];
   const [currentLanguage, setCurrentLanguage] = useState(
     Cookies.get("user-language") || "ENGLISH"
@@ -88,7 +91,7 @@ export default function UsersPage() {
       <AppNavbar setCurrentLanguage={setCurrentLanguage} />
       <div
         className={isMobile ? "ilm-page-mobile" : "ilm-pageb"}
-        style={{ padding: "15px 30px" }}
+        style={{ padding: !isSmallMobile && "15px 70px" }}
       >
         <h1 className="page-title">
           <Trans>
@@ -294,15 +297,27 @@ export default function UsersPage() {
                                         transform: "translateY(5px)",
                                       }}
                                     >
-                                      <span
-                                        style={{
-                                          height: "100%",
-                                          display: "flex",
-                                          alignItems: "center",
-                                        }}
-                                      >
-                                        <Trans>This user has a private profile.</Trans>
-                                      </span>
+                                      {!isSmallMobile ? (
+                                        <span
+                                          style={{
+                                            height: "100%",
+                                            display: "flex",
+                                            alignItems: "center",
+                                          }}
+                                        >
+                                          This user has a private profile
+                                        </span>
+                                      ) : (
+                                        <span
+                                          style={{
+                                            height: "100%",
+                                            display: "flex",
+                                            alignItems: "center",
+                                          }}
+                                        >
+                                          Private profile
+                                        </span>
+                                      )}
                                     </Alert>
                                   </div>
                                 )}
