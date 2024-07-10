@@ -78,10 +78,13 @@ public class UserTaskDao extends AbstractDao<UserTaskEntity> {
 
     public UserEntity findInChargeByTaskId(int taskId) {
         try {
-            return em.createNamedQuery("UserTask.findInChargeByTaskId", UserEntity.class).setParameter("taskId", taskId)
+            return em.createNamedQuery("UserTask.findInChargeByTaskId", UserEntity.class)
+                    .setParameter("taskId", taskId)
                     .getSingleResult();
         } catch (Exception e) {
             return null;
         }
     }
+
+
 }

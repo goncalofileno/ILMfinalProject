@@ -175,14 +175,14 @@ const ProjectPlanPage = () => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     let error = "";
-
+  
     if (name === "title" && taskTitles.includes(value)) {
       error = "Task title must be unique.";
       setTitleError(error);
     } else {
       setTitleError("");
     }
-
+  
     const newTaskDetails = { ...taskDetails, [name]: value };
     setTaskDetails(newTaskDetails);
     setIsSaveEnabled(checkSaveEnabled(newTaskDetails) && !error);
@@ -201,10 +201,11 @@ const ProjectPlanPage = () => {
   };
 
   const handleSave = async () => {
+    // Encontrar o membro responsável (inCharge) na lista de membros da tarefa
     const inChargeMember = taskDetails.membersOfTask.find(
       (member) => member.systemName === taskDetails.inCharge
     );
-
+  
     const updateTaskDto = {
       id: taskDetails.id,
       title: taskDetails.title,
@@ -224,12 +225,12 @@ const ProjectPlanPage = () => {
         (member) =>
           member.type === "CREATOR" || member.type === "CREATOR_INCHARGE"
       )?.id,
-      inChargeId: inChargeMember?.id,
+      inChargeId: inChargeMember ? inChargeMember.id : null,
       systemProjectName: systemProjectName,
     };
-
+  
     console.log("Update Task DTO:", updateTaskDto);
-
+  
     try {
       await updateTask(updateTaskDto);
       handleCloseModal();
@@ -240,7 +241,8 @@ const ProjectPlanPage = () => {
       console.error("Error updating task:", error);
     }
   };
-
+  
+  
   const handleAddMember = (systemUsername) => {
     const member = projectMembers.find(
       (member) => member.systemUsername === systemUsername

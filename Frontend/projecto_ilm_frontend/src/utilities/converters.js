@@ -65,6 +65,16 @@ const usersInProjectTypePublicMappingsPt = {
   GUEST: "Convidado",
 };
 
+const userInProjectTypeApplicationRequestMappingsEn = {
+  PENDING_BY_APPLIANCE: "Application",
+  PENDING_BY_INVITATION: "Invitation",
+};
+
+const userInProjectTypeApplicationRequestMappingsPt = {
+  PENDING_BY_APPLIANCE: "Candidatura",
+  PENDING_BY_INVITATION: "Convite",
+};
+
 const taskStatusMappingsEn = {
   PLANNED: "Planned",
   IN_PROGRESS: "In Progress",
@@ -206,6 +216,12 @@ function formatProjectState(state) {
   return mappings[state] || state.charAt(0) + state.slice(1).toLowerCase();
 }
 
+function formatTypeUserInProjectApplicationRequest(type) {
+  const language = getCurrentLanguage();
+  const mappings = language === "PORTUGUESE" ? userInProjectTypeApplicationRequestMappingsPt : userInProjectTypeApplicationRequestMappingsEn;
+  return mappings[type] || type;
+}
+
 export {
   formatLab,
   formatStatus,
@@ -218,4 +234,5 @@ export {
   formatProjectState,
   formatTypeUserInProjectInMaiusculas,
   formatTypeUserInProjectPublic,
+  formatTypeUserInProjectApplicationRequest,
 };

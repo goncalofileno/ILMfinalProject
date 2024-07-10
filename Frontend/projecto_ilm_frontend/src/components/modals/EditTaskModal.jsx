@@ -201,7 +201,7 @@ const EditTaskModal = ({
                 <Form.Select
                   onChange={(e) => {
                     handleAddMember(e.target.value);
-                    e.target.value = ""; // Reset the selector
+                    e.target.value = ""; 
                   }}
                 >
                   <option value="">

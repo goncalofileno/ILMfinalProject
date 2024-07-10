@@ -16,6 +16,7 @@ public class UserProjectCreationDto {
  private int id;
  private String systemUsername;
  private boolean publicProfile;
+ private String email;
 
     public UserProjectCreationDto() {
     }
@@ -75,5 +76,13 @@ public class UserProjectCreationDto {
 
     public void setPublicProfile(boolean publicProfile) {
         this.publicProfile = publicProfile;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

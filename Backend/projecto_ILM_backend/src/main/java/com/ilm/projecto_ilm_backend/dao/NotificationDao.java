@@ -160,4 +160,17 @@ public class NotificationDao extends AbstractDao<NotificationEntity> {
             return false;
         }
     }
+
+    public boolean findSimilarTaskNotification(String taskName, String projectSystemName, UserEntity receptor) {
+        try {
+            return em.createQuery("SELECT COUNT(n) > 0 FROM NotificationEntity n WHERE n.taskName = :taskName AND n.projectSystemName = :projectSystemName AND n.receptor = :receptor AND n.readStatus = false", Boolean.class)
+                    .setParameter("taskName", taskName)
+                    .setParameter("projectSystemName", projectSystemName)
+                    .setParameter("receptor", receptor)
+                    .getSingleResult();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
 }
