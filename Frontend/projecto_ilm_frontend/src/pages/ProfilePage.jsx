@@ -245,6 +245,15 @@ const UserProfile = () => {
     setSortOrder("asc");
   };
 
+  const formatTypeUserInProjectCard = (type) => {
+    if(type === "PENDING_BY_APPLIANCE"){
+      return t`Appliance Pending`;
+    }
+    if(type === "PENDING_BY_INVITATION"){
+      return t`Invitation`;
+    }
+  };
+
   return (
     <>
       <AppNavbar setCurrentLanguage={setCurrentLanguage} />
@@ -583,15 +592,22 @@ const UserProfile = () => {
                                           <div>
                                             <p className="mb-1">
                                               <strong>
-                                                <Trans>Project:</Trans>:
+                                                <Trans>Project:</Trans>
                                               </strong>{" "}
                                               {project.name}
                                             </p>
                                             <p className="mb-1">
                                               <strong>
-                                                <Trans>Status:</Trans>:
+                                                <Trans>Status:</Trans>
                                               </strong>{" "}
-                                              {project.status}
+                                              {formatProjectState(project.status)}
+                                            </p>
+                                            <p className="mb-1">
+                                              <strong>
+                                                <Trans>Type of Application:</Trans>
+                                                {" "}
+                                                </strong>
+                                              {formatTypeUserInProjectCard(project.typeMember)}
                                             </p>
                                           </div>
                                           {project.typeMember ===

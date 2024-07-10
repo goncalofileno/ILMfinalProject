@@ -401,7 +401,7 @@ export default function UsersPage() {
         show={showMailModal}
         handleClose={handleCloseMailModal}
         preFilledContact={selectedUserContact}
-        preFilledSubject="Invitation to join the project"
+        preFilledSubject=""
       />
     </>
   );

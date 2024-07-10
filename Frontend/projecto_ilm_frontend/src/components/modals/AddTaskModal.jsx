@@ -14,19 +14,9 @@ const AddTaskModal = ({
   tasks,
   systemProjectName,
 }) => {
-
-  const handleQuillChange = (field, value) => {
-    handleInputChange({
-      target: {
-        name: field,
-        value: value,
-      },
-    });
-  };
-
   const currentUsername = Cookies.get("user-systemUsername");
 
-  const [newTaskDetails, setNewTaskDetails] = useState({
+  const getInitialTaskDetails = () => ({
     title: "",
     description: "",
     status: "PLANNED",
@@ -34,25 +24,18 @@ const AddTaskModal = ({
     finalDate: "",
     outColaboration: "",
     inCharge: currentUsername,
-    membersOfTask: [],
+    membersOfTask: projectMembers.filter(member => member.systemUsername === currentUsername).map(member => ({ ...member, type: "CREATOR" })),
     dependentTasks: [],
     systemProjectName: systemProjectName,
   });
+
+  const [newTaskDetails, setNewTaskDetails] = useState(getInitialTaskDetails);
   const [isSaveEnabled, setIsSaveEnabled] = useState(false);
   const [titleError, setTitleError] = useState("");
 
   useEffect(() => {
-    const currentUser = projectMembers.find(
-      (member) => member.systemUsername === currentUsername
-    );
-    if (currentUser) {
-      setNewTaskDetails((prevDetails) => ({
-        ...prevDetails,
-        membersOfTask: [{ ...currentUser, type: "CREATOR" }],
-        inCharge: currentUser.systemUsername,
-      }));
-    }
-  }, [projectMembers, currentUsername]);
+    setNewTaskDetails(getInitialTaskDetails());
+  }, [projectMembers, currentUsername, systemProjectName]);
 
   useEffect(() => {
     setIsSaveEnabled(checkSaveEnabled(newTaskDetails));
@@ -79,6 +62,13 @@ const AddTaskModal = ({
 
     setNewTaskDetails(updatedTaskDetails);
     setIsSaveEnabled(checkSaveEnabled(updatedTaskDetails) && !titleError);
+  };
+
+  const handleQuillChange = (field, value) => {
+    setNewTaskDetails((prevDetails) => ({
+      ...prevDetails,
+      [field]: value,
+    }));
   };
 
   const checkSaveEnabled = (details) => {
@@ -188,34 +178,15 @@ const AddTaskModal = ({
       )
   );
 
-  // Filtra as tarefas disponíveis para excluir a task do tipo projeto e milestone
   const availableTasks = tasks.filter(
     (task) =>
       !newTaskDetails.dependentTasks.some(
         (depTask) => depTask.id === task.rawTask.id
-      ) && task.type !== "project" && task.type !== "milestone" // Exclui tasks do tipo projeto e milestone
+      ) && task.type !== "project" && task.type !== "milestone"
   );
 
   const handleCloseModal = () => {
-    setNewTaskDetails({
-      title: "",
-      description: "",
-      status: "PLANNED",
-      initialDate: "",
-      finalDate: "",
-      outColaboration: "",
-      inCharge: currentUsername,
-      membersOfTask: [
-        {
-          ...projectMembers.find(
-            (member) => member.systemUsername === currentUsername
-          ),
-          type: "CREATOR",
-        },
-      ],
-      dependentTasks: [],
-      systemProjectName: newTaskDetails.systemProjectName,
-    });
+    setNewTaskDetails(getInitialTaskDetails());
     setIsSaveEnabled(false);
     setTitleError("");
     handleClose();
@@ -295,7 +266,7 @@ const AddTaskModal = ({
                   name="outColaboration"
                   type="text"
                   value={newTaskDetails.outColaboration || ""}
-                  onChange={(value) => handleQuillChange("outColaboration", value)}
+                  onChange={handleInputChange}
                   style={{ height: "70px"}}
                 />
               </Form.Group>

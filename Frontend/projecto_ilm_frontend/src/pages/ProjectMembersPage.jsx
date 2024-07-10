@@ -26,7 +26,7 @@ import {
 import Cookies from "js-cookie";
 import TablePagination from "../components/paginations/TablePagination";
 import "./ProjectMembersPage.css";
-import { formatLab, formatTypeUserInProject } from "../utilities/converters";
+import { formatLab, formatTypeUserInProject, formatTypeUserInProjectApplicationRequest } from "../utilities/converters";
 import { useMediaQuery } from "react-responsive";
 import { Trans, t } from "@lingui/macro";
 
@@ -328,7 +328,7 @@ const ProjectMembersPage = () => {
             <Col>
               {projectData.projectState === "CANCELED" && (
                 <Alert variant="danger" className="standard-modal">
-                  The project is canceled and no changes can be made.
+                  <Trans>The project is canceled and no changes can be made.</Trans>
                 </Alert>
               )}
             </Col>
@@ -373,10 +373,10 @@ const ProjectMembersPage = () => {
                       <thead id="table-users-project-head">
                         <tr>
                           <th colSpan={2} style={{ width: "40%" }}>
-                            Name
+                            <Trans>Name</Trans>
                           </th>
-                          <th style={{ width: "30%" }}>Type</th>
-                          <th style={{ width: "30%" }}>Actions</th>
+                          <th style={{ width: "30%" }}><Trans>Type</Trans></th>
+                          <th style={{ width: "30%" }}><Trans>Actions</Trans></th>
                         </tr>
                       </thead>
                       <tbody
@@ -406,7 +406,7 @@ const ProjectMembersPage = () => {
                               className="align-middle"
                             >
                               {member.systemUsername === userSystemUsername
-                                ? "You"
+                                ? (t`You`)
                                 : member.name}
                             </td>
                             <td
@@ -426,8 +426,8 @@ const ProjectMembersPage = () => {
                                   disabled={{ isProjectInactive }}
                                   className="mt-2"
                                 >
-                                  <option value="MANAGER">Manager</option>
-                                  <option value="MEMBER">Member</option>
+                                  <option value="MANAGER"><Trans>Manager</Trans></option>
+                                  <option value="MEMBER"><Trans>Member</Trans></option>
                                 </Form.Select>
                               )}
                             </td>
@@ -441,7 +441,7 @@ const ProjectMembersPage = () => {
                                   onClick={() => handleRemoveMember(member)}
                                   disabled={isProjectInactive}
                                 >
-                                  Remove
+                                  <Trans>Remove</Trans>
                                 </Button>
                               )}
                             </td>
@@ -472,13 +472,13 @@ const ProjectMembersPage = () => {
                   <Card.Header
                     style={{ backgroundColor: "transparent", border: "none" }}
                   >
-                    <h5>Requests and Applications</h5>
+                    <h5><Trans>Requests and Applications</Trans></h5>
                   </Card.Header>
                   <Card.Body
                     style={{ border: "none", backgroundColor: "transparent" }}
                   >
                     {requests.length === 0 ? (
-                      <p>No requests or applications to show.</p>
+                      <p><Trans>No requests or applications to show.</Trans></p>
                     ) : (
                       <table
                         className="table-users-project-table"
@@ -487,10 +487,10 @@ const ProjectMembersPage = () => {
                         <thead id="table-users-project-head">
                           <tr>
                             <th style={{ width: "40%" }} colSpan={2}>
-                              Name
+                            <Trans>Name</Trans>
                             </th>
-                            <th style={{ width: "30%" }}>Type</th>
-                            <th style={{ width: "30%" }}>Actions</th>
+                            <th style={{ width: "30%" }}><Trans>Type</Trans></th>
+                            <th style={{ width: "30%" }}><Trans>Actions</Trans></th>
                           </tr>
                         </thead>
                         <tbody id="body-table-members-project">
@@ -513,18 +513,18 @@ const ProjectMembersPage = () => {
                                 className="align-middle"
                               >
                                 {member.systemUsername === userSystemUsername
-                                  ? "You"
+                                  ? (t`You`)
                                   : member.name}
                               </td>
                               <td
-                                style={{ width: "29%" }}
+                                style={{ width: "28%" }}
                                 className="align-middle"
                               >
-                                {typeLabels[member.type]}
+                                {formatTypeUserInProjectApplicationRequest(member.type)}
                               </td>
                               <td
                                 className="align-middle"
-                                style={{ width: "31%" }}
+                                style={{ width: "32%" }}
                               >
                                 {member.type === "PENDING_BY_APPLIANCE" && (
                                   <>
@@ -536,7 +536,7 @@ const ProjectMembersPage = () => {
                                       disabled={isTeamFull}
                                       className="me-2"
                                     >
-                                      Accept
+                                      <Trans>Accept</Trans>
                                     </Button>
                                     <Button
                                       variant="danger"
@@ -545,7 +545,7 @@ const ProjectMembersPage = () => {
                                       }
                                       disabled={isProjectInactive}
                                     >
-                                      Reject
+                                      <Trans>Reject</Trans>
                                     </Button>
                                   </>
                                 )}
@@ -558,7 +558,7 @@ const ProjectMembersPage = () => {
                                       }
                                       disabled={isProjectInactive}
                                     >
-                                      Cancel
+                                      <Trans>Cancel</Trans>
                                     </Button>
                                   </>
                                 )}
@@ -599,7 +599,7 @@ const ProjectMembersPage = () => {
                     marginBottom: "15px",
                   }}
                 >
-                  <h5>Available Users</h5>
+                  <h5><Trans>Available Users</Trans></h5>
                 </Card.Header>
                 <Card.Body
                   style={{ border: "none", backgroundColor: "transparent" }}
@@ -614,7 +614,7 @@ const ProjectMembersPage = () => {
                                 marginBottom: "0px",
                               }}
                             >
-                              Search
+                              <Trans>Search</Trans>
                             </h6>
                           </Form.Label>
                           <Form.Control
@@ -646,7 +646,7 @@ const ProjectMembersPage = () => {
                                 setNavigateTableTrigger((prev) => !prev);
                               }}
                             >
-                              Clear
+                              <Trans>Clear</Trans>
                             </button>
                             <button
                               className="submit-button"
@@ -658,7 +658,7 @@ const ProjectMembersPage = () => {
                                 setNavigateTableTrigger((prev) => !prev)
                               }
                             >
-                              Search
+                              <Trans>Search</Trans>
                             </button>
                           </div>
                         </Col>
@@ -669,14 +669,14 @@ const ProjectMembersPage = () => {
                               sm={2}
                               style={{ width: "100%", paddingTop: "0px" }}
                             >
-                              <h6>Lab</h6>
+                              <h6><Trans>Lab</Trans></h6>
                             </Form.Label>
                             <Col sm={10}>
                               <Form.Select
                                 value={selectedLab}
                                 onChange={(e) => setSelectedLab(e.target.value)}
                               >
-                                <option value="">All Labs</option>
+                                <option value=""><Trans>All Labs</Trans></option>
                                 {labs.map((lab) => (
                                   <option key={lab.local} value={lab.local}>
                                     {formatLab(lab.local)}
@@ -699,14 +699,14 @@ const ProjectMembersPage = () => {
                           colSpan={2}
                           style={{ width: !isPhone ? "30%" : "40%" }}
                         >
-                          Name
+                          <Trans>Name</Trans>
                         </th>
                         {!isPhone && <th style={{ width: "20%" }}>Lab</th>}
                         <th style={{ width: !isPhone ? "30%" : "35%" }}>
-                          Skills
+                        <Trans>Skills</Trans>
                         </th>
                         <th style={{ width: !isPhone ? "20%" : "25%" }}>
-                          Actions
+                        <Trans>Actions</Trans>
                         </th>
                       </tr>
                     </thead>
@@ -715,8 +715,8 @@ const ProjectMembersPage = () => {
                         <tr style={{ height: "100%" }}>
                           <td colspan="7">
                             <div className="no-results no-results-align">
-                              No users available to show based on the selected
-                              criteria.
+                            <Trans>No users available to show based on the selected
+                            criteria.</Trans>
                             </div>
                           </td>
                         </tr>
@@ -795,7 +795,7 @@ const ProjectMembersPage = () => {
                                             alignItems: "center",
                                           }}
                                         >
-                                          This user has a private profile
+                                          <Trans>This user has a private profile.</Trans>
                                         </span>
                                       </Alert>
                                     </div>
@@ -818,7 +818,7 @@ const ProjectMembersPage = () => {
                                   }}
                                   disabled={isTeamFull}
                                 >
-                                  Invite
+                                  <Trans>Invite</Trans>
                                 </Button>
                               </td>
                             </tr>
@@ -867,11 +867,11 @@ const ProjectMembersPage = () => {
         {/* Remove Member Modal */}
         <Modal show={showRemoveModal} onHide={() => setShowRemoveModal(false)}>
           <Modal.Header closeButton>
-            <Modal.Title>Remove Member</Modal.Title>
+            <Modal.Title><Trans>Remove Member</Trans></Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form.Group>
-              <Form.Label>Reason for Removal</Form.Label>
+              <Form.Label><Trans>Reason for Removal</Trans></Form.Label>
               <Form.Control
                 as="textarea"
                 rows={3}
@@ -885,10 +885,10 @@ const ProjectMembersPage = () => {
               variant="secondary"
               onClick={() => setShowRemoveModal(false)}
             >
-              Cancel
+              <Trans>Cancel</Trans>
             </Button>
             <Button variant="danger" onClick={handleConfirmRemove}>
-              Confirm Remove
+            <Trans>Confirm Remove</Trans>
             </Button>
           </Modal.Footer>
         </Modal>
@@ -896,11 +896,11 @@ const ProjectMembersPage = () => {
         {/* Reject Request Modal */}
         <Modal show={showRejectModal} onHide={() => setShowRejectModal(false)}>
           <Modal.Header closeButton>
-            <Modal.Title>Reject Application</Modal.Title>
+            <Modal.Title><Trans>Reject Application</Trans></Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form.Group>
-              <Form.Label>Reason for Rejection</Form.Label>
+              <Form.Label><Trans>Reason for Rejection</Trans></Form.Label>
               <Form.Control
                 as="textarea"
                 rows={3}
@@ -914,10 +914,10 @@ const ProjectMembersPage = () => {
               variant="secondary"
               onClick={() => setShowRejectModal(false)}
             >
-              Cancel
+              <Trans>Cancel</Trans>
             </Button>
             <Button variant="danger" onClick={handleConfirmReject}>
-              Confirm Reject
+            <Trans>Confirm Reject</Trans>
             </Button>
           </Modal.Footer>
         </Modal>

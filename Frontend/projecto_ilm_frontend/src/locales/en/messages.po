@@ -26,11 +26,15 @@ msgstr "<0>All </0><1>Users</1>"
 msgid "<0>Project </0><1>Creation</1>"
 msgstr "<0>Project </0><1>Creation</1>"
 
-#: src/pages/ProfilePage.jsx:619
+#: src/pages/ProfilePage.jsx:635
+#: src/pages/ProjectMembersPage.jsx:539
 #: src/pages/ProjectProfilePageInfo.jsx:392
 msgid "Accept"
 msgstr "Accept"
 
+#: src/pages/ProjectMembersPage.jsx:379
+#: src/pages/ProjectMembersPage.jsx:493
+#: src/pages/ProjectMembersPage.jsx:709
 #: src/pages/UsersPage.jsx:214
 msgid "Actions"
 msgstr "Actions"
@@ -78,11 +82,11 @@ msgstr "Add Project"
 msgid "Add Resource"
 msgstr "Add Resource"
 
-#: src/pages/ProfilePage.jsx:318
+#: src/pages/ProfilePage.jsx:327
 msgid "Admin"
 msgstr "Admin"
 
-#: src/pages/ProfilePage.jsx:444
+#: src/pages/ProfilePage.jsx:453
 msgid "All"
 msgstr "All"
 
@@ -105,6 +109,7 @@ msgstr "All Brands"
 #: src/components/asides/AsideMyProjectsPage.jsx:62
 #: src/components/asides/AsideProjectCreationPage2.jsx:58
 #: src/components/asides/AsideProjectsTable.jsx:66
+#: src/pages/ProjectMembersPage.jsx:679
 #: src/pages/UsersPage.jsx:184
 msgid "All Labs"
 msgstr "All Labs"
@@ -194,7 +199,11 @@ msgstr "An error occurred while updating the project state."
 msgid "An error occurred. Please try again."
 msgstr "An error occurred. Please try again."
 
-#: src/pages/ProfilePage.jsx:411
+#: src/pages/ProfilePage.jsx:250
+msgid "Appliance Pending"
+msgstr "Appliance Pending"
+
+#: src/pages/ProfilePage.jsx:420
 msgid "Applications"
 msgstr "Applications"
 
@@ -202,7 +211,7 @@ msgstr "Applications"
 msgid "Approve Project"
 msgstr "Approve Project"
 
-#: src/pages/ProfilePage.jsx:453
+#: src/pages/ProfilePage.jsx:462
 msgid "Approved"
 msgstr "Approved"
 
@@ -215,15 +224,15 @@ msgstr "Are you sure you want to delete this mail?"
 msgid "Are you sure you want to delete this task?"
 msgstr "Are you sure you want to delete this task?"
 
-#: src/pages/ProfilePage.jsx:751
+#: src/pages/ProfilePage.jsx:767
 msgid "Are you sure you want to promote this user to Admin?"
 msgstr "Are you sure you want to promote this user to Admin?"
 
-#: src/pages/ProfilePage.jsx:732
+#: src/pages/ProfilePage.jsx:748
 msgid "Are you sure you want to reject this invite?"
 msgstr "Are you sure you want to reject this invite?"
 
-#: src/pages/ProfilePage.jsx:480
+#: src/pages/ProfilePage.jsx:489
 msgid "Ascending"
 msgstr "Ascending"
 
@@ -243,9 +252,9 @@ msgstr "At least one special character (!@#$%^&*)"
 msgid "At least one uppercase letter"
 msgstr "At least one uppercase letter"
 
-#: src/pages/ProjectMembersPage.jsx:600
-#~ msgid "Available Users"
-#~ msgstr "Available Users"
+#: src/pages/ProjectMembersPage.jsx:602
+msgid "Available Users"
+msgstr "Available Users"
 
 #: src/components/Pdf/StatisticsPdf.jsx:315
 #: src/components/Pdf/StatisticsPdf.jsx:400
@@ -259,7 +268,7 @@ msgstr "Average users in project"
 
 #: src/pages/CreateProfilePage.jsx:243
 #: src/pages/EditProfilePage.jsx:363
-#: src/pages/ProfilePage.jsx:333
+#: src/pages/ProfilePage.jsx:342
 msgid "Bio"
 msgstr "Bio"
 
@@ -282,10 +291,13 @@ msgstr "Brand"
 #: src/pages/EditProfilePage.jsx:515
 #: src/pages/EditProfilePage.jsx:644
 #: src/pages/EditProjectPage.jsx:502
-#: src/pages/ProfilePage.jsx:736
-#: src/pages/ProfilePage.jsx:758
+#: src/pages/ProfilePage.jsx:752
+#: src/pages/ProfilePage.jsx:774
 #: src/pages/ProjectCreationPage1.jsx:432
 #: src/pages/ProjectLogsPage.jsx:578
+#: src/pages/ProjectMembersPage.jsx:561
+#: src/pages/ProjectMembersPage.jsx:888
+#: src/pages/ProjectMembersPage.jsx:917
 #: src/pages/ProjectProfilePageInfo.jsx:731
 #: src/pages/ProjectProfilePageInfo.jsx:763
 #: src/pages/ProjectProfilePageInfo.jsx:792
@@ -297,7 +309,7 @@ msgstr "Cancel"
 msgid "Cancel Project"
 msgstr "Cancel Project"
 
-#: src/pages/ProfilePage.jsx:459
+#: src/pages/ProfilePage.jsx:468
 msgid "Canceled"
 msgstr "Canceled"
 
@@ -320,8 +332,9 @@ msgstr "Checking..."
 #: src/components/tables/ProjectsTable.jsx:124
 #: src/components/tables/ResourcesTable.jsx:86
 #: src/pages/MyProjectsPage.jsx:161
-#: src/pages/ProfilePage.jsx:494
+#: src/pages/ProfilePage.jsx:503
 #: src/pages/ProjectCreationPage3.jsx:199
+#: src/pages/ProjectMembersPage.jsx:649
 #: src/pages/ProjectProfileResourcesPage.jsx:274
 #: src/pages/UsersPage.jsx:157
 msgid "Clear"
@@ -356,7 +369,7 @@ msgstr "Completed tasks"
 msgid "Compose New Mail"
 msgstr "Compose New Mail"
 
-#: src/pages/ProfilePage.jsx:761
+#: src/pages/ProfilePage.jsx:777
 msgid "Confirm"
 msgstr "Confirm"
 
@@ -383,19 +396,20 @@ msgstr "Confirm New Password"
 msgid "Confirm Password"
 msgstr "Confirm Password"
 
+#: src/pages/ProjectMembersPage.jsx:920
 #: src/pages/ProjectProfilePageInfo.jsx:766
 msgid "Confirm Reject"
 msgstr "Confirm Reject"
 
-#: src/pages/ProfilePage.jsx:728
+#: src/pages/ProfilePage.jsx:744
 msgid "Confirm Rejection"
 msgstr "Confirm Rejection"
 
-#: src/pages/ProjectMembersPage.jsx:791
-#~ msgid "Confirm Remove"
-#~ msgstr "Confirm Remove"
+#: src/pages/ProjectMembersPage.jsx:891
+msgid "Confirm Remove"
+msgstr "Confirm Remove"
 
-#: src/pages/ProfilePage.jsx:747
+#: src/pages/ProfilePage.jsx:763
 msgid "Confirm User Promotion to Admin"
 msgstr "Confirm User Promotion to Admin"
 
@@ -441,7 +455,7 @@ msgstr "Current Password"
 msgid "Date"
 msgstr "Date"
 
-#: src/pages/ProfilePage.jsx:470
+#: src/pages/ProfilePage.jsx:479
 msgid "Date:"
 msgstr "Date:"
 
@@ -472,7 +486,7 @@ msgstr "Dependencies"
 msgid "Dependent Tasks"
 msgstr "Dependent Tasks"
 
-#: src/pages/ProfilePage.jsx:483
+#: src/pages/ProfilePage.jsx:492
 msgid "Descending"
 msgstr "Descending"
 
@@ -498,7 +512,7 @@ msgid "Edit"
 msgstr "Edit"
 
 #: src/pages/EditProfilePage.jsx:339
-#: src/pages/ProfilePage.jsx:345
+#: src/pages/ProfilePage.jsx:354
 msgid "Edit Profile"
 msgstr "Edit Profile"
 
@@ -622,7 +636,7 @@ msgstr "Final Date"
 #~ msgid "Finish Project Creation"
 #~ msgstr "Finish Project Creation"
 
-#: src/pages/ProfilePage.jsx:462
+#: src/pages/ProfilePage.jsx:471
 msgid "Finished"
 msgstr "Finished"
 
@@ -672,7 +686,7 @@ msgstr "ILM Statistics"
 msgid "In Charge"
 msgstr "In Charge"
 
-#: src/pages/ProfilePage.jsx:456
+#: src/pages/ProfilePage.jsx:465
 msgid "In Progress"
 msgstr "In Progress"
 
@@ -698,7 +712,7 @@ msgstr "Info"
 msgid "Initial Date"
 msgstr "Initial Date"
 
-#: src/pages/ProfilePage.jsx:420
+#: src/pages/ProfilePage.jsx:429
 msgid "Interests"
 msgstr "Interests"
 
@@ -717,13 +731,18 @@ msgstr "Invalid data. Please try again."
 msgid "Invalid project name"
 msgstr "Invalid project name"
 
+#: src/pages/ProfilePage.jsx:253
+msgid "Invitation"
+msgstr "Invitation"
+
 #: src/components/modals/InviteProjectModal.jsx:122
+#: src/pages/ProjectMembersPage.jsx:821
 #: src/pages/UsersPage.jsx:327
 msgid "Invite"
 msgstr "Invite"
 
 #: src/components/modals/InviteProjectModal.jsx:81
-#: src/pages/ProfilePage.jsx:364
+#: src/pages/ProfilePage.jsx:373
 msgid "Invite to Project"
 msgstr "Invite to Project"
 
@@ -750,6 +769,7 @@ msgstr "Knowledge"
 #: src/components/cards/MyProjectCard.jsx:52
 #: src/components/Pdf/StatisticsPdf.jsx:164
 #: src/components/tables/ProjectsTable.jsx:158
+#: src/pages/ProjectMembersPage.jsx:672
 #: src/pages/ProjectProfilePageInfo.jsx:533
 #: src/pages/UsersPage.jsx:174
 msgid "Lab"
@@ -790,7 +810,7 @@ msgstr "Load More"
 msgid "Loading..."
 msgstr "Loading..."
 
-#: src/pages/ProfilePage.jsx:326
+#: src/pages/ProfilePage.jsx:335
 msgid "Location"
 msgstr "Location"
 
@@ -816,9 +836,9 @@ msgstr "Mail Details"
 msgid "Mail sent successfully."
 msgstr "Mail sent successfully."
 
-#: src/pages/ProjectMembersPage.jsx:417
-#~ msgid "Manager"
-#~ msgstr "Manager"
+#: src/pages/ProjectMembersPage.jsx:429
+msgid "Manager"
+msgstr "Manager"
 
 #: src/pages/ProjectProfilePageInfo.jsx:824
 msgid "Mark as Read"
@@ -828,9 +848,9 @@ msgstr "Mark as Read"
 msgid "Max Members"
 msgstr "Max Members"
 
-#: src/pages/ProjectMembersPage.jsx:420
-#~ msgid "Member"
-#~ msgstr "Member"
+#: src/pages/ProjectMembersPage.jsx:430
+msgid "Member"
+msgstr "Member"
 
 #: src/components/asides/AsideMyProjectsPage.jsx:100
 msgid "Member Type"
@@ -892,6 +912,9 @@ msgstr "My Projects"
 #: src/components/tables/ResourcesProjectCreationTable.jsx:64
 #: src/components/tables/ResourcesTable.jsx:97
 #: src/components/tables/YourResourcesProjectCreationTable.jsx:42
+#: src/pages/ProjectMembersPage.jsx:376
+#: src/pages/ProjectMembersPage.jsx:490
+#: src/pages/ProjectMembersPage.jsx:702
 #: src/pages/UsersPage.jsx:207
 msgid "Name"
 msgstr "Name"
@@ -922,7 +945,7 @@ msgstr "Next"
 msgid "Next step"
 msgstr "Next step"
 
-#: src/pages/ProfilePage.jsx:627
+#: src/pages/ProfilePage.jsx:643
 msgid "No applications available."
 msgstr "No applications available."
 
@@ -935,7 +958,7 @@ msgstr "No emails found matching your criteria."
 msgid "No interests added yet."
 msgstr "No interests added yet."
 
-#: src/pages/ProfilePage.jsx:696
+#: src/pages/ProfilePage.jsx:712
 msgid "No interests available."
 msgstr "No interests available."
 
@@ -955,7 +978,7 @@ msgstr "No more notifications"
 msgid "No notifications to show"
 msgstr "No notifications to show"
 
-#: src/pages/ProfilePage.jsx:563
+#: src/pages/ProfilePage.jsx:572
 msgid "No projects available."
 msgstr "No projects available."
 
@@ -963,9 +986,9 @@ msgstr "No projects available."
 msgid "No projects found matching your criteria."
 msgstr "No projects found matching your criteria."
 
-#: src/pages/ProjectMembersPage.jsx:474
-#~ msgid "No requests or applications to show."
-#~ msgstr "No requests or applications to show."
+#: src/pages/ProjectMembersPage.jsx:481
+msgid "No requests or applications to show."
+msgstr "No requests or applications to show."
 
 #: src/components/tables/ResourcesTable.jsx:146
 msgid "No resources found matching your criteria."
@@ -975,11 +998,12 @@ msgstr "No resources found matching your criteria."
 msgid "No skills added yet."
 msgstr "No skills added yet."
 
-#: src/pages/ProfilePage.jsx:666
+#: src/pages/ProfilePage.jsx:682
 #: src/pages/ProjectProfilePageInfo.jsx:671
 msgid "No skills available."
 msgstr "No skills available."
 
+#: src/pages/ProjectMembersPage.jsx:718
 #: src/pages/UsersPage.jsx:223
 msgid "No users available to show based on the selected criteria."
 msgstr "No users available to show based on the selected criteria."
@@ -1095,7 +1119,7 @@ msgstr "PLANNED"
 msgid "Planned tasks"
 msgstr "Planned tasks"
 
-#: src/pages/ProfilePage.jsx:447
+#: src/pages/ProfilePage.jsx:456
 msgid "Planning"
 msgstr "Planning"
 
@@ -1131,7 +1155,7 @@ msgstr "Progress"
 
 #: src/components/tables/ProjectsTable.jsx:138
 #: src/pages/EditProjectPage.jsx:218
-#: src/pages/ProfilePage.jsx:531
+#: src/pages/ProfilePage.jsx:540
 #: src/pages/ProjectCreationPage3.jsx:160
 #: src/pages/ProjectPlanPage.jsx:526
 msgid "Project"
@@ -1175,7 +1199,7 @@ msgstr "Project Progress"
 msgid "Project updated successfully"
 msgstr "Project updated successfully"
 
-#: src/pages/ProfilePage.jsx:586
+#: src/pages/ProfilePage.jsx:595
 msgid "Project:"
 msgstr "Project:"
 
@@ -1185,7 +1209,7 @@ msgstr "Project:"
 #: src/components/Pdf/StatisticsPdf.jsx:160
 #: src/pages/App.jsx:245
 #: src/pages/MyProjectsPage.jsx:118
-#: src/pages/ProfilePage.jsx:405
+#: src/pages/ProfilePage.jsx:414
 #: src/pages/ProjectsPage.jsx:158
 #: src/pages/Register.jsx:243
 msgid "Projects"
@@ -1201,7 +1225,7 @@ msgstr "Projects per Lab"
 msgid "Projects Statistics"
 msgstr "Projects Statistics"
 
-#: src/pages/ProfilePage.jsx:375
+#: src/pages/ProfilePage.jsx:384
 msgid "Promote to Admin"
 msgstr "Promote to Admin"
 
@@ -1210,7 +1234,7 @@ msgstr "Promote to Admin"
 msgid "Public Profile"
 msgstr "Public Profile"
 
-#: src/pages/ProfilePage.jsx:450
+#: src/pages/ProfilePage.jsx:459
 msgid "Ready"
 msgstr "Ready"
 
@@ -1219,13 +1243,13 @@ msgstr "Ready"
 msgid "Reason"
 msgstr "Reason"
 
-#: src/pages/ProjectMembersPage.jsx:806
-#~ msgid "Reason for Rejection"
-#~ msgstr "Reason for Rejection"
+#: src/pages/ProjectMembersPage.jsx:903
+msgid "Reason for Rejection"
+msgstr "Reason for Rejection"
 
-#: src/pages/ProjectMembersPage.jsx:773
-#~ msgid "Reason for Removal"
-#~ msgstr "Reason for Removal"
+#: src/pages/ProjectMembersPage.jsx:874
+msgid "Reason for Removal"
+msgstr "Reason for Removal"
 
 #: src/pages/ProjectProfilePageInfo.jsx:806
 msgid "Reason of Cancellation"
@@ -1249,36 +1273,37 @@ msgid "Registered successfully. Please Verify your email."
 msgstr "Registered successfully. Please Verify your email."
 
 #: src/components/cards/UserCard.jsx:117
-#: src/pages/ProfilePage.jsx:608
-#: src/pages/ProfilePage.jsx:739
+#: src/pages/ProfilePage.jsx:624
+#: src/pages/ProfilePage.jsx:755
+#: src/pages/ProjectMembersPage.jsx:548
 #: src/pages/ProjectProfilePageInfo.jsx:386
 msgid "Reject"
 msgstr "Reject"
 
-#: src/pages/ProjectMembersPage.jsx:800
-#~ msgid "Reject Application"
-#~ msgstr "Reject Application"
+#: src/pages/ProjectMembersPage.jsx:899
+msgid "Reject Application"
+msgstr "Reject Application"
 
 #: src/pages/ProjectProfilePageInfo.jsx:312
 #: src/pages/ProjectProfilePageInfo.jsx:743
 msgid "Reject Project"
 msgstr "Reject Project"
 
-#: src/pages/ProjectMembersPage.jsx:434
-#~ msgid "Remove"
-#~ msgstr "Remove"
+#: src/pages/ProjectMembersPage.jsx:444
+msgid "Remove"
+msgstr "Remove"
 
-#: src/pages/ProjectMembersPage.jsx:767
-#~ msgid "Remove Member"
-#~ msgstr "Remove Member"
+#: src/pages/ProjectMembersPage.jsx:870
+msgid "Remove Member"
+msgstr "Remove Member"
 
 #: src/components/tables/MailTable.jsx:481
 msgid "Reply"
 msgstr "Reply"
 
-#: src/pages/ProjectMembersPage.jsx:466
-#~ msgid "Requests and Applications"
-#~ msgstr "Requests and Applications"
+#: src/pages/ProjectMembersPage.jsx:475
+msgid "Requests and Applications"
+msgstr "Requests and Applications"
 
 #: src/pages/ResetPasswordPage.jsx:99
 msgid "Reset Password"
@@ -1334,6 +1359,8 @@ msgstr "Save Resources"
 #: src/components/tables/SentMailTable.jsx:251
 #: src/pages/MyProjectsPage.jsx:151
 #: src/pages/ProjectCreationPage2.jsx:166
+#: src/pages/ProjectMembersPage.jsx:617
+#: src/pages/ProjectMembersPage.jsx:661
 #: src/pages/UsersPage.jsx:126
 #: src/pages/UsersPage.jsx:167
 msgid "Search"
@@ -1397,7 +1424,7 @@ msgstr "Select Type"
 msgid "Send"
 msgstr "Send"
 
-#: src/pages/ProfilePage.jsx:356
+#: src/pages/ProfilePage.jsx:365
 msgid "Send Email"
 msgstr "Send Email"
 
@@ -1422,6 +1449,7 @@ msgid "Skill Type"
 msgstr "Skill Type"
 
 #: src/components/selectors/SkillSelector.jsx:129
+#: src/pages/ProjectMembersPage.jsx:706
 #: src/pages/UsersPage.jsx:211
 msgid "Skills"
 msgstr "Skills"
@@ -1476,12 +1504,12 @@ msgstr "Statistics"
 #: src/components/modals/EditTaskModal.jsx:78
 #: src/components/tables/ProjectsTable.jsx:148
 #: src/components/tooltips/CustomTooltipContent.jsx:24
-#: src/pages/ProfilePage.jsx:555
+#: src/pages/ProfilePage.jsx:564
 msgid "Status"
 msgstr "Status"
 
-#: src/pages/ProfilePage.jsx:434
-#: src/pages/ProfilePage.jsx:592
+#: src/pages/ProfilePage.jsx:443
+#: src/pages/ProfilePage.jsx:601
 msgid "Status:"
 msgstr "Status:"
 
@@ -1556,9 +1584,9 @@ msgstr "The project is {0} and no tasks can be added or changes made."
 msgid "The project is {0}, and you can't change the resources in the project."
 msgstr "The project is {0}, and you can't change the resources in the project."
 
-#: src/pages/ProjectMembersPage.jsx:326
-#~ msgid "The project is canceled and no changes can be made."
-#~ msgstr "The project is canceled and no changes can be made."
+#: src/pages/ProjectMembersPage.jsx:331
+msgid "The project is canceled and no changes can be made."
+msgstr "The project is canceled and no changes can be made."
 
 #: src/pages/ProjectChatPage.jsx:117
 msgid "The project is canceled, and the chat is disabled."
@@ -1580,7 +1608,7 @@ msgstr "The team is full, no more members can be invited or accepted until the t
 msgid "This email is invalid"
 msgstr "This email is invalid"
 
-#: src/pages/ProfilePage.jsx:389
+#: src/pages/ProfilePage.jsx:398
 msgid "This profile is private."
 msgstr "This profile is private."
 
@@ -1593,6 +1621,7 @@ msgstr "This project is ready for approval"
 msgid "This resource already exists."
 msgstr "This resource already exists."
 
+#: src/pages/ProjectMembersPage.jsx:798
 #: src/pages/UsersPage.jsx:304
 msgid "This user has a private profile."
 msgstr "This user has a private profile."
@@ -1625,7 +1654,9 @@ msgstr "Total users"
 #: src/components/tables/ResourcesProjectCreationTable.jsx:73
 #: src/components/tables/ResourcesTable.jsx:109
 #: src/components/tables/YourResourcesProjectCreationTable.jsx:43
-#: src/pages/ProfilePage.jsx:540
+#: src/pages/ProfilePage.jsx:549
+#: src/pages/ProjectMembersPage.jsx:378
+#: src/pages/ProjectMembersPage.jsx:492
 msgid "Type"
 msgstr "Type"
 
@@ -1636,6 +1667,10 @@ msgstr "Type a message..."
 #: src/pages/ProfilePage.jsx:389
 #~ msgid "Type Member"
 #~ msgstr "Type Member"
+
+#: src/pages/ProfilePage.jsx:607
+msgid "Type of Application:"
+msgstr "Type of Application:"
 
 #: src/pages/ProjectLogsPage.jsx:555
 msgid "Type your note here. Use @ to mention a task."
@@ -1653,7 +1688,7 @@ msgstr "Unread only"
 msgid "Update Project"
 msgstr "Update Project"
 
-#: src/pages/ProfilePage.jsx:317
+#: src/pages/ProfilePage.jsx:326
 msgid "User"
 msgstr "User"
 
@@ -1717,6 +1752,8 @@ msgstr "Year"
 #: src/components/tables/ProjectMembersTable.jsx:55
 #: src/pages/ProjectChatPage.jsx:166
 #: src/pages/ProjectChatPage.jsx:261
+#: src/pages/ProjectMembersPage.jsx:409
+#: src/pages/ProjectMembersPage.jsx:516
 #: src/pages/ProjectProfilePageInfo.jsx:551
 #: src/pages/UsersPage.jsx:258
 msgid "You"
