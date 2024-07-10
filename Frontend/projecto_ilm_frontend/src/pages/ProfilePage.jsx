@@ -363,9 +363,11 @@ const UserProfile = () => {
                       style={{ height: "100%", marginTop: isMobile && "30px" }}
                     >
                       {isPrivate ? (
-                        <Alert variant="info" style={{ textAlign: "center" }}>
-                          <Trans>This profile is private.</Trans>
-                        </Alert>
+                         <div style={{ marginTop:"50%" }}>
+                         <Alert variant="info" style={{ textAlign: "center" }}>
+                           <Trans>This profile is private.</Trans>
+                         </Alert>
+                        </div>
                       ) : (
                         <Tab.Container
                           activeKey={activeKey}

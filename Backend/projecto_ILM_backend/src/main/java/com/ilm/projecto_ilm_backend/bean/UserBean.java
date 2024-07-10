@@ -775,6 +775,7 @@ public class UserBean {
             userProjectCreationDto.setPhoto((String) user[3]);
             userProjectCreationDto.setId((int) user[4]);
             userProjectCreationDto.setPublicProfile((boolean) user[7]);
+            userProjectCreationDto.setEmail((String) user[8]);
             List<SkillEntity> skillsEntities = userDao.getUserSkills((int) user[4], skillsInProject);
             List<SkillDto> skills = new ArrayList<>();
             if(userProjectCreationDto.isPublicProfile()) {

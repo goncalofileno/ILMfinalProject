@@ -1,6 +1,5 @@
 import AppNavbar from "../components/headers/AppNavbar";
 import { useMediaQuery } from "react-responsive";
-import { Trans } from "@lingui/react";
 import { Row, Col, Card, Form, Alert, Button } from "react-bootstrap";
 import {
   getUserProjectCreation,
@@ -9,26 +8,34 @@ import {
 } from "../utilities/services";
 import { useState, useEffect } from "react";
 import { formatLab } from "../utilities/converters";
-import { Cookies } from "react-cookie";
 import InviteProjectModal from "../components/modals/InviteProjectModal";
+import ComposeMailModal from "../components/modals/ComposeMailModal"; // Import the ComposeMailModal
 import TablePagination from "../components/paginations/TablePagination";
+import MailIcon from "../resources/icons/other/email-icon.png";
+import { Trans, t } from "@lingui/macro";
+import Cookies from "js-cookie";
 
 export default function UsersPage() {
   const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
   const isSmallMobile = useMediaQuery({ query: "(max-width: 575px)" });
-  const userSystemUsername = new Cookies().get("systemUsername");
+  const userSystemUsername = Cookies.get("user-system-username");
   const [allUsers, setAllUsers] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedLab, setSelectedLab] = useState("");
   const [searchKeyword, setSearchKeyword] = useState("");
   const [systemUsername, setSystemUsername] = useState("");
+  const [selectedUserContact, setSelectedUserContact] = useState(""); // State to hold the selected user contact
   const [usersTrigger, setUsersTrigger] = useState(false);
   const [labs, setLabs] = useState([]);
   const isPhone = useMediaQuery({ query: "(max-width: 767px)" });
   const [showInviteModal, setShowInviteModal] = useState(false);
+  const [showMailModal, setShowMailModal] = useState(false); // State for the mail modal
   const NUMBER_OF_USERS_PAGE = 6;
   const rejectedUsers = [];
+  const [currentLanguage, setCurrentLanguage] = useState(
+    Cookies.get("user-language") || "ENGLISH"
+  );
 
   useEffect(() => {
     getUserProjectCreation(
@@ -45,7 +52,7 @@ export default function UsersPage() {
         });
       }
     });
-  }, [usersTrigger]);
+  }, [usersTrigger, currentLanguage]);
 
   useEffect(() => {
     getLabsWithSessionId().then((result) => {
@@ -66,16 +73,28 @@ export default function UsersPage() {
     setShowInviteModal(false);
   };
 
+  const handleSendMail = (user) => {
+    const contact = `${user.name} <${user.email}>`;
+    setSelectedUserContact(contact);
+    setShowMailModal(true);
+  };
+
+  const handleCloseMailModal = () => {
+    setShowMailModal(false);
+  };
+
   return (
     <>
-      <AppNavbar />
+      <AppNavbar setCurrentLanguage={setCurrentLanguage} />
       <div
         className={isMobile ? "ilm-page-mobile" : "ilm-pageb"}
         style={{ padding: "15px 30px" }}
       >
         <h1 className="page-title">
-          <span className="app-slogan-1">All </span>
-          <span className="app-slogan-2">Users</span>
+          <Trans>
+            <span className="app-slogan-1">All </span>
+            <span className="app-slogan-2">Users</span>
+          </Trans>
         </h1>
         <Row className="mt-1">
           <Col>
@@ -104,7 +123,7 @@ export default function UsersPage() {
                               padding: "0px",
                             }}
                           >
-                            Search
+                            <Trans>Search</Trans>
                           </h6>
                         </Form.Label>
                         <Form.Control
@@ -135,7 +154,7 @@ export default function UsersPage() {
                               setUsersTrigger((prev) => !prev);
                             }}
                           >
-                            Clear
+                            <Trans>Clear</Trans>
                           </button>
                           <button
                             className="submit-button"
@@ -145,14 +164,14 @@ export default function UsersPage() {
                             }}
                             onClick={() => setUsersTrigger((prev) => !prev)}
                           >
-                            Search
+                            <Trans>Search</Trans>
                           </button>
                         </div>
                       </Col>
                       <Col sm={4}>
                         <Form.Group as={Col} className="mb-3">
                           <Form.Label column sm={2} style={{ width: "100%" }}>
-                            <h6>Lab</h6>
+                            <h6><Trans>Lab</Trans></h6>
                           </Form.Label>
                           <Col sm={10}>
                             <Form.Select
@@ -162,7 +181,7 @@ export default function UsersPage() {
                                 setUsersTrigger((prev) => !prev);
                               }}
                             >
-                              <option value="">All Labs</option>
+                              <option value=""><Trans>All Labs</Trans></option>
                               {labs.map((lab) => (
                                 <option key={lab.local} value={lab.local}>
                                   {formatLab(lab.local)}
@@ -185,14 +204,14 @@ export default function UsersPage() {
                         colSpan={2}
                         style={{ width: !isPhone ? "30%" : "40%" }}
                       >
-                        Name
+                        <Trans>Name</Trans>
                       </th>
                       {!isPhone && <th style={{ width: "20%" }}>Lab</th>}
                       <th style={{ width: !isPhone ? "30%" : "35%" }}>
-                        Skills
+                      <Trans>Skills</Trans>
                       </th>
                       <th style={{ width: !isPhone ? "20%" : "25%" }}>
-                        Actions
+                      <Trans>Actions</Trans>
                       </th>
                     </tr>
                   </thead>
@@ -201,8 +220,8 @@ export default function UsersPage() {
                       <tr style={{ height: "100%" }}>
                         <td colspan="7">
                           <div className="no-results no-results-align">
-                            No users available to show based on the selected
-                            criteria.
+                          <Trans>No users available to show based on the selected
+                          criteria.</Trans>
                           </div>
                         </td>
                       </tr>
@@ -236,7 +255,7 @@ export default function UsersPage() {
                               className="align-middle"
                             >
                               {user.systemUsername === userSystemUsername
-                                ? "You"
+                                ? (t`You`)
                                 : user.name}
                             </td>
                             {!isPhone && (
@@ -253,6 +272,7 @@ export default function UsersPage() {
                                 {user.publicProfile ? (
                                   user.skills.map((skill) => (
                                     <div
+                                      key={skill.id}
                                       className={`skill-div-${skill.inProject}`}
                                       style={{
                                         marginTop: "0px",
@@ -281,7 +301,7 @@ export default function UsersPage() {
                                           alignItems: "center",
                                         }}
                                       >
-                                        This user has a private profile
+                                        <Trans>This user has a private profile.</Trans>
                                       </span>
                                     </Alert>
                                   </div>
@@ -297,15 +317,38 @@ export default function UsersPage() {
                                 style={{
                                   backgroundColor: "rgb(30, 40, 82)",
                                   borderColor: "rgb(30, 40, 82)",
+                                  marginRight: "10px",
                                 }}
                                 onClick={(e) => {
                                   e.stopPropagation();
-
                                   handleInvite(user.systemUsername);
                                 }}
                               >
-                                Invite
+                                <Trans>Invite</Trans>
                               </Button>
+                              <img
+                                src={MailIcon}
+                                alt="Mail"
+                                style={{
+                                  cursor: "pointer",
+                                  width: "50px",
+                                  height: "50px",
+                                  transition: "transform 0.2s",
+                                }}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleSendMail(user);
+                                }}
+                                onMouseDown={(e) => {
+                                  e.target.style.transform = "scale(0.9)";
+                                }}
+                                onMouseUp={(e) => {
+                                  e.target.style.transform = "scale(1)";
+                                }}
+                                onMouseLeave={(e) => {
+                                  e.target.style.transform = "scale(1)";
+                                }}
+                              />
                             </td>
                           </tr>
                         ))}
@@ -353,6 +396,12 @@ export default function UsersPage() {
         show={showInviteModal}
         handleClose={handleCloseInviteModal}
         systemUsername={systemUsername}
+      />
+      <ComposeMailModal
+        show={showMailModal}
+        handleClose={handleCloseMailModal}
+        preFilledContact={selectedUserContact}
+        preFilledSubject="Invitation to join the project"
       />
     </>
   );

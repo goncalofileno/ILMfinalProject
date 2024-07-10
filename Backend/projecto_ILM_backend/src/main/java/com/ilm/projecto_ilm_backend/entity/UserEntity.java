@@ -24,7 +24,7 @@ import java.util.List;
         @NamedQuery(name = "User.checkSystemUsername", query = "SELECT u FROM UserEntity u WHERE u.systemUsername = :systemUsername"),
         @NamedQuery(name = "User.findBySystemUsername", query = "SELECT u FROM UserEntity u WHERE u.systemUsername = :systemUsername"),
         @NamedQuery(name = "User.getFullNameBySystemUsername)", query = "SELECT u.firstName, u.lastName FROM UserEntity u WHERE u.systemUsername = :systemUsername"),
-        @NamedQuery(name = "User.getUserProjectCreationDto", query = "SELECT u.lab.local, u.firstName, u.lastName, u.thumbnailPhoto, u.id, u.systemUsername, COUNT(s), u.publicProfile AS matchingSkillCount " +
+        @NamedQuery(name = "User.getUserProjectCreationDto", query = "SELECT u.lab.local, u.firstName, u.lastName, u.thumbnailPhoto, u.id, u.systemUsername, COUNT(s), u.publicProfile, u.email AS matchingSkillCount " +
                 "FROM UserEntity u " +
                 "LEFT JOIN u.skills s ON s.name IN :skillNames " +
                 "WHERE u.id <> :id AND u.id <> 1 AND u.id NOT IN :excludedIds AND u.profileCreated = true " +
