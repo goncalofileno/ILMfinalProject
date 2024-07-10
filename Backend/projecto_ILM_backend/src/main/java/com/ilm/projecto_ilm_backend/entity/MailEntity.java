@@ -73,6 +73,7 @@ public class MailEntity implements Serializable {
     /**
      * The user receiver of the message. This is a many-to-one relationship with the UserEntity class.
      */
+    @NotNull
     @ManyToOne
     private UserEntity receiver;
 

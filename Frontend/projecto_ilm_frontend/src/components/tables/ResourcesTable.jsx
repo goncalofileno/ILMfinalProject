@@ -65,7 +65,7 @@ export default function ResourcesTable({
           <div className="projects-filters">
             <Form.Control
               type="text"
-              placeholder={t`Search mails`}
+              placeholder={t`Search resources`}
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
               style={{ borderRadius: "10px", cursor: "text" }}
