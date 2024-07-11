@@ -26,7 +26,11 @@ import {
 import Cookies from "js-cookie";
 import TablePagination from "../components/paginations/TablePagination";
 import "./ProjectMembersPage.css";
-import { formatLab, formatTypeUserInProject, formatTypeUserInProjectApplicationRequest } from "../utilities/converters";
+import {
+  formatLab,
+  formatTypeUserInProject,
+  formatTypeUserInProjectApplicationRequest,
+} from "../utilities/converters";
 import { useMediaQuery } from "react-responsive";
 import { Trans, t } from "@lingui/macro";
 
@@ -328,7 +332,9 @@ const ProjectMembersPage = () => {
             <Col>
               {projectData.projectState === "CANCELED" && (
                 <Alert variant="danger" className="standard-modal">
-                  <Trans>The project is canceled and no changes can be made.</Trans>
+                  <Trans>
+                    The project is canceled and no changes can be made.
+                  </Trans>
                 </Alert>
               )}
             </Col>
@@ -375,8 +381,12 @@ const ProjectMembersPage = () => {
                           <th colSpan={2} style={{ width: "40%" }}>
                             <Trans>Name</Trans>
                           </th>
-                          <th style={{ width: "30%" }}><Trans>Type</Trans></th>
-                          <th style={{ width: "30%" }}><Trans>Actions</Trans></th>
+                          <th style={{ width: "30%" }}>
+                            <Trans>Type</Trans>
+                          </th>
+                          <th style={{ width: "30%" }}>
+                            <Trans>Actions</Trans>
+                          </th>
                         </tr>
                       </thead>
                       <tbody
@@ -406,7 +416,7 @@ const ProjectMembersPage = () => {
                               className="align-middle"
                             >
                               {member.systemUsername === userSystemUsername
-                                ? (t`You`)
+                                ? t`You`
                                 : member.name}
                             </td>
                             <td
@@ -426,8 +436,12 @@ const ProjectMembersPage = () => {
                                   disabled={{ isProjectInactive }}
                                   className="mt-2"
                                 >
-                                  <option value="MANAGER"><Trans>Manager</Trans></option>
-                                  <option value="MEMBER"><Trans>Member</Trans></option>
+                                  <option value="MANAGER">
+                                    <Trans>Manager</Trans>
+                                  </option>
+                                  <option value="MEMBER">
+                                    <Trans>Member</Trans>
+                                  </option>
                                 </Form.Select>
                               )}
                             </td>
@@ -472,13 +486,17 @@ const ProjectMembersPage = () => {
                   <Card.Header
                     style={{ backgroundColor: "transparent", border: "none" }}
                   >
-                    <h5><Trans>Requests and Applications</Trans></h5>
+                    <h5>
+                      <Trans>Requests and Applications</Trans>
+                    </h5>
                   </Card.Header>
                   <Card.Body
                     style={{ border: "none", backgroundColor: "transparent" }}
                   >
                     {requests.length === 0 ? (
-                      <p><Trans>No requests or applications to show.</Trans></p>
+                      <p>
+                        <Trans>No requests or applications to show.</Trans>
+                      </p>
                     ) : (
                       <table
                         className="table-users-project-table"
@@ -487,10 +505,14 @@ const ProjectMembersPage = () => {
                         <thead id="table-users-project-head">
                           <tr>
                             <th style={{ width: "40%" }} colSpan={2}>
-                            <Trans>Name</Trans>
+                              <Trans>Name</Trans>
                             </th>
-                            <th style={{ width: "30%" }}><Trans>Type</Trans></th>
-                            <th style={{ width: "30%" }}><Trans>Actions</Trans></th>
+                            <th style={{ width: "30%" }}>
+                              <Trans>Type</Trans>
+                            </th>
+                            <th style={{ width: "30%" }}>
+                              <Trans>Actions</Trans>
+                            </th>
                           </tr>
                         </thead>
                         <tbody id="body-table-members-project">
@@ -513,14 +535,16 @@ const ProjectMembersPage = () => {
                                 className="align-middle"
                               >
                                 {member.systemUsername === userSystemUsername
-                                  ? (t`You`)
+                                  ? t`You`
                                   : member.name}
                               </td>
                               <td
                                 style={{ width: "28%" }}
                                 className="align-middle"
                               >
-                                {formatTypeUserInProjectApplicationRequest(member.type)}
+                                {formatTypeUserInProjectApplicationRequest(
+                                  member.type
+                                )}
                               </td>
                               <td
                                 className="align-middle"
@@ -599,7 +623,9 @@ const ProjectMembersPage = () => {
                     marginBottom: "15px",
                   }}
                 >
-                  <h5><Trans>Available Users</Trans></h5>
+                  <h5>
+                    <Trans>Available Users</Trans>
+                  </h5>
                 </Card.Header>
                 <Card.Body
                   style={{ border: "none", backgroundColor: "transparent" }}
@@ -669,14 +695,18 @@ const ProjectMembersPage = () => {
                               sm={2}
                               style={{ width: "100%", paddingTop: "0px" }}
                             >
-                              <h6><Trans>Lab</Trans></h6>
+                              <h6>
+                                <Trans>Lab</Trans>
+                              </h6>
                             </Form.Label>
                             <Col sm={10}>
                               <Form.Select
                                 value={selectedLab}
                                 onChange={(e) => setSelectedLab(e.target.value)}
                               >
-                                <option value=""><Trans>All Labs</Trans></option>
+                                <option value="">
+                                  <Trans>All Labs</Trans>
+                                </option>
                                 {labs.map((lab) => (
                                   <option key={lab.local} value={lab.local}>
                                     {formatLab(lab.local)}
@@ -703,10 +733,10 @@ const ProjectMembersPage = () => {
                         </th>
                         {!isPhone && <th style={{ width: "20%" }}>Lab</th>}
                         <th style={{ width: !isPhone ? "30%" : "35%" }}>
-                        <Trans>Skills</Trans>
+                          <Trans>Skills</Trans>
                         </th>
                         <th style={{ width: !isPhone ? "20%" : "25%" }}>
-                        <Trans>Actions</Trans>
+                          <Trans>Actions</Trans>
                         </th>
                       </tr>
                     </thead>
@@ -715,8 +745,10 @@ const ProjectMembersPage = () => {
                         <tr style={{ height: "100%" }}>
                           <td colspan="7">
                             <div className="no-results no-results-align">
-                            <Trans>No users available to show based on the selected
-                            criteria.</Trans>
+                              <Trans>
+                                No users available to show based on the selected
+                                criteria.
+                              </Trans>
                             </div>
                           </td>
                         </tr>
@@ -788,15 +820,29 @@ const ProjectMembersPage = () => {
                                           transform: "translateY(5px)",
                                         }}
                                       >
-                                        <span
-                                          style={{
-                                            height: "100%",
-                                            display: "flex",
-                                            alignItems: "center",
-                                          }}
-                                        >
-                                          <Trans>This user has a private profile.</Trans>
-                                        </span>
+                                        {!isSmallMobile ? (
+                                          <span
+                                            style={{
+                                              height: "100%",
+                                              display: "flex",
+                                              alignItems: "center",
+                                            }}
+                                          >
+                                            <Trans>
+                                              This user has a private profile.
+                                            </Trans>
+                                          </span>
+                                        ) : (
+                                          <span
+                                            style={{
+                                              height: "100%",
+                                              display: "flex",
+                                              alignItems: "center",
+                                            }}
+                                          >
+                                            <Trans>Private profile</Trans>
+                                          </span>
+                                        )}
                                       </Alert>
                                     </div>
                                   )}
@@ -867,11 +913,15 @@ const ProjectMembersPage = () => {
         {/* Remove Member Modal */}
         <Modal show={showRemoveModal} onHide={() => setShowRemoveModal(false)}>
           <Modal.Header closeButton>
-            <Modal.Title><Trans>Remove Member</Trans></Modal.Title>
+            <Modal.Title>
+              <Trans>Remove Member</Trans>
+            </Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form.Group>
-              <Form.Label><Trans>Reason for Removal</Trans></Form.Label>
+              <Form.Label>
+                <Trans>Reason for Removal</Trans>
+              </Form.Label>
               <Form.Control
                 as="textarea"
                 rows={3}
@@ -888,7 +938,7 @@ const ProjectMembersPage = () => {
               <Trans>Cancel</Trans>
             </Button>
             <Button variant="danger" onClick={handleConfirmRemove}>
-            <Trans>Confirm Remove</Trans>
+              <Trans>Confirm Remove</Trans>
             </Button>
           </Modal.Footer>
         </Modal>
@@ -896,11 +946,15 @@ const ProjectMembersPage = () => {
         {/* Reject Request Modal */}
         <Modal show={showRejectModal} onHide={() => setShowRejectModal(false)}>
           <Modal.Header closeButton>
-            <Modal.Title><Trans>Reject Application</Trans></Modal.Title>
+            <Modal.Title>
+              <Trans>Reject Application</Trans>
+            </Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form.Group>
-              <Form.Label><Trans>Reason for Rejection</Trans></Form.Label>
+              <Form.Label>
+                <Trans>Reason for Rejection</Trans>
+              </Form.Label>
               <Form.Control
                 as="textarea"
                 rows={3}
@@ -917,7 +971,7 @@ const ProjectMembersPage = () => {
               <Trans>Cancel</Trans>
             </Button>
             <Button variant="danger" onClick={handleConfirmReject}>
-            <Trans>Confirm Reject</Trans>
+              <Trans>Confirm Reject</Trans>
             </Button>
           </Modal.Footer>
         </Modal>

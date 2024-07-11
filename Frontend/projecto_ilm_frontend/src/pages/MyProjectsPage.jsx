@@ -167,8 +167,12 @@ export default function MyProjectsPage() {
             <Col
               xs={1}
               sm={1}
-              className="align-center"
-              style={{ justifyContent: "center" }}
+              style={{
+                justifyContent: "center",
+                transform: (isMobile || isTablet) && "translate(-30px,300px)",
+                display: !isTablet && "flex",
+                alignItems: !isTablet && "center",
+              }}
             >
               {currentPage > 1 && (
                 <button className="btn-arrow" onClick={handlePreviousClick}>
@@ -178,13 +182,21 @@ export default function MyProjectsPage() {
             </Col>
 
             <Col xs={10} sm={10} style={{ height: "100%" }}>
-              <Row style={{ height: "100%" }}>
+              <Row
+                style={{
+                  height: isTablet && !isSmallMobile ? "900px" : "100%",
+                }}
+              >
                 <Col sm={6} xl={4}>
                   {projects.slice(0, 4).map((project, index) => {
                     return index === 0 ? (
                       <div
                         style={{
-                          height: !isSmallMobile ? "45%" : "300px",
+                          height: isSmallMobile
+                            ? "300px"
+                            : isTablet
+                            ? "33%"
+                            : "45%",
                           marginBottom: "5%",
                         }}
                       >
@@ -205,7 +217,13 @@ export default function MyProjectsPage() {
                     ) : (
                       index === 3 && (
                         <div
-                          style={{ height: !isSmallMobile ? "45%" : "300px" }}
+                          style={{
+                            height: isSmallMobile
+                              ? "300px"
+                              : isTablet
+                              ? "33%"
+                              : "45%",
+                          }}
                         >
                           <MyProjectCard
                             name={project.name}
@@ -231,7 +249,11 @@ export default function MyProjectsPage() {
                         index === 0 && (
                           <div
                             style={{
-                              height: !isSmallMobile ? "45%" : "300px",
+                              height: isSmallMobile
+                                ? "300px"
+                                : isTablet
+                                ? "33%"
+                                : "45%",
                               marginBottom: "5%",
                             }}
                           >
@@ -258,7 +280,11 @@ export default function MyProjectsPage() {
                     return index === 0 ? (
                       <div
                         style={{
-                          height: !isSmallMobile ? "45%" : "300px",
+                          height: isSmallMobile
+                            ? "300px"
+                            : isTablet
+                            ? "33%"
+                            : "45%",
                           marginBottom: "5%",
                         }}
                       >
@@ -279,7 +305,13 @@ export default function MyProjectsPage() {
                     ) : (
                       index === 3 && (
                         <div
-                          style={{ height: !isSmallMobile ? "45%" : "300px" }}
+                          style={{
+                            height: isSmallMobile
+                              ? "300px"
+                              : isTablet
+                              ? "33%"
+                              : "45%",
+                          }}
                         >
                           <MyProjectCard
                             name={project.name}
@@ -305,7 +337,11 @@ export default function MyProjectsPage() {
                         index === 3 && (
                           <div
                             style={{
-                              height: !isSmallMobile ? "45%" : "300px",
+                              height: isSmallMobile
+                                ? "300px"
+                                : isTablet
+                                ? "33%"
+                                : "45%",
                               marginBottom: "5%",
                             }}
                           >
@@ -382,8 +418,12 @@ export default function MyProjectsPage() {
             <Col
               xs={1}
               sm={1}
-              className="align-center"
-              style={{ justifyContent: "center" }}
+              style={{
+                justifyContent: "center",
+                transform: (isMobile || isTablet) && "translate(-40px,300px)",
+                display: !isTablet && "flex",
+                alignItems: !isTablet && "center",
+              }}
             >
               {" "}
               {currentPage < totalPages && (

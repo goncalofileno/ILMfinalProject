@@ -523,7 +523,7 @@ public class UserService {
     }
 
     @GET
-    @Path("profile/{systemUsername}")
+    @Path("/profile/{systemUsername}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getProfile(@PathParam("systemUsername") String systemUsername, @CookieParam("session-id") String sessionId) {
         try {
