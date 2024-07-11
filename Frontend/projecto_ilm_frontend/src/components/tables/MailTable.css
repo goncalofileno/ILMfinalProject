@@ -9,7 +9,7 @@
 #mail-table tr {
   background: none;
   transition: background-color 0.3s;
-
+  border-bottom: 1px solid #ddd;
   background-color: rgba(30, 40, 82, 0.056);
 }
 

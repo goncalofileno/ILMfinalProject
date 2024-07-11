@@ -139,4 +139,6 @@ public class MessageBean {
         projectChatWebSocket.broadcastMessage(projectSystemName, broadcastMessage);
     }
 
+
+
 }

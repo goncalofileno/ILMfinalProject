@@ -251,7 +251,7 @@ const StatisticsPdf = () => {
             style={{ height: !isTablet ? "3%" : "30px", width: "10%" }}
           ></Row>
           <Row style={{ height: !isTablet && "42%", width: "100%" }}>
-            <Col sm={1}></Col>
+            <Col xs={1} sm={1}></Col>
 
             <Col
               sm={10}
@@ -300,7 +300,7 @@ const StatisticsPdf = () => {
                 ))}
               </div>
             </Col>
-            <Col sm={1}></Col>
+            <Col xs={1} sm={1}></Col>
           </Row>
           <Row style={{ height: "3%", width: "10%" }}></Row>
           <Row style={{ height: !isTablet && "40%", width: "100%" }}>

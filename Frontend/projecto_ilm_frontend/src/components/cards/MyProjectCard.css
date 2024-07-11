@@ -9,6 +9,8 @@
   display: flex;
   flex-direction: column;
   cursor: pointer;
+  min-height: 255px;
+  max-height: 260px;
 }
 
 .my-projects-banner {

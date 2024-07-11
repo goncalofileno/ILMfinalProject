@@ -14,15 +14,6 @@ const AddTaskModal = ({
   tasks,
   systemProjectName,
 }) => {
-  const handleQuillChange = (field, value) => {
-    handleInputChange({
-      target: {
-        name: field,
-        value: value,
-      },
-    });
-  };
-
   const currentUsername = Cookies.get("user-systemUsername");
 
   const getInitialTaskDetails = () => ({
@@ -33,7 +24,9 @@ const AddTaskModal = ({
     finalDate: "",
     outColaboration: "",
     inCharge: currentUsername,
-    membersOfTask: projectMembers.filter(member => member.systemUsername === currentUsername).map(member => ({ ...member, type: "CREATOR" })),
+    membersOfTask: projectMembers
+      .filter((member) => member.systemUsername === currentUsername)
+      .map((member) => ({ ...member, type: "CREATOR" })),
     dependentTasks: [],
     systemProjectName: systemProjectName,
   });
@@ -194,7 +187,9 @@ const AddTaskModal = ({
     (task) =>
       !newTaskDetails.dependentTasks.some(
         (depTask) => depTask.id === task.rawTask.id
-      ) && task.type !== "project" && task.type !== "milestone"
+      ) &&
+      task.type !== "project" &&
+      task.type !== "milestone"
   );
 
   const handleCloseModal = () => {
@@ -297,7 +292,7 @@ const AddTaskModal = ({
                   type="text"
                   value={newTaskDetails.outColaboration || ""}
                   onChange={handleInputChange}
-                  style={{ height: "70px"}}
+                  style={{ height: "70px" }}
                 />
               </Form.Group>
             </div>

@@ -153,7 +153,9 @@ code {
   border-top-left-radius: 100px;
   position: relative;
 }
-
+body {
+  background-color: rgb(245, 245, 245);
+}
 .ilm-pageb-noheight {
   background-color: rgb(245, 245, 245);
   margin-top: 60px;
