@@ -97,9 +97,6 @@ https://maven.apache.org/xsd/maven-4.0.0.xsd"> <modelVersion>4.0.0</modelVersion
             <artifactId>jakarta.websocket-api</artifactId>
             <version>2.2.0</version>
         </dependency>
-
-
-
     </dependencies>
     <build>
         <finalName>${project.artifactId}</finalName>

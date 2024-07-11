@@ -36,9 +36,6 @@ export default function UsersPage() {
     Cookies.get("user-language") || "ENGLISH"
   );
   const rejectedUsers = [];
-  const [currentLanguage, setCurrentLanguage] = useState(
-    Cookies.get("user-language") || "ENGLISH"
-  );
 
   useEffect(() => {
     getUserProjectCreation(

@@ -56,6 +56,16 @@ export default function AsideResourcesPage({
     setNavigateTableResourcesTrigger((prev) => !prev);
   };
 
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  useEffect(() => {
+    if (!isVisible) {
+      setIsAnimating(true);
+      const timer = setTimeout(() => setIsAnimating(false), 500); // Duração da animação
+      return () => clearTimeout(timer);
+    }
+  }, [isVisible]);
+
   return (
     <>
       {((isVisible && isMobile) || !isMobile) && (

@@ -1,4 +1,4 @@
-const baseURL = "http://localhost:8080/projeto_ilm_final/rest/";
+const baseURL = "https://localhost:8443/projeto_ilm_final/rest/";
 
 async function checkUsername(username, auxiliarToken) {
   try {
@@ -423,16 +423,16 @@ async function logoutUser() {
   }
 }
 
-const getUserProfile = async (systemUsername) => {
+async function getUserProfile(systemUsername){
   try {
     const response = await fetch(
-      `http://localhost:8080/projeto_ilm_final/rest/user/profile/${systemUsername}`,
+      `${baseURL}user/profile/${systemUsername}`,
       {
         method: "GET",
-        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
       }
     );
 

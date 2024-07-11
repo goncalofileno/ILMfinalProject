@@ -14,15 +14,7 @@ const AddTaskModal = ({
   tasks,
   systemProjectName,
 }) => {
-  const handleQuillChange = (field, value) => {
-    handleInputChange({
-      target: {
-        name: field,
-        value: value,
-      },
-    });
-  };
-
+  
   const currentUsername = Cookies.get("user-systemUsername");
 
   const getInitialTaskDetails = () => ({
