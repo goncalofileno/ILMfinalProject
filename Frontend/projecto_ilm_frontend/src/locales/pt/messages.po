@@ -50,19 +50,19 @@ msgstr "Adicionar"
 msgid "Add a skill"
 msgstr "Adicionar uma Skill"
 
-#: src/components/modals/AddTaskModal.jsx:390
-#: src/components/modals/EditTaskModal.jsx:246
+#: src/components/modals/AddTaskModal.jsx:359
+#: src/components/modals/EditTaskModal.jsx:249
 msgid "Add New Dependent Task"
 msgstr "Adicionar Tarefa dependente"
 
-#: src/components/modals/AddTaskModal.jsx:353
-#: src/components/modals/EditTaskModal.jsx:208
+#: src/components/modals/AddTaskModal.jsx:325
+#: src/components/modals/EditTaskModal.jsx:210
 msgid "Add New Member"
 msgstr "Adicionar novo Membro"
 
-#: src/components/modals/AddTaskModal.jsx:211
-#: src/components/modals/AddTaskModal.jsx:413
-#: src/pages/ProjectPlanPage.jsx:486
+#: src/components/modals/AddTaskModal.jsx:198
+#: src/components/modals/AddTaskModal.jsx:381
+#: src/pages/ProjectPlanPage.jsx:447
 msgid "Add New Task"
 msgstr "Adicionar nova Tarefa"
 
@@ -352,8 +352,8 @@ msgstr "Limpar Filtros"
 msgid "Clear Search"
 msgstr "Limpar Pesquisa"
 
-#: src/components/modals/AddTaskModal.jsx:405
-#: src/components/modals/EditTaskModal.jsx:261
+#: src/components/modals/AddTaskModal.jsx:373
+#: src/components/modals/EditTaskModal.jsx:264
 #: src/components/tables/MailTable.jsx:474
 #: src/components/tables/SentMailTable.jsx:428
 #: src/pages/ProjectProfilePageInfo.jsx:814
@@ -481,8 +481,8 @@ msgstr "Eliminar Task"
 msgid "Dependencies"
 msgstr "Dependências"
 
-#: src/components/modals/AddTaskModal.jsx:365
-#: src/components/modals/EditTaskModal.jsx:220
+#: src/components/modals/AddTaskModal.jsx:335
+#: src/components/modals/EditTaskModal.jsx:222
 msgid "Dependent Tasks"
 msgstr "Tarefas Dependentes"
 
@@ -490,11 +490,11 @@ msgstr "Tarefas Dependentes"
 msgid "Descending"
 msgstr "Descendente"
 
-#: src/components/modals/AddResourceModal.jsx:331
-#: src/components/modals/AddTaskModal.jsx:238
-#: src/components/modals/EditTaskModal.jsx:84
-#: src/pages/EditProjectPage.jsx:419
-#: src/pages/ProjectCreationPage1.jsx:396
+#: src/components/modals/AddResourceModal.jsx:332
+#: src/components/modals/AddTaskModal.jsx:221
+#: src/components/modals/EditTaskModal.jsx:66
+#: src/pages/EditProjectPage.jsx:415
+#: src/pages/ProjectCreationPage1.jsx:387
 #: src/pages/ProjectProfilePageInfo.jsx:515
 msgid "Description"
 msgstr "Descrição"
@@ -627,7 +627,7 @@ msgstr "Falha ao enviar ao email."
 msgid "Fair"
 msgstr "Média"
 
-#: src/components/modals/AddTaskModal.jsx:263
+#: src/components/modals/AddTaskModal.jsx:242
 #: src/components/modals/EditTaskModal.jsx:114
 msgid "Final Date"
 msgstr "Data Final"
@@ -685,7 +685,7 @@ msgid "ILM Statistics"
 msgstr "Estatísticas ILM"
 
 #: src/components/cards/TaskCard.jsx:32
-#: src/components/modals/AddTaskModal.jsx:303
+#: src/components/modals/AddTaskModal.jsx:277
 #: src/components/modals/EditTaskModal.jsx:158
 msgid "In Charge"
 msgstr "Responsável"
@@ -711,7 +711,7 @@ msgstr "Caixa de Entrada"
 msgid "Info"
 msgstr "Info"
 
-#: src/components/modals/AddTaskModal.jsx:250
+#: src/components/modals/AddTaskModal.jsx:231
 #: src/components/modals/EditTaskModal.jsx:97
 msgid "Initial Date"
 msgstr "Data Inicial"
@@ -861,8 +861,8 @@ msgid "Member Type"
 msgstr "Tipo de Membro"
 
 #: src/components/cards/MyProjectCard.jsx:55
-#: src/components/modals/AddTaskModal.jsx:321
-#: src/components/modals/EditTaskModal.jsx:176
+#: src/components/modals/AddTaskModal.jsx:294
+#: src/components/modals/EditTaskModal.jsx:177
 #: src/components/tables/ProjectsTable.jsx:193
 #: src/pages/ProjectChatPage.jsx:226
 #: src/pages/ProjectProfilePageInfo.jsx:592
@@ -1058,7 +1058,7 @@ msgstr "O Lab é obrigatório."
 #~ msgid "Online"
 #~ msgstr "Online"
 
-#: src/components/modals/AddTaskModal.jsx:286
+#: src/components/modals/AddTaskModal.jsx:262
 #: src/components/modals/EditTaskModal.jsx:142
 msgid "Out Colaboration"
 msgstr "Colaboração Externa"
@@ -1402,12 +1402,15 @@ msgid "Search for user"
 msgstr "Procurar por Utilizador"
 
 #: src/components/tables/MailTable.jsx:289
-#: src/components/tables/ResourcesTable.jsx:68
 #: src/components/tables/SentMailTable.jsx:231
 msgid "Search mails"
 msgstr "Procurar emails"
 
-#: src/components/modals/InviteProjectModal.jsx:97
+#: src/components/tables/ResourcesTable.jsx:68
+msgid "Search resources"
+msgstr "Procura por recursos"
+
+#: src/components/modals/InviteProjectModal.jsx:98
 msgid "Select a project"
 msgstr "Selecione um projeto"
 
@@ -1565,7 +1568,7 @@ msgstr "Contacto de Fornecedor"
 msgid "Take Flight"
 msgstr "Levantam Voo"
 
-#: src/components/modals/AddTaskModal.jsx:53
+#: src/components/modals/AddTaskModal.jsx:51
 msgid "Task title must be unique."
 msgstr "O título da tarefa deve ser único."
 
@@ -1639,7 +1642,7 @@ msgstr "Este recurso já existe."
 msgid "This user has a private profile."
 msgstr "Este utilizador tem o perfil privado."
 
-#: src/components/modals/AddTaskModal.jsx:221
+#: src/components/modals/AddTaskModal.jsx:206
 #: src/components/modals/EditTaskModal.jsx:49
 msgid "Title"
 msgstr "Título"
