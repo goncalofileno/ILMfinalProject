@@ -6,6 +6,7 @@ import useNotificationStore from "../../stores/useNotificationStore";
 import { useLocation, useNavigate } from "react-router-dom";
 import TimeoutModal from "../../components/modals/TimeoutModal";
 import NotificationBanner from "../../components/banners/NotificationBanner";
+import { getUserType } from "../services";
 
 const MailWebSocket = () => {
   const { incrementUnreadCount, fetchMailsInInbox } = useMailStore();
@@ -15,21 +16,22 @@ const MailWebSocket = () => {
   const [showTimeoutModal, setShowTimeoutModal] = useState(false);
   const [notification, setNotification] = useState(null);
   const navigate = useNavigate();
-  const [audioEnabled, setAudioEnabled] = useState(false);
-  const audioRef = useRef(new Audio("/notification_sound.wav"));
+  // const [audioEnabled, setAudioEnabled] = useState(false);
+  // const audioRef = useRef(new Audio("/notification_sound.wav"));
+  const loggedInUsername = Cookies.get("user-systemUsername");
 
-  useEffect(() => {
-    const enableAudio = () => {
-      setAudioEnabled(true);
-      document.removeEventListener("click", enableAudio);
-    };
+  // useEffect(() => {
+  //   const enableAudio = () => {
+  //     setAudioEnabled(true);
+  //     document.removeEventListener("click", enableAudio);
+  //   };
 
-    document.addEventListener("click", enableAudio);
+  //   document.addEventListener("click", enableAudio);
 
-    return () => {
-      document.removeEventListener("click", enableAudio);
-    };
-  }, []);
+  //   return () => {
+  //     document.removeEventListener("click", enableAudio);
+  //   };
+  // }, []);
 
   useEffect(() => {
     const sessionId = Cookies.get("session-id");
@@ -53,29 +55,33 @@ const MailWebSocket = () => {
         if (event.data.startsWith("new_mail:") && isInboxPage) {
           console.log("Real-time mail received");
           incrementUnreadCount();
-          fetchMailsInInbox(true); // Ensure fetching mails
+          fetchMailsInInbox(true); 
           const senderName = event.data.split(":")[1];
-          if (audioEnabled) {
-            audioRef.current.play();
-          }
+          // if (audioEnabled) {
+          //   audioRef.current.play();
+          // }
         } else if (event.data === "timeout") {
           setShowTimeoutModal(true);
+        } else if (event.data === "promote_to_admin") {
+          console.log("Promoted to admin MESSAGE RECEIVED");
+          getUserType();
         } else if (event.data.startsWith("new_mail:")) {
           incrementUnreadCount();
-          if (audioEnabled) {
-            audioRef.current.play();
-          }
+          // if (audioEnabled) {
+          //   audioRef.current.play();
+          // }
         } else {
           try {
             const parsedData = JSON.parse(event.data);
             if (parsedData.type === "online_members") {
+              console.log("OLINE MEMBERS:", parsedData.message.members);
               setOnlineMembers(parsedData.message.members);
             } else {
               setNotification(parsedData);
               incrementUnreadNotificationsCount();
-              if (audioEnabled) {
-                audioRef.current.play();
-              }
+              // if (audioEnabled) {
+              //   audioRef.current.play();
+              // }
             }
           } catch (e) {
             console.error("Error parsing WebSocket message:", e);
@@ -101,7 +107,7 @@ const MailWebSocket = () => {
     incrementUnreadCount,
     fetchMailsInInbox,
     location.pathname,
-    audioEnabled,
+    // audioEnabled,
     setOnlineMembers,
     incrementUnreadNotificationsCount,
   ]);
@@ -143,6 +149,8 @@ const MailWebSocket = () => {
     REMOVED: (systemUserName) => navigate(`/profile/${systemUserName}`),
     PROJECT_MESSAGE: (projectSystemName) =>
       navigate(`/project/${projectSystemName}/chat`),
+    PROMOTE_TO_ADMIN: (systemUserName) =>
+      navigate(`/profile/${loggedInUsername}`),
   };
 
   const handleNotificationClick = () => {

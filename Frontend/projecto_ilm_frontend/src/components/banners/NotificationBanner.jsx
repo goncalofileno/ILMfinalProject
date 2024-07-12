@@ -43,6 +43,8 @@ const NotificationBanner = ({ notification, onClick, onEnd }) => {
       `The project <strong>${projectName}</strong> was updated by <strong>${userName}</strong>.`,
     LEFT_PROJECT: ({ projectName, userName }) =>
       `The user <strong>${userName}</strong> left the project <strong>${projectName}</strong>.`,
+    PROMOTE_TO_ADMIN: ({ userName }) =>
+      `You were promoted to admin by <strong>${userName}</strong>.`,
   };
 
   const notificationMessagesPt = {
@@ -78,6 +80,8 @@ const NotificationBanner = ({ notification, onClick, onEnd }) => {
       `O projeto <strong>${projectName}</strong> foi atualizado por <strong>${userName}</strong>.`,
     LEFT_PROJECT: ({ projectName, userName }) =>
       `O utilizador <strong>${userName}</strong> saiu do projeto <strong>${projectName}</strong>.`,
+    PROMOTE_TO_ADMIN: ({ userName }) =>
+      `Foi promovido a administrador por <strong>${userName}</strong>.`,
   };
 
   const getNotificationMessage = () => {

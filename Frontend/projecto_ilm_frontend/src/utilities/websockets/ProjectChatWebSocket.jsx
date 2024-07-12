@@ -4,22 +4,22 @@ import useChatStore from "../../stores/useChatStore";
 
 const ProjectChatWebSocket = ({ projectId }) => {
   const { addMessage, setOnlineMembers } = useChatStore();
-  const audioRef = useRef(new Audio("/notification_sound.wav"));
+  // const audioRef = useRef(new Audio("/notification_sound.wav"));
   const socketRef = useRef(null);
   const [audioEnabled, setAudioEnabled] = useState(false);
 
-  useEffect(() => {
-    const enableAudio = () => {
-      setAudioEnabled(true);
-      document.removeEventListener("click", enableAudio);
-    };
+  // useEffect(() => {
+  //   const enableAudio = () => {
+  //     setAudioEnabled(true);
+  //     document.removeEventListener("click", enableAudio);
+  //   };
 
-    document.addEventListener("click", enableAudio);
+  //   document.addEventListener("click", enableAudio);
 
-    return () => {
-      document.removeEventListener("click", enableAudio);
-    };
-  }, []);
+  //   return () => {
+  //     document.removeEventListener("click", enableAudio);
+  //   };
+  // }, []);
 
   useEffect(() => {
     const systemUsername = Cookies.get("user-systemUsername");
@@ -48,6 +48,7 @@ const ProjectChatWebSocket = ({ projectId }) => {
           if (parsedData.type === "new_message") {
             addMessage(parsedData.message);
           } else if (parsedData.type === "online_members") {
+            console.log("OLINE MEMBERS:", parsedData.message.members)
             setOnlineMembers(parsedData.message.members);
           } else {
             console.warn("Unknown message type received:", parsedData.type);
@@ -71,7 +72,7 @@ const ProjectChatWebSocket = ({ projectId }) => {
         socketRef.current.close();
       }
     };
-  }, [projectId, addMessage, setOnlineMembers, audioEnabled]);
+  }, [projectId, addMessage, setOnlineMembers]);
 
   return null;
 };

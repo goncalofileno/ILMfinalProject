@@ -1932,6 +1932,34 @@ const updateLanguage = async (sessionId, language) => {
   }
 };
 
+const getUserType = async () => {
+  try {
+    const response = await fetch(`${baseURL}user/getUserType`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+
+    if (response.status === 200) {
+      const data = await response.json();
+      console.log("User type retrieved successfully");
+      return { success: true, userType: data.userType };
+    } else if (response.status === 401) {
+      console.error("Unauthorized: Invalid session");
+      return { error: "Unauthorized: Invalid session" };
+    } else {
+      console.error("Error retrieving user type: Unknown error");
+      return { error: "Unknown error occurred" };
+    }
+  } catch (error) {
+    console.error("Error retrieving user type:", error);
+    return { error: "An error occurred while retrieving the user type." };
+  }
+};
+
+
 export {
   registerUser,
   getInterests,
@@ -2017,4 +2045,5 @@ export {
   getAppStatistics,
   updateLanguage,
   promoteUserToAdmin,
+  getUserType,
 };

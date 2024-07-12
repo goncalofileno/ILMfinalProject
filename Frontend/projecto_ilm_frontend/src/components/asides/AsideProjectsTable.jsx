@@ -118,11 +118,6 @@ export default function AsideProjectsTable({
                 }}
               />
             </div>
-            <div className="table-label-color">
-              <div id="your-projects-color">
-                <Trans>Your Projects</Trans>
-              </div>
-            </div>
             <button
               className="terciary-button"
               style={{
@@ -147,6 +142,11 @@ export default function AsideProjectsTable({
             >
               <Trans>Clear Filters</Trans>
             </button>
+            <div className="table-label-color">
+              <div id="your-projects-color">
+                <Trans>Your Projects</Trans>
+              </div>
+            </div>
           </div>
         </div>
       )}

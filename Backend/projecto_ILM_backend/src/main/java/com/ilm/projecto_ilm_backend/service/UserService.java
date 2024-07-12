@@ -304,6 +304,7 @@ public class UserService {
             } else {
                 String sessionId = userBean.loginUser(registerUserDto, clientIP, userAgent);
                 if (sessionId != null) {
+
                     NewCookie sessionCookie = new NewCookie("session-id", sessionId, "/", null, null, NewCookie.DEFAULT_MAX_AGE, false, false);
                     NewCookie systemUsernameCookie = new NewCookie("user-systemUsername", userEntity.getSystemUsername(), "/", null, null, NewCookie.DEFAULT_MAX_AGE, false, false);
                     NewCookie userTypeCookie = new NewCookie("user-userType", String.valueOf(userEntity.getType()), "/", null, null, NewCookie.DEFAULT_MAX_AGE, false, false);
@@ -687,6 +688,26 @@ public class UserService {
         } catch (
                 Exception e) {
             logger.error("Error updating user type: " + e.getMessage());
+            return Response.status(Response.Status.BAD_REQUEST).entity(Collections.singletonMap("message", e.getMessage())).build();
+        }
+    }
+
+
+    @GET
+    @Path("/getUserType")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getUserType(@CookieParam("session-id") String sessionId) {
+        try {
+            logger.info("Received a request to get the user type from a user with session ID: " + sessionId);
+            if (databaseValidator.checkSessionId(sessionId)) {
+                UserEntity user = userBean.getUserBySessionId(sessionId);
+                NewCookie userTypeCookie = new NewCookie("user-userType", String.valueOf(user.getType()), "/", null, null, NewCookie.DEFAULT_MAX_AGE, false, false);
+                return Response.status(Response.Status.OK).cookie(userTypeCookie).build();
+            } else {
+                return Response.status(Response.Status.UNAUTHORIZED).build();
+            }
+        } catch (Exception e) {
+            logger.error("Error getting user type: " + e.getMessage());
             return Response.status(Response.Status.BAD_REQUEST).entity(Collections.singletonMap("message", e.getMessage())).build();
         }
     }
