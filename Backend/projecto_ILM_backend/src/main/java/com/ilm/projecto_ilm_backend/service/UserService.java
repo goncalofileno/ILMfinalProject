@@ -173,11 +173,11 @@ public class UserService {
 
         if (databaseValidator.checkAuxiliarToken(auxiliarToken)) {
             if (userBean.confirmEmail(auxiliarToken)) {
-                URI uri = URI.create("http://localhost:3000/create-profile/" + auxiliarToken);
+                URI uri = URI.create("https://localhost:3000/create-profile/" + auxiliarToken);
                 logger.info("Email confirmed.");
                 return Response.seeOther(uri).build();
             } else {
-                URI uri = URI.create("http://localhost:3000/");
+                URI uri = URI.create("https://localhost:3000/");
                 logger.error("Error confirming email.");
                 return Response.seeOther(uri).build();
             }
@@ -473,14 +473,14 @@ public class UserService {
         logger.info("Received a request to reset password of a user from IP address: " + clientIP);
 
         if (databaseValidator.checkAuxiliarToken(auxiliarToken)) {
-            URI uri = URI.create("http://localhost:3000/reset-password/" + auxiliarToken);
+            URI uri = URI.create("https://localhost:3000/reset-password/" + auxiliarToken);
             logger.info("Auxiliar token to reset password was confirmed.");
             return Response.seeOther(uri).build();
 
 
         } else {
             logger.error("Auxiliar token not found.");
-            URI uri = URI.create("http://localhost:3000/");
+            URI uri = URI.create("https://localhost:3000/");
             return Response.seeOther(uri).build();
         }
     }

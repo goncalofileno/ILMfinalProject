@@ -270,6 +270,7 @@ public class UserBean {
             user.setType(UserTypeENUM.STANDARD_USER);
             user.setPhoto("https://www.pngkey.com/png/full/114-1149878_setting-user-avatar-in-specific-size-without-breaking.png");
             user.setAuxiliarToken(generateNewToken());
+            user.setLanguage(LanguageENUM.ENGLISH);
             emailService.sendConfirmationEmail(user.getEmail(), user.getAuxiliarToken());
             userDao.persist(user);
             return true;
@@ -331,6 +332,9 @@ public class UserBean {
         user.setLab(labDao.findbyLocal(WorkLocalENUM.valueOf(userProfileDto.getLab().toUpperCase())));
         user.setBio(userProfileDto.getBio());
         user.setPublicProfile(userProfileDto.isPublicProfile());
+        user.setPhoto("http://localhost:8080/images/users/default/profile_picture.png");
+        user.setAvatarPhoto("http://localhost:8080/images/users/default/profile_picture.png");
+        user.setThumbnailPhoto("http://localhost:8080/images/users/default/profile_picture.png");
 
         // Handle skills
         List<SkillEntity> skillEntities = userProfileDto.getSkills().stream()

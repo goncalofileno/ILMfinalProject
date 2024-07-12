@@ -89,12 +89,12 @@ public class ProjectBean {
     @Inject
     ProjectResourceDao projectResourceDao;
 
+    @Inject
+    SystemDao systemDao;
 
     private static final int NUMBER_OF_MYPROJECTS_PER_PAGE = 6;
     private static final int NUMBER_OF_PROJECTS_PER_PAGE = 8;
     private int numberOfProjectsToCreate = 20;
-    private static final int MAX_PROJECT_MEMBERS_DEFAULT = 4;
-    private static final int MAX_PROJECT_MEMBERS_MAX = 30;
 
     @Transactional
     public void createDefaultProjectsIfNotExistent() {
@@ -108,14 +108,14 @@ public class ProjectBean {
                 project.setStartDate(LocalDateTime.now().minus(5, ChronoUnit.YEARS));
                 project.setEndDate(LocalDateTime.now().plus(5, ChronoUnit.YEARS));
                 project.setStatus(StateProjectENUM.IN_PROGRESS);
-                project.setPhoto("https://cdn.pixabay.com/photo/2016/03/29/08/48/project-1287781_1280.jpg");
                 project.setMotivation("This project aims to develop an innovative software solution for managing large-scale data in real-time. The system will leverage cutting-edge technologies to handle vast amounts of information efficiently.");
                 project.setMaxMembers(15);
                 project.setKeywords("Keyword1, Keyword2, Keyword3, Keyword4, Keyword5, Keyword6");
                 LabEntity lab = labDao.findbyLocal(WorkLocalENUM.COIMBRA);
                 project.setLab(lab);
                 project.setKeywords("Keyword1, Keyword2, Keyword3, Keyword4, Keyword5, Keyword6");
-
+                project.setPhoto("http://localhost:8080/images/projects/default/project_profile_picture.jpg");
+                project.setCardPhoto("http://localhost:8080/images/projects/default/project_profile_picture.jpg");
                 List<SkillEntity> skillEntities = new ArrayList<>();
                 SkillEntity skill1 = skillDao.findById(1);
                 skillEntities.add(skill1);
@@ -146,7 +146,8 @@ public class ProjectBean {
             LabEntity lab = labDao.findbyLocal(WorkLocalENUM.COIMBRA);
             project.setLab(lab);
             project.setKeywords("Keyword1, Keyword2, Keyword3, Keyword4, Keyword5, Keyword6");
-
+            project.setPhoto("http://localhost:8080/images/projects/default/project_profile_picture.jpg");
+            project.setCardPhoto("http://localhost:8080/images/projects/default/project_profile_picture.jpg");
             List<SkillEntity> skillEntities = new ArrayList<>();
             SkillEntity skill1 = skillDao.findById(1);
             skillEntities.add(skill1);
@@ -1306,7 +1307,9 @@ public class ProjectBean {
         project.setStatus(StateProjectENUM.PLANNING);
         project.setMotivation(projectCreationInfoDto.getMotivation());
         project.setCreatedAt(LocalDateTime.now());
-        project.setMaxMembers(MAX_PROJECT_MEMBERS_DEFAULT);
+        project.setMaxMembers(systemDao.findConfigValueByName("maxMembersDefault"));
+        project.setPhoto("http://localhost:8080/images/projects/default/project_profile_picture.jpg");
+        project.setCardPhoto("http://localhost:8080/images/projects/default/project_profile_picture.jpg");
 
         project.setLab(labDao.findbyLocal(WorkLocalENUM.valueOf(projectCreationInfoDto.getLab())));
 
@@ -1424,7 +1427,7 @@ public class ProjectBean {
             project.setMotivation(projectUpdateDto.getMotivation());
             project.setLab(labDao.findbyLocal(WorkLocalENUM.valueOf(projectUpdateDto.getLab())));
 
-            if(projectUpdateDto.getMaxMembers() > MAX_PROJECT_MEMBERS_MAX || projectUpdateDto.getMaxMembers() < 1 || projectUpdateDto.getMaxMembers() < project.getUserProjects().size()) return false;
+            if(projectUpdateDto.getMaxMembers() > systemDao.findConfigValueByName("maxMaxMembers") || projectUpdateDto.getMaxMembers() < 1 || projectUpdateDto.getMaxMembers() < project.getUserProjects().size()) return false;
             project.setMaxMembers(projectUpdateDto.getMaxMembers());
 
             String keywordsList = null;
@@ -1565,7 +1568,7 @@ public class ProjectBean {
 
     public boolean addInitialMembers(ProjectCreationMembersDto projectCreationMembersDto, String projectSystemName, String sessionId) {
         ArrayList<Integer> usersInProject = projectCreationMembersDto.getUsersInProject();
-        if (projectCreationMembersDto.getMaxMembers() > MAX_PROJECT_MEMBERS_MAX || usersInProject.size() > projectCreationMembersDto.getMaxMembers()) {
+        if (projectCreationMembersDto.getMaxMembers() > systemDao.findConfigValueByName("maxMaxMembers") || usersInProject.size() > projectCreationMembersDto.getMaxMembers()) {
             return false;
         }
 

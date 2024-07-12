@@ -2,7 +2,6 @@ import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import ReactDOM from "react-dom/client";
 import App from "./pages/App";
-import Register from "./pages/Register";
 import CreateProfilePage from "./pages/CreateProfilePage";
 import ProjectsPage from "./pages/ProjectsPage";
 import ProfilePage from "./pages/ProfilePage";
@@ -52,8 +51,9 @@ const AppWithWebSocket = () => {
         <ProjectChatWebSocket projectId={isProjectChat[0].split("/")[2]} />
       )}
       <Routes>
+        <Route path="/:register" element={<PublicRoute component={App} />} />
         <Route path="/" element={<PublicRoute component={App} />} />
-        <Route path="/register" element={<Register />} />
+
         <Route path="/create-profile/:token" element={<CreateProfilePage />} />
         <Route
           path="/projects"

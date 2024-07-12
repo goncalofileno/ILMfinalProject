@@ -1,6 +1,7 @@
 import "./App.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import LoginForm from "../components/forms/LoginForm";
+import RegisterForm from "../components/forms/RegisterForm";
 import LoginHeader from "../components/headers/LoginHeader";
 import { useEffect, useRef, useState } from "react";
 import LoginProjectsCards from "../components/cards/LoginProjectsCards";
@@ -12,13 +13,14 @@ import { getHomeProjects } from "../utilities/services";
 import { Trans, t } from "@lingui/macro";
 
 function App() {
+  const { register } = useParams();
   const navigate = useNavigate();
   const contentRef = useRef(null);
   const loginFormRef = useRef(null);
   const isComputer = useMediaQuery({ minWidth: 1200 });
   const isTablet = useMediaQuery({ minWidth: 992, maxWidth: 1200 });
   const isSmallTablet = useMediaQuery({ minWidth: 768, maxWidth: 992 });
-  const isPhone = useMediaQuery({ maxWidth: 768 });
+  const isPhone = useMediaQuery({ maxWidth: 767 });
   const [homeProjects, setHomeProjects] = useState([]);
   const [visibleProjects, setVisibleProjects] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -27,6 +29,10 @@ function App() {
   const [showAlert, setShowAlert] = useState(false);
   const [isModalActive, setIsModalActive] = useState(false);
   const { visibility, type, message, setVisibility } = alertStore();
+  const [isInLogin, setIsInLogin] = useState(false);
+  const [registerMessage, setRegisterMessage] = useState("");
+  const [registerMessageType, setRegisterMessageType] = useState("");
+  const [showRegisterAlert, setShowRegisterAlert] = useState(false);
   const headerHeight = 110;
 
   useEffect(() => {
@@ -206,17 +212,39 @@ function App() {
                 style={{ marginTop: (isPhone || isSmallTablet) && "30px" }}
                 ref={loginFormRef}
               >
-                <Alert
-                  variant="danger"
-                  id="alert-message-register"
-                  style={{ visibility: showAlert ? "visible" : "hidden" }}
-                >
-                  <Trans>Invalid data. Please try again.</Trans>
-                </Alert>
-                <LoginForm
-                  setShowAlert={setShowAlert}
-                  setIsModalActive={setIsModalActive}
-                />
+                {register === "register" ? (
+                  <>
+                    <Alert
+                      variant={registerMessageType}
+                      id="alert-message-register"
+                      style={{
+                        visibility: showRegisterAlert ? "visible" : "hidden",
+                      }}
+                    >
+                      {registerMessage}
+                    </Alert>
+                    <RegisterForm
+                      setShowAlert={setShowRegisterAlert}
+                      setRegisterMessage={setRegisterMessage}
+                      setRegisterMessageType={setRegisterMessageType}
+                      setIsInLogin={setIsInLogin}
+                    ></RegisterForm>
+                  </>
+                ) : (
+                  <>
+                    <Alert
+                      variant="danger"
+                      id="alert-message-register"
+                      style={{ visibility: showAlert ? "visible" : "hidden" }}
+                    >
+                      <Trans>Invalid data. Please try again.</Trans>
+                    </Alert>
+                    <LoginForm
+                      setShowAlert={setShowAlert}
+                      setIsModalActive={setIsModalActive}
+                    />
+                  </>
+                )}
               </Col>
               {isPhone && (
                 <Col>
@@ -237,7 +265,7 @@ function App() {
         <div
           className="ilm-page2"
           ref={contentRef}
-          style={{ paddingTop: "60px" }}
+          style={{ paddingTop: "60px", height: isPhone && "unset" }}
         >
           <Container fluid className="outer-container">
             <Row>
