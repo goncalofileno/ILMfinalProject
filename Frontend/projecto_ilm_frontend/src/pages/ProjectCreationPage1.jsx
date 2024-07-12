@@ -1,4 +1,5 @@
 import "./ProjectCreationPage.css";
+import React from "react";
 import AppNavbar from "../components/headers/AppNavbar";
 import { Row, Col, Form, Image } from "react-bootstrap";
 import InputForm from "../components/inputs/InputForm";
@@ -12,7 +13,6 @@ import {
   checkProjectName,
 } from "../utilities/services";
 import { formatLab } from "../utilities/converters";
-
 import StandardModal from "../components/modals/StandardModal";
 import { useNavigate } from "react-router-dom";
 import { Trans, t } from "@lingui/macro";

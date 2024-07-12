@@ -7,6 +7,7 @@ import {
   formatTypeUserInProjectInMaiusculas,
 } from "../../utilities/converters";
 import { useMediaQuery } from "react-responsive";
+import React from "react";
 
 export default function MyProjectCard({
   name,

@@ -38,7 +38,7 @@ export default function AppNavbar({
   const bellIconRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
-  const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
+  const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
   const { unreadCount, setUnreadCount } = useMailStore();
   const {
     unreadNotificationsCount,

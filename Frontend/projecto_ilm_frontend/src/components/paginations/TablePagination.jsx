@@ -1,4 +1,5 @@
 import { Pagination } from "react-bootstrap";
+import React from "react";
 
 export default function TablePagination({
   totalPages,

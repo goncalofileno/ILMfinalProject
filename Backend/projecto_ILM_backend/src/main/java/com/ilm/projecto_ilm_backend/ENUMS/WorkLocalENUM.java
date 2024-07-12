@@ -42,7 +42,12 @@ public enum WorkLocalENUM {
 
     private final int intValue;
 
-    //Metodo que recebe uma string e verifica se é um dos valores possiveis do ENUM
+    /**
+     * Checks if the provided string is a valid name of a WorkLocalENUM constant.
+     *
+     * @param test the string to check
+     * @return true if the string is a valid name of a WorkLocalENUM constant, false otherwise
+     */
     public static boolean contains(String test) {
 
         for (WorkLocalENUM c : WorkLocalENUM.values()) {

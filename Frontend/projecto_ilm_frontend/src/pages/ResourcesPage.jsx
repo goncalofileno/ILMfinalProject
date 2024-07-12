@@ -124,6 +124,7 @@ export default function ResourcesPage() {
         resourceSupplier={resourceSupplier}
         setResourceId={setResourceId}
         setResourceSupplier={setResourceSupplier}
+        setTableTrigger={setNavigateTableResourcesTrigger}
       />
       <AsideResourcesPage
         brand={brand}

@@ -1,4 +1,5 @@
 import "./Bars.css";
+import React from "react";
 import { formatStatus } from "../../utilities/converters";
 
 export default function ProgressBar({ percentage, status }) {
@@ -26,6 +27,7 @@ export default function ProgressBar({ percentage, status }) {
     <div className="bar-outline">
       <div
         className="bar-inside"
+        data-testid="bar-inside"
         style={{
           width: status === "CANCELED" ? "100%" : `${percentage}%`,
           backgroundColor: statusColor(status),

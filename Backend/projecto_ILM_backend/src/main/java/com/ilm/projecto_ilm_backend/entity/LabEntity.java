@@ -11,6 +11,11 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = "lab")
+/**
+ * Sets the new user type in the project associated with the log entry.
+ *
+ * @param newUserType the new user type in the project.
+ */
 @NamedQuery(name = "Lab.findByLocal", query = "SELECT l FROM LabEntity l WHERE l.local = :local")
 public class LabEntity implements Serializable {
 

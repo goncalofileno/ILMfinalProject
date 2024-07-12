@@ -11,19 +11,27 @@ import java.util.List;
 
 /**
  * The UserEntity class represents the "user" table in the database.
- * Each instance of this class corresponds to a single row in the table.
  */
 @Entity
 @Table(name = "user")
 @NamedQueries({
+        // Query to find a UserEntity by its email.
         @NamedQuery(name = "User.findByEmail", query = "SELECT u FROM UserEntity u WHERE u.email = :email"),
+        // Query to find a UserEntity by its id.
         @NamedQuery(name = "User.findById", query = "SELECT u FROM UserEntity u WHERE u.id = :id"),
+        // Query to find a UserEntity by its username.
         @NamedQuery(name = "User.findByUsername", query = "SELECT u FROM UserEntity u WHERE u.username = :username"),
+        // Query to find a UserEntity by its auxiliar token.
         @NamedQuery(name = "User.findByAuxiliarToken", query = "SELECT u FROM UserEntity u WHERE u.auxiliarToken = :auxiliarToken"),
+        // Query to check the password of a UserEntity by its email.
         @NamedQuery(name = "User.checkPassFromEmail", query = "SELECT u.password FROM UserEntity u WHERE u.email = :email"),
+        // Query to check the system username of a UserEntity.
         @NamedQuery(name = "User.checkSystemUsername", query = "SELECT u FROM UserEntity u WHERE u.systemUsername = :systemUsername"),
+        // Query to find a UserEntity by its system username.
         @NamedQuery(name = "User.findBySystemUsername", query = "SELECT u FROM UserEntity u WHERE u.systemUsername = :systemUsername"),
+        // Query to get the full name of a UserEntity by its system username.
         @NamedQuery(name = "User.getFullNameBySystemUsername)", query = "SELECT u.firstName, u.lastName FROM UserEntity u WHERE u.systemUsername = :systemUsername"),
+        // Query to get a UserProjectCreationDto object with specific fields of a UserEntity.
         @NamedQuery(name = "User.getUserProjectCreationDto", query = "SELECT u.lab.local, u.firstName, u.lastName, u.thumbnailPhoto, u.id, u.systemUsername, COUNT(s), u.publicProfile, u.email AS matchingSkillCount " +
                 "FROM UserEntity u " +
                 "LEFT JOIN u.skills s ON s.name IN :skillNames " +
@@ -33,15 +41,18 @@ import java.util.List;
                 "OR LOWER(u.lastName) LIKE LOWER(CONCAT('%', :keyword, '%')))) " +
                 "GROUP BY u.lab.local, u.firstName, u.lastName, u.thumbnailPhoto, u.id, u.systemUsername " +
                 "ORDER BY matchingSkillCount DESC"),
-
+        // Query to count the number of UserProjectCreationDto objects with specific fields of a UserEntity.
         @NamedQuery(name = "User.countUserProjectCreationDto", query = "SELECT COUNT(u)" +
                 " FROM UserEntity u " +
                 "WHERE u.id <> :id AND u.id <> 1 AND u.id NOT IN :excludedIds AND u.profileCreated=true " +
                 " AND (:lab IS NULL OR u.lab = :lab) " +
                 "AND (:keyword IS NULL OR (LOWER(u.firstName) LIKE LOWER(CONCAT('%', :keyword, '%'))" +
                 " OR  LOWER(u.lastName) LIKE LOWER(CONCAT('%', :keyword, '%'))))"),
+        // Query to get the skills of a UserEntity by its id.
         @NamedQuery(name = "User.getUserSkills", query = "SELECT s FROM UserEntity u JOIN u.skills s WHERE u.id = :id ORDER BY CASE WHEN s.name IN :skillNames THEN 0 ELSE 1 END"),
+        // Query to count the number of UserEntity objects in the application.
         @NamedQuery(name = "User.countUsersInApp", query = "SELECT COUNT(u) FROM UserEntity u WHERE u.mailConfirmed=true AND u.id <> 1"),
+        // Query to count the number of UserEntity objects per lab.
         @NamedQuery(
                 name = "User.countUsersPerLab",
                 query = "SELECT u.lab.local, COUNT(u) " +
@@ -49,6 +60,7 @@ import java.util.List;
                         "WHERE u.id <> 1 " +
                         "GROUP BY u.lab.local"
         ),
+        // Query to find all UserEntity objects except the administration and a specific user.
         @NamedQuery(name = "User.findAllUsersExceptAdministationAndUser", query = "SELECT u FROM UserEntity u WHERE u.id <> 1 AND u <> :user"),
 })
 
@@ -684,15 +696,33 @@ public class UserEntity implements Serializable {
         this.skills = skills;
     }
 
-
+    /**
+     * Returns the auxiliar token of this user.
+     * The auxiliar token is needed for the confirmation email and for the update of the password when user forgets it.
+     *
+     * @return the auxiliar token of this user.
+     */
     public String getAuxiliarToken() {
         return auxiliarToken;
     }
+
+    /**
+     * Sets the auxiliar token of this user.
+     * The auxiliar token is needed for the confirmation email and for the update of the password when user forgets it.
+     *
+     * @param auxiliarToken the new auxiliar token of this user.
+     */
 
     public void setAuxiliarToken(String auxiliarToken) {
         this.auxiliarToken = auxiliarToken;
     }
 
+    /**
+     * Returns the full name of this user.
+     * The full name is a concatenation of the first name and the last name of the user.
+     *
+     * @return the full name of this user.
+     */
     public String getFullName() {
         return firstName + " " + lastName;
     }

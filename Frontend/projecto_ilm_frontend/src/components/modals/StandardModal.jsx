@@ -1,6 +1,7 @@
 import Alert from "react-bootstrap/Alert";
 import "./StandardModal.css";
 import { useEffect } from "react";
+import React from "react";
 
 export default function StandardModal({
   modalType,

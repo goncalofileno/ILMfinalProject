@@ -12,7 +12,9 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name="note")
 @NamedQueries({
+        // Setter for the newUserType field.
         @NamedQuery(name = "Note.findById", query = "SELECT n FROM NoteEntity n WHERE n.id = :id"),
+        // Query to find all NoteEntity instances associated with a specific project.
         @NamedQuery(name = "Note.findAllByProject", query = "SELECT n FROM NoteEntity n WHERE n.project = :project")
 })
 public class NoteEntity implements Serializable {

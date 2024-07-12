@@ -9,25 +9,21 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = "project_resource")
+// Query to delete a ProjectResourceEntity by its id.
 @NamedQuery(
         name = "ProjectResourceEntity.deleteById",
         query = "DELETE FROM ProjectResourceEntity pr WHERE pr.id = :id"
 )
-
+// Query to find a ProjectResourceEntity by its id.
 @NamedQuery(
         name = "ProjectResourceEntity.findById",
         query = "SELECT pr FROM ProjectResourceEntity pr WHERE pr.id = :id"
 )
-
+// Query to get a ProjectResourceEntity by the id of its associated project.
 @NamedQuery(
         name = "ProjectResourceEntity.getByProjectId",
         query = "SELECT pr FROM ProjectResourceEntity pr WHERE pr.project.id = :id "
 )
-
-
-
-
-
 
 public class ProjectResourceEntity implements Serializable {
 
@@ -110,10 +106,19 @@ public class ProjectResourceEntity implements Serializable {
         this.project = project;
     }
 
+    /**
+     * Returns the resource associated with this project resource.
+     *
+     * @return the resource associated with this project resource.
+     */
     public ResourceSupplierEntity getResources() {
         return resource;
     }
-
+    /**
+     * Sets the resource associated with this project resource.
+     *
+     * @param resource the new resource associated with this project resource.
+     */
     public void setResources(ResourceSupplierEntity resource) {
         this.resource = resource;
     }

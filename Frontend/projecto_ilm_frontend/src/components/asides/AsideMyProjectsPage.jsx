@@ -8,6 +8,7 @@ import {
 import { getProjectsFilters } from "../../utilities/services";
 import { Trans } from "@lingui/macro";
 import { useMediaQuery } from "react-responsive";
+import React from "react";
 
 export default function AsideMyProjectsPage({
   selectedLab,
@@ -121,7 +122,7 @@ export default function AsideMyProjectsPage({
             </div>
 
             <button
-              className="terciary-button"
+              className="secondary-button"
               style={{
                 width: "100%",
                 paddingTop: "5px",

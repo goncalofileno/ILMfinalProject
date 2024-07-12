@@ -104,7 +104,7 @@ const ProjectChatPage = () => {
       <AppNavbar setCurrentLanguage={setCurrentLanguage} />
       <ProjectChatWebSocket projectId={systemProjectName} />
 
-      <div className={isTablet ? "ilm-page-mobile" : "ilm-pageb"}>
+      <div className={isTablet ? "ilm-pageb-noheight" : "ilm-pageb"}>
         <ProjectTabs
           typeOfUserSeingProject={typeOfUserSeingTheProject}
           projectName={projectName}

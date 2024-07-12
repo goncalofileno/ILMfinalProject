@@ -12,9 +12,13 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Table(name = "mail")
+// Setter for the receiverProject field.
 @NamedQuery(name = "Mail.getMailsReceivedByUserId", query = "SELECT m FROM MailEntity m WHERE m.receiver.id = :userId AND m.deletedByReceiver = false ORDER BY m.date DESC")
+// Query to get all mails sent by a specific user, ordered by date in descending order.
 @NamedQuery(name = "Mail.getMailsSentByUserId", query = "SELECT m FROM MailEntity m WHERE m.sender.id = :userId AND m.deletedBySender = false ORDER BY m.date DESC")
+// Query to find a MailEntity by its id.
 @NamedQuery(name = "Mail.findById", query = "SELECT m FROM MailEntity m WHERE m.id = :id")
+// Query to get the count of unseen mails for a specific user.
 @NamedQuery(name = "Mail.getUnseenMailsCount", query = "SELECT COUNT(m) FROM MailEntity m WHERE m.receiver.id = :userId AND m.seen = false AND m.deletedByReceiver = false")
 public class MailEntity implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -119,19 +123,35 @@ public class MailEntity implements Serializable {
         this.subject = subject;
     }
 
-
+    /**
+     * Returns the deleted status of the message by the receiver.
+     *
+     * @return true if the message has been deleted by the receiver, false otherwise.
+     */
     public boolean isDeletedByReceiver() {
         return deletedByReceiver;
     }
-
+    /**
+     * Sets the deleted status of the message by the receiver.
+     *
+     * @param deletedByReceiver the new deleted status of the message by the receiver.
+     */
     public void setDeletedByReceiver(boolean deletedByReceiver) {
         this.deletedByReceiver = deletedByReceiver;
     }
-
+    /**
+     * Returns the deleted status of the message by the sender.
+     *
+     * @return true if the message has been deleted by the sender, false otherwise.
+     */
     public boolean isDeletedBySender() {
         return deletedBySender;
     }
-
+    /**
+     * Sets the deleted status of the message by the sender.
+     *
+     * @param deletedBySender the new deleted status of the message by the sender.
+     */
     public void setDeletedBySender(boolean deletedBySender) {
         this.deletedBySender = deletedBySender;
     }

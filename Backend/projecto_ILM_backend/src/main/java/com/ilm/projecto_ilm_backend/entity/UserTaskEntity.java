@@ -12,19 +12,41 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = "user_task")
+/**
+ * Specifies a static, named query in the Java Persistence query language.
+ * Query to find a UserTaskEntity by its id.
+ */
 @NamedQuery(name = "UserTask.findById", query = "SELECT ut FROM UserTaskEntity ut WHERE ut.id = :id"
 )
+/**
+ * Query to find users by task id.
+ */
 @NamedQuery(name = "UserTask.findUsersByTaskId", query = "SELECT ut.user FROM UserTaskEntity ut WHERE ut.task.id = :taskId"
 )
+/**
+ * Query to find user type by task id and user id.
+ */
 @NamedQuery(name = "UserTask.findUserTypeByTaskIdAndUserId", query = "SELECT ut.type FROM UserTaskEntity ut WHERE ut.task.id = :taskId AND ut.user.id = :userId"
 )
+/**
+ * Query to find a UserTaskEntity by task id and user id.
+ */
 @NamedQuery(name = "UserTask.findByTaskIdAndUserId", query = "SELECT ut FROM UserTaskEntity ut WHERE ut.task.id = :taskId AND ut.user.id = :userId"
 )
+/**
+ * Query to delete all UserTaskEntity except creator or creator in charge by task id.
+ */
 @NamedQuery(name = "UserTask.deleteAllExceptCreatorOrCreatorInCharge", query = "DELETE FROM UserTaskEntity ut WHERE ut.task.id = :taskId AND ut.type != com.ilm.projecto_ilm_backend.ENUMS.UserInTaskTypeENUM.CREATOR AND ut.type != com.ilm.projecto_ilm_backend.ENUMS.UserInTaskTypeENUM.CREATOR_INCHARGE"
 )
+/**
+ * Query to find in charge by task id.
+ */
 @NamedQuery(name = "UserTask.findInChargeByTaskId", query = "SELECT ut.user FROM UserTaskEntity ut WHERE ut.task.id = :taskId AND (ut.type = com.ilm.projecto_ilm_backend.ENUMS.UserInTaskTypeENUM.INCHARGE OR ut.type = com.ilm.projecto_ilm_backend.ENUMS.UserInTaskTypeENUM.CREATOR_INCHARGE)")
 
-
+/**
+ * The UserTaskEntity class represents the "user_task" table in the database.
+ * This class is a Java Persistence API (JPA) entity that maps to the "user_task" table in the database.
+*/
 public class UserTaskEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;

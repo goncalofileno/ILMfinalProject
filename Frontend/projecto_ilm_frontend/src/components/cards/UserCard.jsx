@@ -3,6 +3,7 @@ import "./UserCard.css";
 import userProfileIcon from "../../resources/avatares/Avatar padrão.jpg";
 import { Trans, t } from "@lingui/macro";
 import { Alert } from "react-bootstrap";
+import React from "react";
 
 export default function UserCard({
   name,

@@ -119,7 +119,7 @@ export default function AsideProjectsTable({
               />
             </div>
             <button
-              className="terciary-button"
+              className="secondary-button"
               style={{
                 width: "100%",
                 paddingTop: "5px",

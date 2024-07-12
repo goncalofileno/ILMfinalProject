@@ -212,7 +212,7 @@ export default function ProjectProfileResourcesPage() {
 
       <div
         className={
-          isTablet ? "ilm-page-mobile" : "bckg-color-ilm-page ilm-pageb"
+          isTablet ? "ilm-pageb-noheight" : "bckg-color-ilm-page ilm-pageb"
         }
         style={{ paddingBottom: isTablet && "150px" }}
       >

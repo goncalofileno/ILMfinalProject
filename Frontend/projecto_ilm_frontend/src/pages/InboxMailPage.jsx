@@ -9,6 +9,7 @@ import Cookies from "js-cookie";
 
 const InboxMailPage = () => {
   const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
+
   const [isAsideVisible, setIsAsideVisible] = useState(false);
   const [currentLanguage, setCurrentLanguage] = useState(
     Cookies.get("user-language") || "ENGLISH"

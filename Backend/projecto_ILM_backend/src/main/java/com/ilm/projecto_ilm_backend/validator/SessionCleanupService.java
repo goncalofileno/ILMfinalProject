@@ -12,15 +12,29 @@ import java.time.LocalDateTime;
 import java.util.List;
 import com.ilm.projecto_ilm_backend.service.websockets.MailWebSocket;
 
+
+/**
+ * SessionCleanupService is a class that provides a method to clean up expired sessions.
+ * It is annotated with @Singleton and @Startup, meaning that it is a singleton and it is eagerly initialized.
+ */
 @Singleton
 @Startup
 public class SessionCleanupService {
 
+    /**
+     * Logger for this class.
+     */
     private static final Logger logger = LogManager.getLogger(SessionCleanupService.class);
-
+    /**
+     * SessionDao object, used to interact with the session data in the database.
+     */
     @Inject
     private SessionDao sessionDao;
-
+    /**
+     * This method cleans up expired sessions.
+     * It is scheduled to run every 2 minutes.
+     * It retrieves the expired sessions from the database, notifies about the timeout, and removes the session from the database.
+     */
     @Schedule(hour = "*", minute = "*/2", persistent = false)
     public void cleanUpExpiredSessions() {
         logger.info("Cleaning up expired sessions...");
