@@ -35,7 +35,9 @@ public enum NotificationTypeENUM {
 
     TASK_ASSIGNED(14),
 
-    LEFT_PROJECT(15);
+    LEFT_PROJECT(15),
+
+    PROMOTE_TO_ADMIN(16);
 
     private final int intValue;
 

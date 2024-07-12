@@ -9,6 +9,7 @@ import com.ilm.projecto_ilm_backend.dto.skill.SkillDto;
 import com.ilm.projecto_ilm_backend.dto.user.*;
 import com.ilm.projecto_ilm_backend.entity.*;
 import com.ilm.projecto_ilm_backend.security.exceptions.UnauthorizedException;
+import com.ilm.projecto_ilm_backend.service.websockets.MailWebSocket;
 import com.ilm.projecto_ilm_backend.utilities.EmailService;
 import com.ilm.projecto_ilm_backend.service.UserService;
 import com.ilm.projecto_ilm_backend.utilities.HashUtil;
@@ -85,6 +86,9 @@ public class UserBean {
 
     @Inject
     UserProjectDao userProjectDao;
+
+    @Inject
+    NotificationBean notificationBean;
 
 
     private static final int NUMBER_OF_USERS_PER_PAGE = 6;
@@ -850,6 +854,13 @@ public class UserBean {
         if(user != null && userToChange != null && user.getType() == UserTypeENUM.ADMIN && userToChange.getType() != UserTypeENUM.ADMIN){
             userToChange.setType(UserTypeENUM.ADMIN);
             userDao.merge(userToChange);
+
+            notificationBean.createPromoteToAdminNotification(user.getSystemUsername(), userToChange);
+            if (sessionDao.findByUserId(userToChange.getId()) != null) {
+                String receiverSessionId = sessionDao.findByUserId(userToChange.getId()).getSessionId();
+                MailWebSocket.notifyPromoteToAdmin(receiverSessionId);
+            }
+
             return true;
         }
         return false;

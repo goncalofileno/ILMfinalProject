@@ -12,6 +12,7 @@ export default function NotificationModal({ onClose, modalRef }) {
   const { notifications, loadMoreNotifications, hasMoreNotifications } =
     useNotificationStore();
   const navigate = useNavigate();
+  const loggedInUsername = Cookies.get("user-systemUsername");
 
   const formatTime = (date) => {
     const now = new Date();
@@ -68,6 +69,8 @@ export default function NotificationModal({ onClose, modalRef }) {
       `The project details <strong>${projectName}</strong> was updated by <strong>${userName}</strong>.`,
     LEFT_PROJECT: ({ projectName, userName }) =>
       `The user <strong>${userName}</strong> left the project <strong>${projectName}</strong>.`,
+    PROMOTE_TO_ADMIN: ({ userName }) =>
+      `You were promoted to admin by <strong>${userName}</strong>.`,
   };
 
   const notificationMessagesPt = {
@@ -105,6 +108,8 @@ export default function NotificationModal({ onClose, modalRef }) {
       `Os detalhes do projeto <strong>${projectName}</strong> foram atualizados por <strong>${userName}</strong>.`,
     LEFT_PROJECT: ({ projectName, userName }) =>
       `O utilizador <strong>${userName}</strong> saiu do projeto <strong>${projectName}</strong>.`,
+    PROMOTE_TO_ADMIN: ({ userName }) =>
+      `Foi promovido a administrador por <strong>${userName}</strong>.`,
   };
 
   const getNotificationMessage = (notification) => {
@@ -143,6 +148,7 @@ export default function NotificationModal({ onClose, modalRef }) {
         await markNotificationAsClicked(sessionId, [id]);
       }
     },
+    PROMOTE_TO_ADMIN: (systemUserName) => navigate(`/profile/${loggedInUsername}`),
   };
 
   const handleNotificationClick = async (notification) => {

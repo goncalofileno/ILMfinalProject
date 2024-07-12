@@ -105,6 +105,21 @@ public class MailWebSocket {
         }
     }
 
+    public static void notifyPromoteToAdmin(String sessionId) {
+        String keyDefault = sessionId;
+        Set<Session> defaultSessions = sessionMap.get(keyDefault);
+        if (defaultSessions != null) {
+            for (Session session : defaultSessions) {
+                if (session.isOpen()) {
+                    session.getAsyncRemote().sendText("promote_to_admin");
+                    logger.info("Sent promote_to_admin to session: " + session.getId());
+                }
+            }
+        } else {
+            logger.warning("No sessions found for key: " + keyDefault);
+        }
+    }
+
     public static void sendProjectNotification(String sessionId, NotificationDto notificationDto) {
         sendNotification(sessionId, notificationDto);
     }
@@ -162,6 +177,10 @@ public class MailWebSocket {
     }
 
     public static void sendLeftProjectNotification(String sessionId, NotificationDto notificationDto) {
+        sendNotification(sessionId, notificationDto);
+    }
+
+    public static void sendPromoteToAdminNotification(String sessionId, NotificationDto notificationDto) {
         sendNotification(sessionId, notificationDto);
     }
 

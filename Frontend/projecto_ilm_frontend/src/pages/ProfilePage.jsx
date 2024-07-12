@@ -206,9 +206,10 @@ const UserProfile = () => {
   };
 
   const handleConfirmPromotion = async () => {
-    promoteUserToAdmin(systemUsername);
+    promoteUserToAdmin(systemUsername).then((response) => {
     setChangeUserModal(false);
     window.location.reload();
+    });
   };
 
   const nonPendingProjects = profile.projects
