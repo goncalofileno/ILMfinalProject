@@ -20,6 +20,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The MessageBean class is responsible for managing MessageEntity instances.
+ * It is a singleton bean, meaning there is a single instance for the entire application.
+ */
 @Singleton
 @Startup
 public class MessageBean {
@@ -48,6 +52,11 @@ public class MessageBean {
     @Inject
     SessionDao sessionDao;
 
+    /**
+     * Creates default messages for demonstration or initial setup purposes.
+     * This method checks if there are any messages present in the database and,
+     * if not, creates a predefined set of messages for a project.
+     */
     @Transactional
     public void createDefaultMessagesIfNotExistent() {
         UserEntity user = userDao.findById(1);
@@ -64,6 +73,17 @@ public class MessageBean {
         }
     }
 
+    /**
+     * Retrieves a list of messages for a given project and user.
+     * This method checks if the project exists and if the user is a member of the project.
+     * If both conditions are met, it returns a list of message DTOs for the project.
+     *
+     * @param user The user entity for whom the messages are being retrieved.
+     * @param projectSystemName The system name of the project.
+     * @return A list of {@link MessageDto} objects representing the messages.
+     * @throws Exception Throws {@link ProjectNotFoundException} if the project is not found,
+     *                   or {@link UserNotInProjectException} if the user is not a member of the project.
+     */
     public List<MessageDto> getMessages(UserEntity user, String projectSystemName) throws Exception {
 
         ProjectEntity project = projectDao.findBySystemName(projectSystemName);
@@ -86,6 +106,18 @@ public class MessageBean {
         return messageDtos;
     }
 
+    /**
+     * Retrieves a page of messages for a given project and user.
+     * This method checks if the project exists and if the user is a member of the project.
+     * If both conditions are met, it returns a {@link MessagesPageDto} object containing the messages,
+     * project name, status, project members, and the user's type in the project.
+     *
+     * @param user The user entity for whom the messages are being retrieved.
+     * @param projectSystemName The system name of the project.
+     * @return A {@link MessagesPageDto} object containing the messages, project name, status, project members, and user type.
+     * @throws Exception Throws {@link ProjectNotFoundException} if the project is not found,
+     *                   or {@link UserNotInProjectException} if the user is not a member of the project.
+     */
     public MessagesPageDto getChatPage(UserEntity user, String projectSystemName) throws Exception {
 
         ProjectEntity project = projectDao.findBySystemName(projectSystemName);
@@ -105,6 +137,18 @@ public class MessageBean {
 
     }
 
+    /**
+     * Sends a message to a project.
+     * This method checks if the project exists and if the user is a member of the project.
+     * If both conditions are met, it creates a new message entity and persists it in the database.
+     * It then sends a notification to all project members except the sender and broadcasts the message to all connected WebSocket clients.
+     *
+     * @param user The user entity sending the message.
+     * @param projectSystemName The system name of the project.
+     * @param messageDto The message DTO containing the message text.
+     * @throws Exception Throws {@link ProjectNotFoundException} if the project is not found,
+     *                   or {@link UserNotInProjectException} if the user is not a member of the project.
+     */
     public void sendMessage(UserEntity user, String projectSystemName, MessageDto messageDto) throws Exception {
 
         ProjectEntity project = projectDao.findBySystemName(projectSystemName);

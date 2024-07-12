@@ -21,6 +21,11 @@ public class SkillBean {
     @EJB
     SkillDao skillDao;
 
+    /**
+     * Ensures the existence of default skills in the database. If certain skills are not found by their IDs,
+     * they are created and persisted. This method pre-populates the database with a predefined list of skills
+     * across various categories such as knowledge, software, hardware, and tools.
+     */
     public void createDefaultSkillsIfNotExistent(){
         if(skillDao.findById(1) == null){
             SkillEntity skill = new SkillEntity();
@@ -132,6 +137,13 @@ public class SkillBean {
 
     }
 
+    /**
+     * Retrieves all skills from the database. This method fetches a list of all SkillEntity instances,
+     * converts them to SkillDto objects, and returns them. This allows for easy access to skill information
+     * throughout the application.
+     *
+     * @return A list of SkillDto objects representing all skills in the database.
+     */
     public List<SkillDto> getAllSkills() {
         List<SkillEntity> skills = skillDao.findAll();
         List<SkillDto> skillDtos = new ArrayList<>();

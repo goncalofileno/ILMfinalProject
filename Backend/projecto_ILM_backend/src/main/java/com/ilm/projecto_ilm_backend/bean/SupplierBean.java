@@ -58,10 +58,21 @@ public class SupplierBean {
             supplierDao.persist(supplier);
         }
     }
+    /**
+     * Retrieves all supplier names from the database.
+     *
+     * @return A list of strings containing all supplier names.
+     */
     public List<String> getAllNames(){
         return supplierDao.getAllNames();
     }
 
+    /**
+     * Retrieves the contact of a supplier by its name.
+     *
+     * @param name The name of the supplier.
+     * @return The contact of the supplier.
+     */
     public String findSupplierContactByName(String name){
         return supplierDao.findSupplierContactByName(name);
     }

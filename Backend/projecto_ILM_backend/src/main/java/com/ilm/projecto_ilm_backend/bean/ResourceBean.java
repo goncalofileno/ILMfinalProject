@@ -44,7 +44,9 @@ public class ResourceBean {
 
     private static final int NUMBER_OF_RESOURCES_PER_PAGE=8;
 
-
+    /**
+     * Creates default resources if they do not already exist in the database.
+     */
     public void createDefaultResourcesIfNotExistent() {
         if (resourceDao.findById(1) == null) {
             ResourceEntity resource = new ResourceEntity();
@@ -129,6 +131,21 @@ public class ResourceBean {
 
     }
 
+    /**
+     * Retrieves detailed information about resources for display in a paginated table format.
+     *
+     * @param page The page number of the resource table to retrieve.
+     * @param brand The brand filter for the resources.
+     * @param type The type filter for the resources.
+     * @param supplierName The supplier name filter for the resources.
+     * @param searchKeyword The keyword to search within the resources.
+     * @param nameAsc The sorting order for resource names.
+     * @param typeAsc The sorting order for resource types.
+     * @param brandAsc The sorting order for resource brands.
+     * @param supplierAsc The sorting order for resource suppliers.
+     * @param rejectedIdsDto DTO containing IDs of resources to exclude from the result.
+     * @return A DTO containing the details of resources for the specified page and filters.
+     */
     public ResourceTableInfoDto getResourceDetails(int page, String brand, String type, String supplierName, String searchKeyword, String nameAsc, String typeAsc, String brandAsc, String supplierAsc, RejectedIdsDto rejectedIdsDto) {
 
         ResourceTypeENUM typeEnum = null;
@@ -176,10 +193,21 @@ public class ResourceBean {
         return resourceTableInfoDto;
     }
 
+    /**
+     * Calculates the maximum number of pages for the resources table based on the total number of resources.
+     *
+     * @param numberOfResources The total number of resources.
+     * @return The maximum number of pages.
+     */
     public int calculateMaximumPageTableResources(int numberOfResources){
         return (int) Math.ceil((double) numberOfResources/NUMBER_OF_RESOURCES_PER_PAGE);
     }
 
+    /**
+     * Retrieves all resource types available in the system.
+     *
+     * @return A list of all resource types.
+     */
     public ArrayList<ResourceTypeENUM> getAllTypes() {
         ArrayList<ResourceTypeENUM> types = new ArrayList<>();
         for (ResourceTypeENUM type : ResourceTypeENUM.values()) {
@@ -188,10 +216,21 @@ public class ResourceBean {
         return types;
     }
 
+    /**
+     * Retrieves all brands associated with resources in the system.
+     *
+     * @return A list of all resource brands.
+     */
     public List<String> getAllBrands() {
         return resourceDao.getAllBrands();
     }
 
+    /**
+     * Creates a new resource in the system based on the provided DTO.
+     *
+     * @param resourceCreationDto DTO containing the details of the resource to create.
+     * @return true if the resource was successfully created, false otherwise.
+     */
     public boolean createResource(ResourceCreationDto resourceCreationDto) {
             ResourceEntity resourceEntity;
             resourceEntity=resourceDao.findResourceByDetails(resourceCreationDto.getName(), resourceCreationDto.getBrand(), ResourceTypeENUM.valueOf(resourceCreationDto.getType()),resourceCreationDto.getSupplierName());
@@ -239,6 +278,13 @@ public class ResourceBean {
         }
     }
 
+    /**
+     * Retrieves filters for resources, including types, suppliers, brands, and optionally names.
+     *
+     * @param withNames Include resource names in the filters if true.
+     * @param withTypes Include resource types in the filters if true.
+     * @return A DTO containing the filters for resources.
+     */
     public ResourceFiltersDto getResourceFiltersDto(boolean withNames,boolean withTypes){
         ResourceFiltersDto resourceFiltersDto = new ResourceFiltersDto();
 
@@ -249,6 +295,12 @@ public class ResourceBean {
         return resourceFiltersDto;
     }
 
+    /**
+     * Retrieves the details of a resource by its ID.
+     *
+     * @param id The ID of the resource.
+     * @return A DTO containing the details of the resource.
+     */
     public ResourceDto getResourceById(int id){
         ResourceEntity resourceEntity=resourceDao.findById(id);
         ResourceDto resourceDto=new ResourceDto();
@@ -261,12 +313,25 @@ public class ResourceBean {
 
         return resourceDto;
     }
+
+    /**
+     * Sets the supplier details in a resource DTO.
+     *
+     * @param resourceDto The resource DTO to update with supplier details.
+     * @param supplierName The name of the supplier.
+     */
     public void setResourceDtoSupplier(ResourceDto resourceDto, String supplierName){
         SupplierEntity supplier =supplierDao.findByName(supplierName);
         resourceDto.setSupplierName(supplier.getName());
         resourceDto.setSupplierContact(supplier.getContact());
     }
 
+    /**
+     * Edits an existing resource in the system based on the provided DTO.
+     *
+     * @param resourceDto DTO containing the updated details of the resource.
+     * @return true if the resource was successfully updated, false otherwise.
+     */
     public boolean editResource(ResourceDto resourceDto){
         SupplierEntity supplier = supplierDao.findByName(resourceDto.getSupplierName());
         ResourceEntity resourceEntity = resourceDao.findById(resourceDto.getId());
@@ -297,6 +362,12 @@ public class ResourceBean {
         else return false;
     }
 
+    /**
+     * Updates the supplier for a resource.
+     *
+     * @param resourceDto The DTO containing the resource and new supplier details.
+     * @param supplier The entity of the new supplier.
+     */
     public void updateSupplier(ResourceDto resourceDto, SupplierEntity supplier ){
         if(!resourceDto.getOldSupplierName().equals(resourceDto.getSupplierName())){
             resourceSupplierDao.updateIsDeleted(resourceDto.getId(), supplierDao.findIdByName(resourceDto.getOldSupplierName()), true);
@@ -319,9 +390,12 @@ public class ResourceBean {
         }
     }
 
-
-
-
+    /**
+     * Retrieves a list of resources associated with a specific project.
+     *
+     * @param projectSystemName The system name of the project.
+     * @return A list of DTOs containing the details of resources associated with the project.
+     */
     public List<ResourceTableDto> getProjectResources(String projectSystemName) {
         try {
             int projectId = projectDao.getIdBySystemName(projectSystemName);
@@ -346,6 +420,13 @@ public class ResourceBean {
         }
     }
 
+    /**
+     * Retrieves resources and user role information for a project's profile page.
+     *
+     * @param sessionId The session ID of the user requesting the information.
+     * @param projectSystemName The system name of the project.
+     * @return A DTO containing resources and user role information for the project.
+     */
     public ResourcesProjectProfileDto getResourcesProjectProfile(String sessionId, String projectSystemName){
         ResourcesProjectProfileDto resourcesProjectProfileDto=new ResourcesProjectProfileDto();
         resourcesProjectProfileDto.setResources(getProjectResources(projectSystemName));

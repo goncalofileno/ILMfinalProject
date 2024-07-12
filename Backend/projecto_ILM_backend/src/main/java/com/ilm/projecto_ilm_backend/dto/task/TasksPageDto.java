@@ -6,16 +6,24 @@ import com.ilm.projecto_ilm_backend.dto.project.ProjectMemberDto;
 
 import java.util.List;
 
+/**
+ * Data Transfer Object for representing a page of tasks within a project.
+ * This class encapsulates details about the project's name, a specific project task, a list of tasks,
+ * the type of user viewing the tasks, project members, project progress, and the project's state.
+ */
 public class TasksPageDto {
 
-    private String projectName;
-    private TaskDto projectTask;
-    private List<TaskDto> tasks;
-    private UserInProjectTypeENUM userSeingTasksType;
-    private List<ProjectMemberDto> projectMembers;
-    private int projectProgress;
-    private StateProjectENUM projectState;
+    private String projectName; // Name of the project
+    private TaskDto projectTask; // A specific task associated with the project
+    private List<TaskDto> tasks; // List of tasks within the project
+    private UserInProjectTypeENUM userSeingTasksType; // Type of user viewing the tasks
+    private List<ProjectMemberDto> projectMembers; // List of members involved in the project
+    private int projectProgress; // Progress of the project as a percentage
+    private StateProjectENUM projectState; // Current state of the project
 
+    /**
+     * Default constructor.
+     */
     public TasksPageDto() {
     }
 

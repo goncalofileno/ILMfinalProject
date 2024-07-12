@@ -72,6 +72,12 @@ public class ProjectDao extends AbstractDao<ProjectEntity>{
         }
     }
 
+    /**
+     * Retrieves the unique identifier of a project based on its system name.
+     *
+     * @param systemName The system name of the project.
+     * @return The unique identifier of the project or -1 if no project is found.
+     */
     public int getIdBySystemName(String systemName) {
         try {
             return em.createNamedQuery("Project.findIdBySystemName", Integer.class).setParameter("systemName", systemName)
@@ -84,6 +90,12 @@ public class ProjectDao extends AbstractDao<ProjectEntity>{
     }
 
 
+    /**
+     * Retrieves a list of projects suitable for display on the home page.
+     * This includes basic project information such as names and descriptions.
+     *
+     * @return A list of HomeProjectDto objects containing project names and descriptions.
+     */
     public ArrayList<HomeProjectDto> findAllNamesAndDescriptionsHome() {
         TypedQuery<Object[]> query = em.createNamedQuery("Project.findNameAndDescriptionHome", Object[].class);
         List<Object[]> results = query.getResultList();
@@ -96,6 +108,23 @@ public class ProjectDao extends AbstractDao<ProjectEntity>{
         return projects;
     }
 
+    /**
+     * Retrieves project information for display in a paginated project table.
+     * This method allows filtering and sorting based on various project attributes.
+     *
+     * @param page The page number for pagination.
+     * @param projectsPerPage The number of projects to display per page.
+     * @param lab The lab entity to filter projects by.
+     * @param status The project status to filter projects by.
+     * @param slotsAvailable A flag indicating whether to filter projects by available slots.
+     * @param nameAsc A flag indicating whether to sort projects by name in ascending order.
+     * @param statusAsc A flag indicating whether to sort projects by status in ascending order.
+     * @param labAsc A flag indicating whether to sort projects by lab in ascending order.
+     * @param startDateAsc A flag indicating whether to sort projects by start date in ascending order.
+     * @param endDateAsc A flag indicating whether to sort projects by end date in ascending order.
+     * @param keyword A keyword to filter projects by.
+     * @return A list of Object arrays containing project information.
+     */
     public List<Object[]> getProjectTableDtoInfo(int page, int projectsPerPage, LabEntity lab, StateProjectENUM status, boolean slotsAvailable, String nameAsc,
                                                  String  statusAsc,
                                                  String  labAsc,
@@ -147,9 +176,19 @@ public class ProjectDao extends AbstractDao<ProjectEntity>{
 
     }
 
-
-
-
+    /**
+     * Retrieves information about projects associated with a specific user.
+     * This method supports filtering, sorting, and pagination.
+     *
+     * @param page The page number for pagination.
+     * @param projectsPerPage The number of projects to display per page.
+     * @param lab The lab entity to filter projects by.
+     * @param status The project status to filter projects by.
+     * @param keyword A keyword to filter projects by.
+     * @param userId The unique identifier of the user.
+     * @param type The type of user involvement in the project to filter by.
+     * @return A list of Object arrays containing project information.
+     */
     public List<Object[]> getMyProjectsDtoInfo(int page, int projectsPerPage, LabEntity lab, StateProjectENUM status,
                                                String keyword, int userId, UserInProjectTypeENUM type) {
 
@@ -193,6 +232,7 @@ public class ProjectDao extends AbstractDao<ProjectEntity>{
         return query.getResultList();
 
     }
+
 
     public List<Object[]> findAllProjectsOrderedByUser(int page, int projectsPerPage, int userId) {
         TypedQuery<Object[]> query = em.createNamedQuery("Project.findAllProjectsOrderedByUser", Object[].class);
@@ -257,20 +297,36 @@ public class ProjectDao extends AbstractDao<ProjectEntity>{
         }
     }
 
-
+    /**
+     * Finds a project by its name.
+     *
+     * @param name The name of the project.
+     * @return The found project entity or null if no project is found with the given name.
+     */
     public ProjectEntity findByName(String name) {
         return em.createQuery("SELECT p FROM ProjectEntity p WHERE p.name = :name", ProjectEntity.class)
                 .setParameter("name", name)
                 .getSingleResult();
     }
 
-    //retorna o nome do projeto procurando pelo systemName
+    /**
+     * Finds a project by its name.
+     *
+     * @param name The name of the project.
+     * @return The found project entity or null if no project is found with the given name.
+     */
     public String findNameBySystemName(String systemName) {
         return em.createQuery("SELECT p.name FROM ProjectEntity p WHERE p.systemName = :systemName", String.class)
                 .setParameter("systemName", systemName)
                 .getSingleResult();
     }
 
+    /**
+     * Finds a project by its system name.
+     *
+     * @param systemName The system name of the project.
+     * @return The found project entity or null if no project is found with the given system name.
+     */
     public ProjectEntity findBySystemName(String systemName) {
         try {
             return em.createQuery("SELECT p FROM ProjectEntity p WHERE p.systemName = :systemName", ProjectEntity.class)
@@ -281,12 +337,25 @@ public class ProjectDao extends AbstractDao<ProjectEntity>{
         }
     }
 
+    /**
+     * Retrieves the skills associated with a project identified by its system name.
+     *
+     * @param projectSystemName The system name of the project.
+     * @return A list of skill names associated with the project.
+     */
     public List<String> getSkillsBySystemName(String projectSystemName) {
         TypedQuery<String> query = em.createNamedQuery("Project.getSkillsBySystemName", String.class);
         query.setParameter("projectSystemName", projectSystemName);
         return query.getResultList();
     }
 
+    /**
+     * Checks if a specific skill is associated with a project identified by its system name.
+     *
+     * @param projectSystemName The system name of the project.
+     * @param skillName The name of the skill to check.
+     * @return true if the skill is associated with the project, false otherwise.
+     */
     public boolean isSkillInProject(String projectSystemName, String skillName) {
         TypedQuery<Boolean> query = em.createNamedQuery("Project.isSkillInProject", Boolean.class);
         query.setParameter("projectSystemName", projectSystemName);
@@ -294,6 +363,12 @@ public class ProjectDao extends AbstractDao<ProjectEntity>{
         return query.getSingleResult();
     }
 
+    /**
+     * Checks if a project with the given name exists in the database.
+     *
+     * @param name The name of the project to check.
+     * @return true if a project with the given name exists, false otherwise.
+     */
     public boolean doesProjectExists(String name) {
         try {
             return em.createNamedQuery("Project.doesProjectExist", Boolean.class).setParameter("name", name)
@@ -304,6 +379,11 @@ public class ProjectDao extends AbstractDao<ProjectEntity>{
         }
     }
 
+    /**
+     * Retrieves the unique identifiers of all projects in the database.
+     *
+     * @return A list of project identifiers.
+     */
     public List<Integer> getProjectIds() {
         try {
             return em.createNamedQuery("Project.getProjectIds", Integer.class)
@@ -314,6 +394,11 @@ public class ProjectDao extends AbstractDao<ProjectEntity>{
         }
     }
 
+    /**
+     * Retrieves execution dates for all projects in the database.
+     *
+     * @return A list of Object arrays containing project execution dates.
+     */
     public List<Object[]> getProjectsExecutionDates() {
         try {
             return em.createNamedQuery("Project.getProjectsExecutionDates", Object[].class)
@@ -324,6 +409,11 @@ public class ProjectDao extends AbstractDao<ProjectEntity>{
         }
     }
 
+    /**
+     * Retrieves the number of projects per lab.
+     *
+     * @return A list of Object arrays containing the count of projects per lab.
+     */
     public List<Object[]> getProjectsPerLab() {
         try {
             List<Object[]> resultList = em
@@ -337,6 +427,11 @@ public class ProjectDao extends AbstractDao<ProjectEntity>{
         }
     }
 
+    /**
+     * Counts projects by their status and associated lab.
+     *
+     * @return A list of Object arrays containing the count of projects by status and lab.
+     */
     public List<Object[]> countProjectsByStatusAndLab() {
         try {
             return em.createNamedQuery("Project.countProjectsByStatusAndLab", Object[].class).getResultList();

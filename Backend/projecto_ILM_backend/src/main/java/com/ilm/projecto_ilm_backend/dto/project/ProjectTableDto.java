@@ -11,37 +11,58 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
+/**
+ * Data Transfer Object for displaying project information in a table format.
+ * This class encapsulates the essential details of a project necessary for listing in a tabular view,
+ * including project photo, name, lab location, status, start and end dates, member count, and completion percentage.
+ */
 @XmlRootElement
 public class ProjectTableDto {
 
-    private String photo;
-    private String name;
-    private WorkLocalENUM lab;
-    private StateProjectENUM status;
-    private Date startDate;
-    private Date finalDate;
-    private int numberOfMembers;
-    private int maxMembers;
-    private boolean isMember;
-    private int percentageDone;
-    private UserInProjectTypeENUM userInProjectType;
-    private String systemProjectName;
+    private String photo; // URL or path to the project's photo
+    private String name; // Name of the project
+    private WorkLocalENUM lab; // Lab location associated with the project
+    private StateProjectENUM status; // Current status of the project
+    private Date startDate; // Start date of the project
+    private Date finalDate; // End date (expected or actual) of the project
+    private int numberOfMembers; // Current number of members in the project
+    private int maxMembers; // Maximum allowed number of members in the project
+    private boolean isMember; // Flag indicating if the current user is a member of the project
+    private int percentageDone; // Percentage of the project completed
+    private UserInProjectTypeENUM userInProjectType; // Role of the user in the project
+    private String systemProjectName; // System name of the project for internal use
 
-
+    /**
+     * Default constructor.
+     */
     public ProjectTableDto() {
     }
 
-    public ProjectTableDto(String photo,String name, WorkLocalENUM lab, StateProjectENUM status, int numberOfMembers, Date startDate, Date finalDate, int maxMembers, boolean isMember, int percentageDone) {
-        this.photo=photo;
+    /**
+     * Constructs a new ProjectTableDto with specified details.
+     *
+     * @param photo URL or path to the project's photo.
+     * @param name Name of the project.
+     * @param lab Lab location associated with the project.
+     * @param status Current status of the project.
+     * @param numberOfMembers Current number of members in the project.
+     * @param startDate Start date of the project.
+     * @param finalDate End date (expected or actual) of the project.
+     * @param maxMembers Maximum allowed number of members in the project.
+     * @param isMember Flag indicating if the current user is a member of the project.
+     * @param percentageDone Percentage of the project completed.
+     */
+    public ProjectTableDto(String photo, String name, WorkLocalENUM lab, StateProjectENUM status, int numberOfMembers, Date startDate, Date finalDate, int maxMembers, boolean isMember, int percentageDone) {
+        this.photo = photo;
         this.name = name;
         this.lab = lab;
         this.status = status;
         this.numberOfMembers = numberOfMembers;
         this.maxMembers = maxMembers;
-        this.startDate=startDate;
-        this.finalDate=finalDate;
+        this.startDate = startDate;
+        this.finalDate = finalDate;
         this.isMember = isMember;
-        this.percentageDone=percentageDone;
+        this.percentageDone = percentageDone;
     }
 
     public String getPhoto() {

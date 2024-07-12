@@ -57,7 +57,6 @@ public class MailWebSocket {
     @OnMessage
     public void onMessage(String message, Session session) {
         logger.info("Received ...." + message);
-        // No message handling needed for this example
     }
 
     @OnClose
@@ -207,6 +206,7 @@ public class MailWebSocket {
     private void sendOnlineMembers() {
         Set<ProjectMemberDto> members = onlineMembers.values().stream().collect(Collectors.toSet());
         try {
+            logger.info("Sending online member list...");
             String message = objectMapper.writeValueAsString(new WebSocketMessage("online_members", new OnlineMembersMessage(members)));
             broadcastMessage(message);
         } catch (JsonProcessingException e) {

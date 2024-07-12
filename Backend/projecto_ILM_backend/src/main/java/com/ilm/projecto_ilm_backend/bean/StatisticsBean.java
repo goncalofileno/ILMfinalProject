@@ -15,6 +15,11 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Bean responsible for aggregating and calculating various statistics related to users, projects, and resources
+ * within the application. It provides methods to calculate averages, totals, and distributions of different entities
+ * and their attributes across the application.
+ */
 @ApplicationScoped
 public class StatisticsBean {
     @Inject
@@ -26,6 +31,13 @@ public class StatisticsBean {
     @Inject
     ResourceSupplierDao resourceSupplierDao;
 
+    /**
+     * Compiles a comprehensive set of statistics from various aspects of the application, including user counts,
+     * project execution times, and resource allocations. This method serves as a central point for gathering
+     * statistical data to be used for reporting and analysis.
+     *
+     * @return A {@link StatisticsDto} object containing aggregated statistical data.
+     */
     public StatisticsDto getStatistics(){
         StatisticsDto statisticsDto = new StatisticsDto();
         statisticsDto.setTotalUsers(userDao.getNumberOfUsersInApp());
@@ -38,6 +50,11 @@ public class StatisticsBean {
         return statisticsDto;
     }
 
+    /**
+     * Calculates the average number of users per project across all projects in the application.
+     *
+     * @return The average number of users per project as a double.
+     */
     private double getAverageUsersInProject() {
         List<Integer> projectsIds = projectDao.getProjectIds();
         double totalUsers = 0.0;
@@ -57,6 +74,11 @@ public class StatisticsBean {
     }
 
 
+    /**
+     * Calculates the average execution time for projects, based on their start and end dates.
+     *
+     * @return The average execution time per project in minutes as a double.
+     */
     private double getProjectsAverageExecution() {
         List<Object[]> projectsExecutionTime = projectDao.getProjectsExecutionDates();
 
@@ -77,6 +99,11 @@ public class StatisticsBean {
 
     }
 
+    /**
+     * Identifies the suppliers with the most resources allocated and compiles a list of the top suppliers.
+     *
+     * @return An ArrayList of {@link SupplierWithMostResourcesDto} objects representing the suppliers with the most resources.
+     */
     private ArrayList<SupplierWithMostResourcesDto> getSupplierWithMostResources() {
         List<Object[]> suppliersWithMostResources = resourceSupplierDao.countResourcesPerSupplier();
         ArrayList<SupplierWithMostResourcesDto> supplierWithMostResourcesDtos = new ArrayList<>();
@@ -90,6 +117,12 @@ public class StatisticsBean {
         return supplierWithMostResourcesDtos;
     }
 
+    /**
+     * Compiles a list of labs and the number of members associated with each, providing insight into the distribution
+     * of users across different work locations.
+     *
+     * @return An ArrayList of {@link MembersPerLabDto} objects representing the number of members per lab.
+     */
     private ArrayList<MembersPerLabDto> getMembersPerLabDto(){
         List<Object[]> membersPerLab = userDao.getUsersPerLab();
         ArrayList<MembersPerLabDto> membersPerLabDtos = new ArrayList<>();
@@ -102,6 +135,12 @@ public class StatisticsBean {
         return membersPerLabDtos;
     }
 
+    /**
+     * Compiles a list of labs and the number of projects associated with each, offering a view into the distribution
+     * of projects across different work locations.
+     *
+     * @return An ArrayList of {@link ProjectsPerLabDto} objects representing the number of projects per lab.
+     */
     private ArrayList<ProjectsPerLabDto> getProjectsPerLabDto(){
         List<Object[]> projectsPerLab = projectDao.getProjectsPerLab();
         ArrayList<ProjectsPerLabDto> projectsPerLabDtos = new ArrayList<>();
@@ -115,6 +154,12 @@ public class StatisticsBean {
         return projectsPerLabDtos;
     }
 
+    /**
+     * Aggregates the number of projects by their status for each lab, providing a detailed view of project progress
+     * across different locations.
+     *
+     * @return An ArrayList of {@link ProjectsStatusNumberPerLab} objects representing the number of projects by status per lab.
+     */
     private ArrayList<ProjectsStatusNumberPerLab> getProjectsStatusNumberPerLabs() {
         List<Object[]> projects = projectDao.countProjectsByStatusAndLab();
         ArrayList<ProjectsStatusNumberPerLab> projectsStatusNumberPerLabs = new ArrayList<>();
@@ -143,6 +188,12 @@ public class StatisticsBean {
         return projectsStatusNumberPerLabs;
     }
 
+    /**
+     * Converts a string representing a location into title case, improving readability for presentation purposes.
+     *
+     * @param location The location string to be converted.
+     * @return A string representing the location in title case.
+     */
     private String convertToTitleCase(String location) {
         // Convert the first character to uppercase and the rest to lowercase
         if(location.equals("VILA_REAL")){return "Vila Real";}

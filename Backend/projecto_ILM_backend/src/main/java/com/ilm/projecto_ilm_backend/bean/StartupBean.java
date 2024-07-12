@@ -9,6 +9,12 @@ import jakarta.transaction.Transactional;
 
 import java.io.UnsupportedEncodingException;
 
+/**
+ * Initializes the application with default data upon startup. This bean is responsible for populating the database
+ * with default entities such as labs, skills, interests, suppliers, resources, users, projects, tasks, system configurations,
+ * mails, notifications, logs, notes, and messages. It ensures that the application has a basic dataset to work with
+ * right after deployment.
+ */
 @Singleton
 @Startup
 public class StartupBean {
@@ -55,6 +61,15 @@ public class StartupBean {
     @Inject
     MessageBean messageBean;
 
+    /**
+     * Called after the bean's construction and transaction start. This method triggers the creation of default entities
+     * across various beans to ensure the application is pre-populated with essential data. It handles the initialization
+     * of labs, skills, interests, suppliers, resources, users, projects, tasks, system configurations, mails,
+     * notifications, logs, notes, and messages.
+     *
+     * @throws MessagingException If there is an issue with mail setup during initialization.
+     * @throws UnsupportedEncodingException If encoding issues occur during initialization.
+     */
     @PostConstruct
     @Transactional
     public void init() throws MessagingException, UnsupportedEncodingException {

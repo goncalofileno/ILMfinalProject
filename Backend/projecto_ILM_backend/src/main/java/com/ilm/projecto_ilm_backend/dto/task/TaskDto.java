@@ -6,20 +6,28 @@ import com.ilm.projecto_ilm_backend.ENUMS.TaskStatusENUM;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Data Transfer Object for representing a task.
+ * This class encapsulates details about a task, including its ID, title, system title, description,
+ * status, project state, initial and final dates, out collaboration status, dependent tasks, and members of the task.
+ */
 public class TaskDto {
 
-    private int id;
-    private String title;
-    private String systemTitle;
-    private String description;
-    private TaskStatusENUM status;
-    private StateProjectENUM projectState;
-    private LocalDateTime initialDate;
-    private LocalDateTime finalDate;
-    private String outColaboration;
-    private List<TaskDto> dependentTasks;
-    private List<MemberInTaskDto> membersOfTask;
+    private int id; // Unique identifier of the task
+    private String title; // Title of the task
+    private String systemTitle; // System title of the task
+    private String description; // Description of the task
+    private TaskStatusENUM status; // Status of the task
+    private StateProjectENUM projectState; // State of the project the task belongs to
+    private LocalDateTime initialDate; // Initial date of the task
+    private LocalDateTime finalDate; // Final date of the task
+    private String outColaboration; // Out collaboration status of the task
+    private List<TaskDto> dependentTasks; // List of tasks that depend on this task
+    private List<MemberInTaskDto> membersOfTask; // List of members involved in the task
 
+    /**
+     * Default constructor.
+     */
     public TaskDto() {
     }
 

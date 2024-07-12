@@ -2,19 +2,34 @@ package com.ilm.projecto_ilm_backend.dto.messages;
 
 import java.time.LocalDateTime;
 
+/**
+ * Data Transfer Object for messages.
+ * This class encapsulates the details of a message, including the sender's name, the message content,
+ * the date and time the message was sent, the system username of the sender, and a photo URL associated with the message.
+ */
 public class MessageDto {
 
-    private String name;
-    private String message;
-    private LocalDateTime date;
-    private String systemUsername;
-    private String photo;
+    private String name; // The name of the sender
+    private String message; // The message content
+    private LocalDateTime date; // The date and time the message was sent
+    private String systemUsername; // The system username of the sender
+    private String photo; // A URL to a photo associated with the message
 
-    // Construtor padrão
+    /**
+     * Default constructor.
+     */
     public MessageDto() {
     }
 
-    // Construtor com parâmetros
+    /**
+     * Constructs a new MessageDto with specified details.
+     *
+     * @param name The name of the sender.
+     * @param message The message content.
+     * @param date The date and time the message was sent.
+     * @param systemUsername The system username of the sender.
+     * @param photo A URL to a photo associated with the message.
+     */
     public MessageDto(String name, String message, LocalDateTime date, String systemUsername, String photo) {
         this.name = name;
         this.message = message;

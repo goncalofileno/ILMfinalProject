@@ -11,11 +11,16 @@ import com.ilm.projecto_ilm_backend.validator.DatabaseValidator;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
-
 import jakarta.ws.rs.core.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
+/**
+ * Service class for handling message-related operations.
+ */
 @Path("/message")
 public class MessageService {
 
@@ -30,12 +35,22 @@ public class MessageService {
 
     private static final Logger logger = LogManager.getLogger(MessageService.class);
 
+    /**
+     * Retrieves the chat page for a specified project.
+     *
+     * @param sessionId         The session ID of the user.
+     * @param projectSystemName The system name of the project.
+     * @return A response containing the chat page or an error message.
+     * @throws UnknownHostException If the client's IP address cannot be determined.
+     */
     @GET
     @Path("/chatPage")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response getChatPage(@CookieParam("session-id") String sessionId, @QueryParam("projectSystemName") String projectSystemName) {
-        logger.info("GET /message/chatPage");
+    public Response getChatPage(@CookieParam("session-id") String sessionId, @QueryParam("projectSystemName") String projectSystemName) throws UnknownHostException {
+        String clientIP = InetAddress.getLocalHost().getHostAddress();
+        String clientName = userBean.getUserBySessionId(sessionId).getFullName();
+        logger.info("The client with IP address " + clientIP + " and name " + clientName + " requested the chat page for project " + projectSystemName);
 
         if (databaseValidator.checkSessionId(sessionId)) {
             try {
@@ -59,13 +74,23 @@ public class MessageService {
         }
     }
 
-    //Serviço para enviar mensagem, recebe um sessionId, o systemName do projeto e a mensagemDto
+    /**
+     * Sends a message to a specified project.
+     *
+     * @param sessionId         The session ID of the user.
+     * @param projectSystemName The system name of the project.
+     * @param messageDto        The message to be sent.
+     * @return A response indicating the result of the operation.
+     * @throws UnknownHostException If the client's IP address cannot be determined.
+     */
     @POST
     @Path("/sendMessage")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response sendMessage(@CookieParam("session-id") String sessionId, @QueryParam("projectSystemName") String projectSystemName, MessageDto messageDto) {
-        logger.info("POST /message/sendMessage");
+    public Response sendMessage(@CookieParam("session-id") String sessionId, @QueryParam("projectSystemName") String projectSystemName, MessageDto messageDto) throws UnknownHostException {
+        String clientIP = InetAddress.getLocalHost().getHostAddress();
+        String clientName = userBean.getUserBySessionId(sessionId).getFullName();
+        logger.info("The client with IP address " + clientIP + " and name " + clientName + " sent a message to project " + projectSystemName);
 
         if (databaseValidator.checkSessionId(sessionId)) {
             try {
@@ -88,9 +113,4 @@ public class MessageService {
                     .build();
         }
     }
-
-
-
-
-
 }

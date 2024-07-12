@@ -69,6 +69,14 @@ public class ResourceDao extends AbstractDao<ResourceEntity> {
         }
     }
 
+    /**
+     * Finds a resource by the given name.
+     *
+     * @param name the name of the resource to be found.
+     *             The name is unique for each resource.
+     *             It is used to identify the resource.
+     *             It is a string.
+     */
     public int findIdByName(String name) {
         try {
             return em.createNamedQuery("Resource.findIdByName", Long.class).setParameter("name", name)
@@ -79,6 +87,14 @@ public class ResourceDao extends AbstractDao<ResourceEntity> {
         }
     }
 
+    /**
+     * Finds a resource by the given name.
+     *
+     * @param name the name of the resource to be found.
+     *             The name is unique for each resource.
+     *             It is used to identify the resource.
+     *             It is a string.
+     */
     public ResourceEntity findByName(String name) {
         try {
             return em.createNamedQuery("Resource.findByName", ResourceEntity.class).setParameter("name", name)
@@ -89,6 +105,23 @@ public class ResourceDao extends AbstractDao<ResourceEntity> {
         }
     }
 
+    /**
+     * Retrieves detailed information about resources, supporting pagination, sorting, and filtering.
+     * This method dynamically constructs a query based on provided parameters to fetch resources.
+     *
+     * @param page The page number for pagination.
+     * @param resourcesPerPage The number of resources to display per page.
+     * @param brand The brand of the resources to filter by.
+     * @param type The type of the resources to filter by.
+     * @param supplierId The ID of the supplier to filter resources by.
+     * @param name The name of the resources to filter by.
+     * @param nameAsc Sort order for resource names, true for ascending, false for descending.
+     * @param typeAsc Sort order for resource types, true for ascending, false for descending.
+     * @param brandAsc Sort order for brands, true for ascending, false for descending.
+     * @param supplierAsc Sort order for suppliers, true for ascending, false for descending.
+     * @param rejectedIds DTO containing IDs of resources to exclude from the results.
+     * @return A list of Object arrays containing resource details.
+     */
     public List<Object[]> getResourceDetails(int page, int resourcesPerPage, String brand, ResourceTypeENUM type, Integer supplierId, String name,
                                              String nameAsc, String typeAsc,String brandAsc, String supplierAsc, RejectedIdsDto rejectedIds) {
 
@@ -121,6 +154,16 @@ public class ResourceDao extends AbstractDao<ResourceEntity> {
         return query.getResultList();
     }
 
+    /**
+     * Calculates the total number of resources that match the given filters.
+     *
+     * @param brand The brand of the resources to filter by.
+     * @param type The type of the resources to filter by.
+     * @param supplierId The ID of the supplier to filter resources by.
+     * @param name The name of the resources to filter by.
+     * @param rejectedIds DTO containing IDs of resources to exclude from the count.
+     * @return The total number of resources matching the filters.
+     */
     public int getNumberOfResources(String brand, ResourceTypeENUM type, Integer supplierId, String name, RejectedIdsDto rejectedIds) {
         try {
             return  em.createNamedQuery("Resource.getNumberOfResourcesDetails", Long.class).setParameter("brand",brand).setParameter("type",type).setParameter("supplierId",supplierId).setParameter("name",name).setParameter("rejectedIds",rejectedIds.getRejectedIds()).getSingleResult().intValue();
@@ -130,14 +173,33 @@ public class ResourceDao extends AbstractDao<ResourceEntity> {
         }
     }
 
+    /**
+     * Retrieves all unique brands of resources.
+     *
+     * @return A list of all brands.
+     */
     public List<String> getAllBrands() {
         return em.createNamedQuery("Resource.getAllBrands", String.class).getResultList();
     }
 
+    /**
+     * Retrieves all unique names of resources.
+     *
+     * @return A list of all resource names.
+     */
     public List<String> getAllNames() {
         return em.createNamedQuery("Resource.getNames", String.class).getResultList();
     }
 
+    /**
+     * Finds a resource by its detailed attributes.
+     *
+     * @param name The name of the resource.
+     * @param brand The brand of the resource.
+     * @param type The type of the resource.
+     * @param supplierName The name of the supplier associated with the resource.
+     * @return The found ResourceEntity or null if no matching resource is found.
+     */
     public ResourceEntity findResourceByDetails(String name, String brand, ResourceTypeENUM type, String supplierName) {
         try {
             return em.createNamedQuery("Resource.findResourceByDetails", ResourceEntity.class)
@@ -151,6 +213,13 @@ public class ResourceDao extends AbstractDao<ResourceEntity> {
         }
     }
 
+    /**
+     * Checks if a resource is associated with a given supplier.
+     *
+     * @param resourceId The ID of the resource.
+     * @param supplierId The ID of the supplier.
+     * @return true if the resource is associated with the supplier, false otherwise.
+     */
     public boolean resourceHasSupplier(int resourceId, int supplierId) {
         return em.createNamedQuery("Resource.hasSupplier", Boolean.class)
                 .setParameter("resourceId", resourceId)
@@ -158,6 +227,15 @@ public class ResourceDao extends AbstractDao<ResourceEntity> {
                 .getSingleResult();
     }
 
+    /**
+     * Checks if a resource exists with the given attributes.
+     *
+     * @param name The name of the resource.
+     * @param brand The brand of the resource.
+     * @param type The type of the resource.
+     * @param supplierName The name of the supplier associated with the resource.
+     * @return true if a resource with the given attributes exists, false otherwise.
+     */
     public boolean doesResourceExist(String name, String brand, ResourceTypeENUM type, String supplierName) {
         return em.createNamedQuery("Resource.doesResourceExist", Boolean.class)
                 .setParameter("name", name)
@@ -166,6 +244,16 @@ public class ResourceDao extends AbstractDao<ResourceEntity> {
                 .setParameter("supplierName", supplierName)
                 .getSingleResult();
     }
+    /**
+     * Checks if a resource exists with the given attributes and a specific ID.
+     *
+     * @param name The name of the resource.
+     * @param brand The brand of the resource.
+     * @param type The type of the resource.
+     * @param supplierName The name of the supplier associated with the resource.
+     * @param id The ID of the resource to exclude from the check.
+     * @return true if a resource with the given attributes exists excluding the specified ID, false otherwise.
+     */
     public boolean doesResourceExistWithId(String name, String brand, ResourceTypeENUM type, String supplierName, int id) {
         return em.createNamedQuery("Resource.doesResourceExistWithId", Boolean.class)
                 .setParameter("name", name)
@@ -176,6 +264,12 @@ public class ResourceDao extends AbstractDao<ResourceEntity> {
                 .getSingleResult();
     }
 
+    /**
+     * Retrieves resources associated with a specific project ID.
+     *
+     * @param projectId The ID of the project.
+     * @return A list of Object arrays containing details of resources associated with the project.
+     */
     public List<Object[]> getResourcesFromProjectId(int projectId) {
         try {
             return  em.createNamedQuery("Resource.getResourcesDetailsFromProjectId", Object[].class).setParameter("projectId",projectId).getResultList()   ;
