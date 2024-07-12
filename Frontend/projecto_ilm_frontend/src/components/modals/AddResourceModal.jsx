@@ -59,8 +59,6 @@ export default function AddResourceModal({
   }, []);
 
   useEffect(() => {
-    console.log(resourceSupplier);
-    console.log("id " + resourceId);
     if (resourceId != null) {
       getResource(resourceId, resourceSupplier)
         .then((response) => response.json())
@@ -141,7 +139,6 @@ export default function AddResourceModal({
           }
         });
       } else {
-        console.log("2");
         editResource(
           resourceId,
           name,
@@ -158,10 +155,8 @@ export default function AddResourceModal({
             setModalType("success");
             setModalErrorText(t`Resource edited successfully.`);
             setModalErrorVisible(true);
-            console.log("3");
             if (resource === null || resource === undefined) {
               setTimeout(() => {
-                console.log("4");
                 setTableTrigger((prev) => !prev);
                 setTimeout(() => {
                   handleCancel();

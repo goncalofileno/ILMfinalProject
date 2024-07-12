@@ -32,7 +32,6 @@ export default function AsideResourcesPage({
     getResourcesFilters(false, true)
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         setTypes(data.types);
         setSuppliers(data.suppliers);
         setBrands(data.brands);
@@ -62,7 +61,7 @@ export default function AsideResourcesPage({
   useEffect(() => {
     if (!isVisible) {
       setIsAnimating(true);
-      const timer = setTimeout(() => setIsAnimating(false), 500); // Duração da animação
+      const timer = setTimeout(() => setIsAnimating(false), 500); 
       return () => clearTimeout(timer);
     }
   }, [isVisible]);

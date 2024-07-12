@@ -66,7 +66,6 @@ const ProjectProfilePageInfo = () => {
       } else {
         setProjectInfo(data);
         setSelectedState(data.state);
-        console.log(data);
 
         if (
           (data.state === "PLANNING" || data.state === "CANCELED") &&
@@ -457,7 +456,6 @@ const ProjectProfilePageInfo = () => {
                 className="shadow-sm"
                 style={{ height: "100%", paddingBottom: "15px" }}
               >
-                {console.log("projeto :" + projectInfo.photo)}
                 <div
                   className="project-cover-photo"
                   style={{

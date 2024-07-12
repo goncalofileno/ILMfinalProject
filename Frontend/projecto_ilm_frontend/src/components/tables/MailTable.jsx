@@ -120,7 +120,7 @@ const MailTable = () => {
   };
 
   const handleDeleteClick = (mail, event) => {
-    event.stopPropagation(); // Prevent event propagation
+    event.stopPropagation(); 
     setMailToDelete(mail);
     setShowDeleteModal(true);
   };

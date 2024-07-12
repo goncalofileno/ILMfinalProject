@@ -47,13 +47,11 @@ const MailWebSocket = () => {
       );
 
       socket.onopen = () => {
-        console.log("WebSocket connection opened");
+        console.log("");
       };
 
       socket.onmessage = (event) => {
-        console.log("WebSocket message received:", event.data);
         if (event.data.startsWith("new_mail:") && isInboxPage) {
-          console.log("Real-time mail received");
           incrementUnreadCount();
           fetchMailsInInbox(true); 
           const senderName = event.data.split(":")[1];
@@ -63,7 +61,6 @@ const MailWebSocket = () => {
         } else if (event.data === "timeout") {
           setShowTimeoutModal(true);
         } else if (event.data === "promote_to_admin") {
-          console.log("Promoted to admin MESSAGE RECEIVED");
           getUserType();
         } else if (event.data.startsWith("new_mail:")) {
           incrementUnreadCount();
@@ -74,7 +71,6 @@ const MailWebSocket = () => {
           try {
             const parsedData = JSON.parse(event.data);
             if (parsedData.type === "online_members") {
-              console.log("OLINE MEMBERS:", parsedData.message.members);
               setOnlineMembers(parsedData.message.members);
             } else {
               setNotification(parsedData);
@@ -90,7 +86,7 @@ const MailWebSocket = () => {
       };
 
       socket.onclose = () => {
-        console.log("WebSocket connection closed");
+        console.log("");
       };
 
       socket.onerror = (error) => {

@@ -952,7 +952,6 @@ async function createResource(
     observations: observations,
   };
 
-  console.log(resourceCreationDto);
 
   try {
     const response = await fetch(`${baseURL}resource`, {
@@ -1023,7 +1022,6 @@ async function findSupplierContact(supplierName) {
         credentials: "include",
       }
     );
-    console.log(response);
     return response;
   } catch (error) {
     console.error("Error verifying supplier:", error);
@@ -1031,7 +1029,6 @@ async function findSupplierContact(supplierName) {
 }
 
 async function createProject(projectCreationDto) {
-  console.log(projectCreationDto);
   try {
     const response = await fetch(`${baseURL}project`, {
       method: "POST",
@@ -1406,9 +1403,7 @@ async function getUserProjectCreation(
     rejectedIds: rejectedUsers,
   };
 
-  console.log("keyword " + keyword);
   try {
-    console.log("RejectedUsersDto", RejectedIdsDto);
     const response = await fetch(
       `${baseURL}user/userProjectCreation?systemProjectName=${systemProjectName}&page=${currentPage}&lab=${lab}&keyword=${keyword}`,
       {
@@ -1482,7 +1477,6 @@ async function getChatPage(sessionId, projectSystemName) {
     });
 
     const responseJson = await fetchResponse.json();
-    console.log("API Response:", responseJson); // Adicione este log para verificar a resposta
 
     if (!fetchResponse.ok) {
       throw new Error(responseJson.message || "An error occurred");
@@ -1741,7 +1735,6 @@ async function updateProject(projectUpdateDto, systemProjectName) {
 }
 
 const getTasksPage = async (sessionId, systemProjectName) => {
-  console.log(`Fetching tasks for project: ${systemProjectName}`);
 
   try {
     const response = await fetch(
@@ -1886,10 +1879,8 @@ const validateSession = async (sessionId) => {
     });
 
     if (response.status === 200) {
-      console.log("Session is valid");
       return true;
     } else {
-      console.log("Session is invalid");
       return false;
     }
   } catch (error) {

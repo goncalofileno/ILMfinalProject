@@ -133,7 +133,6 @@ export default function ResourcesProjectCreationTable({
               <button
                 className="add-button"
                 onClick={(event) => {
-                  console.log("resource", resource);
                   handleAddResource(
                     resource.name,
                     resource.type,

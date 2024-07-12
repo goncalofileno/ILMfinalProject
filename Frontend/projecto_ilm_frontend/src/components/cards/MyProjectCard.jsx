@@ -25,7 +25,6 @@ export default function MyProjectCard({
   const isMobile = useMediaQuery({ query: "(max-width: 850px)" });
 
   const navigate = useNavigate();
-  console.log(name + " " + photo);
   return (
     <>
       <div

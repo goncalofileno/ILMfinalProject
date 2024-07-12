@@ -16,7 +16,7 @@ const AsideMailActions = ({ isVisible }) => {
   const handleCloseComposeModal = () => setShowComposeModal(false);
   const handleShowComposeModal = () => {
     setShowComposeModal(true);
-    navigate(""); // Clear the path to ensure other items are deselected
+    navigate(""); 
   };
 
   const getNavItemClass = (path) => {

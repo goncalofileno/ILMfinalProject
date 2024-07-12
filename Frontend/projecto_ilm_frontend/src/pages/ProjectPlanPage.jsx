@@ -117,7 +117,6 @@ const ProjectPlanPage = () => {
     const sessionId = Cookies.get("session-id");
     try {
       const data = await getTasksPage(sessionId, systemProjectName);
-      console.log("Tasks data:", data);
       const transformedTasks = transformTasksData(
         data.projectTask,
         data.tasks,
@@ -229,7 +228,6 @@ const ProjectPlanPage = () => {
       systemProjectName: systemProjectName,
     };
   
-    console.log("Update Task DTO:", updateTaskDto);
   
     try {
       await updateTask(updateTaskDto);
@@ -339,8 +337,6 @@ const ProjectPlanPage = () => {
       systemProjectName: systemProjectName,
     };
 
-    console.log("Update Task DTO on Date Change:", updateTaskDto);
-
     try {
       await updateTask(updateTaskDto);
       fetchData();
@@ -356,7 +352,6 @@ const ProjectPlanPage = () => {
   };
 
   const handleConfirmDelete = async () => {
-    console.log("Task to delete:", taskDetails);
     const deleteTaskDto = {
       id: taskDetails.id,
       title: taskDetails.title,
@@ -381,8 +376,6 @@ const ProjectPlanPage = () => {
       )?.id,
       systemProjectName: systemProjectName,
     };
-
-    console.log("Delete Task DTO:", deleteTaskDto);
 
     try {
       await deleteTask(deleteTaskDto);
@@ -573,9 +566,6 @@ const ProjectPlanPage = () => {
                     !["CANCELED", "READY"].includes(projectState)
                       ? handleDateChange
                       : undefined
-                  }
-                  onProgressChange={(task) =>
-                    console.log("Task progress changed:", task)
                   }
                   onDoubleClick={
                     !["CANCELED", "READY"].includes(projectState)

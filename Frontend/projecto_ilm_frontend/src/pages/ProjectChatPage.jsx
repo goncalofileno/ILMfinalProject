@@ -53,7 +53,6 @@ const ProjectChatPage = () => {
     const fetchChatPage = async () => {
       const sessionId = Cookies.get("session-id");
       const response = await getChatPage(sessionId, systemProjectName);
-      console.log("Chat Page Response:", response);
       if (response && !response.error) {
         setMessages(response.messages || []);
         setProjectMembers(response.projectMembers || []);

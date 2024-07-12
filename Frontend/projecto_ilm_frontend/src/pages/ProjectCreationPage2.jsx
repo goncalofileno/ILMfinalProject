@@ -35,7 +35,6 @@ export default function ProjectCreationPage2() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log("rejected users changed", rejectedUsers);
     getUserProjectCreation(
       systemProjectName,
       rejectedUsers,
@@ -66,7 +65,6 @@ export default function ProjectCreationPage2() {
   };
 
   const handleSubmit = () => {
-    console.log("maxMembers", maxMembers);
     if (maxMembers < 31) {
       if (usersInProject.length <= maxMembers - 1) {
         let projectCreationMembersDto = {

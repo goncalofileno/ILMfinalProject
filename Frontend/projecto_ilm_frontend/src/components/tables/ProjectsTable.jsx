@@ -210,7 +210,6 @@ export default function ProjectsTable({
           <tbody id="table-projects-body">
             {projects.map(
               (project, index) => (
-                console.log(project),
                 (
                   <tr
                     onClick={() =>

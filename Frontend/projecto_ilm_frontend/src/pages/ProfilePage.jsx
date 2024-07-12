@@ -64,7 +64,6 @@ const UserProfile = () => {
     try {
       const profileData = await getUserProfile(systemUsername);
       if (profileData.status === 200) {
-        console.log(profileData.data);
         setProfile(profileData.data);
         if (
           loggedInUsername !== systemUsername &&
