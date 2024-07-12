@@ -423,18 +423,15 @@ async function logoutUser() {
   }
 }
 
-async function getUserProfile(systemUsername){
+async function getUserProfile(systemUsername) {
   try {
-    const response = await fetch(
-      `${baseURL}user/profile/${systemUsername}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      }
-    );
+    const response = await fetch(`${baseURL}user/profile/${systemUsername}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -449,7 +446,7 @@ async function getUserProfile(systemUsername){
       error: error.message,
     };
   }
-};
+}
 
 async function getUserEditProfile(systemUsername) {
   try {

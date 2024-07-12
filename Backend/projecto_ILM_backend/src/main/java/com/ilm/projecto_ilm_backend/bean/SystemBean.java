@@ -21,5 +21,17 @@ public class SystemBean {
             system.setValue(24);
             systemDao.persist(system);
         }
+        if (systemDao.findConfigValueByName("maxMaxMembers") == -1) {
+            SystemEntity system = new SystemEntity();
+            system.setName("maxMaxMembers");
+            system.setValue(30);
+            systemDao.persist(system);
+        }
+        if (systemDao.findConfigValueByName("maxMembersDefault") == -1) {
+            SystemEntity system = new SystemEntity();
+            system.setName("maxMembersDefault");
+            system.setValue(4);
+            systemDao.persist(system);
+        }
     }
 }
