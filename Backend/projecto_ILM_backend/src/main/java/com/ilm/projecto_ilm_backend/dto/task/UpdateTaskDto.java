@@ -5,21 +5,30 @@ import com.ilm.projecto_ilm_backend.ENUMS.TaskStatusENUM;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Data Transfer Object for updating a task.
+ * This class encapsulates all necessary information required to update an existing task,
+ * including its unique identifier, title, system title, description, status, dates, collaboration status,
+ * dependent task IDs, member IDs, creator ID, in charge ID, and the system project name.
+ */
 public class UpdateTaskDto {
-    private int id;
-    private String title;
-    private String systemTitle;
-    private String description;
-    private TaskStatusENUM status;
-    private LocalDateTime initialDate;
-    private LocalDateTime finalDate;
-    private String outColaboration;
-    private List<Integer> dependentTaskIds;
-    private List<Integer> memberIds;
-    private int creatorId;
-    private int inChargeId;
-    private String systemProjectName;
+    private int id; // Unique identifier of the task
+    private String title; // Title of the task
+    private String systemTitle; // System title of the task for internal use
+    private String description; // Description of the task
+    private TaskStatusENUM status; // Current status of the task
+    private LocalDateTime initialDate; // The start date of the task
+    private LocalDateTime finalDate; // The end date of the task
+    private String outColaboration; // Status of external collaboration on the task
+    private List<Integer> dependentTaskIds; // IDs of tasks that depend on this task
+    private List<Integer> memberIds; // IDs of members associated with this task
+    private int creatorId; // ID of the user who created the task
+    private int inChargeId; // ID of the user in charge of the task
+    private String systemProjectName; // System name of the project this task belongs to
 
+    /**
+     * Default constructor.
+     */
     public UpdateTaskDto() {
     }
 

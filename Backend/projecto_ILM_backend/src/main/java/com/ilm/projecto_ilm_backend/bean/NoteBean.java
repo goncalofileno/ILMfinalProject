@@ -13,7 +13,10 @@ import jakarta.inject.Inject;
 
 import java.time.LocalDateTime;
 
-
+/**
+ * The NoteBean class is responsible for managing NoteEntity instances.
+ * It is an application scoped bean, meaning there is a single instance for the entire application.
+ */
 @ApplicationScoped
 public class NoteBean {
 
@@ -36,6 +39,11 @@ public class NoteBean {
     private UserProjectDao userProjectDao;
 
 
+    /**
+     * Creates default notes for demonstration or initial setup purposes.
+     * This method checks if there are any notes present in the database and,
+     * if not, creates a predefined set of notes for a project.
+     */
     public void createDefaultNotesIfNotExistent() {
         if (noteDao.findById(1) == null) {
             NoteEntity note = new NoteEntity();
@@ -69,6 +77,12 @@ public class NoteBean {
         }
     }
 
+    /**
+     * Converts a NoteEntity instance to a NoteDto instance.
+     *
+     * @param note the NoteEntity instance to convert
+     * @return the converted NoteDto instance
+     */
     public NoteDto convertToDto(NoteEntity note) {
         NoteDto noteDto = new NoteDto();
         noteDto.setId(note.getId());
@@ -84,6 +98,17 @@ public class NoteBean {
         return noteDto;
     }
 
+    /**
+     * Creates a new note for a project.
+     * This method checks if the project exists and if the user is a member of the project.
+     * If both conditions are met, it creates a new note for the project.
+     *
+     * @param sessionId          the session id of the user
+     * @param noteDto            the NoteDto instance containing the note data
+     * @param systemProjectName  the system name of the project
+     * @throws Exception Throws {@link ProjectNotFoundException} if the project is not found,
+     *                   or {@link UserNotInProjectException} if the user is not a member of the project.
+     */
     public void createNote(String sessionId, NoteDto noteDto, String systemProjectName) throws Exception {
 
         ProjectEntity project = projectDao.findBySystemName(systemProjectName);
@@ -113,6 +138,17 @@ public class NoteBean {
         noteDao.persist(note);
     }
 
+    /**
+     * Marks a note as done or not done.
+     * This method checks if the note exists and if the user is a member of the project.
+     * If both conditions are met, it marks the note as done or not done.
+     *
+     * @param sessionId the session id of the user
+     * @param id        the id of the note
+     * @param done      the done status to set
+     * @throws Exception Throws {@link ProjectNotFoundException} if the note is not found,
+     *                   or {@link UserNotInProjectException} if the user is not a member of the project.
+     */
     public void markAsDone(String sessionId, int id, boolean done) throws Exception {
 
         NoteEntity note = noteDao.findById(id);

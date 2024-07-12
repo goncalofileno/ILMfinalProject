@@ -4,6 +4,11 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 import java.time.LocalDateTime;
 
+/**
+ * Data Transfer Object for mail messages.
+ * This class encapsulates the details of a mail message, including sender and receiver information,
+ * message content, and status flags for seen and deletion states.
+ */
 @XmlRootElement
 public class MailDto {
 
@@ -18,12 +23,32 @@ public class MailDto {
     private String receiverMail;
     private String receiverPhoto;
     private boolean seen;
-   private boolean isDeletedBySender;
+    private boolean isDeletedBySender;
     private boolean isDeletedByReceiver;
 
+    /**
+     * Default constructor.
+     */
     public MailDto() {
     }
 
+    /**
+     * Constructs a new MailDto with specified details.
+     *
+     * @param id The unique identifier of the mail.
+     * @param subject The subject of the mail.
+     * @param text The text content of the mail.
+     * @param date The date and time the mail was sent.
+     * @param senderName The name of the sender.
+     * @param senderMail The email address of the sender.
+     * @param senderPhoto The photo URL of the sender.
+     * @param receiverName The name of the receiver.
+     * @param receiverMail The email address of the receiver.
+     * @param receiverPhoto The photo URL of the receiver.
+     * @param seen Flag indicating if the mail has been seen by the receiver.
+     * @param isDeletedBySender Flag indicating if the mail has been deleted by the sender.
+     * @param isDeletedByReceiver Flag indicating if the mail has been deleted by the receiver.
+     */
     public MailDto(int id, String subject, String text, LocalDateTime date, String senderName, String senderMail, String senderPhoto, String receiverName, String receiverMail, String receiverPhoto, boolean seen, boolean isDeletedBySender, boolean isDeletedByReceiver) {
         this.id = id;
         this.subject = subject;
@@ -40,6 +65,16 @@ public class MailDto {
         this.isDeletedByReceiver = isDeletedByReceiver;
     }
 
+    /**
+     * Constructs a new MailDto with essential details, excluding sender and receiver photos.
+     *
+     * @param subject The subject of the mail.
+     * @param text The text content of the mail.
+     * @param senderName The name of the sender.
+     * @param senderMail The email address of the sender.
+     * @param receiverName The name of the receiver.
+     * @param receiverMail The email address of the receiver.
+     */
     public MailDto(String subject, String text, String senderName, String senderMail, String receiverName, String receiverMail) {
         this.subject = subject;
         this.text = text;

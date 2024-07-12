@@ -221,7 +221,7 @@ const SkillSelector = ({ selectedSkills, setSelectedSkills }) => {
           <Button variant="secondary" onClick={() => setShowModal(false)}>
             <Trans>Cancel</Trans>
           </Button>
-          <Button variant="primary" onClick={handleSaveNewSkill}>
+          <Button variant="primary" style={{backgroundColor:"#f39c12", borderBlockColor:"#f39c12"}} onClick={handleSaveNewSkill}>
             <Trans>Save</Trans>
           </Button>
         </Modal.Footer>

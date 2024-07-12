@@ -394,71 +394,82 @@ public class UserBean {
         return systemUsername;
     }
 
-    public boolean saveUserProfilePicture(String auth, String base64Image) {
-        try {
-            // Decode the Base64 string back to an image
-            byte[] imageBytes = Base64.getDecoder().decode(base64Image);
+/**
+ * Saves a user's profile picture from a Base64 encoded string.
+ * This method decodes the Base64 string to an image, determines the image format,
+ * and saves the original image along with resized versions for avatar and thumbnail use.
+ * It updates the user entity with URLs to these images.
+ *
+ * @param auth The authentication token or session ID used to identify the user.
+ * @param base64Image The Base64 encoded string of the image to be saved.
+ * @return true if the image was successfully saved and the user entity updated, false otherwise.
+ * @throws Exception If the user cannot be found or if an error occurs during image processing.
+ */
+public boolean saveUserProfilePicture(String auth, String base64Image) {
+    try {
+        // Decode the Base64 string back to an image
+        byte[] imageBytes = Base64.getDecoder().decode(base64Image);
 
-            // Extract user information from the token (assuming JWT or similar)
-            UserEntity user = userDao.findByAuxiliarToken(auth);
-            if (user == null) {
-                user = sessionDao.findBySessionId(auth).getUser();
-            }
-
-            if (user == null) {
-                throw new Exception("User not found");
-            }
-
-            // Save the original image to the user's specific directory
-            String directoryPath = imgsPath.IMAGES_PATH + "/" + user.getId();
-            logger.info("Directory path: " + directoryPath);
-            File directory = new File(directoryPath);
-            if (!directory.exists()) {
-                directory.mkdirs();
-            }
-
-            // Determine the image format
-            ByteArrayInputStream bis = new ByteArrayInputStream(imageBytes);
-            BufferedImage originalImage = ImageIO.read(bis);
-            String format = getImageFormat(originalImage);
-
-            // Save the original image
-            String originalFilePath = directoryPath + "/profile_picture." + format;
-            ImageIO.write(originalImage, format, new File(originalFilePath));
-            logger.info("Original file path: " + originalFilePath);
-
-            // Save resized images
-            BufferedImage avatarImage = resizeImage(originalImage, 100, 100); // Example size for avatar
-            String avatarFilePath = directoryPath + "/profile_picture_avatar." + format;
-            ImageIO.write(avatarImage, format, new File(avatarFilePath));
-
-            BufferedImage thumbnailImage = resizeImage(originalImage, 300, 300); // Example size for thumbnail
-            String thumbnailFilePath = directoryPath + "/profile_picture_thumbnail." + format;
-            ImageIO.write(thumbnailImage, format, new File(thumbnailFilePath));
-
-            // Construct the URLs
-            long timestamp = System.currentTimeMillis();
-            String baseUrl = "http://localhost:8080/images/users/" + user.getId();
-            String originalUrl = baseUrl + "/profile_picture." + format + "?t=" + timestamp;
-            logger.info("Original URL: " + originalUrl);
-            String avatarUrl = baseUrl + "/profile_picture_avatar." + format + "?t=" + timestamp;
-            logger.info("Avatar URL: " + avatarUrl);
-            String thumbnailUrl = baseUrl + "/profile_picture_thumbnail." + format + "?t=" + timestamp;
-            logger.info("Thumbnail URL: " + thumbnailUrl);
-
-            // Update the user's photo URLs in the database
-            user = userDao.findById(user.getId());
-            user.setPhoto(originalUrl); // Set URL for original image
-            user.setAvatarPhoto(avatarUrl); // Set URL for avatar
-            user.setThumbnailPhoto(thumbnailUrl); // Set URL for thumbnail
-            userDao.merge(user);
-
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+        // Extract user information from the token (assuming JWT or similar)
+        UserEntity user = userDao.findByAuxiliarToken(auth);
+        if (user == null) {
+            user = sessionDao.findBySessionId(auth).getUser();
         }
+
+        if (user == null) {
+            throw new Exception("User not found");
+        }
+
+        // Save the original image to the user's specific directory
+        String directoryPath = imgsPath.IMAGES_PATH + "/" + user.getId();
+        logger.info("Directory path: " + directoryPath);
+        File directory = new File(directoryPath);
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
+
+        // Determine the image format
+        ByteArrayInputStream bis = new ByteArrayInputStream(imageBytes);
+        BufferedImage originalImage = ImageIO.read(bis);
+        String format = getImageFormat(originalImage);
+
+        // Save the original image
+        String originalFilePath = directoryPath + "/profile_picture." + format;
+        ImageIO.write(originalImage, format, new File(originalFilePath));
+        logger.info("Original file path: " + originalFilePath);
+
+        // Save resized images
+        BufferedImage avatarImage = resizeImage(originalImage, 100, 100); // Example size for avatar
+        String avatarFilePath = directoryPath + "/profile_picture_avatar." + format;
+        ImageIO.write(avatarImage, format, new File(avatarFilePath));
+
+        BufferedImage thumbnailImage = resizeImage(originalImage, 300, 300); // Example size for thumbnail
+        String thumbnailFilePath = directoryPath + "/profile_picture_thumbnail." + format;
+        ImageIO.write(thumbnailImage, format, new File(thumbnailFilePath));
+
+        // Construct the URLs
+        long timestamp = System.currentTimeMillis();
+        String baseUrl = "http://localhost:8080/images/users/" + user.getId();
+        String originalUrl = baseUrl + "/profile_picture." + format + "?t=" + timestamp;
+        logger.info("Original URL: " + originalUrl);
+        String avatarUrl = baseUrl + "/profile_picture_avatar." + format + "?t=" + timestamp;
+        logger.info("Avatar URL: " + avatarUrl);
+        String thumbnailUrl = baseUrl + "/profile_picture_thumbnail." + format + "?t=" + timestamp;
+        logger.info("Thumbnail URL: " + thumbnailUrl);
+
+        // Update the user's photo URLs in the database
+        user = userDao.findById(user.getId());
+        user.setPhoto(originalUrl); // Set URL for original image
+        user.setAvatarPhoto(avatarUrl); // Set URL for avatar
+        user.setThumbnailPhoto(thumbnailUrl); // Set URL for thumbnail
+        userDao.merge(user);
+
+        return true;
+    } catch (Exception e) {
+        e.printStackTrace();
+        return false;
     }
+}
 
 
     /**
@@ -494,6 +505,16 @@ public class UserBean {
         }
     }
 
+    /**
+     * Attempts to log in a user with the provided credentials.
+     * If successful, it checks for an existing session. If one exists, it is refreshed and returned.
+     * Otherwise, a new session is created and returned.
+     *
+     * @param registerUserDto The DTO containing the user's login credentials.
+     * @param clientIpAddress The IP address of the client attempting to log in.
+     * @param userAgent The user agent of the client attempting to log in.
+     * @return The session ID if login is successful; null otherwise.
+     */
     public String loginUser(RegisterUserDto registerUserDto, String clientIpAddress, String userAgent) {
         if (userDao.checkPassFromEmail(registerUserDto.getMail(), HashUtil.toSHA256(registerUserDto.getPassword()))) {
             UserEntity userEntity = userDao.findByEmail(registerUserDto.getMail());
@@ -526,6 +547,15 @@ public class UserBean {
         }
     }
 
+    /**
+     * Creates a new session for a user, or refreshes an existing one.
+     * This method is used internally to manage user sessions upon successful login or session validation.
+     *
+     * @param userEntity The user entity for whom the session is being created or refreshed.
+     * @param clientIpAddress The IP address of the client.
+     * @param userAgent The user agent of the client.
+     * @return The session ID of the newly created or refreshed session.
+     */
     public String createSessionForUser(UserEntity userEntity, String clientIpAddress, String userAgent) {
         logger.info("Checking for existing session for user id: " + userEntity.getId());
         SessionEntity existingSession = sessionDao.findByUserId(userEntity.getId());
@@ -550,6 +580,13 @@ public class UserBean {
         }
     }
 
+    /**
+     * Sends a password reset link to the user's email if the user exists.
+     * This method generates a new auxiliary token for the user, saves it, and sends an email with a reset link.
+     *
+     * @param email The email address of the user requesting a password reset.
+     * @return true if the email was successfully sent, false otherwise.
+     */
     public boolean sendForgetPassLink(String email) {
         UserEntity user = userDao.findByEmail(email);
         if (user != null) {
@@ -566,6 +603,14 @@ public class UserBean {
         return false;
     }
 
+    /**
+     * Resets a user's password given a valid auxiliary token and a new password.
+     * The method looks up the user by the auxiliary token, and if found, updates the user's password.
+     *
+     * @param token The auxiliary token associated with the user's password reset request.
+     * @param newPassword The new password for the user.
+     * @return true if the password was successfully reset, false otherwise.
+     */
     public boolean resetPassword(String token, String newPassword) {
         UserEntity user = userDao.findByAuxiliarToken(token);
         if (user != null) {
@@ -576,6 +621,13 @@ public class UserBean {
         return false;
     }
 
+    /**
+     * Retrieves a user entity based on a session ID.
+     * This method is commonly used to identify the user associated with a given session.
+     *
+     * @param sessionId The session ID to look up the user by.
+     * @return The UserEntity associated with the session ID, or null if not found.
+     */
     public UserEntity getUserBySessionId(String sessionId) {
         SessionEntity session = sessionDao.findBySessionId(sessionId);
         if (session != null) {
@@ -584,10 +636,25 @@ public class UserBean {
         return null;
     }
 
+    /**
+     * Retrieves a user entity based on their system username.
+     * This method provides a way to fetch user details using the unique system username.
+     *
+     * @param systemUsername The system username of the user.
+     * @return The UserEntity associated with the system username, or null if not found.
+     */
     public UserEntity getUserBySystemUsername(String systemUsername) {
         return userDao.findBySystemUsername(systemUsername);
     }
 
+    /**
+     * Updates a user's profile information based on the provided UserProfileDto and session ID.
+     * This method allows users to update their profile details, including first name, last name, lab, and bio.
+     *
+     * @param userProfileDto The DTO containing the new profile information.
+     * @param sessionId The session ID of the user updating their profile.
+     * @throws Exception If the session is invalid or required fields are missing.
+     */
     public void updateUserProfile(UserProfileDto userProfileDto, String sessionId) throws Exception {
         UserEntity user = sessionDao.findBySessionId(sessionId).getUser();
 
@@ -634,16 +701,42 @@ public class UserBean {
         userDao.merge(user);
     }
 
+    /**
+     * Validates a user's password against the stored hash.
+     * This method is used for password verification during login and other authentication processes.
+     *
+     * @param user The user entity whose password is being validated.
+     * @param password The password to validate.
+     * @return true if the password is correct, false otherwise.
+     */
     public boolean validatePassword(UserEntity user, String password) {
         return user.getPassword().equals(HashUtil.toSHA256(password));
     }
 
+    /**
+     * Updates a user's password to a new value.
+     * This method securely updates the user's password with a new hashed value.
+     *
+     * @param user The user entity whose password is being updated.
+     * @param newPassword The new password for the user.
+     * @return true if the password was successfully updated, false otherwise.
+     */
     public boolean updatePassword(UserEntity user, String newPassword) {
         user.setPassword(HashUtil.toSHA256(newPassword));
         userDao.merge(user);
         return true;
     }
 
+    /**
+     * Retrieves the profile information of a user for editing purposes, based on their system username and session ID.
+     * This method ensures that only authorized users can access and edit their own profile information.
+     *
+     * @param systemUsername The system username of the user whose profile is being edited.
+     * @param sessionId The session ID of the requesting user.
+     * @return A UserProfileDto containing the editable profile information.
+     * @throws NotFoundException If the user cannot be found.
+     * @throws UnauthorizedException If the session ID is invalid or does not match the user.
+     */
     public UserProfileDto getEditProfile(String systemUsername, String sessionId) {
         logger.info("Received a request to get the edit profile of a user with session ID: " + sessionId);
         UserEntity requestingUser = getUserBySessionId(sessionId);
@@ -686,6 +779,16 @@ public class UserBean {
         }
     }
 
+    /**
+     * Retrieves the public profile information of a user, based on their system username and session ID.
+     * This method ensures that sensitive information is only available to authorized users or for public profiles.
+     *
+     * @param systemUsername The system username of the user whose profile is being requested.
+     * @param sessionId The session ID of the requesting user.
+     * @return A ShowProfileDto containing the user's public profile information.
+     * @throws NotFoundException If the user cannot be found.
+     * @throws UnauthorizedException If the session ID is invalid or does not match the user.
+     */
     public ShowProfileDto getProfile(String systemUsername, String sessionId) {
         logger.info("Received a request to get the profile of a user with session ID: " + sessionId);
         UserEntity requestingUser = getUserBySessionId(sessionId);
@@ -745,11 +848,26 @@ public class UserBean {
         }
     }
 
+    /**
+     * Checks if a given user ID belongs to an admin user.
+     * This method is used to verify if a user has administrative privileges.
+     *
+     * @param userId The ID of the user to check.
+     * @return true if the user is an admin, false otherwise.
+     */
     public boolean isUserAdmin(int userId) {
         UserEntity user = userDao.findById(userId);
         return user != null && user.getType() == UserTypeENUM.ADMIN;
     }
 
+    /**
+     * Determines if a user is either the creator or a manager of a given project.
+     * This method is used to check a user's permissions within a specific project context.
+     *
+     * @param userId The ID of the user.
+     * @param projectSystemName The system name of the project.
+     * @return true if the user is a creator or manager of the project, false otherwise.
+     */
     public boolean isUserCreatorOrManager(int userId, String projectSystemName) {
         UserEntity user = userDao.findById(userId);
         ProjectEntity project = projectDao.findBySystemName(projectSystemName);
@@ -761,6 +879,18 @@ public class UserBean {
         return false;
     }
 
+    /**
+     * Retrieves information for creating a user project, including potential project members.
+     * This method supports the project creation process by suggesting users based on various criteria.
+     *
+     * @param sessionId The session ID of the user creating the project.
+     * @param systemProjectName The system name of the project for which members are being suggested.
+     * @param rejectedUsersDto A DTO containing IDs of users to exclude from the suggestions.
+     * @param page The pagination page number.
+     * @param labName The name of the lab to filter users by.
+     * @param keyword A keyword to filter users by.
+     * @return A UserProjectCreationInfoDto containing information about potential project members.
+     */
     public UserProjectCreationInfoDto getUserProjectCreationInfoDto(String sessionId, String systemProjectName, RejectedIdsDto rejectedUsersDto, int page, String labName, String keyword) {
         int userId = sessionDao.findBySessionId(sessionId).getUser().getId();
         LabEntity lab;
@@ -805,8 +935,6 @@ public class UserBean {
             userProjectCreationDtos.add(userProjectCreationDto);
             int numberOfUsers = userDao.getNumberUserProjectCreationDto(userId, rejectedUsersDto.getRejectedIds(), lab, keyword);
             int maxPageNumber = calculateMaximumPageUsers(numberOfUsers, NUMBER_OF_USERS_PER_PAGE);
-            System.out.println("max page: " + maxPageNumber);
-            System.out.println("number of users: " + numberOfUsers);
 
             userProjectCreationInfoDto.setUserProjectCreationDtos(userProjectCreationDtos);
             userProjectCreationInfoDto.setMaxPageNumber(maxPageNumber);
@@ -815,10 +943,26 @@ public class UserBean {
         return userProjectCreationInfoDto;
     }
 
+    /**
+     * Calculates the maximum number of pages for user project creation suggestions.
+     * This method aids in pagination by determining the total number of pages based on the number of users.
+     *
+     * @param numberOfProjects The total number of projects.
+     * @param numberOfProjectPerPage The number of projects to display per page.
+     * @return The maximum number of pages.
+     */
     public int calculateMaximumPageUsers(int numberOfProjects, int numberOfProjectPerPage) {
         return (int) Math.ceil((double) numberOfProjects / numberOfProjectPerPage);
     }
 
+    /**
+     * Retrieves the role of a user within a specific project, based on session ID and project system name.
+     * This method is used to determine a user's role within a project for access control and display purposes.
+     *
+     * @param sessionId The session ID of the user.
+     * @param projectSystemName The system name of the project.
+     * @return The UserInProjectTypeENUM representing the user's role in the project, or null if not found.
+     */
     public UserInProjectTypeENUM getUserInProjectENUM(String sessionId, String projectSystemName) {
         UserEntity user = getUserBySessionId(sessionId);
         int projectId = projectDao.getIdBySystemName(projectSystemName);
@@ -828,6 +972,14 @@ public class UserBean {
         return null;
     }
 
+    /**
+     * Updates the preferred language of a user.
+     * This method allows users to change their preferred language for the application interface.
+     *
+     * @param sessionId The session ID of the user requesting the language change.
+     * @param language The new language preference.
+     * @return true if the language was successfully updated, false otherwise.
+     */
     public boolean updateLanguage(String sessionId, LanguageENUM language) {
         UserEntity user = getUserBySessionId(sessionId);
 
@@ -843,7 +995,13 @@ public class UserBean {
         return false;
     }
 
-    //checks if the user have projects where its creator, manager or member
+    /**
+     * Checks if a user is involved in any projects as a creator, manager, or member.
+     * This method is used to determine if a user has any associated projects.
+     *
+     * @param sessionId The session ID of the user.
+     * @return true if the user is involved in any projects, false otherwise.
+     */
     public boolean userHasProjects(String sessionId) {
         UserEntity user = getUserBySessionId(sessionId);
         if (user != null) {
@@ -852,6 +1010,14 @@ public class UserBean {
         return false;
     }
 
+    /**
+     * Promotes a user to an admin role.
+     * This method allows an existing admin to grant administrative privileges to another user.
+     *
+     * @param sessionId The session ID of the admin user making the request.
+     * @param userToChangeSystemUsername The system username of the user being promoted to admin.
+     * @return true if the user was successfully promoted to admin, false otherwise.
+     */
     public boolean promoteUserToAdmin(String sessionId, String userToChangeSystemUsername){
         UserEntity user = getUserBySessionId(sessionId);
         UserEntity userToChange = userDao.findBySystemUsername(userToChangeSystemUsername);

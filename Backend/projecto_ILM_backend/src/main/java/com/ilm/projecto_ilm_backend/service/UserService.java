@@ -293,7 +293,7 @@ public class UserService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response login(RegisterUserDto registerUserDto) throws UnknownHostException {
         String clientIP = InetAddress.getLocalHost().getHostAddress();
-        String userAgent = registerUserDto.getUserAgent();  // Certifique-se de que o DTO contém userAgent
+        String userAgent = registerUserDto.getUserAgent();
 
         logger.info("Received a request to login from IP address: " + clientIP + " with email: " + registerUserDto.getMail() + " and user agent: " + userAgent);
 
@@ -528,8 +528,6 @@ public class UserService {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response getProfile(@CookieParam("session-id") String sessionId, @PathParam("systemUsername") String systemUsername) {
-        System.out.println("SESSION ID: " + sessionId);
-        System.out.println("SYSTEM USERNAME: " + systemUsername);
         try {
             ShowProfileDto profileDto = userBean.getProfile(systemUsername, sessionId);
             return Response.status(Response.Status.OK).entity(profileDto).build();
@@ -650,7 +648,6 @@ public class UserService {
     @Path("/updateLanguage")
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateLanguage(@CookieParam("session-id") String sessionId, @QueryParam("language") LanguageENUM language) {
-        System.out.println("SESSION ID: " + sessionId);
         try {
             logger.info("Received a request to get the users information from a user with session ID: " + sessionId);
             if (databaseValidator.checkSessionId(sessionId)) {

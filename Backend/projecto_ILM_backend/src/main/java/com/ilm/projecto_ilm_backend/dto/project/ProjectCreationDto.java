@@ -5,19 +5,28 @@ import com.ilm.projecto_ilm_backend.dto.skill.SkillDto;
 
 import java.util.List;
 
+/**
+ * Data Transfer Object for creating a new project.
+ * This class encapsulates all necessary information required to create a new project,
+ * including its name, description, associated lab, required skills, interests (keywords),
+ * motivation for the project, start and end dates, project photo, and the maximum number of members.
+ */
 public class ProjectCreationDto {
 
-    private String name;
-    private String description;
-    private String lab;
-    private List<SkillDto> skills;
-    private List<InterestDto> keywords;
-    private String motivation;
-    private String startDate;
-    private String endDate;
-    private String photo;
-    private int maxMembers;
+    private String name; // Name of the project
+    private String description; // Description of the project
+    private String lab; // Lab associated with the project
+    private List<SkillDto> skills; // List of required skills for the project
+    private List<InterestDto> keywords; // List of interests or keywords associated with the project
+    private String motivation; // Motivation behind the project
+    private String startDate; // Start date of the project
+    private String endDate; // End date of the project
+    private String photo; // URL or path to the project's photo
+    private int maxMembers; // Maximum number of members allowed in the project
 
+    /**
+     * Default constructor.
+     */
     public ProjectCreationDto() {
     }
 

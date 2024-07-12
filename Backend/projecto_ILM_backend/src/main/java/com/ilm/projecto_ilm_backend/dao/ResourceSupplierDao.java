@@ -13,6 +13,12 @@ import jakarta.transaction.Transactional;
 
 import java.util.List;
 
+/**
+ * Retrieves resources associated with a specific project ID.
+ *
+ * @param projectId The ID of the project.
+ * @return A list of Object arrays containing details of resources associated with the project.
+ */
 @Stateless
 public class ResourceSupplierDao extends AbstractDao<ResourceSupplierEntity>{
 
@@ -27,10 +33,21 @@ public class ResourceSupplierDao extends AbstractDao<ResourceSupplierEntity>{
     @PersistenceContext
     EntityManager em;
 
+    /**
+     * Default constructor initializing with ResourceSupplierEntity class type.
+     */
     public ResourceSupplierDao() {
         super(ResourceSupplierEntity.class);
     }
 
+    /**
+     * Updates the deletion status of a resource-supplier relationship.
+     *
+     * @param resourceId The ID of the resource.
+     * @param supplierId The ID of the supplier.
+     * @param isDeleted The deletion status to be set.
+     * @return true if the operation was successful, false otherwise.
+     */
     @Transactional
     public boolean updateIsDeleted(int resourceId, int supplierId, boolean isDeleted) {
         try {
@@ -45,6 +62,13 @@ public class ResourceSupplierDao extends AbstractDao<ResourceSupplierEntity>{
         }
     }
 
+    /**
+     * Checks if a relationship between a resource and a supplier exists.
+     *
+     * @param resourceId The ID of the resource.
+     * @param supplierId The ID of the supplier.
+     * @return true if the relationship exists, false otherwise.
+     */
     public boolean doesRelationExist(int resourceId, int supplierId) {
         try {
             Query query = em.createNamedQuery("ResourceSupplier.doesRelationshipExist");
@@ -56,6 +80,13 @@ public class ResourceSupplierDao extends AbstractDao<ResourceSupplierEntity>{
         }
     }
 
+    /**
+     * Retrieves the deletion status of a resource-supplier relationship by their IDs.
+     *
+     * @param resourceId The ID of the resource.
+     * @param supplierId The ID of the supplier.
+     * @return true if the relationship is marked as deleted, false otherwise.
+     */
     public boolean getIsDeletedByIds(int resourceId, int supplierId) {
         try {
             Query query = em.createNamedQuery("ResourceSupplier.getIsDeletedByIds");
@@ -67,7 +98,11 @@ public class ResourceSupplierDao extends AbstractDao<ResourceSupplierEntity>{
         }
     }
 
-
+    /**
+     * Counts the number of resources associated with each supplier.
+     *
+     * @return A list of Object arrays, each containing a supplier ID and the count of associated resources.
+     */
     public List<Object[]> countResourcesPerSupplier() {
         try {
           return   em.createNamedQuery("ResourceSupplier.countResourcesPerSupplier", Object[].class).getResultList();

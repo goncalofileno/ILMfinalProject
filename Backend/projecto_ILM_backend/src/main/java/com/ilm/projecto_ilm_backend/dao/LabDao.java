@@ -54,6 +54,12 @@ public class LabDao extends AbstractDao<LabEntity>{
         }
     }
 
+    /**
+     * Finds a LabEntity in the database with the given local.
+     *
+     * @param local the local of the LabEntity to find.
+     * @return the LabEntity with the given local, or null if no such LabEntity exists.
+     */
     public LabEntity findbyLocal(String local) {
         try {
             return em.createNamedQuery("Lab.findByLocal", LabEntity.class).setParameter("local", WorkLocalENUM.valueOf(local)).getSingleResult();

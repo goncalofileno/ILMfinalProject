@@ -7,10 +7,13 @@ import com.ilm.projecto_ilm_backend.dao.NotificationDao;
 import com.ilm.projecto_ilm_backend.dao.ProjectDao;
 import com.ilm.projecto_ilm_backend.dao.SessionDao;
 import com.ilm.projecto_ilm_backend.dao.UserDao;
+import com.ilm.projecto_ilm_backend.dto.messages.MessageDto;
 import com.ilm.projecto_ilm_backend.dto.notification.NotificationDto;
 import com.ilm.projecto_ilm_backend.entity.NotificationEntity;
 import com.ilm.projecto_ilm_backend.entity.ProjectEntity;
 import com.ilm.projecto_ilm_backend.entity.UserEntity;
+import com.ilm.projecto_ilm_backend.security.exceptions.ProjectNotFoundException;
+import com.ilm.projecto_ilm_backend.security.exceptions.UserNotInProjectException;
 import com.ilm.projecto_ilm_backend.service.websockets.MailWebSocket;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -20,6 +23,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * The NotificationBean class is responsible for managing NotificationEntity instances.
+ * It is an application scoped bean, meaning there is a single instance for the entire application.
+ */
 @ApplicationScoped
 public class NotificationBean {
 
@@ -35,6 +42,11 @@ public class NotificationBean {
     @Inject
     SessionDao sessionDao;
 
+    /**
+     * Creates default notifications for demonstration or initial setup purposes.
+     * This method checks if there are any notifications present in the database and,
+     * if not, creates a predefined set of notifications for a project.
+     */
     public void createDefaultNotificationsIfNotExistent() {
         createNotification(NotificationTypeENUM.PROJECT, 1, 1, StateProjectENUM.IN_PROGRESS, null);
         createNotification(NotificationTypeENUM.INVITE, 2, 1, null, 2);
@@ -47,6 +59,17 @@ public class NotificationBean {
         createNotification(NotificationTypeENUM.REMOVED, 4, 1, null, 2);
     }
 
+
+    /**
+     * Creates a notification entity and persists it to the database.
+     * This method is a utility for creating notifications with various types and associated data.
+     *
+     * @param type The type of the notification.
+     * @param projectId The ID of the project associated with the notification.
+     * @param receptorId The ID of the user who will receive the notification.
+     * @param projectStatus The status of the project, if applicable.
+     * @param userId The ID of the user related to the notification event, if applicable.
+     */
     private void createNotification(NotificationTypeENUM type, int projectId, int receptorId,
                                     StateProjectENUM projectStatus, Integer userId) {
         NotificationEntity notification = new NotificationEntity();
@@ -69,6 +92,14 @@ public class NotificationBean {
         notificationDao.persist(notification);
     }
 
+    /**
+     * Retrieves notifications for a user, combining unread and read notifications up to a limit.
+     * This method prioritizes unread notifications and fills the remaining slots with the most recent read notifications.
+     *
+     * @param userId The ID of the user whose notifications are being retrieved.
+     * @param page The pagination page number for read notifications.
+     * @return A list of {@link NotificationDto} representing the user's notifications.
+     */
     public List<NotificationDto> getUserNotifications(int userId, int page) {
 
         List<NotificationEntity> unreadNotifications = notificationDao.findUnreadByUserId(userId);
@@ -91,14 +122,32 @@ public class NotificationBean {
         return dtos;
     }
 
+    /**
+     * Counts the total number of notifications for a user.
+     *
+     * @param userId The ID of the user.
+     * @return The total count of notifications for the specified user.
+     */
     public int getTotalUserNotifications(int userId) {
         return notificationDao.countAllByUserId(userId);
     }
 
+    /**
+     * Counts the number of unread notifications for a user.
+     *
+     * @param userId The ID of the user.
+     * @return The count of unread notifications for the specified user.
+     */
     public int getUnreadNotificationCount(int userId) {
         return notificationDao.countUnreadByUserId(userId);
     }
 
+    /**
+     * Converts a NotificationEntity instance to a NotificationDto instance.
+     *
+     * @param entity The NotificationEntity instance to convert.
+     * @return The converted NotificationDto instance.
+     */
     private NotificationDto toDto(NotificationEntity entity) {
         NotificationDto dto = new NotificationDto();
         dto.setId(entity.getId());
@@ -127,6 +176,16 @@ public class NotificationBean {
         return dto;
     }
 
+    /**
+     * Creates and sends a project-related notification to a user.
+     * This method is used for notifications related to project events such as creation, updates, and status changes.
+     *
+     * @param projectSystemName The system name of the project.
+     * @param projectStatus The current status of the project.
+     * @param userName The name of the user associated with the event.
+     * @param receptor The user entity who will receive the notification.
+     * @param systemUserName The system username of the user associated with the event.
+     */
     public void createProjectNotification(String projectSystemName, StateProjectENUM projectStatus, String userName, UserEntity receptor, String systemUserName) {
         NotificationEntity notification = new NotificationEntity();
         notification.setType(NotificationTypeENUM.PROJECT);
@@ -144,6 +203,15 @@ public class NotificationBean {
         }
     }
 
+    /**
+     * Creates and sends a project rejection-related notification to a user.
+     *
+     * @param projectSystemName The system name of the project.
+     * @param projectStatus The current status of the project.
+     * @param userName The name of the user associated with the event.
+     * @param receptor The user entity who will receive the notification.
+     * @param systemUserName The system username of the user associated with the event.
+     */
     public void createRejectProjectNotification(String projectSystemName, StateProjectENUM projectStatus, String userName, UserEntity receptor, String systemUserName) {
         NotificationEntity notification = new NotificationEntity();
         notification.setType(NotificationTypeENUM.PROJECT_REJECTED);
@@ -161,6 +229,14 @@ public class NotificationBean {
         }
     }
 
+    /**
+     * Creates and sends an invitation-related notification to a user.
+     *
+     * @param projectSystemName The system name of the project.
+     * @param userName The name of the user associated with the event.
+     * @param receptor The user entity who will receive the notification.
+     * @param systemUserName The system username of the user associated with the event.
+     */
     public void createInviteNotification(String projectSystemName, String userName, UserEntity receptor, String systemUserName) {
         NotificationEntity notification = new NotificationEntity();
         notification.setType(NotificationTypeENUM.INVITE);
@@ -174,11 +250,17 @@ public class NotificationBean {
         notificationDao.persist(notification);
         if(sessionDao.findSessionIdByUserId(receptor.getId()) != null) {
             MailWebSocket.sendInviteNotification(sessionDao.findSessionIdByUserId(receptor.getId()), toDto(notification));
-        }else {
-            System.out.println("SESSION NOT FOUND TO SEND INVITE NOTIFICATION");
         }
     }
 
+    /**
+     * Creates and sends a project insertion-related notification to a user.
+     *
+     * @param projectSystemName The system name of the project.
+     * @param userName The name of the user associated with the event.
+     * @param receptor The user entity who will receive the notification.
+     * @param systemUserName The system username of the user associated with the event.
+     */
     public void createProjectInsertedNotification(String projectSystemName, String userName, UserEntity receptor, String systemUserName) {
         NotificationEntity notification = new NotificationEntity();
         notification.setType(NotificationTypeENUM.PROJECT_INSERTED);
@@ -195,6 +277,14 @@ public class NotificationBean {
         }
     }
 
+    /**
+     * Creates and sends an invitation acceptance-related notification to a user.
+     *
+     * @param projectSystemName The system name of the project.
+     * @param userName The name of the user associated with the event.
+     * @param receptor The user entity who will receive the notification.
+     * @param systemUserName The system username of the user associated with the event.
+     */
     public void createInviteAcceptedNotification(String projectSystemName, String userName, UserEntity receptor, String systemUserName) {
         NotificationEntity notification = new NotificationEntity();
         notification.setType(NotificationTypeENUM.INVITE_ACCEPTED);
@@ -211,6 +301,14 @@ public class NotificationBean {
         }
     }
 
+    /**
+     * Creates and sends an invitation rejection-related notification to a user.
+     *
+     * @param projectSystemName The system name of the project.
+     * @param userName The name of the user associated with the event.
+     * @param receptor The user entity who will receive the notification.
+     * @param systemUserName The system username of the user associated with the event.
+     */
     public void createInviteRejectedNotification(String projectSystemName, String userName, UserEntity receptor, String systemUserName) {
         NotificationEntity notification = new NotificationEntity();
         notification.setType(NotificationTypeENUM.INVITE_REJECTED);
@@ -227,13 +325,19 @@ public class NotificationBean {
         }
     }
 
+    /**
+     * Creates and sends a task-related notification to a user.
+     *
+     * @param taskName The name of the task.
+     * @param projectSystemName The system name of the project.
+     * @param systemeUsername The system username of the user associated with the event.
+     * @param receptor The user entity who will receive the notification.
+     */
     public void createTaskNotification(String taskName, String projectSystemName, String systemeUsername, UserEntity receptor) {
 
-        // Verificar se já existe uma notificação similar
         boolean notificationExists = notificationDao.findSimilarTaskNotification(taskName, projectSystemName, receptor);
 
         if (notificationExists) {
-            // Se uma notificação similar já existir, não crie uma nova
             return;
         }
 
@@ -253,6 +357,14 @@ public class NotificationBean {
         }
     }
 
+    /**
+     * Creates and sends a task assignment-related notification to a user.
+     *
+     * @param taskName The name of the task.
+     * @param projectSystemName The system name of the project.
+     * @param systemUsername The system username of the user associated with the event.
+     * @param receptor The user entity who will receive the notification.
+     */
     public void createTaskAssignedNotification(String taskName, String projectSystemName, String systemUsername, UserEntity receptor) {
         // Verificar se já existe uma notificação similar
         boolean notificationExists = notificationDao.findSimilarTaskNotification(taskName, projectSystemName, receptor);
@@ -277,6 +389,14 @@ public class NotificationBean {
         }
     }
 
+    /**
+     * Creates and sends an appliance-related notification to a user.
+     *
+     * @param projectSystemName The system name of the project.
+     * @param userName The name of the user associated with the appliance.
+     * @param receptor The user entity who will receive the notification.
+     * @param systemUserName The system username of the user associated with the appliance.
+     */
     public void createApplianceNotification(String projectSystemName, String userName, UserEntity receptor, String systemUserName) {
         NotificationEntity notification = new NotificationEntity();
         notification.setType(NotificationTypeENUM.APPLIANCE);
@@ -293,6 +413,13 @@ public class NotificationBean {
         }
     }
 
+    /**
+     * Creates and sends an appliance acceptance-related notification to a user.
+     *
+     * @param projectSystemName The system name of the project.
+     * @param systemUsername The system username of the user associated with the event.
+     * @param receptor The user entity who will receive the notification.
+     */
     public void createApplianceAcceptedNotification(String projectSystemName, String systemUsername, UserEntity receptor) {
         NotificationEntity notification = new NotificationEntity();
         notification.setType(NotificationTypeENUM.APPLIANCE_ACCEPTED);
@@ -309,6 +436,13 @@ public class NotificationBean {
         }
     }
 
+    /**
+     * Creates and sends an appliance rejection-related notification to a user.
+     *
+     * @param projectSystemName The system name of the project.
+     * @param systemUsername The system username of the user associated with the event.
+     * @param receptor The user entity who will receive the notification.
+     */
     public void createApplianceRejectedNotification(String projectSystemName, String systemUsername, UserEntity receptor) {
         NotificationEntity notification = new NotificationEntity();
         notification.setType(NotificationTypeENUM.APPLIANCE_REJECTED);
@@ -325,6 +459,13 @@ public class NotificationBean {
         }
     }
 
+    /**
+     * Creates and sends a removed-related notification to a user.
+     *
+     * @param projectSystemName The system name of the project.
+     * @param systemUsername The system username of the user associated with the event.
+     * @param receptor The user entity who will receive the notification.
+     */
     public void createRemovedNotification(String projectSystemName, String systemUsername, UserEntity receptor) {
         NotificationEntity notification = new NotificationEntity();
         notification.setType(NotificationTypeENUM.REMOVED);
@@ -341,6 +482,13 @@ public class NotificationBean {
         }
     }
 
+    /**
+     * Creates and sends a message-related notification to a user.
+     *
+     * @param projectSystemName The system name of the project.
+     * @param systemUserName The system username of the user associated with the event.
+     * @param receptor The user entity who will receive the notification.
+     */
     public void createProjectMessageNotification(String projectSystemName, String systemUserName, UserEntity receptor) {
         NotificationEntity notification = new NotificationEntity();
         notification.setType(NotificationTypeENUM.PROJECT_MESSAGE);
@@ -357,6 +505,14 @@ public class NotificationBean {
         }
     }
 
+    /**
+     * Creates and sends a user type change-related notification to a user.
+     *
+     * @param projectSystemName The system name of the project.
+     * @param systemUserName The system username of the user associated with the type change.
+     * @param receptor The user entity who will receive the notification.
+     * @param newUserType The new user type.
+     */
     public void createTypeChangedNotification(String projectSystemName, String systemUserName, UserEntity receptor, UserInProjectTypeENUM newUserType){
         NotificationEntity notification = new NotificationEntity();
         notification.setType(NotificationTypeENUM.USER_TYPE_CHANGED);
@@ -374,6 +530,13 @@ public class NotificationBean {
         }
     }
 
+    /**
+     * Creates and sends a project update-related notification to a user.
+     *
+     * @param projectSystemName The system name of the project.
+     * @param systemUserName The system username of the user associated with the update.
+     * @param receptor The user entity who will receive the notification.
+     */
     public void createProjectUpdatedNotification(String projectSystemName, String systemUserName, UserEntity receptor){
         NotificationEntity notification = new NotificationEntity();
         notification.setType(NotificationTypeENUM.PROJECT_UPDATED);
@@ -390,6 +553,13 @@ public class NotificationBean {
         }
     }
 
+    /**
+     * Creates and sends a project leaving-related notification to a user.
+     *
+     * @param projectSystemName The system name of the project.
+     * @param systemUserName The system username of the user associated with the leaving.
+     * @param receptor The user entity who will receive the notification.
+     */
     public void createLeftProjectNotification(String projectSystemName, String systemUserName, UserEntity receptor){
         NotificationEntity notification = new NotificationEntity();
         notification.setType(NotificationTypeENUM.LEFT_PROJECT);
@@ -406,6 +576,12 @@ public class NotificationBean {
         }
     }
 
+    /**
+     * Creates and sends a promotion to admin-related notification to a user.
+     *
+     * @param systemUserName The system username of the user associated with the promotion.
+     * @param receptor The user entity who will receive the notification.
+     */
     public void createPromoteToAdminNotification(String systemUserName, UserEntity receptor){
         NotificationEntity notification = new NotificationEntity();
         notification.setType(NotificationTypeENUM.PROMOTE_TO_ADMIN);
@@ -421,14 +597,33 @@ public class NotificationBean {
         }
     }
 
+    /**
+     * Retrieves the system username of the creator of a notification by the receptor ID and notification type.
+     *
+     * @param receptorId The ID of the receptor.
+     * @param type The type of the notification.
+     * @return The system username of the creator of the notification.
+     */
     public String getSystemUsernameOfCreatorOfNotificationByReceptorAndType(int receptorId, NotificationTypeENUM type) {
         return notificationDao.findSystemUsernameOfCreatorByReceptorAndType(receptorId, type);
     }
 
+    /**
+     * Marks message notifications as clicked.
+     *
+     * @param userId The ID of the user.
+     * @param notificationIds The list of notification IDs to be marked as clicked.
+     */
     public void markMessageNotificationClicked(int userId, List<Integer> notificationIds) {
         notificationDao.markMessageNotificationClicked(userId, notificationIds);
     }
 
+    /**
+     * Marks all notifications as clicked for a user and project.
+     *
+     * @param userId The ID of the user.
+     * @param projectSystemName The system name of the project.
+     */
     public void markAllNotificationsClicked(int userId, String projectSystemName) {
         notificationDao.markAllNotificationsClicked(userId, projectSystemName);
     }

@@ -76,6 +76,12 @@ public class SupplierDao extends AbstractDao<SupplierEntity> {
         }
     }
 
+    /**
+     * Finds the user ID associated with a given session ID.
+     *
+     * @param sessionId The session ID for which the user ID is to be found.
+     * @return The user ID associated with the given session ID, or -1 if no such session exists.
+     */
     public String findNameById(int id) {
         try {
             return em.createNamedQuery("Supplier.findNameById", String.class).setParameter("id", id)
@@ -85,6 +91,14 @@ public class SupplierDao extends AbstractDao<SupplierEntity> {
         }
     }
 
+    /**
+     * Finds the ID of a supplier based on the supplier's name.
+     * This method queries the database for the ID of the supplier with the specified name.
+     * If the supplier is found, their ID is returned. If not found, -1 is returned.
+     *
+     * @param name The name of the supplier.
+     * @return The ID of the supplier if found, -1 otherwise.
+     */
     public int findIdByName(String name) {
         try {
             return em.createNamedQuery("Supplier.findIdByName", int.class).setParameter("name", name)
@@ -93,10 +107,25 @@ public class SupplierDao extends AbstractDao<SupplierEntity> {
             return -1;
         }
     }
+
+    /**
+     * Retrieves all supplier names from the database.
+     * This method queries the database for the names of all suppliers and returns them as a list.
+     *
+     * @return A list of all supplier names.
+     */
     public List<String> getAllNames() {
         return em.createNamedQuery("Supplier.findAllNames", String.class).getResultList();
     }
 
+    /**
+     * Finds the contact information of a supplier based on the supplier's name.
+     * This method queries the database for the contact information of the supplier with the specified name.
+     * If the supplier is found, their contact information is returned. If not found, null is returned.
+     *
+     * @param supplierName The name of the supplier whose contact information is being requested.
+     * @return The contact information of the supplier if found, null otherwise.
+     */
     public String findSupplierContactByName(String supplierName){
         try {
             return em.createNamedQuery("Supplier.findSupplierContactByName", String.class)
