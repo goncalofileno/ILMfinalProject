@@ -171,7 +171,9 @@ export default function UsersPage() {
                       <Col sm={4}>
                         <Form.Group as={Col} className="mb-3">
                           <Form.Label column sm={2} style={{ width: "100%" }}>
-                            <h6><Trans>Lab</Trans></h6>
+                            <h6>
+                              <Trans>Lab</Trans>
+                            </h6>
                           </Form.Label>
                           <Col sm={10}>
                             <Form.Select
@@ -181,7 +183,9 @@ export default function UsersPage() {
                                 setUsersTrigger((prev) => !prev);
                               }}
                             >
-                              <option value=""><Trans>All Labs</Trans></option>
+                              <option value="">
+                                <Trans>All Labs</Trans>
+                              </option>
                               {labs.map((lab) => (
                                 <option key={lab.local} value={lab.local}>
                                   {formatLab(lab.local)}
@@ -208,10 +212,10 @@ export default function UsersPage() {
                       </th>
                       {!isPhone && <th style={{ width: "20%" }}>Lab</th>}
                       <th style={{ width: !isPhone ? "30%" : "35%" }}>
-                      <Trans>Skills</Trans>
+                        <Trans>Skills</Trans>
                       </th>
                       <th style={{ width: !isPhone ? "20%" : "25%" }}>
-                      <Trans>Actions</Trans>
+                        <Trans>Actions</Trans>
                       </th>
                     </tr>
                   </thead>
@@ -220,8 +224,10 @@ export default function UsersPage() {
                       <tr style={{ height: "100%" }}>
                         <td colspan="7">
                           <div className="no-results no-results-align">
-                          <Trans>No users available to show based on the selected
-                          criteria.</Trans>
+                            <Trans>
+                              No users available to show based on the selected
+                              criteria.
+                            </Trans>
                           </div>
                         </td>
                       </tr>
@@ -255,7 +261,7 @@ export default function UsersPage() {
                               className="align-middle"
                             >
                               {user.systemUsername === userSystemUsername
-                                ? (t`You`)
+                                ? t`You`
                                 : user.name}
                             </td>
                             {!isPhone && (
@@ -302,7 +308,9 @@ export default function UsersPage() {
                                             alignItems: "center",
                                           }}
                                         >
-                                          This user has a private profile
+                                          <Trans>
+                                            This user has a private profile.
+                                          </Trans>
                                         </span>
                                       ) : (
                                         <span
@@ -312,7 +320,7 @@ export default function UsersPage() {
                                             alignItems: "center",
                                           }}
                                         >
-                                          Private profile
+                                          <Trans>Private profile</Trans>
                                         </span>
                                       )}
                                     </Alert>
