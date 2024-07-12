@@ -3,9 +3,9 @@ import { create } from "zustand";
 const alertStore = create((set) => ({
    message: "",
    setMessage: (newMessage) => set({ message: newMessage }),
-   visibility: false, // visible or hidden
+   visibility: false,  
    setVisibility: (newVisibility) => set({ visibility: newVisibility }),
-   type: false, // success or danger
+   type: false, 
    setType: (newType) => set({ type: newType }),
 
    confirmMessage: "",

@@ -267,7 +267,7 @@ async function loginUser(email, password) {
   let user = {
     mail: email,
     password: password,
-    userAgent: navigator.userAgent, // Captura o User-Agent do navegador
+    userAgent: navigator.userAgent, 
   };
 
   try {
@@ -278,7 +278,7 @@ async function loginUser(email, password) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(user),
-      credentials: "include", // Inclui os cookies na requisição
+      credentials: "include", 
     });
 
     if (!response.ok) {
@@ -287,14 +287,14 @@ async function loginUser(email, password) {
 
     const contentType = response.headers.get("content-type");
     if (contentType && contentType.includes("application/json")) {
-      const data = await response.json(); // Processa a resposta como JSON
-      return { status: response.status, data: data }; // Retorna um objeto com o status e os dados
+      const data = await response.json(); 
+      return { status: response.status, data: data };
     } else {
       throw new Error("Response is not JSON");
     }
   } catch (error) {
     console.error("Error during fetching login:", error);
-    // Retorna um objeto de erro com o status e a mensagem de erro
+   
     return {
       status: error.response ? error.response.status : 500,
       error: error.message,
@@ -306,11 +306,11 @@ async function getUserProfileImage() {
   try {
     const response = await fetch(`${baseURL}user/profileImage`, {
       method: "GET",
-      credentials: "include", // Inclui os cookies na requisição
+      credentials: "include", 
     });
     if (response.ok) {
       const data = await response.json();
-      return data.imageUrl; // Supondo que a resposta contenha o campo imageUrl
+      return data.imageUrl; 
     } else {
       console.error("Failed to fetch user image");
       return null;
@@ -322,7 +322,7 @@ async function getUserProfileImage() {
 }
 
 async function loginWithToken(token) {
-  let userAgent = navigator.userAgent; // Captura o User-Agent do navegador
+  let userAgent = navigator.userAgent; 
 
   try {
     const response = await fetch(`${baseURL}user/loginWithToken`, {
@@ -332,7 +332,7 @@ async function loginWithToken(token) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ token, userAgent }),
-      credentials: "include", // Inclui os cookies na requisição
+      credentials: "include", 
     });
 
     return response;
@@ -415,7 +415,7 @@ async function logoutUser() {
   try {
     const response = await fetch(`${baseURL}user/logout`, {
       method: "POST",
-      credentials: "include", // Inclui os cookies na requisição
+      credentials: "include", 
     });
     return response;
   } catch (error) {
@@ -511,7 +511,7 @@ async function updateUserProfile(userProfileDto) {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
-      credentials: "include", // Inclui cookies na requisição
+      credentials: "include", 
       body: JSON.stringify(userProfileDto),
     });
 
@@ -539,7 +539,7 @@ async function uploadProfilePictureWithSession(file) {
           headers: {
             "Content-Type": "application/json",
           },
-          credentials: "include", // Inclui cookies na requisição
+          credentials: "include",
           body: JSON.stringify({ file: base64data }),
         });
 
@@ -560,7 +560,7 @@ async function updatePassword(currentPassword, newPassword) {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
-      credentials: "include", // Inclui os cookies na requisição
+      credentials: "include", 
       body: JSON.stringify({ currentPassword, newPassword }),
     });
 
@@ -698,11 +698,11 @@ async function getUnreadNumber(sessionId) {
       return await response.json();
     } else {
       console.error("Failed to fetch unread number:", response.statusText);
-      return { unreadNumber: 0 }; // Retorna 0 em caso de falha
+      return { unreadNumber: 0 }; 
     }
   } catch (error) {
     console.error("Error fetching unread number:", error);
-    return { unreadNumber: 0 }; // Retorna 0 em caso de erro
+    return { unreadNumber: 0 }; 
   }
 }
 
@@ -1061,7 +1061,7 @@ async function getUnreadNotificationsCount(sessionId) {
     }
 
     const data = await response.json();
-    return data; // Directly returning the number
+    return data; 
   } catch (error) {
     console.error("Error fetching unread notifications count:", error);
     return null;
@@ -1346,7 +1346,6 @@ async function createNote(sessionId, noteDto, systemProjectName) {
       body: JSON.stringify(noteDto),
     });
 
-    // Ensure response is valid JSON
     const responseText = await fetchResponse.text();
     let responseJson;
     try {

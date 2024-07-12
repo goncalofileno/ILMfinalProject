@@ -141,12 +141,11 @@ const resourceTypeMappingsPt = {
   COMPONENT: "Componente",
 };
 
-// Function to get the current language from cookies
+
 function getCurrentLanguage() {
   return Cookies.get("user-language") || "ENGLISH";
 }
 
-// Format functions with language checks
 function formatLab(lab) {
   const language = getCurrentLanguage();
   const mappings = language === "PORTUGUESE" ? labMappingsPt : labMappingsEn;

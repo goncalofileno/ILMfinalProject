@@ -22,7 +22,7 @@ const useNotificationStore = create((set, get) => ({
     if (sessionId) {
       const result = await getUnreadNotificationsCount(sessionId);
       if (typeof result === "number") {
-        // Check if result is a number
+        
         set({ unreadNotificationsCount: result });
       } else {
         console.error(

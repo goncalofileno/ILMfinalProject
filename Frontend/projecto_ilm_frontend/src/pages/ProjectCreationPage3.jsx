@@ -52,8 +52,6 @@ export default function ProjectCreationPage3() {
 
   useEffect(() => {
     return () => {
-      // Clear the cookies you want to remove
-
       Cookies.remove("yourResources");
     };
   }, []);

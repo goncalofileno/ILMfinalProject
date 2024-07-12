@@ -16,8 +16,7 @@ const MailWebSocket = () => {
   const [showTimeoutModal, setShowTimeoutModal] = useState(false);
   const [notification, setNotification] = useState(null);
   const navigate = useNavigate();
-  // const [audioEnabled, setAudioEnabled] = useState(false);
-  // const audioRef = useRef(new Audio("/notification_sound.wav"));
+
   const loggedInUsername = Cookies.get("user-systemUsername");
 
   // useEffect(() => {
@@ -113,7 +112,7 @@ const MailWebSocket = () => {
     Cookies.remove("session-id");
     Cookies.remove("user-systemUsername");
     Cookies.remove("user-userType");
-    navigate("/"); // Redirect to login page
+    navigate("/"); 
   };
 
   const notificationHandlers = {
