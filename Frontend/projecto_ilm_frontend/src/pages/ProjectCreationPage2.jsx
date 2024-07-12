@@ -132,8 +132,9 @@ export default function ProjectCreationPage2() {
         style={{ height: isTablet && "unset" }}
       >
         <h1 className="page-title">
-          <span className="app-slogan-1">Project </span>
-          <span className="app-slogan-2">Members</span>
+          <Trans><span className="app-slogan-1">Project </span>
+          <span className="app-slogan-2">Members</span></Trans>
+          
         </h1>
         <InputGroup
           className="mail-filters"

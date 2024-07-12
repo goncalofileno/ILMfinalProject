@@ -40,7 +40,6 @@ public class ProjectResourceDao  extends AbstractDao<ProjectResourceEntity>{
      *
      *the project to be removed.
      */
-
     public void removeById(int id) {
         try {
              em.createNamedQuery("ProjectResourceEntity.deleteById").setParameter("id", id).executeUpdate();
@@ -50,6 +49,12 @@ public class ProjectResourceDao  extends AbstractDao<ProjectResourceEntity>{
         }
     }
 
+    /**
+     * Retrieves a project by its unique identifier.
+     *
+     * @param id The unique identifier of the project.
+     * @return The found ProjectEntity or null if no entity is found with the provided id.
+     */
     public ProjectResourceEntity findById(int id) {
         try {
            return em.createNamedQuery("ProjectResourceEntity.findById", ProjectResourceEntity.class).setParameter("id", id).getSingleResult();
@@ -60,6 +65,11 @@ public class ProjectResourceDao  extends AbstractDao<ProjectResourceEntity>{
         }
     }
 
+    /**
+     * Retrieves all projects from the database.
+     *
+     * @return A list of all projects in the database.
+     */
     public List<ProjectResourceEntity> findResourcesById(int id) {
         try {
             return em.createNamedQuery("ProjectResourceEntity.getByProjectId", ProjectResourceEntity.class).setParameter("id", id).getResultList();

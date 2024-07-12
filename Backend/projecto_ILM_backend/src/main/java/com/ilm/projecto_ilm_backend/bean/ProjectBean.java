@@ -34,6 +34,10 @@ import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+/**
+ * The ProjectBean class is responsible for managing ProjectEntity instances.
+ * It is a singleton bean, meaning there is a single instance for the entire application.
+ */
 @Singleton
 @Startup
 public class ProjectBean {
@@ -96,6 +100,10 @@ public class ProjectBean {
     private static final int NUMBER_OF_PROJECTS_PER_PAGE = 8;
     private int numberOfProjectsToCreate = 20;
 
+    /**
+     * Creates default projects if they do not already exist.
+     * This method initializes a predefined number of projects with default values.
+     */
     @Transactional
     public void createDefaultProjectsIfNotExistent() {
         if (projectDao.countProjects() < numberOfProjectsToCreate) {
@@ -161,6 +169,12 @@ public class ProjectBean {
         }
     }
 
+    /**
+     * Creates a final presentation task for a project.
+     *
+     * @param userResponsable The user responsible for the final presentation task.
+     * @param projectSystemName The system name of the project.
+     */
     public void createFinalPresentation(UserEntity userResponsable, String projectSystemName) {
 
         TaskEntity finalPresentation = new TaskEntity();
@@ -180,6 +194,12 @@ public class ProjectBean {
 
     }
 
+    /**
+     * Creates a UserTaskEntity for a user responsible for a task.
+     *
+     * @param userResponsable The user responsible for the task.
+     * @param systemTitle The system title of the task.
+     */
     public void createUserTaskEntityPresentator(UserEntity userResponsable, String systemTitle) {
 
         TaskEntity finalPresentation2 = taskDao.findTaskBySystemTitle(systemTitle);
@@ -192,6 +212,12 @@ public class ProjectBean {
     }
 
 
+    /**
+     * Generates a system name for a project based on its original name.
+     *
+     * @param originalName The original name of the project.
+     * @return The generated system name.
+     */
     public String projectSystemNameGenerator(String originalName) {
         // Convert to lower case
         String lowerCaseName = originalName.toLowerCase();
@@ -210,6 +236,10 @@ public class ProjectBean {
         return cleanSystemName;
     }
 
+    /**
+     * Creates default users in projects if they do not already exist.
+     * This method initializes a predefined number of users in projects with default values.
+     */
     public void createDefaultUsersInProjectIfNotExistent() {
         if (userProjectDao.countUserProjects() < numberOfProjectsToCreate) {
 
@@ -244,10 +274,31 @@ public class ProjectBean {
 
     }
 
+    /**
+     * Retrieves a list of project DTOs for the home page.
+     *
+     * @return A list of HomeProjectDto instances.
+     */
     public ArrayList<HomeProjectDto> getProjectsDtosHome() {
         return projectDao.findAllNamesAndDescriptionsHome();
     }
 
+    /**
+     * Retrieves information for the project table.
+     *
+     * @param sessionId The session ID of the user.
+     * @param page The page number to retrieve.
+     * @param labName The name of the lab.
+     * @param status The status of the project.
+     * @param slotsAvailable Whether the project has available slots.
+     * @param nameAsc Sort by name ascending.
+     * @param statusAsc Sort by status ascending.
+     * @param labAsc Sort by lab ascending.
+     * @param startDateAsc Sort by start date ascending.
+     * @param endDateAsc Sort by end date ascending.
+     * @param keyword The keyword to search for.
+     * @return A ProjectTableInfoDto instance containing the project table information.
+     */
     public ProjectTableInfoDto getProjectTableInfo(String sessionId, int page, String labName, String status, boolean slotsAvailable, String nameAsc,
                                                    String statusAsc, String labAsc, String startDateAsc, String endDateAsc, String keyword) {
 
@@ -289,12 +340,22 @@ public class ProjectBean {
         ProjectTableInfoDto projectTableInfoDto = new ProjectTableInfoDto();
 
         projectTableInfoDto.setTableProjects(projectsTableDtos);
-        System.out.println("number of projects: " + projectDao.getNumberOfProjectsTableDtoInfo(lab, state, slotsAvailable, keyword));
         projectTableInfoDto.setMaxPageNumber(calculateMaximumPageTableProjects(projectDao.getNumberOfProjectsTableDtoInfo(lab, state, slotsAvailable, keyword), NUMBER_OF_PROJECTS_PER_PAGE));
 
         return projectTableInfoDto;
     }
 
+    /**
+     * Retrieves information for the user's projects.
+     *
+     * @param sessionId The session ID of the user.
+     * @param page The page number to retrieve.
+     * @param labName The name of the lab.
+     * @param status The status of the project.
+     * @param keyword The keyword to search for.
+     * @param type The type of user in the project.
+     * @return A ProjectTableInfoDto instance containing the user's projects information.
+     */
     public ProjectTableInfoDto getMyProjectsPageInfo(String sessionId, int page, String labName, String status, String keyword, String type) {
         int userId = sessionDao.findUserIdBySessionId(sessionId);
 
@@ -346,6 +407,11 @@ public class ProjectBean {
         return projectTableInfoDto;
     }
 
+    /**
+     * Retrieves all project statuses.
+     *
+     * @return A list of StateProjectENUM values representing all project statuses.
+     */
     public ArrayList<StateProjectENUM> getAllStatus() {
         ArrayList<StateProjectENUM> status = new ArrayList<>();
         for (StateProjectENUM state : StateProjectENUM.values()) {
@@ -354,6 +420,11 @@ public class ProjectBean {
         return status;
     }
 
+    /**
+     * Retrieves project filters for the project table.
+     *
+     * @return A ProjectFiltersDto instance containing the project filters.
+     */
     public ProjectFiltersDto getProjectsFilters() {
         ArrayList<StateProjectENUM> status = new ArrayList<>();
         ArrayList<UserInProjectTypeENUM> userInProjectType = new ArrayList<>();
@@ -383,10 +454,26 @@ public class ProjectBean {
         return projectFiltersDto;
     }
 
+    /**
+     * Calculates the maximum page number for the project table.
+     *
+     * @param numberOfProjects The total number of projects.
+     * @param numberOfProjectPerPage The number of projects per page.
+     * @return The maximum page number.
+     */
     public int calculateMaximumPageTableProjects(int numberOfProjects, int numberOfProjectPerPage) {
         return (int) Math.ceil((double) numberOfProjects / numberOfProjectPerPage);
     }
 
+    /**
+     * Retrieves a list of project profiles to invite a user to.
+     *
+     * @param userId The ID of the user sending the invitation.
+     * @param inviteeUsername The username of the user to be invited.
+     * @return A list of ProjectProfileDto instances representing the projects to invite the user to.
+     * @throws NoProjectsToInviteException If there are no projects to invite the user to.
+     * @throws NoProjectsForInviteeException If the invitee does not exist.
+     */
     public List<ProjectProfileDto> getProjectsToInvite(int userId, String inviteeUsername) throws NoProjectsToInviteException, NoProjectsForInviteeException{
         UserEntity invitee = userBean.getUserBySystemUsername(inviteeUsername);
 
@@ -438,7 +525,6 @@ public class ProjectBean {
                 })
                 .collect(Collectors.toList());
 
-        // Filtra ainda por projetos que tenham vagas disponíveis
         projects = projects.stream()
                 .filter(project -> userProjectDao.getNumberOfUsersByProjectId(projectDao.findByName(project.getName()).getId()) < projectDao.findByName(project.getName()).getMaxMembers())
                 .collect(Collectors.toList());
@@ -455,17 +541,39 @@ public class ProjectBean {
     }
 
 
-
+    /**
+     * Checks if a user is either a creator or a manager of a project by project name.
+     *
+     * @param userId The ID of the user to check.
+     * @param projectName The name of the project.
+     * @return true if the user is a creator or manager of the project, false otherwise.
+     */
     public boolean isUserCreatorOrManagerByProjectName(int userId, String projectName) {
         ProjectEntity project = projectDao.findByName(projectName);
         return userProjectDao.isUserCreatorOrManager(userId, project.getId());
     }
 
+    /**
+     * Checks if a user is either a creator or a manager of a project by project system name.
+     *
+     * @param userId The ID of the user to check.
+     * @param projectSystemName The system name of the project.
+     * @return true if the user is a creator or manager of the project, false otherwise.
+     */
     public boolean isUserCreatorOrManager(int userId, String projectSystemName) {
         ProjectEntity project = projectDao.findBySystemName(projectSystemName);
         return userProjectDao.isUserCreatorOrManager(userId, project.getId());
     }
 
+    /**
+     * Invites a user to a project. This method checks if the project is not canceled or full,
+     * and if the user is not already invited, then sends an invitation.
+     *
+     * @param sessionId The session ID of the user sending the invitation.
+     * @param systemUsername The system username of the user to invite.
+     * @param projectName The name of the project to which the user is being invited.
+     * @return A string message indicating the result of the invitation process.
+     */
     public String inviteUserToProject(String sessionId, String systemUsername, String projectName) {
         UserEntity userToInvite = userDao.findBySystemUsername(systemUsername);
         ProjectEntity project = projectDao.findByName(projectName);
@@ -522,6 +630,14 @@ public class ProjectBean {
         return "User invited successfully";
     }
 
+    /**
+     * Accepts an invitation to a project. This method checks if the project is not canceled or full,
+     * and if so, changes the user's project status to MEMBER_BY_INVITATION.
+     *
+     * @param userId The ID of the user accepting the invitation.
+     * @param projectName The name of the project to which the user was invited.
+     * @return A string message indicating the result of the acceptance process.
+     */
     public String acceptInvite(int userId, String projectName) {
         ProjectEntity project = projectDao.findByName(projectName);
         UserProjectEntity userProject = userProjectDao.findByUserIdAndProjectIdAndType(userId, project.getId(), UserInProjectTypeENUM.PENDING_BY_INVITATION);
@@ -538,9 +654,7 @@ public class ProjectBean {
         userProject.setType(UserInProjectTypeENUM.MEMBER_BY_INVITATION);
         userProjectDao.merge(userProject);
         UserEntity invitator = userBean.getUserBySystemUsername(notificationBean.getSystemUsernameOfCreatorOfNotificationByReceptorAndType(userId, NotificationTypeENUM.INVITE));
-        System.out.println("INVITATOR: " + invitator.getSystemUsername());
         UserEntity acceptor = userDao.findById(userId);
-        System.out.println("ACCEPTOR: " + acceptor.getSystemUsername());
         notificationBean.createInviteAcceptedNotification(project.getSystemName(), userDao.getFullNameBySystemUsername(acceptor.getSystemUsername()), invitator, acceptor.getSystemUsername());
         logBean.createMemberAddedLog(project, invitator, acceptor.getFullName());
 
@@ -563,6 +677,14 @@ public class ProjectBean {
         return "Invite accepted successfully";
     }
 
+    /**
+     * Rejects an invitation to a project. This method removes the user's pending invitation to the project
+     * and sends a notification to the inviter indicating the rejection.
+     *
+     * @param userId The ID of the user rejecting the invitation.
+     * @param projectName The name of the project to which the user was invited.
+     * @return A string message indicating the result of the rejection process.
+     */
     public String rejectInvite(int userId, String projectName) {
         ProjectEntity project = projectDao.findByName(projectName);
         UserProjectEntity userProject = userProjectDao.findByUserIdAndProjectIdAndType(userId, project.getId(), UserInProjectTypeENUM.PENDING_BY_INVITATION);
@@ -574,6 +696,15 @@ public class ProjectBean {
         return "Invite rejected successfully";
     }
 
+    /**
+     * Retrieves detailed information about a project for display on the project's profile page.
+     * This includes project members, skills required for the project, possible states the project can transition to,
+     * and the project's progress.
+     *
+     * @param userId The ID of the user requesting the project information.
+     * @param systemProjectName The system name of the project.
+     * @return An instance of ProjectProfilePageDto containing detailed information about the project.
+     */
     public ProjectProfilePageDto getProjectInfoPage(int userId, String systemProjectName) {
         ProjectEntity project = projectDao.findBySystemName(systemProjectName);
         List<ProjectMemberDto> members = getProjectMembers(project.getId());
@@ -607,6 +738,12 @@ public class ProjectBean {
         return projectProfilePageDto;
     }
 
+    /**
+     * Retrieves a list of project members for a given project.
+     *
+     * @param projectId The ID of the project.
+     * @return A list of ProjectMemberDto objects representing the members of the project.
+     */
     public List<ProjectMemberDto> getProjectMembers(int projectId) {
         List<UserProjectEntity> membersUserProjects = userProjectDao.findMembersByProjectId(projectId);
         return membersUserProjects.stream().map(userProject -> {
@@ -615,6 +752,12 @@ public class ProjectBean {
         }).collect(Collectors.toList());
     }
 
+    /**
+     * Retrieves a list of all project members, regardless of their role, for a given project.
+     *
+     * @param projectId The ID of the project.
+     * @return A list of ProjectMemberDto objects representing all members associated with the project.
+     */
     public List<ProjectMemberDto> getAllProjectMembers(int projectId) {
         List<UserProjectEntity> membersUserProjects = userProjectDao.findAllTypeOfMembersByProjectId(projectId);
         return membersUserProjects.stream().map(userProject -> {
@@ -623,6 +766,14 @@ public class ProjectBean {
         }).collect(Collectors.toList());
     }
 
+    /**
+     * Creates a ProjectMemberDto object from a UserEntity and a UserInProjectTypeENUM.
+     * This method is used internally to construct project member DTOs for API responses.
+     *
+     * @param user The UserEntity object representing the user.
+     * @param type The type of the user within the project, as defined by UserInProjectTypeENUM.
+     * @return A ProjectMemberDto object representing the project member.
+     */
     private ProjectMemberDto createProjectMemberDto(UserEntity user, UserInProjectTypeENUM type) {
         ProjectMemberDto member = new ProjectMemberDto();
         member.setId(user.getId());
@@ -633,6 +784,12 @@ public class ProjectBean {
         return member;
     }
 
+    /**
+     * Retrieves a list of skills associated with a project.
+     *
+     * @param project The ProjectEntity object representing the project.
+     * @return A list of SkillDto objects representing the skills required for the project.
+     */
     private List<SkillDto> getProjectSkills(ProjectEntity project) {
         return project.getSkillInProject().stream().map(skill -> {
             SkillDto skillDto = new SkillDto();
@@ -642,6 +799,14 @@ public class ProjectBean {
         }).collect(Collectors.toList());
     }
 
+    /**
+     * Determines the possible states to which a project can transition, based on the current state of the project
+     * and the role of the user making the request.
+     *
+     * @param userId The ID of the user.
+     * @param project The ProjectEntity object representing the project.
+     * @return A list of StateProjectENUM values representing the possible states the project can transition to.
+     */
     private List<StateProjectENUM> getPossibleStatesToChange(int userId, ProjectEntity project) {
 
         UserTypeENUM userType = userDao.findById(userId).getType();
@@ -664,7 +829,13 @@ public class ProjectBean {
         return new ArrayList<>();
     }
 
-
+    /**
+     * Calculates the progress of a project based on the status of its tasks.
+     * The progress is a percentage value representing the completion level of the project.
+     *
+     * @param projectId The ID of the project.
+     * @return An integer value representing the project's progress percentage.
+     */
     public int getProgress(int projectId) {
         ProjectEntity project = projectDao.findById(projectId);
         switch (project.getStatus()) {
@@ -689,6 +860,14 @@ public class ProjectBean {
         }
     }
 
+    /**
+     * Determines the type of a user within a project. This can be used to tailor the user interface
+     * based on the user's role in the project.
+     *
+     * @param userId The ID of the user.
+     * @param projectId The ID of the project.
+     * @return A UserInProjectTypeENUM value representing the user's type within the project.
+     */
     public UserInProjectTypeENUM getUserTypeInProject(int userId, int projectId) {
         UserProjectEntity userProject = userProjectDao.findByUserIdAndProjectId(userId, projectId);
         if (userProject != null) {
@@ -703,6 +882,17 @@ public class ProjectBean {
         }
     }
 
+    /**
+     * Approves or rejects a project based on the provided boolean flag. This method also sends notifications
+     * to project members and updates the project's status accordingly.
+     *
+     * @param projectSystemName The system name of the project.
+     * @param approve A boolean flag indicating whether the project is to be approved (true) or rejected (false).
+     * @param reason The reason for rejection, if applicable.
+     * @param userId The ID of the user performing the approval or rejection.
+     * @param sessionId The session ID of the user performing the action.
+     * @return A string message indicating the result of the operation.
+     */
     @Transactional
     public String approveOrRejectProject(String projectSystemName, boolean approve, String reason, int userId, String sessionId) {
         ProjectEntity project = projectDao.findBySystemName(projectSystemName);
@@ -818,7 +1008,17 @@ public class ProjectBean {
         return approve ? "Project approved successfully" : "Project rejected successfully";
     }
 
-
+    /**
+     * Allows a user to apply to join a project. This method checks if the project exists and is not canceled,
+     * and if the user does not already have a record in this project. If all conditions are met, the user's application
+     * is recorded, and notifications are sent to the project's team leaders.
+     *
+     * @param userId The ID of the user applying to join the project.
+     * @param projectSystemName The system name of the project the user wants to join.
+     * @return A string message indicating the outcome of the application process.
+     * @throws IllegalArgumentException if the project does not exist or the user already has a record in this project.
+     * @throws IllegalStateException if the project is canceled.
+     */
     @Transactional
     public String joinProject(int userId, String projectSystemName) {
         ProjectEntity project = projectDao.findBySystemName(projectSystemName);
@@ -855,6 +1055,19 @@ public class ProjectBean {
     }
 
 
+    /**
+     * Cancels a project. This method checks if the project exists and if the user requesting the cancellation
+     * has the necessary permissions. If the conditions are met, the project's status is set to canceled, a reason
+     * for the cancellation is recorded, and notifications are sent to all team members.
+     *
+     * @param userId The ID of the user requesting the cancellation.
+     * @param projectSystemName The system name of the project to be canceled.
+     * @param reason The reason for canceling the project.
+     * @param sessionId The session ID of the user requesting the cancellation.
+     * @return A string message indicating the outcome of the cancellation process.
+     * @throws IllegalArgumentException if the project does not exist or the user is not found.
+     * @throws UnauthorizedAccessException if the user does not have permission to cancel the project.
+     */
     @Transactional
     public String cancelProject(int userId, String projectSystemName, String reason, String sessionId) {
         ProjectEntity project = projectDao.findBySystemName(projectSystemName);
@@ -938,7 +1151,17 @@ public class ProjectBean {
     }
 
 
-
+    /**
+     * Marks the cancellation reason of a project as read by a user. This method checks if the project exists
+     * and if the user has the necessary permissions to mark the reason as read. If the conditions are met,
+     * the cancellation reason is cleared.
+     *
+     * @param userId The ID of the user marking the reason as read.
+     * @param projectSystemName The system name of the project.
+     * @return A string message indicating the outcome of the operation.
+     * @throws IllegalArgumentException if the project does not exist.
+     * @throws UnauthorizedAccessException if the user does not have permission to mark the reason as read.
+     */
     @Transactional
     public String markReasonAsRead(int userId, String projectSystemName) {
         ProjectEntity project = projectDao.findBySystemName(projectSystemName);
@@ -958,6 +1181,18 @@ public class ProjectBean {
         return "Reason marked as read successfully";
     }
 
+    /**
+     * Changes the state of a project. This method checks if the project exists and if the user requesting the change
+     * has the necessary permissions. It also validates the new state and, if applicable, records a reason for the change.
+     * Notifications are sent to all team members about the state change.
+     *
+     * @param userId The ID of the user requesting the state change.
+     * @param projectSystemName The system name of the project.
+     * @param newState The new state to which the project is to be changed.
+     * @param reason The reason for changing the state, required if the new state is CANCELED.
+     * @return A string message indicating the outcome of the state change.
+     * @throws Exception if the project does not exist, the user does not have permission, or a cancellation reason is required but not provided.
+     */
     public String changeProjectState(int userId, String projectSystemName, StateProjectENUM newState, String reason) throws Exception {
         ProjectEntity project = projectDao.findBySystemName(projectSystemName);
         UserEntity sender = userDao.findById(userId);
@@ -1011,15 +1246,44 @@ public class ProjectBean {
         return "Project state updated successfully";
     }
 
-
+    /**
+     * Retrieves a list of project members by project ID. This method is used internally to fetch the list of users
+     * who are members of a specific project.
+     *
+     * @param projectId The ID of the project.
+     * @return A list of UserEntity objects representing the members of the project.
+     */
     public List<UserEntity> getProjectMembersByProjectId(int projectId) {
         return userProjectDao.findMembersByProjectId(projectId).stream().map(UserProjectEntity::getUser).collect(Collectors.toList());
     }
 
+    /**
+     * Retrieves a list of project creators and managers by project ID. This method is used internally to fetch the list
+     * of users who are either creators or managers of a specific project.
+     *
+     * @param projectId The ID of the project.
+     * @return A list of UserEntity objects representing the creators and managers of the project.
+     */
     public List<UserEntity> getProjectCreatorsAndManagersByProjectId(int projectId) {
         return userProjectDao.findCreatorsAndManagersByProjectId(projectId);
     }
 
+    /**
+     * Removes a user from a project. This method checks if the project exists, if the user to be removed exists,
+     * and if the user requesting the removal has the necessary permissions. If the conditions are met, the user is
+     * removed from the project, and notifications are sent to the removed user.
+     *
+     * @param systemProjectName The system name of the project.
+     * @param userToRemoveId The ID of the user to be removed from the project.
+     * @param currentUserId The ID of the user requesting the removal.
+     * @param reason The reason for removing the user from the project.
+     * @param sessionId The session ID of the user requesting the removal.
+     * @return A string message indicating the outcome of the removal process.
+     * @throws IllegalArgumentException if the project does not exist, the user to be removed is not in the project,
+     *                                  or the user to be removed is the creator of the project.
+     * @throws UnauthorizedAccessException if the user requesting the removal does not have permission to remove the user.
+     * @throws IllegalStateException if the project is in a state that does not allow removal of users.
+     */
     public String removeUserFromProject(String systemProjectName, int userToRemoveId, int currentUserId, String reason, String sessionId) {
         ProjectEntity project = projectDao.findBySystemName(systemProjectName);
         UserEntity userToRemove = userDao.findById(userToRemoveId);
@@ -1090,6 +1354,19 @@ public class ProjectBean {
         return "User removed successfully";
     }
 
+    /**
+     * Accepts a user's application to join a project. This method verifies the project's existence, the user's pending status,
+     * and the project's capacity before changing the user's status to a member. It also sends a notification and an email
+     * to the user about the acceptance.
+     *
+     * @param systemProjectName The system name of the project to which the user applied.
+     * @param userToAccept The ID of the user whose application is to be accepted.
+     * @param currentUserId The ID of the current user performing the operation.
+     * @param sessionId The session ID of the current user.
+     * @return A string message indicating the outcome of the operation.
+     * @throws IllegalArgumentException If the user is not pending to join the project.
+     * @throws IllegalStateException If the project is full, canceled, or ready.
+     */
     public String acceptApplication(String systemProjectName, int userToAccept, int currentUserId, String sessionId) {
         ProjectEntity project = projectDao.findBySystemName(systemProjectName);
         UserEntity user = userDao.findById(userToAccept);
@@ -1154,6 +1431,19 @@ public class ProjectBean {
         return "Application accepted successfully";
     }
 
+    /**
+     * Rejects a user's application to join a project. This method verifies the project's existence and the user's pending status
+     * before removing the user's application. It also sends a notification and an email to the user about the rejection.
+     *
+     * @param systemProjectName The system name of the project to which the user applied.
+     * @param userToReject The ID of the user whose application is to be rejected.
+     * @param currentUserId The ID of the current user performing the operation.
+     * @param reason The reason for rejecting the application.
+     * @param sessionId The session ID of the current user.
+     * @return A string message indicating the outcome of the operation.
+     * @throws IllegalArgumentException If the user is not pending to join the project.
+     * @throws IllegalStateException If the project is canceled or ready.
+     */
     public String rejectApplication(String systemProjectName, int userToReject, int currentUserId, String reason, String sessionId) {
         ProjectEntity project = projectDao.findBySystemName(systemProjectName);
         UserEntity user = userDao.findById(userToReject);
@@ -1214,6 +1504,16 @@ public class ProjectBean {
         return "Application rejected successfully";
     }
 
+    /**
+     * Retrieves the page information of project members for a specific project. This method checks if the project exists
+     * and if the current user has the necessary permissions to view the project members.
+     *
+     * @param currentUserId The ID of the current user requesting the information.
+     * @param systemProjectName The system name of the project.
+     * @return An instance of ProjectMembersPageDto containing information about the project members.
+     * @throws IllegalArgumentException If the project is not found.
+     * @throws UnauthorizedAccessException If the current user is not a creator or manager of the project.
+     */
     public ProjectMembersPageDto getProjectMembersPage(int currentUserId, String systemProjectName) {
         ProjectEntity project = projectDao.findBySystemName(systemProjectName);
         UserEntity currentUser = userDao.findById(currentUserId);
@@ -1244,11 +1544,30 @@ public class ProjectBean {
         return projectMembersPageDto;
     }
 
+    /**
+     * Checks if a user is the creator of a project.
+     *
+     * @param userId The ID of the user to check.
+     * @param projectSystemName The system name of the project.
+     * @return true if the user is the creator of the project, false otherwise.
+     */
     public boolean isUserCreator(int userId, String projectSystemName) {
         ProjectEntity project = projectDao.findBySystemName(projectSystemName);
         return userProjectDao.isUserCreator(userId, project.getId());
     }
 
+    /**
+     * Changes the type of a user in a project. This method verifies the project's existence, the current user's permissions,
+     * and the validity of the new type before updating the user's type in the project.
+     *
+     * @param projectSystemName The system name of the project.
+     * @param userId The ID of the user whose type is to be changed.
+     * @param newType The new type to assign to the user.
+     * @param currentUserId The ID of the current user performing the operation.
+     * @return A string message indicating the outcome of the operation.
+     * @throws IllegalArgumentException If the project is not found, the new type is invalid, or the user is not in the project.
+     * @throws UnauthorizedAccessException If the current user does not have permission to change the user type.
+     */
     public String changeUserInProjectType(String projectSystemName, int userId, UserInProjectTypeENUM newType, int currentUserId) {
 
         ProjectEntity project = projectDao.findBySystemName(projectSystemName);
@@ -1288,6 +1607,15 @@ public class ProjectBean {
     }
 
 
+    /**
+     * Creates a new project based on the provided information. This method checks if the project already exists,
+     * validates the start and end dates, and then creates a new project entity along with its associated user project entity.
+     *
+     * @param projectCreationInfoDto The DTO containing information for project creation.
+     * @param sessionId The session ID of the user creating the project.
+     * @return true if the project is successfully created, false otherwise.
+     * @throws IllegalStateException If the start date is after the end date or before the current date.
+     */
     @Transactional
     public boolean createProject(ProjectCreationDto projectCreationInfoDto, String sessionId) {
 
@@ -1349,6 +1677,19 @@ public class ProjectBean {
         return true;
     }
 
+    /**
+     * Retrieves detailed information about a project based on its system name and the session ID of the requesting user.
+     * This method ensures that only the creator or a manager of the project can view its details. It fetches the project
+     * from the database and maps its properties to a {@link ProjectCreationDto} object, including name, description,
+     * lab location, motivation, start and end dates, photo URL, maximum members, skills required, and keywords associated
+     * with the project.
+     *
+     * @param systemProjectName The system name of the project for which details are requested.
+     * @param sessionId The session ID of the user requesting the project details.
+     * @return A {@link ProjectCreationDto} object containing the detailed information of the project.
+     * @throws UnauthorizedAccessException If the user is not the creator or a manager of the project.
+     * @throws IllegalArgumentException If the project with the given system name does not exist.
+     */
     public ProjectCreationDto getProjectDetails(String systemProjectName, String sessionId) {
 
         UserEntity user = userDao.findById(sessionDao.findUserIdBySessionId(sessionId));
@@ -1397,6 +1738,20 @@ public class ProjectBean {
         return projectCreationDto;
     }
 
+    /**
+     * Updates the details of an existing project based on the provided {@link ProjectCreationDto} object, session ID,
+     * and system project name. This method checks if the project exists and if the user making the request is the creator
+     * or a manager of the project. It then updates the project details in the database if the project is not canceled
+     * or ready. The method also validates the start and end dates, maximum members, and updates the project's skills
+     * and keywords.
+     *
+     * @param projectUpdateDto The DTO containing the updated project details.
+     * @param sessionId The session ID of the user requesting the update.
+     * @param systemProjectName The system name of the project to update.
+     * @return true if the project was successfully updated, false otherwise.
+     * @throws UnauthorizedAccessException If the user is not the creator or a manager of the project.
+     * @throws IllegalArgumentException If the project does not exist or the input data is invalid.
+     */
     public boolean updateProject(ProjectCreationDto projectUpdateDto, String sessionId, String systemProjectName) {
 
         UserEntity user = userDao.findById(sessionDao.findUserIdBySessionId(sessionId));
@@ -1468,12 +1823,21 @@ public class ProjectBean {
             return true;
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Error updating project: " + e.getMessage());
             return false;
         }
     }
 
 
+    /**
+     * Handles the upload of a project picture, decoding it from a Base64 string and saving it to the project's directory.
+     * The method updates the project entity with URLs to the original and resized images. It checks if the provided
+     * Base64 string is not empty and contains the image data, then delegates the saving of the image to the
+     * {@code saveProjectPicture} method.
+     *
+     * @param request A map containing the Base64 string of the image under the key "file".
+     * @param projectName The name of the project to which the picture will be uploaded.
+     * @return true if the picture was successfully uploaded and saved, false otherwise.
+     */
     public boolean uploadProjectPicture(Map<String, String> request, String projectName) {
         try {
             String base64Image = request.get("file");
@@ -1495,6 +1859,15 @@ public class ProjectBean {
         }
     }
 
+    /**
+     * Saves the project picture to the filesystem and updates the project entity with URLs to the original and resized
+     * images. This method decodes the Base64 string to an image, determines the image format, and saves the image
+     * to the project's specific directory. It also creates resized versions of the image for different purposes.
+     *
+     * @param projectEntity The project entity to which the picture belongs.
+     * @param base64Image The Base64 string of the image.
+     * @return true if the image was successfully saved, false otherwise.
+     */
     public boolean saveProjectPicture(ProjectEntity projectEntity, String base64Image) {
         try {
             // Decode the Base64 string back to an image
@@ -1539,6 +1912,15 @@ public class ProjectBean {
         }
     }
 
+    /**
+     * Determines the image format based on the available ImageIO image writers for "png" and "jpg" suffixes.
+     * This method checks if there are available image writers for "png" and "jpg" formats and returns the format
+     * if available. Throws an exception if neither format is supported.
+     *
+     * @param image The BufferedImage object for which the format needs to be determined.
+     * @return The image format as a String ("png" or "jpg").
+     * @throws IOException If neither "png" nor "jpg" formats are supported by the available ImageIO image writers.
+     */
     private String getImageFormat(BufferedImage image) throws IOException {
         if (ImageIO.getImageWritersBySuffix("png").hasNext()) {
             return "png";
@@ -1549,6 +1931,16 @@ public class ProjectBean {
         }
     }
 
+    /**
+     * Resizes a given BufferedImage to the specified width and height. This method creates a new BufferedImage
+     * of the specified dimensions and draws the original image onto the new image at the specified size,
+     * effectively resizing it.
+     *
+     * @param originalImage The original BufferedImage to resize.
+     * @param width The desired width of the resized image.
+     * @param height The desired height of the resized image.
+     * @return A new BufferedImage object containing the original image resized to the specified dimensions.
+     */
     private BufferedImage resizeImage(BufferedImage originalImage, int width, int height) {
         BufferedImage resizedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = resizedImage.createGraphics();
@@ -1557,6 +1949,14 @@ public class ProjectBean {
         return resizedImage;
     }
 
+    /**
+     * Converts a date string in ISO_LOCAL_DATE format to a LocalDateTime object at the start of the day (00:00).
+     * This method parses the input string as a LocalDate and then converts it to a LocalDateTime at the start
+     * of the day.
+     *
+     * @param date The date string in ISO_LOCAL_DATE format (e.g., "2023-01-01").
+     * @return A LocalDateTime object representing the start of the specified date.
+     */
     private LocalDateTime convertStringToLocalDateTime(String date) {
 
         LocalDate localDate = LocalDate.parse(date);
@@ -1566,6 +1966,17 @@ public class ProjectBean {
         return localDateTime;
     }
 
+    /**
+     * Adds initial members to a project based on a list of user IDs. This method checks if the number of initial members
+     * does not exceed the project's maximum allowed members and the system's configuration. It then adds each user as a
+     * member of the project and sends notifications and emails to the added members.
+     *
+     * @param projectCreationMembersDto The DTO containing the list of user IDs to add as initial members and the maximum
+     *                                  members allowed for the project.
+     * @param projectSystemName The system name of the project to which members will be added.
+     * @param sessionId The session ID of the user adding the members.
+     * @return true if the initial members were successfully added, false otherwise.
+     */
     public boolean addInitialMembers(ProjectCreationMembersDto projectCreationMembersDto, String projectSystemName, String sessionId) {
         ArrayList<Integer> usersInProject = projectCreationMembersDto.getUsersInProject();
         if (projectCreationMembersDto.getMaxMembers() > systemDao.findConfigValueByName("maxMaxMembers") || usersInProject.size() > projectCreationMembersDto.getMaxMembers()) {
@@ -1573,7 +1984,6 @@ public class ProjectBean {
         }
 
         UserEntity sender = userBean.getUserBySessionId(sessionId);
-        System.out.println("SENDER: " + sender.getSystemUsername());
         ProjectEntity project = projectDao.findBySystemName(projectSystemName);
 
         int numberOfMembersInProject = userProjectDao.getNumberOfUsersByProjectId(project.getId());
@@ -1627,6 +2037,18 @@ public class ProjectBean {
         return true;
     }
 
+    /**
+     * Removes an invitation for a user to join a project. This method checks if the user has a pending invitation to the
+     * project and removes it. It also sends a notification and an email to the user informing them that the invitation
+     * has been removed.
+     *
+     * @param projectSystemName The system name of the project from which the invitation is to be removed.
+     * @param userToRemoveId The ID of the user whose invitation is to be removed.
+     * @param currentUserId The ID of the current user performing the operation.
+     * @param sessionId The session ID of the current user.
+     * @return A string message indicating the outcome of the operation.
+     * @throws IllegalArgumentException If the user does not have a pending invitation to the project.
+     */
     public String removeInvitation(String projectSystemName, int userToRemoveId, int currentUserId, String sessionId) {
         ProjectEntity project = projectDao.findBySystemName(projectSystemName);
         UserEntity userToRemove = userDao.findById(userToRemoveId);
@@ -1680,6 +2102,16 @@ public class ProjectBean {
     }
 
 
+    /**
+     * Adds resources to a project based on a list of resource supplier IDs. This method updates the project's resources,
+     * removing any that are not in the provided list and adding new ones. It ensures that each added resource is valid
+     * and updates the project entity accordingly.
+     *
+     * @param projectSystemName The system name of the project to which resources are to be added.
+     * @param resourcesSuppliersIds The DTO containing the list of resource supplier IDs to add to the project.
+     * @param sessionId The session ID of the user performing the operation.
+     * @return true if the resources were successfully added to the project, false otherwise.
+     */
     public boolean addResourcesToProject(String projectSystemName, RejectedIdsDto resourcesSuppliersIds, String sessionId) {
         ProjectEntity project = projectDao.findBySystemName(projectSystemName);
         List<ProjectResourceEntity> atualProjectResources = projectResourceDao.findResourcesById(project.getId());
@@ -1711,6 +2143,17 @@ public class ProjectBean {
         return true;
     }
 
+    /**
+     * Allows a user to leave a project. This method checks if the user is part of the project and not the creator. It
+     * then removes the user from the project and sends notifications and emails to the project's managers informing them
+     * of the user's departure.
+     *
+     * @param userId The ID of the user leaving the project.
+     * @param projectSystemName The system name of the project the user is leaving.
+     * @param reason The reason provided by the user for leaving the project.
+     * @return A string message indicating the outcome of the operation.
+     * @throws IllegalArgumentException If the user is not in the project or is the project's creator.
+     */
     public String leaveProject(int userId, String projectSystemName, String reason) {
         ProjectEntity project = projectDao.findBySystemName(projectSystemName);
         UserEntity user = userDao.findById(userId);

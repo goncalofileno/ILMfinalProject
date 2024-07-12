@@ -82,6 +82,12 @@ public class SkillDao extends AbstractDao<SkillEntity> {
         }
     }
 
+    /**
+     * Finds a skill entity by its name.
+     *
+     * @param name the name of the skill entity to find.
+     * @return the skill entity with the given name.
+     */
     public SkillEntity findSkillByName(String name) {
         try {
             return em.createNamedQuery("Skill.findByName", SkillEntity.class).setParameter("name", name).getSingleResult();

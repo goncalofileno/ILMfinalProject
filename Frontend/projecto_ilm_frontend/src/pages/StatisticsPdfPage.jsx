@@ -270,12 +270,12 @@ const StatisticsPdfPage = () => {
             >
               <div className="app-stats" style={{ gap: "5px" }}>
                 <div style={{ marginBottom: "10px" }}>
-                  <b>Supplers with the most resources</b>
+                  <b><Trans>Supplers with the most resources</Trans></b>
                 </div>
                 {supplierWithMostResources.map((supplier, index) => (
                   <div>
-                    {index + 1}. <b>{supplier.supplier}</b> with{" "}
-                    <b>{supplier.resources}</b> resources
+                    {index + 1}. <b>{supplier.supplier}</b> <Trans>with</Trans>{" "}
+                    <b>{supplier.resources}</b> <Trans>resource(s)</Trans>
                   </div>
                 ))}
               </div>

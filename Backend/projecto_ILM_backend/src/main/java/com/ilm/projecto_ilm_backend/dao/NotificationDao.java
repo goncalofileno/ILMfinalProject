@@ -139,12 +139,6 @@ public class NotificationDao extends AbstractDao<NotificationEntity> {
 
     public boolean findDoubleNotificationTask(String taskTitle, String projectSystemName, String systemUsername, UserEntity receptor, LocalDateTime date){
         try {
-            System.out.println("title " + taskTitle);
-            System.out.println("project " + projectSystemName);
-            System.out.println("system " + systemUsername);
-            System.out.println("receptor " + receptor.getId());
-            System.out.println("date " + date);
-
             em.createNamedQuery("NotificationEntity.findDoubleNotificationTask", NotificationEntity.class)
                     .setParameter("taskTitle", taskTitle)
                     .setParameter("projectSystemName", projectSystemName)
@@ -153,10 +147,8 @@ public class NotificationDao extends AbstractDao<NotificationEntity> {
                     .setParameter("datePlus", date)
                     .setParameter("dateMinus", date.minusSeconds(1))
                     .getSingleResult();
-            System.out.println("fodasse "+true);
             return true;
         } catch (Exception e) {
-            System.out.println("fodasse "+false);
             return false;
         }
     }

@@ -16,6 +16,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * The MailBean class is responsible for managing MailEntity instances.
+ * It is an application scoped bean, meaning there is a single instance for the entire application.
+
+ */
 @ApplicationScoped
 public class MailBean {
 
@@ -301,30 +306,47 @@ public class MailBean {
         return maildao.getTotalSentSearchResults(userId, query);
     }
 
-    public List<MailDto> getMailsSentBySessionId(String sessionId, int page, int pageSize) {
-        int userId = sessionDao.findBySessionId(sessionId).getUser().getId();
-        List<MailEntity> mails = maildao.getMailsSentByUserId(userId, page, pageSize);
-        List<MailDto> mailDtos = new ArrayList<>();
-        for (MailEntity mail : mails) {
-            MailDto mailDto = new MailDto();
-            mailDto.setId(mail.getId());
-            mailDto.setSubject(mail.getSubject());
-            mailDto.setText(mail.getText());
-            mailDto.setDate(mail.getDate());
-            mailDto.setSenderName(mail.getSender().getFirstName() + " " + mail.getSender().getLastName());
-            mailDto.setSenderMail(mail.getSender().getEmail());
-            mailDto.setSenderPhoto(mail.getSender().getAvatarPhoto());
-            mailDto.setReceiverName(mail.getReceiver().getFirstName() + " " + mail.getReceiver().getLastName());
-            mailDto.setReceiverMail(mail.getReceiver().getEmail());
-            mailDto.setReceiverPhoto(mail.getReceiver().getAvatarPhoto());
-            mailDto.setSeen(mail.isSeen());
-            mailDto.setDeletedBySender(mail.isDeletedBySender());
-            mailDto.setDeletedByReceiver(mail.isDeletedByReceiver());
-            mailDtos.add(mailDto);
-        }
-        return mailDtos;
+   /**
+ * Retrieves a list of mails sent by the user identified by the given session ID.
+ * This method paginates the results based on the provided page number and page size.
+ *
+ * @param sessionId The session ID of the user whose sent mails are to be retrieved.
+ *                  This is used to identify the user within the system.
+ * @param page The page number of the result set to retrieve. This is used for pagination.
+ * @param pageSize The number of mail items to retrieve per page. This is used for pagination.
+ * @return A list of {@link MailDto} objects representing the mails sent by the user.
+ *         Each {@link MailDto} contains details of a single mail, including sender and receiver information,
+ *         subject, text, and status flags such as whether the mail has been seen, or deleted by the sender or receiver.
+ */
+public List<MailDto> getMailsSentBySessionId(String sessionId, int page, int pageSize) {
+    int userId = sessionDao.findBySessionId(sessionId).getUser().getId();
+    List<MailEntity> mails = maildao.getMailsSentByUserId(userId, page, pageSize);
+    List<MailDto> mailDtos = new ArrayList<>();
+    for (MailEntity mail : mails) {
+        MailDto mailDto = new MailDto();
+        mailDto.setId(mail.getId());
+        mailDto.setSubject(mail.getSubject());
+        mailDto.setText(mail.getText());
+        mailDto.setDate(mail.getDate());
+        mailDto.setSenderName(mail.getSender().getFirstName() + " " + mail.getSender().getLastName());
+        mailDto.setSenderMail(mail.getSender().getEmail());
+        mailDto.setSenderPhoto(mail.getSender().getAvatarPhoto());
+        mailDto.setReceiverName(mail.getReceiver().getFirstName() + " " + mail.getReceiver().getLastName());
+        mailDto.setReceiverMail(mail.getReceiver().getEmail());
+        mailDto.setReceiverPhoto(mail.getReceiver().getAvatarPhoto());
+        mailDto.setSeen(mail.isSeen());
+        mailDto.setDeletedBySender(mail.isDeletedBySender());
+        mailDto.setDeletedByReceiver(mail.isDeletedByReceiver());
+        mailDtos.add(mailDto);
     }
+    return mailDtos;
+}
 
+    /**
+     * Retrieves the total number of mails sent by the user identified by the given session ID.
+     * @param sessionId
+     * @return
+     */
     public int getTotalMailsSentBySessionId(String sessionId) {
         int userId = sessionDao.findBySessionId(sessionId).getUser().getId();
         return maildao.getTotalMailsSentByUserId(userId);

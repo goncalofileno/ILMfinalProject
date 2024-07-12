@@ -6,24 +6,43 @@ import com.ilm.projecto_ilm_backend.dto.skill.SkillDto;
 
 import java.util.List;
 
+/**
+ * Data Transfer Object for displaying a page of project members.
+ * This class encapsulates information about project members, including their details,
+ * the maximum number of members, the project's current state, name, skills required for the project,
+ * and the type of user viewing the project.
+ */
 public class ProjectMembersPageDto {
 
-     private List<ProjectMemberDto> projectMembers;
-     private int maxMembers;
-     private StateProjectENUM projectState;
-     private String projectName;
-     private List<SkillDto> projectSkills;
-     private UserInProjectTypeENUM userSeingProject;
+     private List<ProjectMemberDto> projectMembers; // List of project members
+     private int maxMembers; // Maximum number of members for the project
+     private StateProjectENUM projectState; // Current state of the project
+     private String projectName; // Name of the project
+     private List<SkillDto> projectSkills; // Skills required for the project
+     private UserInProjectTypeENUM userSeingProject; // Type of user viewing the project
 
+     /**
+      * Constructs a new ProjectMembersPageDto with specified details.
+      *
+      * @param projectMembers List of project members.
+      * @param maxMembers Maximum number of members for the project.
+      * @param projectState Current state of the project.
+      * @param projectName Name of the project.
+      * @param projectSkills Skills required for the project.
+      * @param userSeingProject Type of user viewing the project.
+      */
      public ProjectMembersPageDto(List<ProjectMemberDto> projectMembers, int maxMembers, StateProjectENUM projectState, String projectName, List<SkillDto> projectSkills, UserInProjectTypeENUM userSeingProject) {
           this.projectMembers = projectMembers;
-            this.maxMembers = maxMembers;
+          this.maxMembers = maxMembers;
           this.projectState = projectState;
           this.projectName = projectName;
           this.projectSkills = projectSkills;
           this.userSeingProject = userSeingProject;
      }
 
+     /**
+      * Default constructor.
+      */
      public ProjectMembersPageDto() {
      }
 

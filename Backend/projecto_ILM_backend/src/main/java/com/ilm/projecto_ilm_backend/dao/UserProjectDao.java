@@ -93,7 +93,12 @@ public class UserProjectDao extends AbstractDao<UserProjectEntity>{
     }
 
 
-
+    /**
+     * Returns the number of users associated with the given project ID.
+     *
+     * @param projectId the ID of the project.
+     * @return the number of users associated with the given project ID.
+     */
     public int getNumberOfUsersByProjectId(int projectId) {
         try {
             return  ((Number)em.createNamedQuery("UserProject.findNumberOfUsers").setParameter("projectId",projectId).getSingleResult()).intValue();
@@ -103,6 +108,13 @@ public class UserProjectDao extends AbstractDao<UserProjectEntity>{
         }
     }
 
+    /**
+     * Checks if a user is part of a specific project.
+     *
+     * @param projectId The ID of the project to check.
+     * @param userId The ID of the user to check.
+     * @return true if the user is part of the project, false otherwise.
+     */
     public boolean isUserInProject(int projectId, int userId) {
         try {
             if  (((Number)em.createNamedQuery("UserProject.isUserInProject").setParameter("projectId",projectId).setParameter("userId",userId).getSingleResult()).intValue()>0){
@@ -115,6 +127,11 @@ public class UserProjectDao extends AbstractDao<UserProjectEntity>{
         }
     }
 
+    /**
+     * Counts the total number of projects associated with a user.
+     *
+     * @return The total number of projects.
+     */
     public long countUserProjects() {
         try {
             return  em.createNamedQuery("UserProject.countUserProjects", Long.class)
@@ -125,6 +142,13 @@ public class UserProjectDao extends AbstractDao<UserProjectEntity>{
         }
     }
 
+    /**
+     * Determines if a user is either the creator or a manager of a project.
+     *
+     * @param userId The ID of the user.
+     * @param projectId The ID of the project.
+     * @return true if the user is the creator or a manager, false otherwise.
+     */
     public boolean isUserCreatorOrManager(int userId, int projectId) {
         return em.createNamedQuery("UserProject.isUserCreatorOrManager", Long.class)
                 .setParameter("userId", userId)
@@ -132,6 +156,13 @@ public class UserProjectDao extends AbstractDao<UserProjectEntity>{
                 .getSingleResult() > 0;
     }
 
+    /**
+     * Checks if a user has already been invited to a project.
+     *
+     * @param userId The ID of the user.
+     * @param projectId The ID of the project.
+     * @return true if the user has been invited, false otherwise.
+     */
     public boolean isUserAlreadyInvited(int userId, int projectId) {
         return em.createNamedQuery("UserProject.isUserAlreadyInvited", Long.class)
                 .setParameter("userId", userId)
@@ -140,6 +171,14 @@ public class UserProjectDao extends AbstractDao<UserProjectEntity>{
                 .getSingleResult() > 0;
     }
 
+    /**
+     * Finds a UserProjectEntity by user ID, project ID, and type.
+     *
+     * @param userId The ID of the user.
+     * @param projectId The ID of the project.
+     * @param type The type of association (e.g., MEMBER, MANAGER).
+     * @return The found UserProjectEntity or null if not found.
+     */
     public  UserProjectEntity findByUserIdAndProjectIdAndType(int userId, int projectId, UserInProjectTypeENUM type) {
         try {
             return em.createNamedQuery("UserProject.findByUserIdAndProjectIdAndType", UserProjectEntity.class)
@@ -152,16 +191,12 @@ public class UserProjectDao extends AbstractDao<UserProjectEntity>{
         }
     }
 
-    //retorna todos os membros do projecto pelo id do projecto, membros do projecto sao  CREATOR(0),
-    //
-    //    MANAGER(1),
-    //
-    //    MEMBER(2),
-    //
-    //    MEMBER_BY_INVITATION(3),
-    //
-    //    MEMBER_BY_APPLIANCE(4),
-
+    /**
+     * Finds all members of a project by project ID.
+     *
+     * @param projectId The ID of the project.
+     * @return A list of UserProjectEntity instances representing the members.
+     */
     public List<UserProjectEntity> findMembersByProjectId(int projectId) {
         try {
             return em.createNamedQuery("UserProject.findMembersByProjectId", UserProjectEntity.class)
@@ -172,6 +207,12 @@ public class UserProjectDao extends AbstractDao<UserProjectEntity>{
         }
     }
 
+    /**
+     * Finds all types of members (including pending and rejected) by project ID.
+     *
+     * @param projectId The ID of the project.
+     * @return A list of UserProjectEntity instances representing all types of members.
+     */
     public List<UserProjectEntity> findAllTypeOfMembersByProjectId(int projectId) {
         try {
             return em.createNamedQuery("UserProject.findAllTypeOfMembersByProjectId", UserProjectEntity.class)
@@ -182,6 +223,12 @@ public class UserProjectDao extends AbstractDao<UserProjectEntity>{
         }
     }
 
+    /**
+     * Finds UserEntity instances representing members of a project by project ID.
+     *
+     * @param projectId The ID of the project.
+     * @return A list of UserEntity instances.
+     */
     public List<UserEntity> findMembersEntityByProjectId(int projectId) {
         try {
             return em.createNamedQuery("UserProject.findMembersByProjectId", UserEntity.class)
@@ -192,6 +239,12 @@ public class UserProjectDao extends AbstractDao<UserProjectEntity>{
         }
     }
 
+    /**
+     * Finds UserEntity instances representing creators and managers of a project by project ID.
+     *
+     * @param projectId The ID of the project.
+     * @return A list of UserEntity instances.
+     */
     public List<UserEntity> findCreatorsAndManagersByProjectId(int projectId) {
         try {
             return em.createNamedQuery("UserProject.findCreatorsAndManagersByProjectId", UserEntity.class)
@@ -202,6 +255,12 @@ public class UserProjectDao extends AbstractDao<UserProjectEntity>{
         }
     }
 
+    /**
+     * Finds the UserEntity instance representing the creator of a project by project ID.
+     *
+     * @param projectId The ID of the project.
+     * @return The UserEntity instance or null if not found.
+     */
     public UserEntity findCreatorByProjectId(int projectId) {
         try {
             return em.createNamedQuery("UserProject.findCreatorByProjectId", UserEntity.class)
@@ -212,6 +271,13 @@ public class UserProjectDao extends AbstractDao<UserProjectEntity>{
         }
     }
 
+    /**
+     * Finds a UserProjectEntity by user ID and project ID.
+     *
+     * @param userId The ID of the user.
+     * @param projectId The ID of the project.
+     * @return The UserProjectEntity or null if not found.
+     */
     public UserProjectEntity findByUserIdAndProjectId(int userId, int projectId) {
         try {
             return em.createNamedQuery("UserProject.findByUserIdAndProjectId", UserProjectEntity.class)
@@ -223,6 +289,13 @@ public class UserProjectDao extends AbstractDao<UserProjectEntity>{
         }
     }
 
+    /**
+     * Finds the type of a user in a project by user ID and project ID.
+     *
+     * @param userId The ID of the user.
+     * @param projectId The ID of the project.
+     * @return The UserInProjectTypeENUM representing the user's type.
+     */
     public UserInProjectTypeENUM findUserTypeByUserIdAndProjectId(int userId, int projectId) {
         try {
             return em.createNamedQuery("UserProject.findUserTypeByUserIdAndProjectId", UserInProjectTypeENUM.class)
@@ -234,6 +307,13 @@ public class UserProjectDao extends AbstractDao<UserProjectEntity>{
         }
     }
 
+    /**
+     * Checks if a user is the creator of a project.
+     *
+     * @param userId The ID of the user.
+     * @param projectId The ID of the project.
+     * @return true if the user is the creator, false otherwise.
+     */
     public boolean isUserCreator(int userId, int projectId) {
         return em.createNamedQuery("UserProject.isUserCreator", Long.class)
                 .setParameter("userId", userId)
@@ -241,12 +321,24 @@ public class UserProjectDao extends AbstractDao<UserProjectEntity>{
                 .getSingleResult() > 0;
     }
 
+    /**
+     * Counts the number of users in a project by project ID.
+     *
+     * @param projectId The ID of the project.
+     * @return The count of users in the project.
+     */
     public int countUsersInProject(int projectId) {
         return em.createNamedQuery("UserProject.countMembersByProjectId", Long.class)
                 .setParameter("projectId", projectId)
                 .getSingleResult().intValue();
     }
 
+    /**
+     * Checks if a user has projects.
+     *
+     * @param userId The ID of the user.
+     * @return true if the user has projects, false otherwise.
+     */
     public boolean userHasProjects(int userId) {
         return em.createNamedQuery("UserProject.userHasProjects", Long.class)
                 .setParameter("userId", userId)

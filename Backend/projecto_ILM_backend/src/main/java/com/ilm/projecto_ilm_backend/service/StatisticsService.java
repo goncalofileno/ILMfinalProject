@@ -2,6 +2,7 @@ package com.ilm.projecto_ilm_backend.service;
 
 
 import com.ilm.projecto_ilm_backend.bean.StatisticsBean;
+import com.ilm.projecto_ilm_backend.bean.UserBean;
 import com.ilm.projecto_ilm_backend.dto.skill.SkillDto;
 import com.ilm.projecto_ilm_backend.dto.statistics.ProjectsStatusNumberPerLab;
 import com.ilm.projecto_ilm_backend.dto.statistics.StatisticsDto;
@@ -29,6 +30,9 @@ public class StatisticsService {
     @Inject
     StatisticsBean statisticsBean;
 
+    @Inject
+    UserBean userBean;
+
     private static final Logger logger = LogManager.getLogger(UserService.class);
 
     @GET
@@ -36,10 +40,13 @@ public class StatisticsService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllSkills(@CookieParam("session-id") String sessionId) throws UnknownHostException {
         String clientIP = InetAddress.getLocalHost().getHostAddress();
-        logger.info("Received a request to retrieve the statistics from IP address: " + clientIP);
+        String clientName = userBean.getUserBySessionId(sessionId).getFullName();
+        logger.info("Received a request to retrieve statistics from IP address: " + clientIP + " by user: " + clientName);
         if(databaseValidator.checkSessionId(sessionId)) {
+            logger.info("Statistics retrieved successfully.");
             return Response.ok(statisticsBean.getStatistics()).build();
         } else {
+            logger.error("Unauthorized access to statistics.");
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
 

@@ -226,7 +226,7 @@ export default function EditProjectPage() {
             >
               <Col xs={6} sm={5}>
                 <InputForm
-                  label="Project Name"
+                  label={t`Project Name`}
                   value={projectName}
                   setValue={setProjectName}
                   warningType={warningType}

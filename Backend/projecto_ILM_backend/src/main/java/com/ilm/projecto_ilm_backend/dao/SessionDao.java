@@ -66,6 +66,15 @@ public class SessionDao extends AbstractDao<SessionEntity> {
         }
     }
 
+    /**
+     * Finds a session by the given user ID.
+     *
+     * @param userId the ID of the user to be found.
+     *               The user ID is unique for each user.
+     *               It is used to identify the user.
+     *               It is an integer.
+     * @return the session entity, or null if not found.
+     */
     public SessionEntity findByUserId(int userId) {
         try {
             return em.createNamedQuery("Session.findByUserId", SessionEntity.class)
@@ -76,6 +85,15 @@ public class SessionDao extends AbstractDao<SessionEntity> {
         }
     }
 
+    /**
+     * Removes a session from the database by its ID.
+     *
+     * @param sessionId the ID of the session to be removed.
+     *                  The session ID is unique for each session.
+     *                  It is used to identify the session.
+     *                  It is a string.
+     * @return true if the operation was successful, false otherwise.
+     */
     public boolean removeSessionById(String sessionId) {
         try {
             SessionEntity session = findBySessionId(sessionId);
@@ -89,6 +107,13 @@ public class SessionDao extends AbstractDao<SessionEntity> {
         return false;
     }
 
+
+    /**
+     * Finds the user ID associated with a given session ID.
+     *
+     * @param sessionId The session ID for which the user ID is to be found.
+     * @return The user ID associated with the given session ID, or -1 if no such session exists.
+     */
     public int findUserIdBySessionId(String sessionId) {
         try {
             return (int) em.createNamedQuery("Session.findUserIdBySessionId")
@@ -99,6 +124,12 @@ public class SessionDao extends AbstractDao<SessionEntity> {
         }
     }
 
+    /**
+     * Checks if a user associated with the given session ID is logged in by updating the session's expiry time.
+     *
+     * @param sessionId The session ID of the user to check.
+     * @return true if the user is logged in (session exists and is updated), false otherwise.
+     */
     public boolean isUserLogged(String sessionId) {
         try {
             SessionEntity session= (SessionEntity) em.createNamedQuery("Session.findBySessionId")
@@ -113,12 +144,24 @@ public class SessionDao extends AbstractDao<SessionEntity> {
         }
     }
 
+    /**
+     * Finds all sessions that have expired relative to the given current time.
+     *
+     * @param currentTime The current time to compare session expiry times against.
+     * @return A list of SessionEntity objects representing all sessions that have expired.
+     */
     public List<SessionEntity> findExpiredSessions(LocalDateTime currentTime) {
         return em.createQuery("SELECT s FROM SessionEntity s WHERE s.expiresAt < :currentTime", SessionEntity.class)
                 .setParameter("currentTime", currentTime)
                 .getResultList();
     }
 
+    /**
+     * Finds the session ID associated with a given user ID.
+     *
+     * @param userId The user ID for which the session ID is to be found.
+     * @return The session ID associated with the given user ID, or null if no such session exists.
+     */
     public String findSessionIdByUserId(int userId) {
         try {
             return em.createNamedQuery("Session.findSessionIdByUserId", String.class)
