@@ -53,7 +53,6 @@ export default function MyProjectsPage() {
       .then((data) => {
         setProjects(data.tableProjects);
         setTotalPages(data.maxPageNumber);
-        console.log(data.tableProjects);
       });
 
     const queryParamsObj = {};
@@ -100,7 +99,6 @@ export default function MyProjectsPage() {
         isVisible={isAsideVisible}
       />
 
-      {console.log(projects)}
       <div
         className={
           isMobile

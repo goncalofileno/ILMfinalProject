@@ -22,7 +22,7 @@ describe("LoginProjectsCards", () => {
   };
 
   beforeEach(() => {
-    useMediaQuery.mockReturnValue(false); // Default to not tablet view
+    useMediaQuery.mockReturnValue(false);
   });
 
   test("renders title and description", () => {

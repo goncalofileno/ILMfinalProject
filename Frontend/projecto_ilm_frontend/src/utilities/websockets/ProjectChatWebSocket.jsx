@@ -26,8 +26,6 @@ const ProjectChatWebSocket = ({ projectId }) => {
 
     if (systemUsername) {
 
-      console.log("WebSocket connection opened for project chat");
-      console.log(`ws://localhost:8080/projeto_ilm_final/ws/chat/${projectId}/${systemUsername}`);
       const socket = new WebSocket(
         `ws://localhost:8080/projeto_ilm_final/ws/chat/${projectId}/${systemUsername}`
       );
@@ -37,18 +35,15 @@ const ProjectChatWebSocket = ({ projectId }) => {
       socketRef.current = socket;
 
       socket.onopen = () => {
-        console.log("WebSocket connection opened for project chat");
+        console.log("");
       };
 
       socket.onmessage = (event) => {
-        console.log("WebSocket message received:", event.data);
         try {
           const parsedData = JSON.parse(event.data);
-          console.log("Parsed Data:", parsedData);
           if (parsedData.type === "new_message") {
             addMessage(parsedData.message);
           } else if (parsedData.type === "online_members") {
-            console.log("OLINE MEMBERS:", parsedData.message.members)
             setOnlineMembers(parsedData.message.members);
           } else {
             console.warn("Unknown message type received:", parsedData.type);
@@ -59,7 +54,7 @@ const ProjectChatWebSocket = ({ projectId }) => {
       };
 
       socket.onclose = () => {
-        console.log("WebSocket connection closed for project chat");
+        console.log("");
       };
 
       socket.onerror = (error) => {

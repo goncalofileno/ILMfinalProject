@@ -30,7 +30,6 @@ const InterestSelector = ({
     getInterests(token)
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         setAllInterests(data);
       });
   }, [token]);

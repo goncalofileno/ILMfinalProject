@@ -47,7 +47,6 @@ export default function ProjectCreationPage1() {
       return response
         .json()
         .then((data) => {
-          console.log("data : " + data);
           setLabs(data);
         })
         .catch((error) => {

@@ -10,7 +10,7 @@ import {
   getProjectDetails,
   uploadProjectPhoto,
   checkProjectName,
-  updateProject, // Import the update project function
+  updateProject,
 } from "../utilities/services";
 import { formatLab } from "../utilities/converters";
 import defaultPhoto from "../resources/avatares/defaultProjectAvatar.jpg";
@@ -40,7 +40,7 @@ export default function EditProjectPage() {
   const [warningType, setWarningType] = useState("");
   const [warningTxt, setWarningTxt] = useState("");
   const [maxMembers, setMaxMembers] = useState(0);
-  const [isFormModified, setIsFormModified] = useState(false); // New state for form modification tracking
+  const [isFormModified, setIsFormModified] = useState(false); 
   const isTablet = useMediaQuery({ query: "(max-width: 991px)" });
   const isMobile = useMediaQuery({ query: "(max-width: 575px)" });
   const [currentLanguage, setCurrentLanguage] = useState(
@@ -101,7 +101,7 @@ export default function EditProjectPage() {
       endDate !== "" &&
       selectedInterests.length > 0
     ) {
-      const today = new Date().toISOString().split("T")[0]; // Get today's date as YYYY-MM-DD string
+      const today = new Date().toISOString().split("T")[0]; 
       const startDateObj = new Date(startDate).toISOString().split("T")[0];
       const endDateObj = new Date(endDate).toISOString().split("T")[0];
 
@@ -233,7 +233,7 @@ export default function EditProjectPage() {
                   warningTxt={warningTxt}
                   handleOnBlur={handleOnBlur}
                   onBlurActive={true}
-                  onChange={handleInputChange(setProjectName)} // Use handleInputChange directly here
+                  onChange={handleInputChange(setProjectName)} 
                 ></InputForm>
               </Col>
               <Col xs={5} sm={2}>
@@ -280,7 +280,7 @@ export default function EditProjectPage() {
                     className="date-input"
                     value={endDate}
                     onChange={handleInputChange(setEndDate)}
-                    min={getNextDay(startDate)} // Set minimum date for end date
+                    min={getNextDay(startDate)} 
                     style={{ minWidth: "95px" }}
                   ></input>
                 </div>
@@ -350,7 +350,7 @@ export default function EditProjectPage() {
                     warningTxt={warningTxt}
                     handleOnBlur={handleOnBlur}
                     onBlurActive={true}
-                    onChange={handleInputChange(setProjectName)} // Use handleInputChange directly here
+                    onChange={handleInputChange(setProjectName)} 
                   ></InputForm>
                 </Col>
                 <Col sm={2}>
@@ -396,7 +396,7 @@ export default function EditProjectPage() {
                       className="date-input"
                       value={endDate}
                       onChange={handleInputChange(setEndDate)}
-                      min={getNextDay(startDate)} // Set minimum date for end date
+                      min={getNextDay(startDate)} 
                       style={{ minWidth: "95px" }}
                     ></input>
                   </div>
@@ -509,7 +509,7 @@ export default function EditProjectPage() {
                 className="submit-button"
                 id="submit-creation-project-btn"
                 onClick={handleClick}
-                disabled={!isFormModified} // Enable button only if the form is modified
+                disabled={!isFormModified} 
               >
                 <Trans>Update Project</Trans>
               </button>

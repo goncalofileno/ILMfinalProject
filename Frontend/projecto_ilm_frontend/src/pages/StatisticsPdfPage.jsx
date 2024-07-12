@@ -35,7 +35,6 @@ const StatisticsPdfPage = () => {
   useEffect(() => {
     getAppStatistics().then((response) => {
       return response.json().then((data) => {
-        console.log(data);
         const transformedMembersPerLab = data.membersPerLab.map(
           ({ workLocal, members }) => [workLocal, members]
         );

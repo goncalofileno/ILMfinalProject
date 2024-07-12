@@ -33,7 +33,7 @@ export default function InputForm({
   };
 
   const handleBlurInactive = () => {
-    console.log(" ");
+    console.log("");
   };
 
   return (

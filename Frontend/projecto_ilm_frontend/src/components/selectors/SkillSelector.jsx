@@ -32,7 +32,6 @@ const SkillSelector = ({ selectedSkills, setSelectedSkills }) => {
         return response.json();
       })
       .then((data) => {
-        console.log(data);
         setAllSkills(data);
       });
   }, [token]);

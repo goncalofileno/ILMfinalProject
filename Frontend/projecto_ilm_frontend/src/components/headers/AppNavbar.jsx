@@ -83,7 +83,6 @@ export default function AppNavbar({
       if (response.success) {
         Cookies.set("user-language", newLanguage);
         setCurrentLanguage(newLanguage);
-        console.log("Language updated successfully");
       } else {
         console.error("Failed to update language:", response.error);
       }

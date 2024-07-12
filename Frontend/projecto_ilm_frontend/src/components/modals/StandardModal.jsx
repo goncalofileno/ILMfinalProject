@@ -9,7 +9,6 @@ export default function StandardModal({
   setModalActive,
   modalActive,
 }) {
-  console.log(modalType);
   useEffect(() => {
     if (modalActive) {
       setTimeout(() => {

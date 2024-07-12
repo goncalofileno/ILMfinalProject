@@ -43,7 +43,7 @@ const CreateProfilePage = () => {
   const [selectedSkills, setSelectedSkills] = useState([]);
   const [formErrors, setFormErrors] = useState({});
   const [showConfirmationAlert, setShowConfirmationAlert] = useState(false);
-  const [isFormValid, setIsFormValid] = useState(false); // Novo estado para validade do formulário
+  const [isFormValid, setIsFormValid] = useState(false);  
   const navigate = useNavigate();
   const { token } = useParams();
 

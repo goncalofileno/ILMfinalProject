@@ -204,7 +204,6 @@ const ProjectMembersPage = () => {
         ...projectData.projectMembers.map((member) => member.id),
         ...projectData.projectMembers.map((member) => member.id),
       ];
-      console.log("Fetching all users with rejectedUsers:", rejectedUsers);
 
       const result = await getUserProjectCreation(
         systemProjectName,
@@ -219,7 +218,6 @@ const ProjectMembersPage = () => {
       }
 
       const data = await result.json();
-      console.log("Fetched users result:", data);
 
       setAllUsers(data.userProjectCreationDtos || []);
       setMaxPageNumber(data.maxPageNumber);

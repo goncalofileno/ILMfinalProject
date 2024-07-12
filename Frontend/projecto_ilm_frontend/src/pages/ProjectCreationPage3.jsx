@@ -116,7 +116,6 @@ export default function ProjectCreationPage3() {
     )
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         setResources(data.tableResources);
         setTotalPages(data.maxPageNumber);
       });
