@@ -68,8 +68,7 @@ export default function AsideProjectCreationPage2({
                 <Trans>Max Members</Trans>
               </Form.Label>
               <Form.Control
-                type="text"
-                placeholder="4"
+                type="number"
                 style={{ borderRadius: "10px", cursor: "text" }}
                 className="custom-focus"
                 value={maxMembers}

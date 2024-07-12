@@ -12,7 +12,7 @@ import {
   checkProjectName,
 } from "../utilities/services";
 import { formatLab } from "../utilities/converters";
-import defaultPhoto from "../resources/avatares/defaultProjectAvatar.jpg";
+
 import StandardModal from "../components/modals/StandardModal";
 import { useNavigate } from "react-router-dom";
 import { Trans, t } from "@lingui/macro";
@@ -281,7 +281,7 @@ export default function ProjectCreationPage1() {
                   />
                 ) : (
                   <Image
-                    src={defaultPhoto}
+                    src="http://localhost:8080/images/projects/default/project_profile_picture.jpg"
                     className="project-creation-image"
                     fluid
                   />

@@ -21,7 +21,7 @@ export default function LoginForm({ setShowAlert, setIsModalActive }) {
         if (response.status === 200) {
           // Atualizar o estado de autenticação
           setIsAuthenticated(true);
-  
+
           if (response.data && response.data.auxiliarToken) {
             navigate(`/create-profile/${response.data.auxiliarToken}`);
           } else {
