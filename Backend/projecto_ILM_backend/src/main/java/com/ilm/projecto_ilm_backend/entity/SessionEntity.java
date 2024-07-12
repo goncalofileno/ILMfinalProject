@@ -10,11 +10,17 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Table(name = "session")
+// Query to find a SkillEntity by its name.
 @NamedQuery(name = "Session.findBySessionId", query = "SELECT s FROM SessionEntity s WHERE s.sessionId = :sessionId")
+// Query to find a SessionEntity by the id of its associated user.
 @NamedQuery(name = "Session.findByUserId", query = "SELECT s FROM SessionEntity s WHERE s.user.id = :user_id")
+// Query to find a SessionEntity by the id of its associated user and the user agent.
 @NamedQuery(name = "Session.findByUserAndUserAgent", query = "SELECT s FROM SessionEntity s WHERE s.user.id = :userId AND s.userAgent = :userAgent")
+// Query to find a SessionEntity by its associated user.
 @NamedQuery(name = "Session.findByUser", query = "SELECT s FROM SessionEntity s WHERE s.user = :user")
+// Query to find the id of the user associated with a SessionEntity by its session id.
 @NamedQuery(name = "Session.findUserIdBySessionId", query = "SELECT s.user.id FROM SessionEntity s WHERE s.sessionId = :sessionId")
+// Query to find the session id of a SessionEntity by the id of its associated user.
 @NamedQuery(name = "Session.findSessionIdByUserId", query = "SELECT s.sessionId FROM SessionEntity s WHERE s.user.id = :userId")
 public class SessionEntity implements Serializable {
 

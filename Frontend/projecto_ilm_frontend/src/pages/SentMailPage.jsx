@@ -18,6 +18,7 @@ const SentMailPage = () => {
       <AppNavbar
         setIsAsideVisible={setIsAsideVisible}
         setCurrentLanguage={setCurrentLanguage}
+        pageWithAside={true}
       />
       <AsideMailActions isVisible={isAsideVisible} />
       <div

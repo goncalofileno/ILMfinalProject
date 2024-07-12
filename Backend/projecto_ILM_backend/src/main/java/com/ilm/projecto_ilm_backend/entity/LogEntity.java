@@ -95,10 +95,17 @@ public class LogEntity implements Serializable {
      */
     @Column(name = "resourceStock", nullable = true, unique = false, updatable = false)
     private int resourceStock;
-
+    /**
+     * Sets the deleted status of the message by the sender.
+     *
+     * @param deletedBySender the new deleted status of the message by the sender.
+     */
     @Column(name = "oldUserType", nullable = true, unique = false, updatable = false)
     private UserInProjectTypeENUM oldUserType;
-
+    /**
+     * The new type of the user in the project associated with the log entry.
+     * This is an enumerated type.
+     */
     @Column(name = "newUserType", nullable = true, unique = false, updatable = false)
     private UserInProjectTypeENUM newUserType;
 
@@ -414,19 +421,35 @@ public class LogEntity implements Serializable {
     public void setProject(ProjectEntity project) {
         this.project = project;
     }
-
+    /**
+     * Returns the old user type in the project associated with the log entry.
+     *
+     * @return the old user type in the project.
+     */
     public UserInProjectTypeENUM getOldUserType() {
         return oldUserType;
     }
-
+    /**
+     * Sets the old user type in the project associated with the log entry.
+     *
+     * @param oldUserType the new old user type in the project.
+     */
     public void setOldUserType(UserInProjectTypeENUM oldUserType) {
         this.oldUserType = oldUserType;
     }
-
+    /**
+     * Returns the new user type in the project associated with the log entry.
+     *
+     * @return the new user type in the project.
+     */
     public UserInProjectTypeENUM getNewUserType() {
         return newUserType;
     }
-
+    /**
+     * Sets the new user type in the project associated with the log entry.
+     *
+     * @param newUserType the new user type in the project.
+     */
     public void setNewUserType(UserInProjectTypeENUM newUserType) {
         this.newUserType = newUserType;
     }

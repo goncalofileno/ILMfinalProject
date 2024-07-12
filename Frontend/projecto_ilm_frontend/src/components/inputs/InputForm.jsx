@@ -1,5 +1,6 @@
 import "./InputForm.css";
 import { useState } from "react";
+import React from "react";
 
 // The InputForm component is used to create a form input field with a label. The component takes in the following props:
 // label: The label for the input field.

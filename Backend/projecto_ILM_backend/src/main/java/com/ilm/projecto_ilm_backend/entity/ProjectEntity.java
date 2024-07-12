@@ -15,9 +15,13 @@ import com.ilm.projecto_ilm_backend.ENUMS.ConvertersENUM.StateProjectEnumConvert
  */
 @Entity
 @Table(name = "project")
+// Query to find a ProjectEntity by its id.
 @NamedQuery(name = "Project.findById", query = "SELECT p FROM ProjectEntity p WHERE p.id = :id")
+// Query to find a ProjectEntity id by its system name.
 @NamedQuery(name = "Project.findIdBySystemName", query = "SELECT p.id FROM ProjectEntity p WHERE p.systemName = :systemName")
+// Query to find the name and description of a ProjectEntity that is in a specific set of statuses.
 @NamedQuery(name = "Project.findNameAndDescriptionHome", query = "SELECT p.name, p.description FROM ProjectEntity p WHERE p.status = 0 OR  p.status = 1 OR  p.status = 2 OR  p.status = 3 OR p.status=5 ")
+// Query to get information about a ProjectEntity for a DTO table. The query can be filtered by lab, status, and keyword, and checks if there are available slots.
 @NamedQuery(
         name = "Project.getProjectTableDtoInfo",
         query = "SELECT p.id, p.name, p.lab, p.status, FUNCTION('DATE', p.startDate), FUNCTION('DATE', p.endDate), p.maxMembers, p.photo, p.systemName " +
@@ -28,7 +32,7 @@ import com.ilm.projecto_ilm_backend.ENUMS.ConvertersENUM.StateProjectEnumConvert
                 "OR (:keyword IS NULL OR LOWER(p.keywords) LIKE LOWER(CONCAT('%', :keyword, '%'))))" +
                 "GROUP BY p.id, p.name, p.lab, p.status, p.startDate, p.endDate, p.maxMembers " +
                 "HAVING (:slotsAvailable = FALSE OR p.maxMembers > COUNT(up))")
-
+// Query to get the number of ProjectEntity instances for a DTO table. The query can be filtered by lab, status, and keyword, and checks if there are available slots.
 @NamedQuery(name = "Project.getNumberOfProjectsTableDtoInfo",
         query = "SELECT COUNT(p) " +
         "FROM ProjectEntity p " +
@@ -38,7 +42,7 @@ import com.ilm.projecto_ilm_backend.ENUMS.ConvertersENUM.StateProjectEnumConvert
         "OR (:keyword IS NULL OR (LOWER(p.keywords) LIKE LOWER(CONCAT('%', :keyword, '%')))))" +
         "AND (:slotsAvailable = FALSE OR p.maxMembers > " +
         "(SELECT COUNT(up) FROM UserProjectEntity up WHERE up.project.id = p.id))")
-
+// Query to get all ProjectEntity instances ordered by a specific user.
 @NamedQuery(
         name = "Project.findAllProjectsOrderedByUser",
         query = "SELECT p.id, p.name, p.lab, p.status, FUNCTION('DATE', p.startDate), FUNCTION('DATE', p.endDate), p.maxMembers, p.photo, p.systemName FROM ProjectEntity p " +
@@ -46,7 +50,7 @@ import com.ilm.projecto_ilm_backend.ENUMS.ConvertersENUM.StateProjectEnumConvert
                 "ORDER BY CASE WHEN (up.user.id = :userId) " +
                 "AND (up.type=0 OR up.type=1 OR up.type=2 OR up.type=3 OR up.type=4) THEN 0 ELSE 1 END, p.name ASC"
 )
-
+// Query to get information about a user's projects. The query can be filtered by lab, status, and keyword.
 @NamedQuery(
         name = "Project.getMyProjectsInfo",
         query = "SELECT p.id, p.name, p.lab, p.status, FUNCTION('DATE', p.startDate), FUNCTION('DATE', p.endDate), p.maxMembers,p.photo, up.type, p.systemName " +
@@ -56,7 +60,7 @@ import com.ilm.projecto_ilm_backend.ENUMS.ConvertersENUM.StateProjectEnumConvert
                 "AND (:keyword IS NULL OR LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%')))" +
                 "AND (up.user.id = :userId) " +
                 "AND (up.type=0 OR up.type=1 OR up.type=2 OR up.type=3 OR up.type=4) ")
-
+// Query to get the number of a user's projects. The query can be filtered by lab, status, and keyword.
 @NamedQuery(name = "Project.getNumberOfMyProjectsInfo",
         query = "SELECT COUNT(p) " +
                 "FROM ProjectEntity p LEFT JOIN UserProjectEntity up ON p.id = up.project.id " +
@@ -65,26 +69,33 @@ import com.ilm.projecto_ilm_backend.ENUMS.ConvertersENUM.StateProjectEnumConvert
                 "AND (:keyword IS NULL OR (LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%'))))" +
                 "AND (up.user.id = :userId) " +
                 "AND (up.type = 0 OR up.type = 1 OR up.type = 2 OR up.type = 3 OR up.type = 4) ")
-
+// Query to count the total number of ProjectEntity instances.
 @NamedQuery(name = "Project.countProjects", query = "SELECT COUNT(p) FROM ProjectEntity p")
+// Query to get the skills associated with a ProjectEntity by its system name.
+
 @NamedQuery(
         name = "Project.getSkillsBySystemName",
         query = "SELECT s.name FROM ProjectEntity p JOIN p.skillInProject s WHERE p.systemName = :projectSystemName"
 )
-
+// Query to check if a skill is associated with a ProjectEntity by its system name and the skill name.
 @NamedQuery(
         name = "Project.isSkillInProject",
         query = "SELECT COUNT(s) > 0 FROM ProjectEntity p JOIN p.skillInProject s WHERE p.systemName = :projectSystemName AND s.name = :skillName"
 )
+// Query to check if a ProjectEntity exists by its name.
 @NamedQuery(name = "Project.doesProjectExist", query = "SELECT COUNT(p)>0 FROM ProjectEntity p WHERE p.name = :name")
+// Query to get all ProjectEntity ids.
 @NamedQuery(name = "Project.getProjectIds", query = "SELECT p.id FROM ProjectEntity p")
+// Query to get the execution dates of all ProjectEntity instances.
 @NamedQuery(name = "Project.getProjectsExecutionDates", query = "SELECT p.inProgressDate, p.finishedDate  FROM ProjectEntity p")
+// Query to count the number of ProjectEntity instances per lab.
 @NamedQuery(
         name = "Project.countProjectsPerLab",
         query = "SELECT p.lab.local, COUNT(p) " +
                 "FROM ProjectEntity p " +
                 "GROUP BY p.lab.local"
 )
+// Query to count the number of ProjectEntity instances by status and lab.
 @NamedQuery(
         name = "Project.countProjectsByStatusAndLab",
         query = "SELECT p.lab.local, p.status, COUNT(p) " +
@@ -538,26 +549,51 @@ public class ProjectEntity implements Serializable {
         this.skillInProject = skillInProject;
     }
 
+    /**
+     * Returns the creation date and time of this project.
+     *
+     * @return the creation date and time of this project.
+     */
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
-
+    /**
+     * Sets the creation date and time of this project.
+     *
+     * @param createdAt the new creation date and time of this project.
+     */
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
-
+    /**
+     * Returns the finished date and time of this project.
+     *
+     * @return the finished date and time of this project.
+     */
     public LocalDateTime getFinishedDate() {
         return finishedDate;
     }
-
+    /**
+     * Sets the finished date and time of this project.
+     *
+     * @param finishedDate the new finished date and time of this project.
+     */
     public void setFinishedDate(LocalDateTime finishedDate) {
         this.finishedDate = finishedDate;
     }
-
+    /**
+     * Returns the card photo of this project.
+     *
+     * @return the card photo of this project.
+     */
     public String getCardPhoto() {
         return cardPhoto;
     }
-
+    /**
+     * Sets the card photo of this project.
+     *
+     * @param cardPhoto the new card photo of this project.
+     */
     public void setCardPhoto(String cardPhoto) {
         this.cardPhoto = cardPhoto;
     }

@@ -5,26 +5,49 @@ package com.ilm.projecto_ilm_backend.ENUMS;
  */
 public enum UserInProjectTypeENUM {
 
+    /**
+     * Represents the creator of the project. Associated with the integer value 0.
+     */
     CREATOR(0),
-
+    /**
+     * Represents a manager in the project. Associated with the integer value 1.
+     */
     MANAGER(1),
-
+    /**
+     * Represents a member in the project. Associated with the integer value 2.
+     */
     MEMBER(2),
-
+    /**
+     * Represents a member who joined the project by invitation. Associated with the integer value 3.
+     */
     MEMBER_BY_INVITATION(3),
-
+    /**
+     * Represents a member who joined the project by appliance. Associated with the integer value 4.
+     */
     MEMBER_BY_APPLIANCE(4),
-
+    /**
+     * Represents a user who is pending to join the project by appliance. Associated with the integer value 5.
+     */
     PENDING_BY_APPLIANCE(5),
-
+    /**
+     * Represents a user who is pending to join the project by invitation. Associated with the integer value 6.
+     */
     PENDING_BY_INVITATION(6),
-
+    /**
+     * Represents a user who was a member of the project but is no longer. Associated with the integer value 7.
+     */
     EXMEMBER(7),
-
+    /**
+     * Represents an admin of the project. Associated with the integer value 8.
+     */
     ADMIN(8),
-
+    /**
+     * Represents a guest in the project. Associated with the integer value 9.
+     */
     GUEST(9);
-
+    /**
+     * The integer value associated with the enum constant.
+     */
     private final int intValue;
 
     /**

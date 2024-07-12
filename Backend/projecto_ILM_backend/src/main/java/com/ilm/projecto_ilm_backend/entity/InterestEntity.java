@@ -8,9 +8,13 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name="interest")
+// NamedQuery to find an InterestEntity by its id.
 @NamedQuery(name = "Interest.findById", query = "SELECT i FROM InterestEntity i WHERE i.id = :id")
+// NamedQuery to find all InterestEntity instances.
 @NamedQuery(name = "Interest.findAll", query = "SELECT i FROM InterestEntity i")
+// NamedQuery to count all InterestEntity instances.
 @NamedQuery(name = "Interest.countAll", query = "SELECT COUNT(i) FROM InterestEntity i")
+// NamedQuery to find an InterestEntity by its name.
 @NamedQuery(name = "Interest.findByName", query = "SELECT i FROM InterestEntity i WHERE i.name = :name")
 public class InterestEntity implements Serializable{
     private static final long serialVersionUID = 1L;

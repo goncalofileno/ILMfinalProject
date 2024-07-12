@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useCurrentPng } from "recharts-to-png";
 import { useMediaQuery } from "react-responsive";
 import { Trans, t } from "@lingui/macro";
+import React from "react";
 
 export default function ProjectsTable({
   projects,

@@ -206,15 +206,15 @@ body {
   position: relative;
 }
 
-@media (max-width: 1199px) {
+@media (max-width: 1000px) {
   .ilm-page-tablet-with-aside {
-    height: 130vh;
+    height: 160vh;
   }
 }
 
 @media (max-width: 1000px) {
-  .ilm-page-tablet-with-aside {
-    height: 160vh;
+  .ilm-pageb-with-aside {
+    height: 107vh;
   }
 }
 .ilm-page2-noheight {

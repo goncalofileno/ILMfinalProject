@@ -14,6 +14,7 @@ import TablePagination from "../components/paginations/TablePagination";
 import MailIcon from "../resources/icons/other/email-icon.png";
 import { Trans, t } from "@lingui/macro";
 import Cookies from "js-cookie";
+import React from "react";
 
 export default function UsersPage() {
   const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
@@ -88,7 +89,7 @@ export default function UsersPage() {
       <AppNavbar setCurrentLanguage={setCurrentLanguage} />
       <div
         className={isMobile ? "ilm-page-mobile" : "ilm-pageb"}
-        style={{ padding: !isSmallMobile && "15px 70px" }}
+        style={{ paddingTop: "15px" }}
       >
         <h1 className="page-title">
           <Trans>
@@ -96,7 +97,7 @@ export default function UsersPage() {
             <span className="app-slogan-2">Users</span>
           </Trans>
         </h1>
-        <Row className="mt-1">
+        <Row className="mt-1" style={{ marginRight: "0px", marginLeft: "0px" }}>
           <Col>
             <Card
               style={{
@@ -116,7 +117,7 @@ export default function UsersPage() {
                       }}
                     >
                       <Col sm={6}>
-                        <Form.Label column sm={2}>
+                        <Form.Label column sm={2} style={{ width: "100%" }}>
                           <h6
                             style={{
                               marginBottom: "0px",

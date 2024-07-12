@@ -10,11 +10,17 @@ import java.util.List;
  */
 @Entity
 @Table(name = "supplier")
+// Query to find a SupplierEntity by its name.
 @NamedQuery(name = "Supplier.findByName", query = "SELECT s FROM SupplierEntity s WHERE s.name = :name")
+// Query to find a SupplierEntity by its id.
 @NamedQuery(name = "Supplier.findById", query = "SELECT s FROM SupplierEntity s WHERE s.id = :id")
+// Query to find the name of a SupplierEntity by its id.
 @NamedQuery(name = "Supplier.findNameById", query = "SELECT s.name FROM SupplierEntity s WHERE s.id = :id")
+// Query to find the id of a SupplierEntity by its name.
 @NamedQuery(name = "Supplier.findIdByName", query = "SELECT s.id FROM SupplierEntity s WHERE s.name = :name")
+// Query to find all names of the SupplierEntity instances.
 @NamedQuery(name = "Supplier.findAllNames", query = "SELECT s.name FROM SupplierEntity s ")
+// Query to find the contact of a SupplierEntity by its name.
 @NamedQuery(name = "Supplier.findSupplierContactByName", query = "SELECT s.contact FROM SupplierEntity s WHERE s.name = :name")
 
 
@@ -105,10 +111,21 @@ public class SupplierEntity implements Serializable {
         this.contact = contact;
     }
 
+    /**
+     * Returns the list of ResourceSupplierEntity instances associated with this supplier.
+     * This represents a one-to-many relationship with the ResourceSupplierEntity class.
+     *
+     * @return the list of ResourceSupplierEntity instances associated with this supplier.
+     */
     public List<ResourceSupplierEntity> getResource() {
         return resource;
     }
-
+    /**
+     * Sets the list of ResourceSupplierEntity instances associated with this supplier.
+     * This represents a one-to-many relationship with the ResourceSupplierEntity class.
+     *
+     * @param resource the new list of ResourceSupplierEntity instances associated with this supplier.
+     */
     public void setResource(List<ResourceSupplierEntity> resource) {
         this.resource = resource;
     }

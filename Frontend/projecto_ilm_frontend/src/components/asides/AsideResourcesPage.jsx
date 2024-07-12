@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { formatResourceType } from "../../utilities/converters";
 import { Trans } from "@lingui/macro";
 import { useMediaQuery } from "react-responsive";
+import React from "react";
 
 export default function AsideResourcesPage({
   brand,
@@ -131,7 +132,7 @@ export default function AsideResourcesPage({
               </Form.Select>
             </div>
             <button
-              className="terciary-button"
+              className="secondary-button"
               style={{
                 width: "100%",
                 paddingTop: "5px",

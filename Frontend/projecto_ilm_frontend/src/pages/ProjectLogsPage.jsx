@@ -369,7 +369,7 @@ const ProjectLogsPage = () => {
       <AppNavbar setCurrentLanguage={setCurrentLanguage} />
       <div
         className={
-          !isMobile ? "bckg-color-ilm-page ilm-pageb" : "ilm-page-mobile"
+          !isMobile ? "bckg-color-ilm-page ilm-pageb" : "ilm-pageb-noheight"
         }
       >
         <ProjectTabs
@@ -520,7 +520,7 @@ const ProjectLogsPage = () => {
                             logsAndNotes.projectStatus
                           )}
                         >
-                          <Trans>Add </Trans> {!isTablet && (t`Note`)}
+                          <Trans>Add </Trans> {!isTablet && t`Note`}
                         </Button>
                       </div>
                     </Col>

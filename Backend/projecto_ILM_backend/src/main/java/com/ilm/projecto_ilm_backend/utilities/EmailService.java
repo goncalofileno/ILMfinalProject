@@ -6,12 +6,25 @@ import jakarta.mail.internet.*;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Properties;
-
+/**
+ * EmailService is a stateless EJB that provides methods to send confirmation and password reset emails.
+ * It uses the JavaMail API to send emails.
+ */
 @Stateless
 public class EmailService {
-    private final String username = "innovationlabmanagementcs@gmail.com"; // Seu nome de usuário do email
+    /**
+     * The username for the email account from which the emails are sent.
+     */
+    private final String username = "innovationlabmanagementcs@gmail.com";
+    /**
+     * The password for the email account from which the emails are sent.
+     */
     private final String password = "xnog bvud syvq rpcv"; // Sua senha de email
-
+    /**
+     * This method creates and returns a mail Session with the necessary properties and authenticator.
+     *
+     * @return a mail Session with the necessary properties and authenticator
+     */
     private Session createSession() {
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
@@ -27,7 +40,14 @@ public class EmailService {
             }
         });
     }
-
+    /**
+     * This method sends a confirmation email to the provided email address with the provided verification link.
+     *
+     * @param to the email address to which the confirmation email is to be sent
+     * @param verificationLink the verification link to be included in the confirmation email
+     * @throws MessagingException if there is a problem with the creation or sending of the message
+     * @throws UnsupportedEncodingException if the character encoding is not supported
+     */
     public void sendConfirmationEmail(String to, String verificationLink) throws MessagingException, UnsupportedEncodingException {
         Session session = createSession();
 
@@ -55,7 +75,14 @@ public class EmailService {
     }
 
 
-
+    /**
+     * This method sends a password reset email to the provided email address with the provided verification link.
+     *
+     * @param to the email address to which the password reset email is to be sent
+     * @param verificationLink the verification link to be included in the password reset email
+     * @throws MessagingException if there is a problem with the creation or sending of the message
+     * @throws UnsupportedEncodingException if the character encoding is not supported
+     */
 
     public void sendResetPasswordEmail(String to, String verificationLink) throws MessagingException, UnsupportedEncodingException {
         Session session = createSession();

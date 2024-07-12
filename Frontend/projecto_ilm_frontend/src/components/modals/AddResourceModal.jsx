@@ -13,6 +13,7 @@ import {
 import { formatResourceType } from "../../utilities/converters";
 import { useMediaQuery } from "react-responsive";
 import { Trans, t } from "@lingui/macro";
+import React from "react";
 
 export default function AddResourceModal({
   isModalActive,
@@ -130,7 +131,7 @@ export default function AddResourceModal({
             setTimeout(() => {
               window.location.reload();
               setTimeout(() => {
-                setIsModalActive(false);
+                handleCancel();
               }, 500);
             }, 1000);
           } else if (response.status === 400) {
@@ -163,7 +164,7 @@ export default function AddResourceModal({
                 console.log("4");
                 setTableTrigger((prev) => !prev);
                 setTimeout(() => {
-                  setIsModalActive(false);
+                  handleCancel();
                 }, 500);
               }, 1000);
             } else {

@@ -11,6 +11,7 @@ import ForgetPassModal from "../components/modals/ForgetPassModal";
 import alertStore from "../stores/alertStore";
 import { getHomeProjects } from "../utilities/services";
 import { Trans, t } from "@lingui/macro";
+import React from "react";
 
 function App() {
   const { register } = useParams();

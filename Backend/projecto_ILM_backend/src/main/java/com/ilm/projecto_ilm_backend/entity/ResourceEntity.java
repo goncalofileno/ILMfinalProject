@@ -13,9 +13,13 @@ import java.util.List;
  */
 @Entity
 @Table(name = "resource")
+// Setter for the 'projectResources' field.
 @NamedQuery(name = "Resource.findById", query = "SELECT r FROM ResourceEntity r WHERE r.id = :id")
+// Query to find a ResourceEntity by its name.
 @NamedQuery(name = "Resource.findByName", query = "SELECT r FROM ResourceEntity r WHERE r.name = :name")
+// Query to find the id of a ResourceEntity by its name.
 @NamedQuery(name = "Resource.findIdByName", query = "SELECT r.id FROM ResourceEntity r WHERE r.name = :name")
+// Query to check if a resource has a supplier.
 @NamedQuery(
         name = "Resource.hasSupplier",
         query = "SELECT COUNT(r) > 0 FROM ResourceEntity r " +
@@ -23,7 +27,7 @@ import java.util.List;
                 "WHERE r.id = :resourceId " +
                 "AND rs.supplier.id = :supplierId"
 )
-
+// Query to check if a resource exists based on its name, brand, type, and supplier name.
 @NamedQuery(
         name = "Resource.doesResourceExist",
         query = "SELECT COUNT(r) > 0 FROM ResourceEntity r " +
@@ -33,7 +37,7 @@ import java.util.List;
                 "AND (r.type = :type) "+
                 "AND (rs.supplier.name=:supplierName) "
 )
-
+// Query to check if a resource exists based on its id, name, brand, type, and supplier name.
 @NamedQuery(
         name = "Resource.doesResourceExistWithId",
         query = "SELECT COUNT(r) > 0 FROM ResourceEntity r " +
@@ -44,6 +48,7 @@ import java.util.List;
                 "AND (rs.supplier.name=:supplierName) "+
                 "AND (r.id = :id)"
 )
+// Query to find a resource based on its name, brand, type, and supplier name.
 @NamedQuery(
         name = "Resource.findResourceByDetails",
         query = "SELECT r FROM ResourceEntity r " +
@@ -53,7 +58,7 @@ import java.util.List;
                 "AND (r.type = :type) "+
                 "AND (rs.supplier.name=:supplierName) "
 )
-
+// Query to get the details of resources based on various parameters.
 @NamedQuery(
         name = "Resource.getResourcesDetails",
         query = "SELECT r.name, r.brand, r.type, rs.supplier.id,r.id,rs.id FROM ResourceEntity r " +
@@ -64,7 +69,7 @@ import java.util.List;
                 "AND (:name IS NULL OR LOWER(r.name) LIKE LOWER(CONCAT('%', :name, '%'))) "+
                 "AND (rs.isDeleted = false) "
 )
-
+// Query to get the number of resources based on various parameters.
 @NamedQuery(
         name = "Resource.getNumberOfResourcesDetails",
         query = "SELECT COUNT(r) FROM ResourceEntity r " +
@@ -75,15 +80,15 @@ import java.util.List;
                 "AND (:name IS NULL OR LOWER(r.name) LIKE LOWER(CONCAT('%', :name, '%'))) "+
                 "AND (rs.isDeleted = false) "
 )
-
+// Query to get all distinct brands of resources.
 @NamedQuery(
         name = "Resource.getAllBrands",
         query = "SELECT DISTINCT r.brand FROM ResourceEntity r ")
-
+// Query to get all distinct names of resources.
 @NamedQuery(
         name = "Resource.getNames",
         query = "SELECT DISTINCT r.name FROM ResourceEntity r ")
-
+// Query to get the details of resources associated with a specific project.
 @NamedQuery(
         name = "Resource.getResourcesDetailsFromProjectId",
         query = "SELECT r.name, r.brand, r.type, rs.supplier.id,r.id,rs.id FROM ResourceEntity r " +
@@ -285,11 +290,19 @@ public class ResourceEntity implements Serializable {
     public void setSerialNumber(String serialNumber) {
         this.serialNumber = serialNumber;
     }
-
+    /**
+     * Returns the list of ResourceSupplierEntity instances associated with this ResourceEntity.
+     *
+     * @return the list of ResourceSupplierEntity instances.
+     */
     public List<ResourceSupplierEntity> getSupplier() {
         return supplier;
     }
-
+    /**
+     * Sets the list of ResourceSupplierEntity instances associated with this ResourceEntity.
+     *
+     * @param supplier the new list of ResourceSupplierEntity instances.
+     */
     public void setSupplier(List<ResourceSupplierEntity> supplier) {
         this.supplier = supplier;
     }

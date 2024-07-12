@@ -15,10 +15,15 @@ import java.util.List;
 @Entity
 @Table(name = "task")
 @NamedQueries({
+        // Query to find a TaskEntity by its id.
         @NamedQuery(name = "Task.findById", query = "SELECT t FROM TaskEntity t WHERE t.id = :id"),
+        // Query to find all TaskEntity instances.
         @NamedQuery(name = "Task.findAll", query = "SELECT t FROM TaskEntity t"),
+        // Query to find a TaskEntity by its associated project's id, excluding deleted tasks.
         @NamedQuery(name = "Task.findByProject", query = "SELECT t FROM TaskEntity t WHERE t.project.id = :id AND t.isDeleted = false"),
+        // Query to find a TaskEntity by its system title.
         @NamedQuery(name = "Task.findBySystemTitle", query = "SELECT t FROM TaskEntity t WHERE t.systemTitle = :systemTitle"),
+        // Query to find a TaskEntity by its system title and associated project's id.
         @NamedQuery(name = "Task.findBySystemTitleAndProject", query = "SELECT t FROM TaskEntity t WHERE t.systemTitle = :systemTitle AND t.project.id = :projectId"),
 })
 public class TaskEntity implements Serializable {
