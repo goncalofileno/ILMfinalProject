@@ -605,9 +605,9 @@ public class ProjectBean {
             String subject = "Invite to Project " + project.getName();
             String text = "<p>User " + "<strong>" + sender.getFirstName() + " " + sender.getLastName() + "</strong>" + " has invited you to join the project <strong>" + project.getName() + "</strong>.</p>" +
                     "<p>Click the button below to accept the invitation:</p>" +
-                    "<a href=\"http://localhost:3000/project/" + project.getSystemName() + "\" style=\"display:inline-block; padding:10px 20px; font-size:16px; color:#fff; background-color:#f39c12; text-align:center; text-decoration:none; border-radius:5px;\">Accept Invitation</a>" +
+                    "<a href=\"https://localhost:3000/project/" + project.getSystemName() + "\" style=\"display:inline-block; padding:10px 20px; font-size:16px; color:#fff; background-color:#f39c12; text-align:center; text-decoration:none; border-radius:5px;\">Accept Invitation</a>" +
                     "<p>If the button does not work, you can also copy and paste the following link into your browser:</p>" +
-                    "<p>http://localhost:3000/project/" + project.getSystemName() + "</p>" +
+                    "<p>https://localhost:3000/project/" + project.getSystemName() + "</p>" +
                     "<p></p>" +
                     "<p>Best regards,<br>ILM Management Team</p>";
             MailDto mailDto = new MailDto(subject, text, (sender.getFirstName() + " " + sender.getLastName()), sender.getEmail(), userToInvite.getFirstName() + " " + userToInvite.getLastName(), userToInvite.getEmail());
@@ -616,9 +616,9 @@ public class ProjectBean {
             String subject = "Convite para o Projeto " + project.getName();
             String text = "<p>O utilizador " + "<strong>" + sender.getFirstName() + " " + sender.getLastName() + "</strong>" + " convidou-o a juntar-se ao projeto <strong>" + project.getName() + "</strong>.</p>" +
                     "<p>Clique no botão abaixo para aceitar o convite:</p>" +
-                    "<a href=\"http://localhost:3000/project/" + project.getSystemName() + "\" style=\"display:inline-block; padding:10px 20px; font-size:16px; color:#fff; background-color:#f39c12; text-align:center; text-decoration:none; border-radius:5px;\">Aceitar Convite</a>" +
+                    "<a href=\"https://localhost:3000/project/" + project.getSystemName() + "\" style=\"display:inline-block; padding:10px 20px; font-size:16px; color:#fff; background-color:#f39c12; text-align:center; text-decoration:none; border-radius:5px;\">Aceitar Convite</a>" +
                     "<p>Se o botão não funcionar, pode também copiar e colar o seguinte link no seu navegador:</p>" +
-                    "<p>http://localhost:3000/project/" + project.getSystemName() + "</p>" +
+                    "<p>https://localhost:3000/project/" + project.getSystemName() + "</p>" +
                     "<p></p>" +
                     "<p>Com os melhores cumprimentos,<br>Equipa de Gestão ILM</p>";
             MailDto mailDto = new MailDto(subject, text, (admnistration.getFirstName() + " " + admnistration.getLastName()), admnistration.getEmail(), userToInvite.getFirstName() + " " + userToInvite.getLastName(), userToInvite.getEmail());
@@ -932,7 +932,7 @@ public class ProjectBean {
                 if (user.getLanguage() == LanguageENUM.ENGLISH) {
                     String subject = "Project " + project.getName() + " Approved";
                     String text = "<p>Dear " + user.getFirstName() + " " + user.getLastName() + ",</p>" +
-                            "<p>We are pleased to inform you that the project <strong><a href=\"http://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong> has been approved. You can now start working on the project.</p>" +
+                            "<p>We are pleased to inform you that the project <strong><a href=\"https://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong> has been approved. You can now start working on the project.</p>" +
                             "<p>Best regards,<br>ILM Management Team</p>";
 
                     MailDto mailDto = new MailDto(
@@ -948,7 +948,7 @@ public class ProjectBean {
                 } else if (user.getLanguage() == LanguageENUM.PORTUGUESE) {
                     String subject = "Projeto " + project.getName() + " Aprovado";
                     String text = "<p>Caro(a) " + user.getFirstName() + " " + user.getLastName() + ",</p>" +
-                            "<p>É com prazer que informamos que o projeto <strong><a href=\"http://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong> foi aprovado. Pode agora começar a trabalhar no projeto.</p>" +
+                            "<p>É com prazer que informamos que o projeto <strong><a href=\"https://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong> foi aprovado. Pode agora começar a trabalhar no projeto.</p>" +
                             "<p>Com os melhores cumprimentos,<br>Equipa de Gestão ILM</p>";
 
                     MailDto mailDto = new MailDto(
@@ -969,7 +969,7 @@ public class ProjectBean {
                 if (user.getLanguage() == LanguageENUM.ENGLISH) {
                     String subject = "Project " + project.getName() + " Rejected";
                     String text = "<p>Dear " + user.getFirstName() + " " + user.getLastName() + ",</p>" +
-                            "<p>We regret to inform you that the project <strong><a href=\"http://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong> has been rejected.</p>" +
+                            "<p>We regret to inform you that the project <strong><a href=\"https://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong> has been rejected.</p>" +
                             "<p>Reason: " + reason + "</p>" +
                             "<p>We apologize for any inconvenience this may cause.</p>" +
                             "<p>Best regards,<br>ILM Management Team</p>";
@@ -987,7 +987,7 @@ public class ProjectBean {
                 } else if (user.getLanguage() == LanguageENUM.PORTUGUESE) {
                     String subject = "Projeto " + project.getName() + " Rejeitado";
                     String text = "<p>Caro(a) " + user.getFirstName() + " " + user.getLastName() + ",</p>" +
-                            "<p>Lamentamos informar que o projeto <strong><a href=\"http://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong> foi rejeitado.</p>" +
+                            "<p>Lamentamos informar que o projeto <strong><a href=\"https://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong> foi rejeitado.</p>" +
                             "<p>Razão: " + reason + "</p>" +
                             "<p>Pedimos desculpa por qualquer inconveniente que isto possa causar.</p>" +
                             "<p>Com os melhores cumprimentos,<br>Equipa de Gestão ILM</p>";
@@ -1111,7 +1111,7 @@ public class ProjectBean {
             if (user.getLanguage() == LanguageENUM.ENGLISH) {
                 String subject = "Project " + project.getName() + " Canceled";
                 String text = "<p>Dear " + user.getFirstName() + " " + user.getLastName() + ",</p>" +
-                        "<p>We regret to inform you that the project <strong><a href=\"http://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong> has been canceled.</p>" +
+                        "<p>We regret to inform you that the project <strong><a href=\"https://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong> has been canceled.</p>" +
                         "<p>Reason: " + reason + "</p>" +
                         "<p>We apologize for any inconvenience this may cause.</p>" +
                         "<p>Best regards,<br>ILM Management Team</p>";
@@ -1129,7 +1129,7 @@ public class ProjectBean {
             } else if (user.getLanguage() == LanguageENUM.PORTUGUESE) {
                 String subject = "Projeto " + project.getName() + " Cancelado";
                 String text = "<p>Caro(a) " + user.getFirstName() + " " + user.getLastName() + ",</p>" +
-                        "<p>Lamentamos informar que o projeto <strong><a href=\"http://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong> foi cancelado.</p>" +
+                        "<p>Lamentamos informar que o projeto <strong><a href=\"https://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong> foi cancelado.</p>" +
                         "<p>Razão: " + reason + "</p>" +
                         "<p>Pedimos desculpa por qualquer inconveniente que isto possa causar.</p>" +
                         "<p>Com os melhores cumprimentos,<br>Equipa de Gestão ILM</p>";
@@ -1316,7 +1316,7 @@ public class ProjectBean {
         if (userToRemove.getLanguage() == LanguageENUM.ENGLISH) {
             String subject = "You have been removed from project " + project.getName();
             String text = "<p>Dear " + userToRemove.getFirstName() + " " + userToRemove.getLastName() + ",</p>" +
-                    "<p>We regret to inform you that you have been removed from the project <strong><a href=\"http://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong>.</p>" +
+                    "<p>We regret to inform you that you have been removed from the project <strong><a href=\"https://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong>.</p>" +
                     "<p>Reason: " + reason + "</p>" +
                     "<p>We apologize for any inconvenience this may cause.</p>" +
                     "<p>Best regards,<br>ILM Management Team</p>";
@@ -1334,7 +1334,7 @@ public class ProjectBean {
         } else if (userToRemove.getLanguage() == LanguageENUM.PORTUGUESE) {
             String subject = "Foi removido do projeto " + project.getName();
             String text = "<p>Caro(a) " + userToRemove.getFirstName() + " " + userToRemove.getLastName() + ",</p>" +
-                    "<p>Lamentamos informar que foi removido do projeto <strong><a href=\"http://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong>.</p>" +
+                    "<p>Lamentamos informar que foi removido do projeto <strong><a href=\"https://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong>.</p>" +
                     "<p>Razão: " + reason + "</p>" +
                     "<p>Pedimos desculpa por qualquer inconveniente que isto possa causar.</p>" +
                     "<p>Com os melhores cumprimentos,<br>Equipa de Gestão ILM</p>";
@@ -1394,7 +1394,7 @@ public class ProjectBean {
         if(user.getLanguage() == LanguageENUM.ENGLISH) {
             String subject = "Your application to project " + project.getName() + " has been accepted";
             String text = "<p>Dear " + user.getFirstName() + " " + user.getLastName() + ",</p>" +
-                    "<p>We are pleased to inform you that your application to join the project <strong><a href=\"http://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong> has been accepted.</p>" +
+                    "<p>We are pleased to inform you that your application to join the project <strong><a href=\"https://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong> has been accepted.</p>" +
                     "<p>You can now start working on the project.</p>" +
                     "<p>Best regards,<br>ILM Management Team</p>";
 
@@ -1411,7 +1411,7 @@ public class ProjectBean {
         } else if (user.getLanguage() == LanguageENUM.PORTUGUESE) {
             String subject = "A sua candidatura ao projeto " + project.getName() + " foi aceite";
             String text = "<p>Caro(a) " + user.getFirstName() + " " + user.getLastName() + ",</p>" +
-                    "<p>É com prazer que informamos que a sua candidatura ao projeto <strong><a href=\"http://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong> foi aceite.</p>" +
+                    "<p>É com prazer que informamos que a sua candidatura ao projeto <strong><a href=\"https://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong> foi aceite.</p>" +
                     "<p>Pode agora começar a trabalhar no projeto.</p>" +
                     "<p>Com os melhores cumprimentos,<br>Equipa de Gestão ILM</p>";
 
@@ -1466,7 +1466,7 @@ public class ProjectBean {
         if(user.getLanguage() == LanguageENUM.ENGLISH) {
             String subject = "Your application to project " + project.getName() + " has been rejected";
             String text = "<p>Dear " + user.getFirstName() + " " + user.getLastName() + ",</p>" +
-                    "<p>We regret to inform you that your application to join the project <strong><a href=\"http://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong> has been rejected.</p>" +
+                    "<p>We regret to inform you that your application to join the project <strong><a href=\"https://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong> has been rejected.</p>" +
                     "<p>Reason: " + reason + "</p>" +
                     "<p>We apologize for any inconvenience this may cause.</p>" +
                     "<p>Best regards,<br>ILM Management Team</p>";
@@ -1484,7 +1484,7 @@ public class ProjectBean {
         } else if(user.getLanguage() == LanguageENUM.PORTUGUESE){
             String subject = "A sua candidatura ao projeto " + project.getName() + " foi rejeitada";
             String text = "<p>Caro(a) " + user.getFirstName() + " " + user.getLastName() + ",</p>" +
-                    "<p>Lamentamos informar que a sua candidatura ao projeto <strong><a href=\"http://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong> foi rejeitada.</p>" +
+                    "<p>Lamentamos informar que a sua candidatura ao projeto <strong><a href=\"https://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong> foi rejeitada.</p>" +
                     "<p>Razão: " + reason + "</p>" +
                     "<p>Pedimos desculpa por qualquer inconveniente que isto possa causar.</p>" +
                     "<p>Com os melhores cumprimentos,<br>Equipa de Gestão ILM</p>";
@@ -2002,7 +2002,7 @@ public class ProjectBean {
             if(userReceiver.getLanguage() == LanguageENUM.ENGLISH) {
                 String subject = "You have been added to project " + project.getName();
                 String text = "<p>Dear " + userReceiver.getFirstName() + " " + userReceiver.getLastName() + ",</p>" +
-                        "<p>You have been added to the project <strong><a href=\"http://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong>.</p>" +
+                        "<p>You have been added to the project <strong><a href=\"https://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong>.</p>" +
                         "<p>Best regards,<br>ILM Management Team</p>";
 
                 MailDto mailDto = new MailDto(
@@ -2017,7 +2017,7 @@ public class ProjectBean {
             } else if (userReceiver.getLanguage() == LanguageENUM.PORTUGUESE) {
                 String subject = "Foi adicionado ao projeto " + project.getName();
                 String text = "<p>Caro(a) " + userReceiver.getFirstName() + " " + userReceiver.getLastName() + ",</p>" +
-                        "<p>Foi adicionado ao projeto <strong><a href=\"http://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong>.</p>" +
+                        "<p>Foi adicionado ao projeto <strong><a href=\"https://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong>.</p>" +
                         "<p>Com os melhores cumprimentos,<br>Equipa de Gestão ILM</p>";
 
                 MailDto mailDto = new MailDto(
@@ -2067,7 +2067,7 @@ public class ProjectBean {
         if(userToRemove.getLanguage() == LanguageENUM.ENGLISH) {
             String subject = "Invitation to project " + project.getName() + " removed";
             String text = "<p>Dear " + userToRemove.getFirstName() + " " + userToRemove.getLastName() + ",</p>" +
-                    "<p>We regret to inform you that the invitation to join the project <strong><a href=\"http://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong> has been removed.</p>" +
+                    "<p>We regret to inform you that the invitation to join the project <strong><a href=\"https://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong> has been removed.</p>" +
                     "<p>Best regards,<br>ILM Management Team</p>";
 
             MailDto mailDto = new MailDto(
@@ -2083,7 +2083,7 @@ public class ProjectBean {
         } else if (userToRemove.getLanguage() == LanguageENUM.PORTUGUESE) {
             String subject = "Convite para o projeto " + project.getName() + " removido";
             String text = "<p>Caro(a) " + userToRemove.getFirstName() + " " + userToRemove.getLastName() + ",</p>" +
-                    "<p>Lamentamos informar que o convite para se juntar ao projeto <strong><a href=\"http://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong> foi removido.</p>" +
+                    "<p>Lamentamos informar que o convite para se juntar ao projeto <strong><a href=\"https://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong> foi removido.</p>" +
                     "<p>Com os melhores cumprimentos,<br>Equipa de Gestão ILM</p>";
 
             MailDto mailDto = new MailDto(
@@ -2175,7 +2175,7 @@ public class ProjectBean {
             if(teamManager.getLanguage() == LanguageENUM.ENGLISH){
             String subject = "User " + user.getFullName() + " left project " + project.getName();
             String text = "<p>Dear " + teamManager.getFullName() + ",</p>" +
-                    "<p>We regret to inform you that user <strong>" + user.getFullName() + "</strong> has left the project <strong><a href=\"http://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong>.</p>" +
+                    "<p>We regret to inform you that user <strong>" + user.getFullName() + "</strong> has left the project <strong><a href=\"https://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong>.</p>" +
                     "<p>Reason: " + reason + "</p>" +
                     "<p>We apologize for any inconvenience this may cause.</p>" +
                     "<p>Best regards,<br>ILM Management Team</p>";
@@ -2191,7 +2191,7 @@ public class ProjectBean {
         } else if(teamManager.getLanguage() == LanguageENUM.PORTUGUESE){
             String subject = "Utilizador " + user.getFullName() + " saiu do projeto " + project.getName();
             String text = "<p>Caro(a) " + teamManager.getFullName() + ",</p>" +
-                    "<p>Lamentamos informar que o utilizador <strong>" + user.getFullName() + "</strong> saiu do projeto <strong><a href=\"http://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong>.</p>" +
+                    "<p>Lamentamos informar que o utilizador <strong>" + user.getFullName() + "</strong> saiu do projeto <strong><a href=\"https://localhost:3000/project/" + project.getSystemName() + "\">" + project.getName() + "</a></strong>.</p>" +
                     "<p>Razão: " + reason + "</p>" +
                     "<p>Pedimos desculpa por qualquer inconveniente que isto possa causar.</p>" +
                     "<p>Com os melhores cumprimentos,<br>Equipa de Gestão ILM</p>";

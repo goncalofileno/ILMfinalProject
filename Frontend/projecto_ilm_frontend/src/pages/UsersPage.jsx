@@ -15,6 +15,7 @@ import MailIcon from "../resources/icons/other/email-icon.png";
 import { Trans, t } from "@lingui/macro";
 import Cookies from "js-cookie";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function UsersPage() {
   const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
@@ -37,6 +38,7 @@ export default function UsersPage() {
     Cookies.get("user-language") || "ENGLISH"
   );
   const rejectedUsers = [];
+  const navigate = useNavigate();
 
   useEffect(() => {
     getUserProjectCreation(
@@ -238,10 +240,7 @@ export default function UsersPage() {
                           <tr
                             key={user.id}
                             onClick={() =>
-                              window.open(
-                                `/profile/${user.systemUsername}`,
-                                "_blank"
-                              )
+                              navigate(`/profile/${user.systemUsername}`)
                             }
                             style={{ height: "16.67%" }}
                           >
@@ -261,9 +260,11 @@ export default function UsersPage() {
                               style={{ width: !isPhone ? "20%" : "25%" }}
                               className="align-middle"
                             >
-                              {user.systemUsername === userSystemUsername
-                                ? <strong>{t`You`}</strong>
-                                : <strong>{user.name}</strong>}
+                              {user.systemUsername === userSystemUsername ? (
+                                <strong>{t`You`}</strong>
+                              ) : (
+                                <strong>{user.name}</strong>
+                              )}
                             </td>
                             {!isPhone && (
                               <td

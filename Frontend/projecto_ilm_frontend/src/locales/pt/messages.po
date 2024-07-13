@@ -18,7 +18,7 @@ msgstr ""
 #~ msgid "todos-os-recursos-all"
 #~ msgstr "Todos os "
 
-#: src/pages/UsersPage.jsx:95
+#: src/pages/UsersPage.jsx:97
 msgid "<0>All </0><1>Users</1>"
 msgstr "<0>Todos os </0><1>Utilizadores</1>"
 
@@ -31,15 +31,15 @@ msgid "<0>Project </0><1>Members</1>"
 msgstr "<0>Equipa do </0><1>Projeto</1>"
 
 #: src/pages/ProfilePage.jsx:635
-#: src/pages/ProjectMembersPage.jsx:561
+#: src/pages/ProjectMembersPage.jsx:565
 #: src/pages/ProjectProfilePageInfo.jsx:391
 msgid "Accept"
 msgstr "Aceitar"
 
-#: src/pages/ProjectMembersPage.jsx:386
-#: src/pages/ProjectMembersPage.jsx:512
-#: src/pages/ProjectMembersPage.jsx:737
-#: src/pages/UsersPage.jsx:219
+#: src/pages/ProjectMembersPage.jsx:390
+#: src/pages/ProjectMembersPage.jsx:516
+#: src/pages/ProjectMembersPage.jsx:741
+#: src/pages/UsersPage.jsx:221
 msgid "Actions"
 msgstr "Ações"
 
@@ -113,8 +113,8 @@ msgstr "Todas as Marcas"
 #: src/components/asides/AsideMyProjectsPage.jsx:62
 #: src/components/asides/AsideProjectCreationPage2.jsx:57
 #: src/components/asides/AsideProjectsTable.jsx:66
-#: src/pages/ProjectMembersPage.jsx:706
-#: src/pages/UsersPage.jsx:188
+#: src/pages/ProjectMembersPage.jsx:710
+#: src/pages/UsersPage.jsx:190
 msgid "All Labs"
 msgstr "Todos os Labs"
 
@@ -134,7 +134,7 @@ msgstr "Todos os Fornecedores"
 msgid "All Types"
 msgstr "Todos os Tipos"
 
-#: src/pages/ProjectMembersPage.jsx:166
+#: src/pages/ProjectMembersPage.jsx:170
 msgid "An error occurred while accepting the application."
 msgstr "Ocorreu um erro ao aceitar a candidatura."
 
@@ -146,7 +146,7 @@ msgstr "Ocorreu um erro ao aprovar o projecto."
 msgid "An error occurred while canceling the project."
 msgstr "Ocorreu um erro ao cancelar o projeto."
 
-#: src/pages/ProjectMembersPage.jsx:113
+#: src/pages/ProjectMembersPage.jsx:117
 msgid "An error occurred while changing user role."
 msgstr "Ocorreu um erro a alterar a função do utilizador."
 
@@ -154,11 +154,11 @@ msgstr "Ocorreu um erro a alterar a função do utilizador."
 msgid "An error occurred while fetching the profile."
 msgstr "Ocorreu um erro a obter o perfil do utilizador."
 
-#: src/pages/ProjectMembersPage.jsx:225
+#: src/pages/ProjectMembersPage.jsx:229
 msgid "An error occurred while fetching users."
 msgstr "Ocorreu um erro a obter os utilizadores."
 
-#: src/pages/ProjectMembersPage.jsx:247
+#: src/pages/ProjectMembersPage.jsx:251
 msgid "An error occurred while inviting the user."
 msgstr "Ocorreu um erro a convidar o utilizador."
 
@@ -174,7 +174,7 @@ msgstr "Ocorreu um erro a abandonar o projeto."
 msgid "An error occurred while marking the reason as read."
 msgstr "Ocorreu um erro a marcar a razão como lida."
 
-#: src/pages/ProjectMembersPage.jsx:197
+#: src/pages/ProjectMembersPage.jsx:201
 msgid "An error occurred while rejecting the application."
 msgstr "Ocorreu um erro a rejeitar a candidatura."
 
@@ -186,7 +186,7 @@ msgstr "Ocorreu um erro a rejeitar o convite."
 msgid "An error occurred while rejecting the project."
 msgstr "Ocorreu um erro a rejeitar um projeto."
 
-#: src/pages/ProjectMembersPage.jsx:143
+#: src/pages/ProjectMembersPage.jsx:147
 msgid "An error occurred while removing the user."
 msgstr "Ocorreu um erro a remover o utilizador."
 
@@ -256,7 +256,7 @@ msgstr "Pelo menos um caracter especial (!@#$%^&*)"
 msgid "At least one uppercase letter"
 msgstr "Pelo menos um caracter maiusculo"
 
-#: src/pages/ProjectMembersPage.jsx:625
+#: src/pages/ProjectMembersPage.jsx:629
 msgid "Available Users"
 msgstr "Utilizadores Disponíveis"
 
@@ -299,9 +299,9 @@ msgstr "Marca"
 #: src/pages/ProfilePage.jsx:774
 #: src/pages/ProjectCreationPage1.jsx:440
 #: src/pages/ProjectLogsPage.jsx:578
-#: src/pages/ProjectMembersPage.jsx:583
-#: src/pages/ProjectMembersPage.jsx:936
-#: src/pages/ProjectMembersPage.jsx:969
+#: src/pages/ProjectMembersPage.jsx:587
+#: src/pages/ProjectMembersPage.jsx:937
+#: src/pages/ProjectMembersPage.jsx:970
 #: src/pages/ProjectProfilePageInfo.jsx:729
 #: src/pages/ProjectProfilePageInfo.jsx:761
 #: src/pages/ProjectProfilePageInfo.jsx:790
@@ -324,7 +324,7 @@ msgid "Change Password"
 msgstr "Alterar Password"
 
 #: src/components/headers/ProjectTabs.jsx:17
-#: src/pages/ProjectChatPage.jsx:129
+#: src/pages/ProjectChatPage.jsx:130
 msgid "Chat"
 msgstr "Chat"
 
@@ -338,9 +338,9 @@ msgstr "Verificando..."
 #: src/pages/MyProjectsPage.jsx:159
 #: src/pages/ProfilePage.jsx:503
 #: src/pages/ProjectCreationPage3.jsx:196
-#: src/pages/ProjectMembersPage.jsx:673
+#: src/pages/ProjectMembersPage.jsx:677
 #: src/pages/ProjectProfileResourcesPage.jsx:274
-#: src/pages/UsersPage.jsx:158
+#: src/pages/UsersPage.jsx:160
 msgid "Clear"
 msgstr "Limpar"
 
@@ -400,7 +400,7 @@ msgstr "Confirmar Nova Password"
 msgid "Confirm Password"
 msgstr "Confirme a Password"
 
-#: src/pages/ProjectMembersPage.jsx:972
+#: src/pages/ProjectMembersPage.jsx:973
 #: src/pages/ProjectProfilePageInfo.jsx:764
 msgid "Confirm Reject"
 msgstr "Confirmar Rejeição"
@@ -409,7 +409,7 @@ msgstr "Confirmar Rejeição"
 msgid "Confirm Rejection"
 msgstr "Confirmar Rejeição"
 
-#: src/pages/ProjectMembersPage.jsx:939
+#: src/pages/ProjectMembersPage.jsx:940
 msgid "Confirm Remove"
 msgstr "Confirmar Remoção"
 
@@ -676,7 +676,7 @@ msgstr "Boa"
 msgid "Hardware"
 msgstr "Hardware"
 
-#: src/pages/ProjectChatPage.jsx:91
+#: src/pages/ProjectChatPage.jsx:92
 msgid "HH:mm DD MMM YYYY"
 msgstr "HH:mm DD MMM YYYY"
 
@@ -744,8 +744,8 @@ msgid "Invitation"
 msgstr "Convite"
 
 #: src/components/modals/InviteProjectModal.jsx:121
-#: src/pages/ProjectMembersPage.jsx:865
-#: src/pages/UsersPage.jsx:348
+#: src/pages/ProjectMembersPage.jsx:866
+#: src/pages/UsersPage.jsx:349
 msgid "Invite"
 msgstr "Convidar"
 
@@ -776,10 +776,10 @@ msgstr "Conhecimento"
 #: src/components/asides/AsideProjectsTable.jsx:52
 #: src/components/cards/MyProjectCard.jsx:52
 #: src/components/tables/ProjectsTable.jsx:159
-#: src/pages/ProjectMembersPage.jsx:697
+#: src/pages/ProjectMembersPage.jsx:701
 #: src/pages/ProjectProfilePageInfo.jsx:531
 #: src/pages/StatisticsPdfPage.jsx:130
-#: src/pages/UsersPage.jsx:176
+#: src/pages/UsersPage.jsx:178
 msgid "Lab"
 msgstr "Lab"
 
@@ -844,7 +844,7 @@ msgstr "Detalhes do Email"
 msgid "Mail sent successfully."
 msgstr "Email enviado com sucesso."
 
-#: src/pages/ProjectMembersPage.jsx:438
+#: src/pages/ProjectMembersPage.jsx:442
 msgid "Manager"
 msgstr "Manager"
 
@@ -856,7 +856,7 @@ msgstr "Marcar como lida"
 msgid "Max Members"
 msgstr "Nº Máximo de Membros"
 
-#: src/pages/ProjectMembersPage.jsx:441
+#: src/pages/ProjectMembersPage.jsx:445
 msgid "Member"
 msgstr "Membro"
 
@@ -869,12 +869,12 @@ msgstr "Tipo de Membro"
 #: src/components/modals/AddTaskModal.jsx:321
 #: src/components/modals/EditTaskModal.jsx:176
 #: src/components/tables/ProjectsTable.jsx:194
-#: src/pages/ProjectChatPage.jsx:225
+#: src/pages/ProjectChatPage.jsx:226
 #: src/pages/ProjectProfilePageInfo.jsx:590
 msgid "Members"
 msgstr "Membros"
 
-#: src/pages/ProjectMembersPage.jsx:365
+#: src/pages/ProjectMembersPage.jsx:369
 msgid "Members ({0}/{1})"
 msgstr "Membros ({0}/{1})"
 
@@ -925,10 +925,10 @@ msgstr "Meus Projetos"
 #: src/components/tables/ResourcesProjectCreationTable.jsx:64
 #: src/components/tables/ResourcesTable.jsx:97
 #: src/components/tables/YourResourcesProjectCreationTable.jsx:42
-#: src/pages/ProjectMembersPage.jsx:380
-#: src/pages/ProjectMembersPage.jsx:506
-#: src/pages/ProjectMembersPage.jsx:730
-#: src/pages/UsersPage.jsx:212
+#: src/pages/ProjectMembersPage.jsx:384
+#: src/pages/ProjectMembersPage.jsx:510
+#: src/pages/ProjectMembersPage.jsx:734
+#: src/pages/UsersPage.jsx:214
 msgid "Name"
 msgstr "Nome"
 
@@ -999,7 +999,7 @@ msgstr "Sem projetos disponíveis."
 msgid "No projects found matching your criteria."
 msgstr "Não foram encontrados projetos."
 
-#: src/pages/ProjectMembersPage.jsx:496
+#: src/pages/ProjectMembersPage.jsx:500
 msgid "No requests or applications to show."
 msgstr "Sem pedidos ou candidaturas disponíveis."
 
@@ -1016,8 +1016,8 @@ msgstr "Sem skills ainda adicionadas."
 msgid "No skills available."
 msgstr "Sem skills disponíveis."
 
-#: src/pages/ProjectMembersPage.jsx:746
-#: src/pages/UsersPage.jsx:228
+#: src/pages/ProjectMembersPage.jsx:750
+#: src/pages/UsersPage.jsx:230
 msgid "No users available to show based on the selected criteria."
 msgstr "Sem utilizadores disponíveis."
 
@@ -1157,8 +1157,8 @@ msgstr "Selecione um ficheiro .jpg ou .png por favor."
 msgid "Please select a maximum number of members value smaller or equal to 30"
 msgstr "Por favor selecione um número máximo de números menor ou igual que 30"
 
-#: src/pages/ProjectMembersPage.jsx:841
-#: src/pages/UsersPage.jsx:324
+#: src/pages/ProjectMembersPage.jsx:842
+#: src/pages/UsersPage.jsx:325
 msgid "Private profile"
 msgstr "Perfil Privado"
 
@@ -1262,11 +1262,11 @@ msgstr "Pronto"
 msgid "Reason"
 msgstr "Razão"
 
-#: src/pages/ProjectMembersPage.jsx:954
+#: src/pages/ProjectMembersPage.jsx:955
 msgid "Reason for Rejection"
 msgstr "Razão de Rejeição"
 
-#: src/pages/ProjectMembersPage.jsx:921
+#: src/pages/ProjectMembersPage.jsx:922
 msgid "Reason for Removal"
 msgstr "Razão de Remoção"
 
@@ -1294,12 +1294,12 @@ msgstr "Registado com sucesso. Por favor verifique o seu email."
 #: src/components/cards/UserCard.jsx:118
 #: src/pages/ProfilePage.jsx:624
 #: src/pages/ProfilePage.jsx:755
-#: src/pages/ProjectMembersPage.jsx:570
+#: src/pages/ProjectMembersPage.jsx:574
 #: src/pages/ProjectProfilePageInfo.jsx:385
 msgid "Reject"
 msgstr "Rejeitar"
 
-#: src/pages/ProjectMembersPage.jsx:948
+#: src/pages/ProjectMembersPage.jsx:949
 msgid "Reject Application"
 msgstr "Rejeitar Candidatura"
 
@@ -1308,11 +1308,11 @@ msgstr "Rejeitar Candidatura"
 msgid "Reject Project"
 msgstr "Rejeitar Projeto"
 
-#: src/pages/ProjectMembersPage.jsx:456
+#: src/pages/ProjectMembersPage.jsx:460
 msgid "Remove"
 msgstr "Remover"
 
-#: src/pages/ProjectMembersPage.jsx:915
+#: src/pages/ProjectMembersPage.jsx:916
 msgid "Remove Member"
 msgstr "Remover Membro"
 
@@ -1320,7 +1320,7 @@ msgstr "Remover Membro"
 msgid "Reply"
 msgstr "Responder"
 
-#: src/pages/ProjectMembersPage.jsx:488
+#: src/pages/ProjectMembersPage.jsx:492
 msgid "Requests and Applications"
 msgstr "Pedidos e Candidaturas"
 
@@ -1377,10 +1377,10 @@ msgstr "Guardar Recursos"
 #: src/components/tables/SentMailTable.jsx:251
 #: src/pages/MyProjectsPage.jsx:149
 #: src/pages/ProjectCreationPage2.jsx:165
-#: src/pages/ProjectMembersPage.jsx:641
-#: src/pages/ProjectMembersPage.jsx:685
-#: src/pages/UsersPage.jsx:127
-#: src/pages/UsersPage.jsx:168
+#: src/pages/ProjectMembersPage.jsx:645
+#: src/pages/ProjectMembersPage.jsx:689
+#: src/pages/UsersPage.jsx:129
+#: src/pages/UsersPage.jsx:170
 msgid "Search"
 msgstr "Procurar"
 
@@ -1440,7 +1440,7 @@ msgid "Select Type"
 msgstr "Selecione Tipo"
 
 #: src/components/modals/ComposeMailModal.jsx:210
-#: src/pages/ProjectChatPage.jsx:209
+#: src/pages/ProjectChatPage.jsx:210
 msgid "Send"
 msgstr "Enviar"
 
@@ -1469,8 +1469,8 @@ msgid "Skill Type"
 msgstr "Tipo de Skill"
 
 #: src/components/selectors/SkillSelector.jsx:128
-#: src/pages/ProjectMembersPage.jsx:734
-#: src/pages/UsersPage.jsx:216
+#: src/pages/ProjectMembersPage.jsx:738
+#: src/pages/UsersPage.jsx:218
 msgid "Skills"
 msgstr "Skills"
 
@@ -1593,6 +1593,10 @@ msgstr "Os membros foram adicionados ao projeto com sucesso"
 msgid "The project is {0} and cannot be edited."
 msgstr "O projeto está {0} e não pode ser modificado."
 
+#: src/pages/ProjectMembersPage.jsx:337
+msgid "The project is {0} and no changes can be made."
+msgstr "Este projeto está {0} e não podem ser feitas alterações."
+
 #: src/pages/ProjectLogsPage.jsx:394
 msgid "The project is {0} and no notes can be added or changes made."
 msgstr "O projeto está {0} e notas não pode serem adicionadas."
@@ -1606,10 +1610,10 @@ msgid "The project is {0}, and you can't change the resources in the project."
 msgstr "O projeto está {0}, e não pode alterar os recursos no mesmo."
 
 #: src/pages/ProjectMembersPage.jsx:333
-msgid "The project is canceled and no changes can be made."
-msgstr "O projeto está cancelado e não podem ser feitas alterações."
+#~ msgid "The project is canceled and no changes can be made."
+#~ msgstr "O projeto está cancelado e não podem ser feitas alterações."
 
-#: src/pages/ProjectChatPage.jsx:116
+#: src/pages/ProjectChatPage.jsx:117
 msgid "The project is canceled, and the chat is disabled."
 msgstr "O projeto está cancelado e o chat está desativado."
 
@@ -1621,7 +1625,7 @@ msgstr "Os recursos foram adicionados ao projeto com sucesso."
 msgid "The resources have been saved successfully!"
 msgstr "Os recursos foram salvos com sucesso!"
 
-#: src/pages/ProjectMembersPage.jsx:343
+#: src/pages/ProjectMembersPage.jsx:347
 msgid "The team is full, no more members can be invited or accepted until the team has an available slot."
 msgstr "A equipa de projeto está cheia, mais nenhum membro pode ser aceite ou convidado até abertura de vaga."
 
@@ -1642,8 +1646,8 @@ msgstr "O projeto está pronto para aprovação."
 msgid "This resource already exists."
 msgstr "Este recurso já existe."
 
-#: src/pages/ProjectMembersPage.jsx:829
-#: src/pages/UsersPage.jsx:312
+#: src/pages/ProjectMembersPage.jsx:830
+#: src/pages/UsersPage.jsx:313
 msgid "This user has a private profile."
 msgstr "Este utilizador tem o perfil privado."
 
@@ -1676,12 +1680,12 @@ msgstr "Total de Utilizadores"
 #: src/components/tables/ResourcesTable.jsx:109
 #: src/components/tables/YourResourcesProjectCreationTable.jsx:43
 #: src/pages/ProfilePage.jsx:549
-#: src/pages/ProjectMembersPage.jsx:383
-#: src/pages/ProjectMembersPage.jsx:509
+#: src/pages/ProjectMembersPage.jsx:387
+#: src/pages/ProjectMembersPage.jsx:513
 msgid "Type"
 msgstr "Tipo"
 
-#: src/pages/ProjectChatPage.jsx:193
+#: src/pages/ProjectChatPage.jsx:194
 msgid "Type a message..."
 msgstr "Digite uma mensagem..."
 
@@ -1768,12 +1772,13 @@ msgid "Year"
 msgstr "Ano"
 
 #: src/components/tables/ProjectMembersTable.jsx:55
-#: src/pages/ProjectChatPage.jsx:165
-#: src/pages/ProjectChatPage.jsx:260
-#: src/pages/ProjectMembersPage.jsx:417
-#: src/pages/ProjectMembersPage.jsx:536
+#: src/pages/ProjectChatPage.jsx:166
+#: src/pages/ProjectChatPage.jsx:261
+#: src/pages/ProjectMembersPage.jsx:421
+#: src/pages/ProjectMembersPage.jsx:540
+#: src/pages/ProjectMembersPage.jsx:784
 #: src/pages/ProjectProfilePageInfo.jsx:549
-#: src/pages/UsersPage.jsx:265
+#: src/pages/UsersPage.jsx:264
 msgid "You"
 msgstr "Tu"
 

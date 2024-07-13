@@ -30,9 +30,11 @@ import {
   formatLab,
   formatTypeUserInProject,
   formatTypeUserInProjectApplicationRequest,
+  formatProjectState,
 } from "../utilities/converters";
 import { useMediaQuery } from "react-responsive";
 import { Trans, t } from "@lingui/macro";
+import { useNavigate } from "react-router-dom";
 
 const ProjectMembersPage = () => {
   const { systemProjectName } = useParams();
@@ -62,6 +64,8 @@ const ProjectMembersPage = () => {
   const [currentLanguage, setCurrentLanguage] = useState(
     Cookies.get("user-language") || "ENGLISH"
   );
+  const navigate = useNavigate();
+  
 
   useEffect(() => {
     const fetchProjectData = async () => {
@@ -328,10 +332,10 @@ const ProjectMembersPage = () => {
         <Container>
           <Row>
             <Col>
-              {projectData.projectState === "CANCELED" && (
+              {(projectData.projectState === "CANCELED" || projectData.projectState === "READY") && (
                 <Alert variant="danger" className="standard-modal">
                   <Trans>
-                    The project is canceled and no changes can be made.
+                    The project is {formatProjectState(projectData.projectState)} and no changes can be made.
                   </Trans>
                 </Alert>
               )}
@@ -756,10 +760,7 @@ const ProjectMembersPage = () => {
                             <tr
                               key={user.id}
                               onClick={() =>
-                                window.open(
-                                  `/profile/${user.systemUsername}`,
-                                  "_blank"
-                                )
+                                navigate(`/profile/${user.systemUsername}`)
                               }
                               style={{ height: "16.67%" }}
                             >

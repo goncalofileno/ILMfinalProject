@@ -22,7 +22,7 @@ export default function UserCard({
   publicProfile,
 }) {
   const openNewWindow = () => {
-    const url = `http://localhost:3000/profile/${systemUsername}`; // The URL you want to navigate to
+    const url = `https://localhost:3000/profile/${systemUsername}`; 
     const newWindow = window.open(url, "_blank", "noopener,noreferrer");
 
     if (newWindow) newWindow.opener = null;
