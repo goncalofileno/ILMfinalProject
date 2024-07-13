@@ -40,7 +40,7 @@ import java.util.List;
                 "AND (:keyword IS NULL OR (LOWER(u.firstName) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
                 "OR LOWER(u.lastName) LIKE LOWER(CONCAT('%', :keyword, '%')))) " +
                 "GROUP BY u.lab.local, u.firstName, u.lastName, u.thumbnailPhoto, u.id, u.systemUsername " +
-                "ORDER BY matchingSkillCount DESC"),
+                "ORDER BY u.publicProfile DESC, matchingSkillCount DESC"),
         // Query to count the number of UserProjectCreationDto objects with specific fields of a UserEntity.
         @NamedQuery(name = "User.countUserProjectCreationDto", query = "SELECT COUNT(u)" +
                 " FROM UserEntity u " +
