@@ -43,6 +43,7 @@ export default function ProjectCreationPage2() {
       keyword
     ).then((response) => {
       return response.json().then((data) => {
+        console.log(data);
         setUsers(data.userProjectCreationDtos);
         setTotalPages(data.maxPageNumber);
       });
@@ -130,9 +131,10 @@ export default function ProjectCreationPage2() {
         style={{ height: isTablet && "unset" }}
       >
         <h1 className="page-title">
-          <Trans><span className="app-slogan-1">Project </span>
-          <span className="app-slogan-2">Members</span></Trans>
-          
+          <Trans>
+            <span className="app-slogan-1">Project </span>
+            <span className="app-slogan-2">Members</span>
+          </Trans>
         </h1>
         <InputGroup
           className="mail-filters"
@@ -237,6 +239,7 @@ export default function ProjectCreationPage2() {
                           setGetUsersTrigger={setGetUsersTrigger}
                           maxMembers={maxMembers}
                           numberOfMembersInProject={usersInProject.length}
+                          publicProfile={user.publicProfile}
                         ></UserCard>
                       </Col>
                     );
@@ -262,6 +265,7 @@ export default function ProjectCreationPage2() {
                           setGetUsersTrigger={setGetUsersTrigger}
                           maxMembers={maxMembers}
                           numberOfMembersInProject={usersInProject.length}
+                          publicProfile={user.publicProfile}
                         ></UserCard>
                       </Col>
                     );
@@ -288,6 +292,7 @@ export default function ProjectCreationPage2() {
                           setGetUsersTrigger={setGetUsersTrigger}
                           maxMembers={maxMembers}
                           numberOfMembersInProject={usersInProject.length}
+                          publicProfile={user.publicProfile}
                         ></UserCard>
                       </Col>
                     );
