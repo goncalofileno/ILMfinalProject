@@ -22,6 +22,7 @@ import { i18n } from "@lingui/core";
 import {
   formatProjectState,
   formatTypeUserInProject,
+  formatTypeUserInProjectPublic,
 } from "../utilities/converters";
 import { useMediaQuery } from "react-responsive";
 
@@ -261,7 +262,7 @@ const ProjectChatPage = () => {
                                   : member.name}
                               </strong>
                               <div className="text-muted">
-                                {formatTypeUserInProject(member.type)}
+                                {formatTypeUserInProjectPublic(member.type)}
                               </div>
                             </div>
                           </Col>

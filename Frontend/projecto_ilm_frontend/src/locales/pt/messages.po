@@ -28,7 +28,7 @@ msgstr "<0>Criação de </0><1>Projeto</1>"
 
 #: src/pages/ProjectCreationPage2.jsx:133
 msgid "<0>Project </0><1>Members</1>"
-msgstr "<0>Equipa do </0>Projeto</1>"
+msgstr "<0>Equipa do </0><1>Projeto</1>"
 
 #: src/pages/ProfilePage.jsx:635
 #: src/pages/ProjectMembersPage.jsx:561

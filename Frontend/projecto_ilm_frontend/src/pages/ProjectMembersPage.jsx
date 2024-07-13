@@ -414,8 +414,8 @@ const ProjectMembersPage = () => {
                               className="align-middle"
                             >
                               {member.systemUsername === userSystemUsername
-                                ? t`You`
-                                : member.name}
+                                ? <strong>{t`You`}</strong>
+                                : <strong>{member.name}</strong>}
                             </td>
                             <td
                               style={{ width: "30%" }}
@@ -533,8 +533,8 @@ const ProjectMembersPage = () => {
                                 className="align-middle"
                               >
                                 {member.systemUsername === userSystemUsername
-                                  ? t`You`
-                                  : member.name}
+                                  ? <strong>{t`You`}</strong>
+                                  : <strong>{member.name}</strong>}
                               </td>
                               <td
                                 style={{ width: "28%" }}
@@ -780,8 +780,8 @@ const ProjectMembersPage = () => {
                                 className="align-middle"
                               >
                                 {user.systemUsername === userSystemUsername
-                                  ? "You"
-                                  : user.name}
+                                  ? <strong><Trans>You</Trans></strong>
+                                  : <strong>{user.name}</strong>}
                               </td>
                               {!isPhone && (
                                 <td
