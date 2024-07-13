@@ -65,7 +65,6 @@ const ProjectMembersPage = () => {
     Cookies.get("user-language") || "ENGLISH"
   );
   const navigate = useNavigate();
-  
 
   useEffect(() => {
     const fetchProjectData = async () => {
@@ -400,7 +399,12 @@ const ProjectMembersPage = () => {
                         }}
                       >
                         {members.map((member) => (
-                          <tr key={member.id}>
+                          <tr
+                            key={member.id}
+                            onClick={() =>
+                              navigate(`/profile/${member.systemUsername}`)
+                            }
+                          >
                             <td
                               className="align-middle"
                               style={{ width: "15%" }}
@@ -417,9 +421,11 @@ const ProjectMembersPage = () => {
                               style={{ width: "25%" }}
                               className="align-middle"
                             >
-                              {member.systemUsername === userSystemUsername
-                                ? <strong>{t`You`}</strong>
-                                : <strong>{member.name}</strong>}
+                              {member.systemUsername === userSystemUsername ? (
+                                <strong>{t`You`}</strong>
+                              ) : (
+                                <strong>{member.name}</strong>
+                              )}
                             </td>
                             <td
                               style={{ width: "30%" }}
@@ -435,7 +441,8 @@ const ProjectMembersPage = () => {
                                   onChange={(e) =>
                                     handleRoleChange(member, e.target.value)
                                   }
-                                  disabled={{ isProjectInactive }}
+                                  onClick={(e) => e.stopPropagation()}
+                                  disabled={isProjectInactive}
                                   className="mt-2"
                                 >
                                   <option value="MANAGER">
@@ -454,7 +461,10 @@ const ProjectMembersPage = () => {
                               {member.type !== "CREATOR" && (
                                 <Button
                                   variant="danger"
-                                  onClick={() => handleRemoveMember(member)}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleRemoveMember(member);
+                                  }}
                                   disabled={isProjectInactive}
                                 >
                                   <Trans>Remove</Trans>
@@ -519,7 +529,12 @@ const ProjectMembersPage = () => {
                         </thead>
                         <tbody id="body-table-members-project">
                           {requests.map((member) => (
-                            <tr key={member.id}>
+                            <tr
+                              key={member.id}
+                              onClick={() =>
+                                navigate(`/profile/${member.systemUsername}`)
+                              }
+                            >
                               <td
                                 className="align-middle"
                                 style={{ width: "15%" }}
@@ -536,9 +551,12 @@ const ProjectMembersPage = () => {
                                 style={{ width: "25%" }}
                                 className="align-middle"
                               >
-                                {member.systemUsername === userSystemUsername
-                                  ? <strong>{t`You`}</strong>
-                                  : <strong>{member.name}</strong>}
+                                {member.systemUsername ===
+                                userSystemUsername ? (
+                                  <strong>{t`You`}</strong>
+                                ) : (
+                                  <strong>{member.name}</strong>
+                                )}
                               </td>
                               <td
                                 style={{ width: "28%" }}
@@ -556,9 +574,10 @@ const ProjectMembersPage = () => {
                                   <>
                                     <Button
                                       variant="success"
-                                      onClick={() =>
-                                        handleAcceptRequest(member)
-                                      }
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleAcceptRequest(member);
+                                      }}
                                       disabled={isTeamFull}
                                       className="me-2"
                                     >
@@ -566,9 +585,10 @@ const ProjectMembersPage = () => {
                                     </Button>
                                     <Button
                                       variant="danger"
-                                      onClick={() =>
-                                        handleRejectRequest(member)
-                                      }
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleRejectRequest(member);
+                                      }}
                                       disabled={isProjectInactive}
                                     >
                                       <Trans>Reject</Trans>
@@ -579,9 +599,10 @@ const ProjectMembersPage = () => {
                                   <>
                                     <Button
                                       variant="danger"
-                                      onClick={() =>
-                                        handleRemoveInvitation(member.id)
-                                      }
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleRemoveInvitation(member.id);
+                                      }}
                                       disabled={isProjectInactive}
                                     >
                                       <Trans>Cancel</Trans>
@@ -780,9 +801,13 @@ const ProjectMembersPage = () => {
                                 style={{ width: !isPhone ? "20%" : "25%" }}
                                 className="align-middle"
                               >
-                                {user.systemUsername === userSystemUsername
-                                  ? <strong><Trans>You</Trans></strong>
-                                  : <strong>{user.name}</strong>}
+                                {user.systemUsername === userSystemUsername ? (
+                                  <strong>
+                                    <Trans>You</Trans>
+                                  </strong>
+                                ) : (
+                                  <strong>{user.name}</strong>
+                                )}
                               </td>
                               {!isPhone && (
                                 <td
