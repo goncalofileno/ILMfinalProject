@@ -262,8 +262,8 @@ export default function UsersPage() {
                               className="align-middle"
                             >
                               {user.systemUsername === userSystemUsername
-                                ? t`You`
-                                : user.name}
+                                ? <strong>{t`You`}</strong>
+                                : <strong>{user.name}</strong>}
                             </td>
                             {!isPhone && (
                               <td
